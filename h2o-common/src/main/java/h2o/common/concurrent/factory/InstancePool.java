@@ -46,11 +46,18 @@ public class InstancePool<I> {
         }
 
         if ( stop ) {
-            this.free(ins);
-        }
 
-        if ( !cache.offer( ins ) ) {
-            queue.offer(ins);
+            this.free(ins);
+
+        } else {
+
+            if ( !cache.offer( ins ) ) {
+                queue.offer(ins);
+            }
+
+            if ( stop ) {
+               this.close();
+            }
         }
 
     }
@@ -76,8 +83,6 @@ public class InstancePool<I> {
     public void close() {
 
         this.stop = true;
-
-        RunUtil.sleep(100);
 
         this.clear( -1 );
 
