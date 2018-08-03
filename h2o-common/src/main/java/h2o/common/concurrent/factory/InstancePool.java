@@ -88,19 +88,6 @@ public class InstancePool<I> {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     private void free( I ins ) {
         if ( ins != null ) {
             factory.free(null, ins);
