@@ -4,20 +4,23 @@ import h2o.common.concurrent.RunUtil;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstancePool<I> {
 
     private final InstanceFactory<I> factory;
 
 
-    private final ArrayBlockingQueue<I> cache;
     private final ConcurrentLinkedQueue<I> queue = new ConcurrentLinkedQueue<I>();
+    private final AtomicInteger queueSize = new AtomicInteger();
+
+    private final int n;
 
     private volatile boolean stop = false;
 
-    public InstancePool(InstanceFactory<I> factory, int n) {
+    public InstancePool( InstanceFactory<I> factory, int n ) {
         this.factory = factory;
-        this.cache = new ArrayBlockingQueue<I>(n);
+        this.n = n;
     }
 
     public I get() {
@@ -26,10 +29,7 @@ public class InstancePool<I> {
             return null;
         }
 
-        I ins = cache.poll();
-        if ( ins == null ) {
-            ins = queue.poll();
-        }
+        I ins = poll();
 
         if ( ins == null ) {
             ins = factory.create(null);
@@ -51,9 +51,7 @@ public class InstancePool<I> {
 
         } else {
 
-            if ( !cache.offer( ins ) ) {
-                queue.offer(ins);
-            }
+            offer(ins);
 
             if ( stop ) {
                this.close();
@@ -62,21 +60,25 @@ public class InstancePool<I> {
 
     }
 
-    public int clear( int n ) {
+    public void clear() {
 
         if ( queue.isEmpty() ) {
-            return 0;
+            return;
         }
 
-        int i = 0;
-        while ( n < 0 || i++ < n ) {
-            if ( queue.isEmpty() ) {
-                return 0;
+        int m = queueSize.get() - n;
+
+        if ( m > 0 ) {
+
+            int i = 0;
+            while ( i++ < m ) {
+                if (queue.isEmpty()) {
+                    return;
+                }
+                free(poll());
             }
-            free( queue.poll() );
-        }
 
-        return 1;
+        }
 
     }
 
@@ -84,14 +86,38 @@ public class InstancePool<I> {
 
         this.stop = true;
 
-        this.clear( -1 );
-
-        while ( !cache.isEmpty()  ) {
-            free( cache.poll() );
+        while ( true ) {
+            if (queue.isEmpty()) {
+                return;
+            }
+            free(queue.poll());
         }
 
     }
 
+
+
+    private I poll() {
+
+        I ins = queue.poll();
+
+        if ( ins != null ) {
+            queueSize.decrementAndGet();
+        }
+
+        return ins;
+    }
+
+    private boolean offer( I ins ) {
+
+        boolean ok = queue.offer(ins);
+
+        if ( ok ){
+            queueSize.incrementAndGet();
+        }
+
+        return ok;
+    }
 
     private void free( I ins ) {
         if ( ins != null ) {

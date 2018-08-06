@@ -80,7 +80,7 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return var == null ? null : var.toString();
+		return var == null ? "null" : var.toString();
 	}
 	
 
