@@ -9,7 +9,7 @@ import java.io.PrintWriter;
  * Unchecked exception and also a wrapper for checked exceptions.
  */
 
-public class UncheckedException extends RuntimeException {
+public class UncheckedException extends RuntimeException implements ExceptionWrapper {
 
 	private static final long serialVersionUID = -3267095208290225144L;
 
