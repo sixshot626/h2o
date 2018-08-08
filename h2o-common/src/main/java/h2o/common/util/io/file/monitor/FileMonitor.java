@@ -29,14 +29,6 @@ public class FileMonitor {
 
     private FileChangeListener changeListener;
 
-    protected boolean isReliableMode() {
-        return reliableMode;
-    }
-
-    protected String getSaveFilePath() {
-        return saveFilePath;
-    }
-
     private FileMonitor( FileFilter filter ) {
         IOFileFilter baseFilter = FileFilterUtils.or(FileFilterUtils.fileFileFilter(), FileFilterUtils.directoryFileFilter());
         if ( filter == null ) {
@@ -191,7 +183,7 @@ public class FileMonitor {
     }
 
 
-    protected void save( List<FileEntry> fileEntries ) throws Exception {
+    private void save( List<FileEntry> fileEntries ) throws Exception {
 
         OutputStream os = null;
         try {
@@ -218,12 +210,12 @@ public class FileMonitor {
     }
 
 
-    protected boolean hasBackupFile() {
+    private boolean hasBackupFile() {
         return new File( this.saveFilePath ).exists() || new File( this.getTmpFilePath() ).exists();
     }
 
 
-    protected String getTmpFilePath() {
+    private String getTmpFilePath() {
         return this.saveFilePath + ".tmp";
     }
 
@@ -268,7 +260,7 @@ public class FileMonitor {
         this.observers = observers;
     }
 
-    protected List<FileEntry> load( String path ) throws IOException {
+    private List<FileEntry> load( String path ) throws IOException {
 
         InputStream is = null;
         try {
