@@ -29,6 +29,14 @@ public class FileMonitor {
 
     private FileChangeListener changeListener;
 
+    protected boolean isReliableMode() {
+        return reliableMode;
+    }
+
+    protected String getSaveFilePath() {
+        return saveFilePath;
+    }
+
     private FileMonitor(FileFilter filter ) {
         IOFileFilter baseFilter = FileFilterUtils.or(FileFilterUtils.fileFileFilter(), FileFilterUtils.directoryFileFilter());
         if ( filter == null ) {
@@ -61,7 +69,7 @@ public class FileMonitor {
 
     public static FileMonitor reliableMonitor( String[] paths , FileFilter filter , String saveFilePath , boolean reset ) throws Exception {
 
-        FileMonitor fileMonitor = monitor( paths , filter  );
+        FileMonitor fileMonitor = new FileMonitor(filter);
         fileMonitor.enableReliableMode( saveFilePath );
 
         if ( reset && fileMonitor.hasBackupFile() ) {
@@ -73,7 +81,11 @@ public class FileMonitor {
             }
 
         } else {
+
+            fileMonitor = monitor( paths , filter  );
+            fileMonitor.enableReliableMode( saveFilePath );
             fileMonitor.save();
+
         }
 
         return fileMonitor;
@@ -103,7 +115,7 @@ public class FileMonitor {
     }
 
 
-    public static FileMonitor loadByBackup(FileFilter filter , String saveFilePath  ) throws Exception {
+    public static FileMonitor loadByBackup( FileFilter filter , String saveFilePath  ) throws Exception {
 
         FileMonitor fileMonitor = new FileMonitor( filter );
         fileMonitor.enableReliableMode( saveFilePath );
@@ -168,7 +180,14 @@ public class FileMonitor {
 
 
     public void save() throws Exception {
-        this.save( this.backupObj() );
+
+        List<FileEntry> fileEntries = ListBuilder.newList( observers.size() );
+
+        for ( AlterationObserver observer : observers ) {
+            fileEntries.add( observer.getEntry()  );
+        }
+
+        this.save( fileEntries );
     }
 
 
@@ -199,34 +218,6 @@ public class FileMonitor {
     }
 
 
-
-
-    public void reset() throws Exception {
-
-        if ( ! hasBackupFile() ) {
-            throw new FileNotFoundException(this.saveFilePath);
-        }
-
-        try {
-
-            this.observers = formBackupObj( load( this.saveFilePath ) );
-
-        } catch ( Exception e ) {
-
-            try {
-                this.observers = formBackupObj(load( getTmpFilePath() ) );
-            } catch ( Exception e2 ) {
-                Tools.log.error( e2 );
-                throw e;
-            }
-
-            Tools.log.error( e );
-        }
-
-    }
-
-
-
     protected boolean hasBackupFile() {
         return new File( this.saveFilePath ).exists() || new File( this.getTmpFilePath() ).exists();
     }
@@ -238,31 +229,43 @@ public class FileMonitor {
 
 
 
-    private List<AlterationObserver> formBackupObj( List<FileEntry> entries ) {
+    public void reset() throws Exception {
+
+        if ( ! hasBackupFile() ) {
+            throw new FileNotFoundException(this.saveFilePath);
+        }
+
+        try {
+
+            this.reset( load( this.saveFilePath ) );
+
+        } catch ( Exception e ) {
+
+            try {
+                this.reset( load( getTmpFilePath() ) );
+            } catch ( Exception e2 ) {
+                Tools.log.error( e2 );
+                throw e;
+            }
+
+            Tools.log.error( e );
+        }
+
+    }
+
+    private void reset(List<FileEntry> entries ) {
 
         List<AlterationObserver> observers = ListBuilder.newList( entries.size() );
 
-        for ( FileEntry entity : entries ) {
+        for ( FileEntry entry : entries ) {
 
-            AlterationObserver observer = new AlterationObserver( entity , filter );
+            AlterationObserver observer = new AlterationObserver( entry , filter );
             observer.addListener( fileAlterationListener );
 
             observers.add( observer );
         }
 
-        return observers;
-    }
-
-
-    private List<FileEntry> backupObj() {
-
-        List<FileEntry> fileEntries = ListBuilder.newList( observers.size() );
-
-        for ( AlterationObserver observer : observers ) {
-            fileEntries.add( observer.getEntry()  );
-        }
-
-        return fileEntries;
+        this.observers = observers;
     }
 
     protected List<FileEntry> load( String path ) throws IOException {
@@ -303,8 +306,6 @@ public class FileMonitor {
             return entry;
         }
     }
-
-
 
 
 
