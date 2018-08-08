@@ -37,7 +37,7 @@ public class FileMonitor {
         return saveFilePath;
     }
 
-    private FileMonitor(FileFilter filter ) {
+    private FileMonitor( FileFilter filter ) {
         IOFileFilter baseFilter = FileFilterUtils.or(FileFilterUtils.fileFileFilter(), FileFilterUtils.directoryFileFilter());
         if ( filter == null ) {
             this.filter = baseFilter;
