@@ -12,13 +12,15 @@ public final class DbConfigProvider {
 
         ButterflyFactory dbButterflyFactory = new ButterflyFactory( "db" , "db.bcs");
 
-        Factory factory = dbButterflyFactory.silentlyGet("dbConfig");
+        Factory factory = null;
 
-        if ( factory == null ) {
+        try {
+            factory = dbButterflyFactory.get("dbConfig");
+        } catch ( Exception e ) {
+        }
 
-            return dbButterflyFactory;
 
-        } else {
+        if ( factory != null ) {
 
             try {
                 dbButterflyFactory.dispose();
@@ -26,6 +28,12 @@ public final class DbConfigProvider {
             }
 
             return factory;
+
+
+        } else {
+
+            return dbButterflyFactory;
+
         }
     }
 
