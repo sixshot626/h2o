@@ -20,7 +20,6 @@ package com.jenkov.db.impl;
 
 import com.jenkov.db.PersistenceManager;
 import com.jenkov.db.impl.init.DatabaseInitializer;
-import com.jenkov.db.itf.Database;
 import com.jenkov.db.itf.IPersistenceConfiguration;
 import com.jenkov.db.scope.IScopeFactory;
 import com.jenkov.db.scope.ScopeFactory;
@@ -39,28 +38,15 @@ public class PersistenceConfiguration implements IPersistenceConfiguration{
 
 
 
-    protected Database            database                 = null;
     protected DataSource          dataSource               = null;
 
     protected DatabaseInitializer databaseInitializer      = new DatabaseInitializer();
     protected IScopeFactory       scopeFactory             = null;
 
 
-    public PersistenceConfiguration(PersistenceManager persistenceManager){
-        this(null, persistenceManager);
-    }
 
-    public PersistenceConfiguration(Database database, PersistenceManager persistenceManager){
-        this.database = database;
+    public PersistenceConfiguration( PersistenceManager persistenceManager){
         this.persistenceManager = persistenceManager;
-    }
-
-    public synchronized Database getDatabase() {
-        return this.database;
-    }
-
-    public synchronized void setDatabase(Database database) {
-        this.database = database;
     }
 
     public synchronized DataSource getDataSource() {

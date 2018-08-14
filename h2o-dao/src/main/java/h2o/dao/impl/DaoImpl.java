@@ -16,6 +16,7 @@ import h2o.dao.SqlSource;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -340,13 +341,14 @@ public class DaoImpl extends AbstractDao implements Dao {
 	public int[] batchUpdate(String sql, Collection<?> args) throws DaoException {
 		return this.batchUpdate( new TSql(sql), args );
 	}
-	
-	
-	
-	
-	
 
-	@Override
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return bdb.persistenceManager.getDataSource().getConnection();
+    }
+
+    @Override
 	public void close() throws DaoException {
 		if (this.bdao != null) {
 			try {

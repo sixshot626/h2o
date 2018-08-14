@@ -4,6 +4,8 @@ import h2o.dao.exception.DaoException;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +87,9 @@ public interface Dao extends TxManager , ScopeManager {
 	int[] batchUpdate(String sql, Collection<?> args)  throws DaoException;
 	
 	int[] batchUpdate(SqlSource sqlSource, Collection<?> args)  throws DaoException;
-	
-	
+
+
+    Connection getConnection() throws SQLException;
 	
 	void close() throws DaoException;
 	

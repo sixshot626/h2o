@@ -40,9 +40,6 @@ public class Daos implements IDaos {
         this.connection = connection;
         this.configuration = configuration;
         this.persistenceManager = manager;
-        if(this.configuration.getDatabase() == null){
-            this.configuration.setDatabase(Database.determineDatabase(this.connection));
-        }    
     }
 
     public Connection getConnection() {

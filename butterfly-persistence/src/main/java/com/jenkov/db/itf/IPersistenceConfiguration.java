@@ -35,23 +35,7 @@ import javax.sql.DataSource;
  */
 public interface IPersistenceConfiguration {
 
-    /**
-     * Returns the <code>Database</code> instance representing the database this instance
-     * is specialized for.
-     * @return The <code>Database</code> instance represeting the database this instance
-     * is specialized for.
-     */
-    public Database getDatabase();
 
-
-    /**
-     * Sets the database this configuration is specialized for. Note that simply setting the
-     * database instance isn't enough to target the entire configuration to another database.
-     * If you change the database instance you will have to change the other components manually,
-     * or you will have a semantically incoherent persistence configuration. In other words: Do
-     * not change the database configuration unless you know what you are doing.
-     */
-    public void setDatabase(Database database);
 
     /**
      * Gets the data source associated with this persistence configuration.
