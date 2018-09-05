@@ -12,6 +12,6 @@ import java.util.List;
 
 public interface SignalNode extends Node {
 
-	Tuple2< RunStatus , List<Line> > signal(RunContext runContext) throws FlowException;
+	Tuple2<RunStatus , List<Line>> signal(RunContext runContext) throws FlowException;
 	
 }

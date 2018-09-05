@@ -12,6 +12,6 @@ import java.util.List;
 
 public interface Node extends FlowElement {
 	
-	Tuple2< RunStatus , List<Line> > exec(RunContext runContext) throws FlowException;
+	Tuple2<RunStatus , List<Line> > exec(RunContext runContext) throws FlowException;
 
 }
