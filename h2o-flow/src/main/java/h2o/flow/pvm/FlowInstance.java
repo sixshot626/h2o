@@ -11,7 +11,5 @@ public interface FlowInstance {
 	  Node findStartNode();
 	
 	  Node findNode(Object id);
-	  
-	  FlowDefinition getFlowDefinition();
 
 }
