@@ -4,17 +4,17 @@ import java.util.Random;
 
 public class RandomString {
 
-    private final Random rand;
+    private final RandInt rand;
 
     public RandomString() {
-        this.rand = new Random();
+        this.rand = new DefaultRandIntImpl(new Random());
     }
 
     public RandomString( long seed ) {
-        this.rand = new Random( seed );
+        this.rand = new DefaultRandIntImpl( new Random( seed ) );
     }
 
-    public RandomString( Random rand ) {
+    public RandomString( RandInt rand ) {
         this.rand = rand;
     }
 
@@ -50,6 +50,28 @@ public class RandomString {
         }
 
         return sb.toString();
+    }
+
+
+
+
+    public interface RandInt {
+        int nextInt(int n);
+    }
+
+    private static class DefaultRandIntImpl implements RandInt {
+
+        private final Random random;
+
+        public DefaultRandIntImpl(Random random) {
+            this.random = random;
+        }
+
+        @Override
+        public int nextInt(int n) {
+            return random.nextInt();
+        }
+
     }
 
 
