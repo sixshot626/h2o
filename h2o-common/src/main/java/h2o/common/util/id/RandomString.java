@@ -69,7 +69,7 @@ public class RandomString {
 
         @Override
         public int nextInt(int n) {
-            return random.nextInt();
+            return random.nextInt(n);
         }
 
     }
