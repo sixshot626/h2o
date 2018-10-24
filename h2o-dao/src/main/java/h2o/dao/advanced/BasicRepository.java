@@ -52,6 +52,10 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).loadByAttr(entity, attrNames);
     }
 
+    public final List<E> loadAll( Class<E> entityClazz) {
+        return this.createDaoBasicUtil(entityClazz).loadAll();
+    }
+
 
     public int del(E entity) {
         return this.createDaoBasicUtil(entity).del(entity);
@@ -67,6 +71,10 @@ public class BasicRepository<E> {
 
     protected DaoBasicUtil<E> createDaoBasicUtil( E entity ) {
         return new DaoBasicUtil<E>(entity.getClass());
+    }
+
+    protected DaoBasicUtil<E> createDaoBasicUtil( Class<?> entityClazz ) {
+        return new DaoBasicUtil<E>(entityClazz);
     }
 
 }

@@ -33,13 +33,15 @@ public final class DaoBasicUtil<E> {
     private final EntityParser entityParser;
 
 
-
+    private final Class<E> entityClazz;
 
     public DaoBasicUtil( Class<?> entityClazz ) {
         this( entityClazz , DbUtil.getDao() );
     }
 
     public DaoBasicUtil( Class<?> entityClazz , Dao dao ) {
+
+        this.entityClazz = (Class<E> )entityClazz;
         this.dao = dao;
         this.entityParser = CACHE ? ENTITYPARSER_TABLE.getAndCreateIfAbsent(entityClazz) :
                 new EntityParser( entityClazz );
@@ -132,6 +134,10 @@ public final class DaoBasicUtil<E> {
 
         return (List<E>)dao.load( entity.getClass() , sql.toString() , entity );
 
+    }
+
+    public List<E> loadAll() {
+        return (List<E>)dao.load( this.entityClazz , "select * from " + this.entityParser.getTableName() );
     }
 
 

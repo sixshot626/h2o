@@ -28,6 +28,15 @@ public class PageInfo implements Pageable, Serializable {
         this.pageRecordSize = pageRequest.getPageRecordSize();
     }
 
+    public PageInfo( PageRequest pageRequest , long totalRecord ){
+
+        this( pageRequest );
+
+        this.totalRecord = totalRecord;
+
+        this.calcTotalPage();
+    }
+
     public PageInfo(long pageNo, long pageRecordSize, long totalRecord) {
 
 		this(pageNo, pageRecordSize);
