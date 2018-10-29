@@ -1,5 +1,6 @@
 package h2o.common.util.date;
 
+import h2o.common.Tools;
 import h2o.common.exception.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,32 +101,75 @@ public final class DateTime {
 	}
 
 	public int getDaysBetween(Date date_start, Date date_end) {
-		try {
-	
-			Calendar d1 = Calendar.getInstance();
-			Calendar d2 = Calendar.getInstance();
-			d1.setTime(date_start);
-			d2.setTime(date_end);
-			if (d1.after(d2)) { // swap dates so that d1 is start and d2 is end
-				Calendar swap = d1;
-				d1 = d2;
-				d2 = swap;
-			}
-			int days = d2.get(Calendar.DAY_OF_YEAR) - d1.get(Calendar.DAY_OF_YEAR);
-			int y2 = d2.get(Calendar.YEAR);
-			if (d1.get(Calendar.YEAR) != y2) {
-				d1 = (Calendar) d1.clone();
-				do {
-					days += d1.getActualMaximum(Calendar.DAY_OF_YEAR);
-					d1.add(Calendar.YEAR, 1);
-				} while (d1.get(Calendar.YEAR) != y2);
-			}
-			return days;
-		} catch (Exception e) {			
-			log.debug("getDaysBetween", e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
-	}
+        try {
+
+            Calendar d1 = Calendar.getInstance();
+            Calendar d2 = Calendar.getInstance();
+            d1.setTime(date_start);
+            d2.setTime(date_end);
+            if (d1.after(d2)) { // swap dates so that d1 is start and d2 is end
+                Calendar swap = d1;
+                d1 = d2;
+                d2 = swap;
+            }
+            int days = d2.get(Calendar.DAY_OF_YEAR) - d1.get(Calendar.DAY_OF_YEAR);
+            int y2 = d2.get(Calendar.YEAR);
+            if (d1.get(Calendar.YEAR) != y2) {
+                d1 = (Calendar) d1.clone();
+                do {
+                    days += d1.getActualMaximum(Calendar.DAY_OF_YEAR);
+                    d1.add(Calendar.YEAR, 1);
+                } while (d1.get(Calendar.YEAR) != y2);
+            }
+            return days;
+        } catch (Exception e) {
+            log.debug("getDaysBetween", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
+
+
+
+    public int getMonthsBetween( Date date_start, Date date_end ) {
+
+        try {
+
+            Calendar d1 = Calendar.getInstance();
+            Calendar d2 = Calendar.getInstance();
+            d1.setTime(date_start);
+            d2.setTime(date_end);
+            if (d1.after(d2)) { // swap dates so that d1 is start and d2 is end
+                Calendar swap = d1;
+                d1 = d2;
+                d2 = swap;
+            }
+
+            int ms = d2.get(Calendar.MONTH) - d1.get(Calendar.MONTH);
+
+            int y2 = d2.get(Calendar.YEAR);
+            int y1 = d1.get(Calendar.YEAR);
+
+            ms += ( y2 - y1 ) * 12;
+
+            if( d2.get( Calendar.DAY_OF_MONTH ) < d1.get( Calendar.DAY_OF_MONTH )
+                    /*&& d2.get( Calendar.DAY_OF_MONTH ) != d2.getActualMaximum( Calendar.DATE ) */ ) {
+
+                ms -= 1;
+
+            }
+
+            return ms;
+
+        } catch (Exception e) {
+            log.debug("getMonthsBetween", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
+
+
+
+
+
 	
 	
 	public Date getAfterDay( Date date, int countdate) {
@@ -151,5 +195,6 @@ public final class DateTime {
 			}
 		}
 	}
+
 
 }
