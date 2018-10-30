@@ -46,16 +46,20 @@ public abstract class DateUtil {
 	
 	
 
-	public static int getDaysOfMonth(String year, String month) {
+	public static int getDaysOfMonth( String year, String month ) {
 		return dateTime.getDaysOfMonth( year,  month);
 	}
 
-	public static int getDaysBetween(Date date_start, Date date_end) {
-		return dateTime.getDaysBetween( date_start,  date_end);
+	public static int getDaysBetween(Date date_start, Date date_end ) {
+		return dateTime.getDaysBetween( date_start,  date_end );
 	}
+
+    public static int getMonthsBetween(Date date_start, Date date_end ) {
+        return dateTime.getMonthsBetween( date_start,  date_end );
+    }
 	
 	
-	public static Date getAfterDay( Date date, int countdate) {
+	public static Date getAfterDay( Date date, int countdate ) {
 		return dateTime.getAfterDay( date , countdate);
 	}
 
