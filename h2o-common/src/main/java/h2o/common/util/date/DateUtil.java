@@ -57,6 +57,10 @@ public abstract class DateUtil {
     public static int getMonthsBetween(Date date_start, Date date_end ) {
         return dateTime.getMonthsBetween( date_start,  date_end );
     }
+
+    public static int getActualMaximum(Date date ) {
+        return dateTime.getActualMaximum( date );
+    }
 	
 	
 	public static Date getAfterDay( Date date, int countdate ) {

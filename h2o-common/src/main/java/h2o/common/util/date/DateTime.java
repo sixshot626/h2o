@@ -168,9 +168,17 @@ public final class DateTime {
 
 
 
+    public int getActualMaximum( Date date ) {
+        
+        Calendar d = Calendar.getInstance();
+        d.setTime( date );
+
+        return d.getActualMaximum( Calendar.DATE );
+        
+    }
 
 
-	
+
 	
 	public Date getAfterDay( Date date, int countdate) {
 		return getAfterDay( date , Calendar.DATE , countdate);
