@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * Created by zhangjianwei on 16/8/18.
  */
-public class FileLogger implements Logger {
+public class FileLogger implements MetaLogger {
 
     private static final org.slf4j.Logger slfLog = LoggerFactory.getLogger( FileLogger.class.getName() );
 
