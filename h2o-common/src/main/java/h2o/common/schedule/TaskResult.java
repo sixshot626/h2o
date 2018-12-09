@@ -2,11 +2,11 @@ package h2o.common.schedule;
 
 public class TaskResult {
 
-    public static final TaskResult Ok   = new TaskResult( TaskState.Ok );
-    public static final TaskResult Free = new TaskResult( TaskState.Free );
-    public static final TaskResult Continue = new TaskResult( TaskState.Continue );
-    public static final TaskResult Break = new TaskResult( TaskState.Break );
-    public static final TaskResult Wait = new TaskResult( TaskState.Wait );
+    public static final TaskResult OK   = new TaskResult( TaskState.Ok );
+    public static final TaskResult FREE = new TaskResult( TaskState.Free );
+    public static final TaskResult CONTINUE = new TaskResult( TaskState.Continue );
+    public static final TaskResult BREAK = new TaskResult( TaskState.Break );
+    public static final TaskResult WAIT = new TaskResult( TaskState.Wait );
 
     public static TaskResult sleep( long time ) {
         TaskResult tr = new TaskResult( TaskState.Sleep );

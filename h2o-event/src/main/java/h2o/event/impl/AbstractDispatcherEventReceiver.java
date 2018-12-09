@@ -4,7 +4,6 @@ package h2o.event.impl;
 import h2o.common.schedule.Dispatcher;
 import h2o.common.schedule.RepetitiveTask;
 import h2o.common.schedule.TaskResult;
-import h2o.common.schedule.TaskState;
 import h2o.event.Event;
 import h2o.event.EventReceiver;
 import org.slf4j.Logger;
@@ -39,12 +38,12 @@ public abstract class AbstractDispatcherEventReceiver extends AbstractEventRecei
 
                 List<Event> events = recvEvent();
                 if( events == null || events.isEmpty() ) {
-                    return new TaskResult( TaskState.Free );
+                    return TaskResult.FREE;
                 } else {
                     for( Event event : events ) {
                         procEvent(event);
                     }
-                    return new TaskResult( TaskState.Ok );
+                    return TaskResult.OK;
                 }
 
 
