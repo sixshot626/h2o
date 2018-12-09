@@ -27,15 +27,15 @@ public class InterruptAbleRepetitiveTask implements RepetitiveTask {
 		this.realRepetitiveTask = realRepetitiveTask;		
 	}
 
-	private volatile Future<Integer> future;
+	private volatile Future<TaskResult> future;
 	
 	private final RunUtil runUtil = new RunUtil();
 
-	final public int doTask() throws Throwable {
+	final public TaskResult doTask() throws Throwable {
 
-		future = runUtil.submit( new Callable<Integer>() {
+		future = runUtil.submit( new Callable<TaskResult>() {
 
-			public Integer call() throws Exception {
+			public TaskResult call() throws Exception {
 				try {
 					return doInterruptedAbleTask();
 				} catch (Exception e) {
@@ -63,13 +63,13 @@ public class InterruptAbleRepetitiveTask implements RepetitiveTask {
 
 	}
 
-	protected int doInterruptedAbleTask() throws Throwable {
+	protected TaskResult doInterruptedAbleTask() throws Throwable {
 		return realRepetitiveTask.doTask();
 	}
 
 	public void stop() {
 
-		Future<Integer> f = future;
+		Future<TaskResult> f = future;
 		if (f == null) {
 			return;
 		} else {

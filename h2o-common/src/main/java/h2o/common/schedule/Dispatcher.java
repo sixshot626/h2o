@@ -71,19 +71,19 @@ public class Dispatcher {
 						long st;
 						
 						try {
-							int r =  task.getVar().doTask();
-							if( r == 0 ) {
+                            TaskResult tr = task.getVar().doTask();
+							if( tr.taskState == TaskState.Free ) {
 								st = freeSleepTime.getVar();
-							} else if(r == 1 ) {
+							} else if( tr.taskState == TaskState.Ok ) {
 								st = okSleepTime.getVar();
-							} else if(r == 2 ) {
+							} else if( tr.taskState == TaskState.Continue ) {
 								st = 0;
-							} else if(r < 0 ) {
+							} else if( tr.taskState == TaskState.Wait ) {
 								st = -1;
-							} else if(r == 9 ) {
+							} else if( tr.taskState == TaskState.Break ) {
 								break;
 							} else {
-								st = r;
+								st = tr.getSleepTime();
 							}
 							
 						} catch( InterruptedException e ) {
