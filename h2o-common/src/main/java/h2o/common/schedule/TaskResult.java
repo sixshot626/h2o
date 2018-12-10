@@ -1,5 +1,13 @@
 package h2o.common.schedule;
 
+
+
+enum TaskState {
+    Ok,Free,Continue,Break,Wait,Sleep
+}
+
+
+
 public class TaskResult {
 
     public static final TaskResult OK   = new TaskResult( TaskState.Ok );
@@ -8,7 +16,7 @@ public class TaskResult {
     public static final TaskResult BREAK = new TaskResult( TaskState.Break );
     public static final TaskResult WAIT = new TaskResult( TaskState.Wait );
 
-    public static TaskResult sleep( long time ) {
+    public static TaskResult SLEEP( long time ) {
         TaskResult tr = new TaskResult( TaskState.Sleep );
         tr.sleepTime = time;
         return tr;
