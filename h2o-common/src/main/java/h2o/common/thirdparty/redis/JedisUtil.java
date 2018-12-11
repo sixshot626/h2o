@@ -20,17 +20,25 @@ public class JedisUtil extends AbstractJedisProvider implements JedisProvider {
 		int i = 0;
 		for( String conf : confs ) {
 
+		    //host:port_1@abcd
+
 		    String pass = null;
 		    if( StringUtils.contains( conf , '@' ) ) {
                 pass = StringUtils.substringAfter( conf , "@");
                 conf = StringUtils.substringBefore( conf , "@");
             }
 
+            Integer db = null;
+            if( StringUtils.contains( conf , '_' ) ) {
+                db = Integer.parseInt(StringUtils.substringAfter( conf , "_"));
+                conf = StringUtils.substringBefore( conf , "_");
+            }
+
 			String host = StringUtils.substringBefore( conf , ":");
 			String p = StringUtils.substringAfter( conf , ":");
 			Integer port = StringUtils.isBlank(p) ? 6379 : new Integer(p);
 
-			redisConfigs[i++] = new RedisConfig( host , port , pass );
+			redisConfigs[i++] = new RedisConfig( host , port , pass  ,  db );
 		}
 
 	}
@@ -102,6 +110,10 @@ public class JedisUtil extends AbstractJedisProvider implements JedisProvider {
 
         if ( conf.pass != null ) {
             jedis.auth(conf.pass);
+        }
+
+        if ( conf.db != null ) {
+            jedis.select( conf.db );
         }
 
         return jedis;

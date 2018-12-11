@@ -16,11 +16,14 @@ public class RedisConfig {
 
     public final Integer timeout;
 
+    public final Integer db;
+
     public RedisConfig(String host, int port) {
         this.host = host;
         this.port = port;
         this.pass = null;
         this.timeout = null;
+        this.db = null;
     }
 
     public RedisConfig(String host, int port, String pass) {
@@ -28,13 +31,23 @@ public class RedisConfig {
         this.port = port;
         this.pass = pass;
         this.timeout = null;
+        this.db = null;
     }
 
-    public RedisConfig(String host, int port, String pass, Integer timeout) {
+    public RedisConfig(String host, int port, String pass , Integer db ) {
+        this.host = host;
+        this.port = port;
+        this.pass = pass;
+        this.timeout = null;
+        this.db = db;
+    }
+
+    public RedisConfig( String host, int port, Integer timeout , String pass, Integer db ) {
         this.host = host;
         this.port = port;
         this.pass = pass;
         this.timeout = timeout;
+        this.db = db;
     }
 
     @Override
@@ -62,9 +75,11 @@ public class RedisConfig {
 
     @Override
     public String toString() {
-        return "RedisConfig{" +
-                "host='" + host + '\'' +
-                ", port=" + port +
-                '}';
+        final StringBuilder sb = new StringBuilder("RedisConfig{");
+        sb.append("host='").append(host).append('\'');
+        sb.append(", port=").append(port);
+        sb.append(", db=").append(db);
+        sb.append('}');
+        return sb.toString();
     }
 }
