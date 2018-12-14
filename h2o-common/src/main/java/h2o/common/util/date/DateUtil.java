@@ -63,12 +63,12 @@ public abstract class DateUtil {
     }
 	
 	
-	public static Date getAfterDay( Date date, int countdate ) {
-		return dateTime.getAfterDay( date , countdate);
+	public static Date getAfterDay( Date date, int count ) {
+		return dateTime.getAfterDay( date , count );
 	}
 
-	public static Date getAfterDay( Date date, int type , int countdate) {
-		return dateTime.getAfterDay(  date,  type ,  countdate);
+	public static Date getAfterDate( Date date, int type , int count ) {
+		return dateTime.getAfterDate(  date,  type ,  count );
 	}
 
 }

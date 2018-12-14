@@ -180,23 +180,23 @@ public final class DateTime {
 
 
 	
-	public Date getAfterDay( Date date, int countdate) {
-		return getAfterDay( date , Calendar.DATE , countdate);
+	public Date getAfterDay( Date date, int count ) {
+		return getAfterDate( date , Calendar.DATE , count );
 	}
 
-	public Date getAfterDay( Date date, int type , int countdate) {
+	public Date getAfterDate( Date date, int type , int count ) {
 		try {
 		
 			Calendar c = Calendar.getInstance();
-			c.setTime(date);
-			c.add(type, countdate);
+			c.setTime( date );
+			c.add( type, count );
 			
 			return c.getTime();
 			
-		} catch (Exception e) {			
-			log.debug("getAfterDay", e);
+		} catch ( Exception e ) {
+			log.debug("getAfterDate", e);
 			
-			if( this.silently) {
+			if( this.silently ) {
 				return null;
 			} else {
 				throw ExceptionUtil.toRuntimeException(e);
