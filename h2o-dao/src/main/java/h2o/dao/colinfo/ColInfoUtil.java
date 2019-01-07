@@ -173,7 +173,7 @@ public class ColInfoUtil {
 			}
 			
 			String colName = colAnn.name();
-			ci.colName =  StringUtils.isBlank( colName ) ? fieldName : colName;		
+			ci.colName =  StringUtils.isBlank( colName ) ? fieldName.toLowerCase() : colName;
 			
 			ci.defVal = new ColumnDefValue( colAnn.defaultValue() );
 
