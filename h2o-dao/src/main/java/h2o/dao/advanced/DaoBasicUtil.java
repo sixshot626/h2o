@@ -114,7 +114,8 @@ public final class DaoBasicUtil<E> {
 
         StringBuilder sql = new StringBuilder();
 
-        StringUtil.append( sql , "select * from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
+        StringUtil.append( sql , "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+                " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
         if( lock ) {
             sql.append(" for update ");
         }
@@ -130,14 +131,17 @@ public final class DaoBasicUtil<E> {
 
         StringBuilder sql = new StringBuilder();
 
-        StringUtil.append( sql , "select * from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
+        StringUtil.append( sql , "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+                " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
 
         return (List<E>)dao.load( entity.getClass() , sql.toString() , entity );
 
     }
 
     public List<E> loadAll() {
-        return (List<E>)dao.load( this.entityClazz , "select * from " + this.entityParser.getTableName() );
+        return (List<E>)dao.load( this.entityClazz ,
+                "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+                " from " + this.entityParser.getTableName() );
     }
 
 
@@ -154,7 +158,8 @@ public final class DaoBasicUtil<E> {
     }
 
     private int delByColInfos( E entity , List<ColInfo> cis  ) {
-        return dao.update( "delete from " + this.entityParser.getTableName() +  " where " +  buildWhereStr( cis ) , entity );
+        return dao.update( "delete from " + this.entityParser.getTableName() +
+                " where " +  buildWhereStr( cis ) , entity );
     }
 
 
@@ -189,7 +194,7 @@ public final class DaoBasicUtil<E> {
 
 
 
-    private String buildWhereStr(List<ColInfo> wColInfos  ) {
+    private String buildWhereStr( List<ColInfo> wColInfos  ) {
 
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -200,6 +205,22 @@ public final class DaoBasicUtil<E> {
             sb.append( ci.colName );
             sb.append( " = :");
             sb.append( ci.attrName );
+        }
+        sb.append( ' ' );
+        return sb.toString();
+
+    }
+
+    private String connectSelectFileds( List<ColInfo> fs ) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append( ' ' );
+        int i = 0;
+        for ( ColInfo ci : fs ) {
+            if (  i++ > 0 ) {
+                sb.append( " , ");
+            }
+            sb.append( ci.colName );
         }
         sb.append( ' ' );
         return sb.toString();

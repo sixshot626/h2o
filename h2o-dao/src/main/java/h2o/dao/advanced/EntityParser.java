@@ -82,4 +82,17 @@ public class EntityParser {
     }
 
 
+    public List<ColInfo> getAllAttrs() {
+
+        List<ColInfo> cis = ListBuilder.newList();
+
+        for ( ColInfo ci : colInfos ) {
+             cis.add(ci);
+        }
+
+        return cis;
+
+    }
+
+
 }
