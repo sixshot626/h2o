@@ -47,7 +47,11 @@ public class ClusterLock {
 
     private void tryLock( Jedis jedis ) {
 
-        if (jedis.setnx(key, id) == 1 || (id.equals(jedis.get(key)))) {
+        if ( "OK".equals(jedis.set( key, id ,  "NX" , "EX" , expire ) ) ) {
+
+            locked = true;
+
+        } else if ( id.equals(jedis.get(key) ) )  {
 
             jedis.expire(key, expire);
             locked = true;

@@ -34,8 +34,7 @@ public abstract class AbstractExecuteOneTime<C> {
                 @Override
                 public Boolean doCallBack(Jedis jedis) throws Exception {
 
-                    if ( jedis.setnx( jobId , "1" ) == 1 ) {
-                        jedis.expire( jobId , timeout );
+                    if ( "OK".equals( jedis.set( jobId , "1" , "NX" , "EX" , timeout ) ) ) {
                         return true;
                     }
 
@@ -63,13 +62,13 @@ public abstract class AbstractExecuteOneTime<C> {
 
         if ( jr != null && jr ) {
 
-            log.debug( "执行任务:{}" , jobId );
+            log.debug( "Exec job:{}" , jobId );
 
             this.execOneTime( context );
 
         } else {
 
-            log.debug( "跳过任务:{}" ,jobId );
+            log.debug( "Skip job:{}" ,jobId );
 
         }
     }
