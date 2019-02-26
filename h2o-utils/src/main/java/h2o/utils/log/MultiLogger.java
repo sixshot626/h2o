@@ -1,30 +1,26 @@
 package h2o.utils.log;
 
 
-public class MultiLogger implements MetaLogger {
+public class MultiLogger extends AbstractTagLogger implements TagLogger {
 
-    private final MetaLogger[] loggers;
+    private final TagLogger[] loggers;
 
-    public MultiLogger(MetaLogger... loggers) {
+    public MultiLogger(TagLogger... loggers) {
         this.loggers = loggers;
     }
 
     @Override
-    public LogMeta getLogMeta() {
-        return loggers[0].getLogMeta();
-    }
+    public void log(LogLevel level, String[] tags , String prompt, Object log) {
 
-    @Override
-    public void log(LogLevel level, String prompt, Object log) {
-
-        for ( MetaLogger logger : loggers  ) {
-            logger.log( level , prompt , log );
+        for ( TagLogger logger : loggers  ) {
+            logger.log( level , tags , prompt , log );
         }
 
     }
 
 
-    public MetaLogger[] getLoggers() {
+    public TagLogger[] getLoggers() {
         return loggers;
     }
+
 }

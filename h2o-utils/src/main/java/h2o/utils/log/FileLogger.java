@@ -1,6 +1,7 @@
 package h2o.utils.log;
 
 
+import h2o.common.collections.CollectionUtil;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.io.FileUtil;
@@ -15,7 +16,7 @@ import java.util.Date;
 /**
  * Created by zhangjianwei on 16/8/18.
  */
-public class FileLogger implements MetaLogger {
+public class FileLogger extends AbstractTagLogger implements TagLogger {
 
     private static final org.slf4j.Logger slfLog = LoggerFactory.getLogger( FileLogger.class.getName() );
 
@@ -28,25 +29,9 @@ public class FileLogger implements MetaLogger {
         this.baseDir = baseDir;
     }
 
-    @Override
-    public LogMeta getLogMeta() {
-        return logMeta;
-    }
 
     @Override
-    public void log(LogLevel level, String prompt, Object log ) {
-
-        StringBuilder sbm = new StringBuilder();
-        sbm.append(prompt);
-
-        if( log != null ) {
-
-            sbm.append(  log instanceof Throwable ?
-                    this.exceptionToString( (Throwable)log ) :
-                    log.toString() );
-
-        }
-        String msg = sbm.toString();
+    public void log(LogLevel level, String[] tags , String prompt, Object log ) {
 
         StringBuilder sb = new StringBuilder( baseDir );
         for( String p : logMeta.getPath() ) {
@@ -61,24 +46,19 @@ public class FileLogger implements MetaLogger {
         Writer w = null;
         try {
             w = StreamUtil.writeFile( path + "/" + logMeta.getId() + ".txt" , true );
-            w.write( formatLog( level , msg ) );
+            w.write( formatLog( level , tags , prompt , log ) );
             w.flush();
 
         } catch (IOException e) {
 
-            slfLog.error("日志纪录错误",e);
+            slfLog.error("" , e);
 
         } finally {
             StreamUtil.close(w);
         }
     }
 
-    protected String formatLog( LogLevel level , String msg ) {
-        return StringUtil.build("\n" , DateUtil.toLongString( new Date() ) , " : " , level , " -- " ,  msg , "\n");
-    }
 
-    protected String exceptionToString( Throwable e ) {
-        return ExceptionUtil.exceptionChainToString(e);
-    }
+
 
 }
