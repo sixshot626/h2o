@@ -139,9 +139,14 @@ public final class DaoBasicUtil<E> {
     }
 
     public List<E> loadAll() {
-        return (List<E>)dao.load( this.entityClazz ,
-                "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
-                " from " + this.entityParser.getTableName() );
+
+        StringBuilder sql = new StringBuilder();
+
+        StringUtil.append(sql , "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+                " from " , this.entityParser.getTableName() );
+
+        return (List<E>)dao.load( this.entityClazz , sql.toString() );
+
     }
 
 
