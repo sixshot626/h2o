@@ -48,7 +48,7 @@ public abstract class AbstractTagLogger implements  TagLogger {
         sbm.append( "} " );
 
         sbm.append(prompt);
-        sbm.append(" : ");
+        sbm.append(" ");
 
         if( log != null ) {
 
