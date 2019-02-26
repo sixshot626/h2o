@@ -10,13 +10,14 @@ import h2o.common.util.lang.StringUtil;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.Date;
 
 /**
  * Created by zhangjianwei on 16/8/18.
  */
-public class FileLogger extends AbstractTagLogger implements TagLogger {
+public class FileLogger extends AbstractTagLogger implements TagLogger , Serializable {
 
     private static final org.slf4j.Logger slfLog = LoggerFactory.getLogger( FileLogger.class.getName() );
 
