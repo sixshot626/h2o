@@ -20,11 +20,11 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).edit(entity);
     }
 
-    protected final int editByUnique(E entity, String uniqueName) {
+    public int editByUnique(E entity, String uniqueName) {
         return this.createDaoBasicUtil(entity).editByUnique(entity, uniqueName);
     }
 
-    protected final int editByAttr(E entity, String... attrNames) {
+    public int editByAttr(E entity, String... attrNames) {
         return this.createDaoBasicUtil(entity).editByAttr(entity, attrNames);
     }
 
@@ -36,23 +36,42 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).getAndLock(entity);
     }
 
-    protected final E get(E entity, boolean lock) {
+    protected E get(E entity, boolean lock) {
         return this.createDaoBasicUtil(entity).get(entity, lock);
     }
 
-    protected final E getByUnique(E entity, boolean lock, String uniqueName ) {
+
+    public E getByUnique( E entity, String uniqueName ) {
+        return this.getByUnique( entity , false ,uniqueName );
+    }
+
+    public E getAndLockByUnique( E entity, String uniqueName ) {
+        return this.getByUnique( entity , true ,uniqueName );
+    }
+
+    protected E getByUnique(E entity, boolean lock, String uniqueName ) {
         return this.createDaoBasicUtil(entity).getByUnique(entity,lock ,uniqueName );
     }
 
-    protected final E getByAttr(E entity , boolean lock , String... attrNames) {
+
+    public E getByAttr(E entity ,  String... attrNames) {
+        return this.createDaoBasicUtil(entity).getByAttr(entity, false , attrNames );
+    }
+
+    public E getAndLockByAttr(E entity , String... attrNames) {
+        return this.createDaoBasicUtil(entity).getByAttr(entity, true  , attrNames );
+    }
+
+
+    protected E getByAttr(E entity , boolean lock , String... attrNames) {
         return this.createDaoBasicUtil(entity).getByAttr(entity, lock, attrNames );
     }
 
-    public final List<E> loadByAttr(E entity, String... attrNames) {
+    public List<E> loadByAttr(E entity, String... attrNames) {
         return this.createDaoBasicUtil(entity).loadByAttr(entity, attrNames);
     }
 
-    public final List<E> loadAll( Class<E> entityClazz) {
+    public List<E> loadAll( Class<E> entityClazz) {
         return this.createDaoBasicUtil(entityClazz).loadAll();
     }
 
@@ -61,11 +80,11 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).del(entity);
     }
 
-    protected final int delByUnique(E entity, String uniqueName) {
+    public int delByUnique(E entity, String uniqueName) {
         return this.createDaoBasicUtil(entity).delByUnique(entity, uniqueName);
     }
 
-    protected final int delByAttr(E entity, String... attrNames) {
+    public int delByAttr(E entity, String... attrNames) {
         return this.createDaoBasicUtil(entity).delByAttr(entity, attrNames);
     }
 
