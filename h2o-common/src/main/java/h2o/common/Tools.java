@@ -8,14 +8,8 @@ import h2o.common.util.bean.support.MapVOImpl;
 
 public class Tools {
 
-
 	public static final BeanUtil b = new BeanUtil(new JoddBeanUtilVOImpl(true,false) , null);
 	
-	public static final BeanUtil bu = new BeanUtil(new JoddBeanUtilVOImpl(true,false) ,
-			new MapVOImpl( new CasePreOperateImpl("Upper")));
-
 	public static final Logger log = new Logger();
-	
 
-	
 }
