@@ -72,7 +72,7 @@ public class JsonUtil {
 
 		if( StringUtils.isBlank( json ) ) return null;
 
-		return null;
+		return this.creater.create().fromJson( json , clazz );
 
 	}
 
