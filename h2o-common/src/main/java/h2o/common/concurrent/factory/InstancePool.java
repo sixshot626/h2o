@@ -1,8 +1,5 @@
 package h2o.common.concurrent.factory;
 
-import h2o.common.concurrent.RunUtil;
-
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 

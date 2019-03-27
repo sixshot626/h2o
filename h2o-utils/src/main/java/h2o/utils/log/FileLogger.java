@@ -1,18 +1,13 @@
 package h2o.utils.log;
 
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.exception.ExceptionUtil;
-import h2o.common.util.date.DateUtil;
 import h2o.common.util.io.FileUtil;
 import h2o.common.util.io.StreamUtil;
-import h2o.common.util.lang.StringUtil;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.Date;
 
 /**
  * Created by zhangjianwei on 16/8/18.

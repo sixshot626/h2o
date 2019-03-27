@@ -2,8 +2,8 @@ package h2o.common.web;
 
 import h2o.common.collections.builder.MapBuilder;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.util.json.JsonUtil;
 import h2o.common.util.web.Beanfilter;
-import h2o.common.util.web.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +17,8 @@ public class WebTools {
     private static final Logger log = LoggerFactory.getLogger( WebTools.class.getName() );
 
     private volatile Beanfilter bf;
+
+	private volatile JsonUtil jsonUtil;
 	
 	public WebTools setBeanfilter(Beanfilter beanfilter) {
 		this.bf = beanfilter;
@@ -57,7 +59,7 @@ public class WebTools {
 		Map<String,Object> m = MapBuilder.newMap();
 		m.put("success", success );
 		m.put("ret", data);
-		return JsonUtil.toJson(m);
+		return jsonUtil.toJson(m);
 	}
 	
 	
@@ -71,7 +73,7 @@ public class WebTools {
 	}
 
 	public  void outJSON(HttpServletResponse response, Object obj) {
-		String msg = JsonUtil.toJson(obj);
+		String msg = jsonUtil.toJson(obj);
 		out(response, msg);
 	}
 

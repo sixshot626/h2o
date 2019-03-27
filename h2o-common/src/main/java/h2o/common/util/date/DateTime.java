@@ -1,6 +1,5 @@
 package h2o.common.util.date;
 
-import h2o.common.Tools;
 import h2o.common.exception.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

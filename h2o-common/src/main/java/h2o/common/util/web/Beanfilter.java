@@ -1,5 +1,6 @@
 package h2o.common.util.web;
 
+import h2o.common.Tools;
 import h2o.common.util.bean.BeanUtil;
 
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.Map;
 public class Beanfilter {
 	
 	
-	private volatile BeanUtil bu = new BeanUtil();
+	private volatile BeanUtil bu = Tools.b;
 	
 	public void setBeanUtil(BeanUtil bu) {
 		this.bu = bu;
