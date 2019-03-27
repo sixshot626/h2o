@@ -76,10 +76,6 @@ public class JsonUtil {
 
 	}
 
-	public static void main( String[] args ) {
 
-		Object obj = new JsonUtil().json2List( "[1,2]");
-		System.out.println( obj.getClass() );
-	}
 
 }
