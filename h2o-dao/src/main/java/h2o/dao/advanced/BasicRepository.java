@@ -76,6 +76,70 @@ public class BasicRepository<E> {
     }
 
 
+
+
+
+
+
+
+
+
+    public E selectOne( String[] fields , E entity ) {
+        return this.createDaoBasicUtil(entity).selectOne( fields , entity);
+    }
+
+    public E selectOneAndLock( String[] fields , E entity) {
+        return this.createDaoBasicUtil(entity).selectOneAndLock( fields , entity);
+    }
+
+    protected E selectOne( String[] fields , E entity, boolean lock) {
+        return this.createDaoBasicUtil(entity).selectOne( fields , entity , lock );
+    }
+
+
+    public E selectOneByUnique( String[] fields , E entity, String uniqueName ) {
+        return this.selectOneByUnique( fields , entity , false ,uniqueName );
+    }
+
+    public E selectOneAndLockByUnique(String[] fields ,  E entity, String uniqueName ) {
+        return this.selectOneByUnique( fields , entity , true ,uniqueName );
+    }
+
+    protected E selectOneByUnique(String[] fields , E entity, boolean lock, String uniqueName ) {
+        return this.createDaoBasicUtil(entity).selectOneByUnique( fields , entity,lock ,uniqueName );
+    }
+
+
+    public E selectOneByAttr(String[] fields , E entity ,  String... attrNames) {
+        return this.createDaoBasicUtil(entity).selectOneByAttr( fields , entity, false , attrNames );
+    }
+
+    public E selectOneAndLockByAttr(String[] fields , E entity , String... attrNames) {
+        return this.createDaoBasicUtil(entity).selectOneByAttr( fields , entity, true  , attrNames );
+    }
+
+
+    protected E selectOneByAttr( String[] fields , E entity , boolean lock , String... attrNames) {
+        return this.createDaoBasicUtil(entity).selectOneByAttr( fields , entity , lock , attrNames );
+    }
+
+
+
+
+    public List<E> selectByAttr( String[] fields , E entity, String... attrNames) {
+        return this.createDaoBasicUtil(entity).selectByAttr( fields , entity, attrNames);
+    }
+
+    public List<E> selectAll( String[] fields , Class<E> entityClazz) {
+        return this.createDaoBasicUtil(entityClazz).selectAll( fields );
+    }
+
+
+
+
+
+
+
     public int del(E entity) {
         return this.createDaoBasicUtil(entity).del(entity);
     }
@@ -87,6 +151,9 @@ public class BasicRepository<E> {
     public int delByAttr(E entity, String... attrNames) {
         return this.createDaoBasicUtil(entity).delByAttr(entity, attrNames);
     }
+
+
+
 
     protected DaoBasicUtil<E> createDaoBasicUtil( E entity ) {
         return new DaoBasicUtil<E>(entity.getClass());

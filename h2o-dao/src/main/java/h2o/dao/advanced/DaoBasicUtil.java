@@ -1,7 +1,9 @@
 package h2o.dao.advanced;
 
 import h2o.common.Mode;
+import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
+import h2o.common.collections.builder.MapBuilder;
 import h2o.common.concurrent.factory.AbstractInstanceFactory;
 import h2o.common.concurrent.factory.InstanceTable;
 import h2o.common.thirdparty.spring.util.Assert;
@@ -11,6 +13,7 @@ import h2o.dao.DbUtil;
 import h2o.dao.colinfo.ColInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangjianwei on 2017/7/1.
@@ -83,8 +86,9 @@ public final class DaoBasicUtil<E> {
 
         return dao.update( DbUtil.sqlBuilder.buildUpdateSql3(
                 entity , buildWhereStr( cis )  , (String[])ks.toArray( new String[ks.size() ] )
-                ) , entity );
+        ) , entity );
     }
+
 
 
 
@@ -98,7 +102,7 @@ public final class DaoBasicUtil<E> {
         return this.get( entity , true );
     }
 
-    public E get( E entity  , boolean lock ) {
+    public E get( E entity , boolean lock ) {
         return getByColInfos( entity , checkAndGetPk() , lock );
     }
 
@@ -110,11 +114,39 @@ public final class DaoBasicUtil<E> {
         return getByColInfos( entity , checkAndGetAttrs(attrNames) , lock );
     }
 
-    private E getByColInfos( E entity , List<ColInfo> cis , boolean lock ) {
+    private E getByColInfos( E entity , List<ColInfo> cis , boolean lock  ){
+        return selectOneByColInfos( null , null , cis , lock );
+    }
+
+
+
+    public E selectOne( String[] fields , E entity  ) {
+        return this.selectOne( fields , entity , false );
+    }
+
+    public E selectOneAndLock( String[] fields , E entity ) {
+        return this.selectOne( fields ,  entity , true );
+    }
+
+    public E selectOne( String[] fields , E entity ,  boolean lock ) {
+        return selectOneByColInfos( fields , entity , checkAndGetPk() , lock );
+    }
+
+    public E selectOneByUnique( String[] fields , E entity ,  boolean lock , String uniqueName  ) {
+        return selectOneByColInfos( fields , entity , checkAndGetUnique(uniqueName) , lock );
+    }
+
+    public E selectOneByAttr( String[] fields , E entity ,  boolean lock , String... attrNames  ) {
+        return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , lock );
+    }
+
+
+
+    private E selectOneByColInfos( String[] fields , E entity ,  List<ColInfo> cis , boolean lock  ) {
 
         StringBuilder sql = new StringBuilder();
 
-        StringUtil.append( sql , "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+        StringUtil.append( sql , "select " , this.connectSelectFileds( fields )  ,
                 " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
         if( lock ) {
             sql.append(" for update ");
@@ -126,28 +158,40 @@ public final class DaoBasicUtil<E> {
 
 
     public List<E> loadByAttr( E entity , String... attrNames  ) {
+        return selectByAttr( null , entity , attrNames );
+    }
+
+
+    public List<E> selectByAttr( String[] fields  , E entity  , String... attrNames  ) {
 
         List<ColInfo> cis = checkAndGetAttrs(attrNames);
 
         StringBuilder sql = new StringBuilder();
 
-        StringUtil.append( sql , "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+        StringUtil.append( sql , "select " , this.connectSelectFileds( fields ) ,
                 " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
 
         return (List<E>)dao.load( entity.getClass() , sql.toString() , entity );
 
     }
 
+
     public List<E> loadAll() {
+        return selectAll( null );
+    }
+
+    public List<E> selectAll( String[] fields ) {
 
         StringBuilder sql = new StringBuilder();
 
-        StringUtil.append(sql , "select " , this.connectSelectFileds( this.entityParser.getAllAttrs() ) ,
+        StringUtil.append(sql , "select " , this.connectSelectFileds( fields ) ,
                 " from " , this.entityParser.getTableName() );
 
         return (List<E>)dao.load( this.entityClazz , sql.toString() );
 
     }
+
+
 
 
     public int del( E entity ) {
@@ -216,7 +260,17 @@ public final class DaoBasicUtil<E> {
 
     }
 
-    private String connectSelectFileds( List<ColInfo> fs ) {
+
+
+    private String connectSelectFileds( String... attrs ) {
+        return CollectionUtil.argsIsBlank( attrs ) ?
+                this._connectSelectFileds( this.entityParser.getAllAttrs() ) :
+                this._connectSelectFileds( this.entityParser.getAttrs( attrs ) );
+    }
+
+
+
+    private String _connectSelectFileds( List<ColInfo> fs ) {
 
         StringBuilder sb = new StringBuilder();
         sb.append( ' ' );
@@ -231,4 +285,5 @@ public final class DaoBasicUtil<E> {
         return sb.toString();
 
     }
+
 }
