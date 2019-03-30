@@ -115,7 +115,7 @@ public final class DaoBasicUtil<E> {
     }
 
     private E getByColInfos( E entity , List<ColInfo> cis , boolean lock  ){
-        return selectOneByColInfos( null , null , cis , lock );
+        return selectOneByColInfos( null , entity , cis , lock );
     }
 
 

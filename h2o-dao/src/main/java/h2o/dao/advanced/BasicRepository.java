@@ -28,6 +28,11 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).editByAttr(entity, attrNames);
     }
 
+
+
+
+
+
     public E get(E entity) {
         return this.createDaoBasicUtil(entity).get(entity);
     }
@@ -74,9 +79,6 @@ public class BasicRepository<E> {
     public List<E> loadAll( Class<E> entityClazz) {
         return this.createDaoBasicUtil(entityClazz).loadAll();
     }
-
-
-
 
 
 
