@@ -3,14 +3,12 @@
  */
 package h2o.flow.pvm.runtime;
 
-public interface TransactionManager {
+public interface FlowTransactionManager {
 	
 	void beginTransaction();
 	
 	void rollBack();
-	
-	void setRollbackOnly();
-	
+
 	void commit();	
 
 }

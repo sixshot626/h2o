@@ -13,7 +13,7 @@ import h2o.flow.pvm.elements.Node;
 import h2o.flow.pvm.elements.SignalNode;
 import h2o.flow.pvm.runtime.RunContext;
 import h2o.flow.pvm.runtime.RunStatus;
-import h2o.flow.pvm.runtime.TransactionManager;
+import h2o.flow.pvm.runtime.FlowTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +104,7 @@ public final class ProcessVirtualMachine {
 
 	
 	public  RunStatus start( RunContext runContext ) throws FlowException {
-		return run( runContext , runContext.getFlowInstance().findStartNode() , false );
+		return run( runContext , runContext.getFlowInstance().getStartNode() , false );
 	}
 	
 	public  RunStatus run(  RunContext runContext ,  Object nodeId ) throws FlowException {
@@ -115,7 +115,7 @@ public final class ProcessVirtualMachine {
 	private RunStatus run(  RunContext runContext , Node node , boolean isSignal ) throws FlowException  {		
 	
 		
-		TransactionManager tx = runContext.getTxManager();
+		FlowTransactionManager tx = runContext.getTxManager();
 		
 		if( tx != null ) {
 			tx.beginTransaction();

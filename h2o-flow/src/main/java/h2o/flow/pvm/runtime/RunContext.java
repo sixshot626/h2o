@@ -14,7 +14,7 @@ public class RunContext {
 
 	private FlowData runData;
 
-	private TransactionManager txManager;
+	private FlowTransactionManager txManager;
 
 	
 	
@@ -23,11 +23,11 @@ public class RunContext {
 	}
 
 
-	public TransactionManager getTxManager() {
+	public FlowTransactionManager getTxManager() {
 		return txManager;
 	}
 
-	public void setTxManager(TransactionManager txManager) {
+	public void setTxManager(FlowTransactionManager txManager) {
 		this.txManager = txManager;
 	}
 

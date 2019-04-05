@@ -8,7 +8,7 @@ import h2o.flow.pvm.elements.Node;
 
 public interface FlowInstance {	
 	
-	  Node findStartNode();
+	  Node getStartNode();
 	
 	  Node findNode(Object id);
 
