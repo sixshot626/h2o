@@ -186,7 +186,7 @@ public final class ProcessVirtualMachine {
 
 
 
-		public void runNode( RunContext runContext ,  Node node , boolean isSignal  ) throws FlowException {
+		public void runNode( RunContext runContext ,  Node node , boolean isSignal ) throws FlowException {
 			
 			fireInNode( runContext , node );
 			
