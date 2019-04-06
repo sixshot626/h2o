@@ -5,9 +5,11 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.locks.Lock;
 
+@Component
 public class SpringFactory implements BeanFactoryAware {
 	
 	private static final Lock lock = new java.util.concurrent.locks.ReentrantLock();
@@ -38,17 +40,8 @@ public class SpringFactory implements BeanFactoryAware {
 
     public static BeanFactory getBeanFactory()  {
         BeanFactory bf = beanFactory;
-        if (bf == null) {
-            lock.lock();
-            try {
-                bf = beanFactory;
-                if (bf == null) {
-                    setStaticConfigPath("/applicationContext.xml");
-                    bf = beanFactory;
-                }
-            } finally {
-                lock.unlock();
-            }
+        if ( bf == null ) {
+            throw new IllegalStateException("BeanFactory not initialized");
         }
         return bf;
     }
