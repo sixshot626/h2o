@@ -96,30 +96,36 @@ public final class ProcessVirtualMachine {
 	}
 	
 	
-	
-	
+
+
+	private volatile FlowTransactionManager transactionManager;
+
+	public void setTransactionManager(FlowTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+	}
+
 	//=================================================
 	//  核心实现
 	//=================================================
 
 	
-	public  RunStatus start( RunContext runContext ) throws FlowException {
-		return run( runContext , runContext.getFlowInstance().getStartNode() , false );
+	public  RunStatus start( FlowInstance flowInstance , FlowData runData  ) throws FlowException {
+		return run( flowInstance , flowInstance.getStartNode() , runData , false );
 	}
 	
-	public  RunStatus run(  RunContext runContext ,  Object nodeId ) throws FlowException {
-		return run( runContext , runContext.getFlowInstance().findNode( nodeId ) , true );
+	public  RunStatus run(  FlowInstance flowInstance ,  Object nodeId , FlowData runData ) throws FlowException {
+		return run( flowInstance , flowInstance.findNode( nodeId ) , runData , true );
 	}
 	
 
-	private RunStatus run(  RunContext runContext , Node node , boolean isSignal ) throws FlowException  {		
-	
-		
-		FlowTransactionManager tx = runContext.getTxManager();
-		
-		if( tx != null ) {
-			tx.beginTransaction();
-		}
+	private RunStatus run(  FlowInstance flowInstance , Node node , FlowData runData , boolean isSignal ) throws FlowException  {
+
+		FlowTransactionManager tx = this.transactionManager;
+
+		Object transactionObj = tx == null ? null : tx.beginTransaction(flowInstance, runData);
+
+		RunContext runContext = new RunContext( flowInstance , runData , transactionObj );
+
 		
 		try {
 			
@@ -132,7 +138,7 @@ public final class ProcessVirtualMachine {
 			fireEnd( runContext , engine.getRunStatus() );
 			
 			if( tx != null ) {
-				tx.commit();
+				tx.commit( transactionObj );
 			}
 			
 			return engine.getRunStatus();
@@ -143,7 +149,7 @@ public final class ProcessVirtualMachine {
 			fireEnd( runContext , RunStatus.EXCEPTION );
 			
 			if( tx != null ) try {
-				tx.rollBack();
+				tx.rollBack( transactionObj );
 			} catch( Exception e1 ) {
 				e1.printStackTrace();
 			}
