@@ -1,10 +1,15 @@
 package h2o.dao.advanced;
 
+import h2o.common.bean.page.Page;
+import h2o.common.bean.page.PageRequest;
 import h2o.common.collections.CollectionUtil;
+import h2o.common.util.lang.GenericsUtil;
 
 import java.util.List;
 
 public class BasicRepository<E> {
+
+
 
     public void add(E entity) {
         this.createDaoBasicUtil(entity).add(entity);
@@ -76,12 +81,18 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).loadByAttr(entity, attrNames);
     }
 
-    public List<E> loadAll( Class<E> entityClazz) {
-        return this.createDaoBasicUtil(entityClazz).loadAll();
+    public List<E> loadAll() {
+        return this.createDaoBasicUtil(this.getEntityClass()).loadAll();
     }
 
 
+    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String... attrNames) {
+        return this.createDaoBasicUtil(entity).pagingLoadByAttr(pageRequest, entity, attrNames);
+    }
 
+    public Page<E> pagingLoad(PageRequest pageRequest ) {
+        return this.createDaoBasicUtil(this.getEntityClass()).pagingLoad(pageRequest);
+    }
 
 
 
@@ -132,12 +143,19 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(entity).selectByAttr( fields , entity, attrNames);
     }
 
-    public List<E> selectAll( String[] fields , Class<E> entityClazz) {
-        return this.createDaoBasicUtil(entityClazz).selectAll( fields );
+    public List<E> selectAll( String[] fields) {
+        return this.createDaoBasicUtil(this.getEntityClass()).selectAll( fields );
     }
 
 
 
+    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, String... attrNames) {
+        return this.createDaoBasicUtil(entity).pagingSelectByAttr(fields, pageRequest, entity, attrNames);
+    }
+
+    public Page<E> pagingSelect(String[] fields, PageRequest pageRequest ) {
+        return this.createDaoBasicUtil(this.getEntityClass()).pagingSelect(fields, pageRequest);
+    }
 
 
 
@@ -163,6 +181,10 @@ public class BasicRepository<E> {
 
     protected DaoBasicUtil<E> createDaoBasicUtil( Class<?> entityClazz ) {
         return new DaoBasicUtil<E>(entityClazz);
+    }
+
+    protected Class<E> getEntityClass() {
+        return (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
     }
 
 }

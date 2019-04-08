@@ -2,8 +2,8 @@ package h2o.dao;
 
 public interface ScopeManager {
 
-	void beginScope();
+	Object beginScope(Dao dao);
 	
-	void endScope();
+	void endScope(Object scopeObj);
 	
 }

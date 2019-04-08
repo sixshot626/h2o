@@ -2,13 +2,18 @@ package h2o.dao;
 
 
 public interface Db {
-	
-	Dao getDao();
+
+
+    void setTransactionManager(TransactionManager txManager);
+    void setScopeManager(ScopeManager scopeManager);
+
+
+    Dao getDao();
 	
 	Dao getDao(boolean autoClose);
+
+	<T> T q(DaoCallback<T> txCallback);
 	
-	<T> T q(TxCallback<T> txCallback);
-	
-	<T> T tx(TxCallback<T> txCallback);
+	<T> T tx(DaoCallback<T> txCallback);
 
 }

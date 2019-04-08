@@ -11,9 +11,12 @@ import javax.sql.DataSource;
 
 public class DbImpl extends AbstractDb implements Db {
 
+	private final String dataSourceName;
+
 	private final DataSource dataSource;
 
-	public DbImpl(DataSource dataSource) {
+	public DbImpl(String dataSourceName, DataSource dataSource) {
+		this.dataSourceName = dataSourceName;
 		this.dataSource = dataSource;
 	}
 
@@ -26,14 +29,14 @@ public class DbImpl extends AbstractDb implements Db {
 	public Dao getDao(boolean autoClose) {
 
 		ButterflyDb bdb = new ButterflyDb(this.dataSource);
-		Dao dao = createDao( bdb , autoClose );
+		Dao dao = createDao(bdb,autoClose);
 
 		return dao;
 
 	}
 	
 	protected Dao createDao( ButterflyDb bdb , boolean autoClose ) {
-		return DbUtil.dbConfig.get("dao", bdb, autoClose);
+		return DbUtil.dbConfig.get( DbUtil.DAO_BEANID, dataSourceName, bdb, autoClose);
 	}
 
 }

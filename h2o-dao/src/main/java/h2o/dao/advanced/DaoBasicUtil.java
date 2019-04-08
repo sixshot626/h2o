@@ -1,6 +1,9 @@
 package h2o.dao.advanced;
 
 import h2o.common.Mode;
+import h2o.common.bean.page.Page;
+import h2o.common.bean.page.PageRequest;
+import h2o.common.bean.page.SortInfo;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.collections.builder.MapBuilder;
@@ -48,6 +51,10 @@ public final class DaoBasicUtil<E> {
         this.dao = dao;
         this.entityParser = CACHE ? ENTITYPARSER_TABLE.getAndCreateIfAbsent(entityClazz) :
                 new EntityParser( entityClazz );
+    }
+
+    public EntityParser getEntityParser() {
+        return entityParser;
     }
 
     public String tableName() {
@@ -190,6 +197,68 @@ public final class DaoBasicUtil<E> {
         return (List<E>)dao.load( this.entityClazz , sql.toString() );
 
     }
+
+
+
+    public Page<E> pagingLoadByAttr(PageRequest pageRequest , E entity , String... attrNames  ) {
+        return pagingSelectByAttr( null , pageRequest , entity , attrNames );
+    }
+
+
+    public Page<E> pagingSelectByAttr(String[] fields , PageRequest pageRequest , E entity  , String... attrNames  ) {
+
+        List<ColInfo> cis = checkAndGetAttrs(attrNames);
+
+        StringBuilder sql = new StringBuilder();
+
+        StringUtil.append( sql , "select " , this.connectSelectFileds( fields ) ,
+                " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
+
+        return (Page<E>)dao.pagingLoad( entity.getClass() , sql.toString() , convertSortAttr(pageRequest)  , entity );
+
+    }
+
+
+    public Page<E> pagingLoad( PageRequest pageRequest ) {
+        return pagingSelect( null , pageRequest );
+    }
+
+    public Page<E> pagingSelect( String[] fields , PageRequest pageRequest ) {
+
+        StringBuilder sql = new StringBuilder();
+
+        StringUtil.append(sql , "select " , this.connectSelectFileds( fields ) ,
+                " from " , this.entityParser.getTableName() );
+
+        return dao.pagingLoad( this.entityClazz , sql.toString() , convertSortAttr(pageRequest) );
+
+    }
+
+
+    private PageRequest convertSortAttr( PageRequest pageRequest ) {
+        List<SortInfo> sortInfos = pageRequest.getSorts();
+        if ( CollectionUtil.isBlank( sortInfos ) ) {
+            return pageRequest;
+        }
+
+        Map<String,SortInfo> sortInfoMap = MapBuilder.newMap();
+        for ( SortInfo sortInfo : sortInfos ) {
+            sortInfoMap.put( sortInfo.getName() , sortInfo );
+        }
+
+        List<SortInfo> newSortInfos = ListBuilder.newList(sortInfos.size());
+        List<ColInfo> attrs = entityParser.getAllAttrs();
+        for ( ColInfo colInfo : attrs ) {
+            if ( sortInfoMap.containsKey( colInfo.attrName ) ) {
+                newSortInfos.add( new SortInfo( colInfo.colName ,
+                        sortInfoMap.get( colInfo.attrName  ).getDirection() ) );
+            }
+        }
+
+        return new PageRequest( pageRequest.getPageNo() , pageRequest.getPageRecordSize() , newSortInfos );
+
+    }
+
 
 
 

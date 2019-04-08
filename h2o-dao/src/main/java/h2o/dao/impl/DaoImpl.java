@@ -11,15 +11,13 @@ import h2o.common.dao.butterflydb.ButterflyDb;
 import h2o.common.dao.butterflydb.impl.PreparedStatementManagerBatch;
 import h2o.common.exception.ExceptionUtil;
 import h2o.dao.Dao;
-import h2o.dao.RsCallback;
+import h2o.dao.ResultSetCallback;
 import h2o.dao.SqlSource;
 import h2o.dao.exception.DaoException;
-import h2o.dao.impl.sql.TSql;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +31,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 	private final ButterflyDb bdb;
 	private ButterflyDao bdao;
+
 
 	public DaoImpl(ButterflyDb bdb) {
 		this(bdb, true);
@@ -54,13 +53,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 		}
 	}
 
-	protected Map<String, Object> argProc(Object... args) {
-		return this.argProcessor.proc(args);
-	}
 
-	protected <T> T ormProc(Map<String, Object> row, Class<T> clazz) {
-		return this.ormProcessor.proc(row, clazz);
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -146,51 +139,13 @@ public class DaoImpl extends AbstractDao implements Dao {
 		}
 	}
 
-	@Override
-	public <T> T get(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
-		try {
-			Map<String, Object> row = this.get(sqlSource, args);
 
-			return this.ormProc(row, clazz);
-		} catch (Exception e) {
-			throw new DaoException(e);
-		}
-	}
 
-	@Override
-	public <T> List<T> load(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
-		try {
-			List<Map<String, Object>> rows = this.load(sqlSource, args);
 
-			List<T> objs = new ArrayList<T>(rows.size());
-
-			for (Map<String, Object> row : rows) {
-				objs.add(this.ormProc(row, clazz));
-			}
-
-			return objs;
-
-		} catch (Exception e) {
-			throw new DaoException(e);
-		}
-	}
-
-	@Override
-	public int update(SqlSource sqlSource, Object... args) throws DaoException {
-		try {
-			Map<String, Object> paramMap = this.argProc(args);
-			String sql = sqlSource.getSql( paramMap );
-
-			return getBDao().update(sql, paramMap);
-
-		} catch (Exception e) {
-			throw new DaoException(e);
-		}
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T load(final RsCallback<T> rsCallback, SqlSource sqlSource, Object... args) throws DaoException {
+	public <T> T load(final ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args) throws DaoException {
 		
 		try {
 			Map<String, Object> paramMap = this.argProc(args);
@@ -248,6 +203,25 @@ public class DaoImpl extends AbstractDao implements Dao {
 		}
 	}
 
+
+
+
+
+
+	@Override
+	public int update(SqlSource sqlSource, Object... args) throws DaoException {
+		try {
+			Map<String, Object> paramMap = this.argProc(args);
+			String sql = sqlSource.getSql( paramMap );
+
+			return getBDao().update(sql, paramMap);
+
+		} catch (Exception e) {
+			throw new DaoException(e);
+		}
+	}
+
+
 	@Override
 	public int[] batchUpdate(SqlSource sqlSource, Collection<?> args) throws DaoException {
 		try {
@@ -288,65 +262,16 @@ public class DaoImpl extends AbstractDao implements Dao {
 			throw new DaoException(e);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
 
 	@Override
-	public <T> T getField(String sql, String fieldName, Object... args) throws DaoException {
-		return this.getField( new TSql(sql) , fieldName, args );
-	}
-
-	@Override
-	public <T> List<T> loadFields(String sql, String fieldName, Object... args) throws DaoException {
-		return this.loadFields( new TSql(sql) , fieldName, args );
-	}
-
-	@Override
-	public Map<String, Object> get(String sql, Object... args) throws DaoException {
-		return this.get( new TSql(sql) , args );
-	}
-
-	@Override
-	public List<Map<String, Object>> load(String sql, Object... args) throws DaoException {
-		return this.load( new TSql(sql), args );
-	}
-
-	@Override
-	public <T> T get(Class<T> clazz, String sql, Object... args) throws DaoException {
-		return this.get( clazz,  new TSql(sql), args );
-	}
-
-	@Override
-	public <T> List<T> load(Class<T> clazz, String sql, Object... args) throws DaoException {
-		return this.load( clazz, new TSql(sql), args );
-	}
-
-	@Override
-	public <T> T load(RsCallback<T> rsCallback, String sql, Object... args) throws DaoException {
-		return this.load( rsCallback, new TSql(sql), args );
-	}
-
-	@Override
-	public int update(String sql, Object... args) throws DaoException {
-		return this.update( new TSql(sql), args );
-	}
-
-	@Override
-	public int[] batchUpdate(String sql, Collection<?> args) throws DaoException {
-		return this.batchUpdate( new TSql(sql), args );
+	public DataSource getDataSource() {
+		return bdb.persistenceManager.getDataSource();
 	}
 
 
-    @Override
-    public Connection getConnection() throws SQLException {
-        return bdb.persistenceManager.getDataSource().getConnection();
-    }
 
     @Override
 	public void close() throws DaoException {

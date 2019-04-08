@@ -26,6 +26,12 @@ public class PageRequest implements java.io.Serializable {
         this.sorts = CollectionUtil.argsIsBlank(sorts) ? null : ListBuilder.newList(sorts);
     }
 
+    public PageRequest(long pageNo, long pageRecordSize, List<SortInfo> sorts) {
+        this.pageNo = pageNo;
+        this.pageRecordSize = pageRecordSize;
+        this.sorts = sorts;
+    }
+
     public long getPageNo() {
         return pageNo;
     }

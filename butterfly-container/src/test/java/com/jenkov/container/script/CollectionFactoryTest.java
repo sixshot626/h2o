@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
 
@@ -131,9 +132,9 @@ public class CollectionFactoryTest extends TestCase {
                            "   ['value1', 'value2']); ");
 
         TestProduct product = (TestProduct) container.instance("bean");
-        Iterator iterator = product.getSet().iterator();
-        assertEquals("value1", iterator.next());
-        assertEquals("value2", iterator.next());
+        Set set = product.getSet();
+        assertTrue(set.contains("value1"));
+        assertTrue(set.contains("value2"));
 
     }
 

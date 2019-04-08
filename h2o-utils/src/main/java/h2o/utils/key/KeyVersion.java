@@ -3,7 +3,7 @@ package h2o.utils.key;
 
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
-import h2o.dao.TxCallback;
+import h2o.dao.DaoCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class KeyVersion {
 
     public static boolean incVersion( final String key ) {
 
-        return DbUtil.getDb("common").tx( new TxCallback<Boolean>() {
+        return DbUtil.getDb("common").tx( new DaoCallback<Boolean>() {
 
             @Override
             public Boolean doCallBack(Dao dao) throws Exception {

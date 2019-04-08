@@ -31,6 +31,14 @@ public class SortInfo implements java.io.Serializable {
         return direction;
     }
 
+    public String toSqlString() {
+        if ( direction == null || direction == Direction.ASC ) {
+            return name;
+        } else {
+            return name + " desc";
+        }
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

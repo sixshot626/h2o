@@ -7,7 +7,7 @@ import h2o.common.concurrent.LockMap;
 import h2o.common.math.IntArith;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
-import h2o.dao.TxCallback;
+import h2o.dao.DaoCallback;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +120,7 @@ public class KeyGen {
 
         final String[] rr = {"-1", "-1"};
 
-        DbUtil.getDb("common" ).tx( new TxCallback<Void>() {
+        DbUtil.getDb("common" ).tx( new DaoCallback<Void>() {
 
             @Override
             public Void doCallBack(Dao dao) throws Exception {
