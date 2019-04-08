@@ -1,0 +1,33 @@
+
+sqlTable 		= 1 h2o.common.dao.SqlTable();
+sqlTemplateUtil = 1 h2o.common.thirdparty.freemarker.TemplateUtil();
+sqlBuilder 		= 1	h2o.dao.SqlBuilder();
+map2BeanUtil	= 1 h2o.dao.impl.orm.DbMap2BeanUtil();
+
+
+
+argProcessor    = 1 h2o.dao.impl.orm.DefaultArgProcessor();
+ormProcessor    = 1 h2o.dao.impl.orm.DefaultOrmProcessor();
+pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
+
+
+dao = * h2o.dao.impl.DaoImpl( $1 , $2 ).setArgProcessor( argProcessor )
+									   .setOrmProcessor( ormProcessor )
+									   .setPagingProcessor( pagingProcessor );
+
+
+scopeManager        = 1 h2o.dao.impl.transaction.ScopeManagerImpl();
+transactionManager  = 1 h2o.dao.impl.transaction.TransactionManagerImpl();
+
+
+db 	= * h2o.dao.impl.DbImpl( $0 , $1 ).setScopeManager( scopeManager )
+                                      .setTransactionManager( transactionManager );
+
+
+
+/* dbUtil = 1 h2o.dao.DbUtil().setDataSources(dss); */
+
+dbUtil = h2o.common.thirdparty.spring.factory.SpringFactory.getObject("dbUtil");
+
+
+
