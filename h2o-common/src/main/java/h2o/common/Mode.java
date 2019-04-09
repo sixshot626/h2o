@@ -15,8 +15,10 @@ public class Mode {
     public static final String PROD     = "PROD";
 	public static final String TEST     = "TEST";
     public static final String DEV      = "DEV";
-	
-	private static final String mode;
+
+	public static final String mode;
+	public static final String name;
+
 	
 	public static final boolean prodMode;
 	public static final boolean testMode;
@@ -86,6 +88,7 @@ public class Mode {
 		userModeArrays = uma;
 
 		mode = m;
+		name = m.toLowerCase();
 		
 		log.info("Mode : {}"       , mode );
         log.info("Debug Mode : {}" , debugMode );
