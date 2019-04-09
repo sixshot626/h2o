@@ -1,7 +1,6 @@
-package h2o.common.util.web;
+package h2o.common.util.bean;
 
 import h2o.common.Tools;
-import h2o.common.util.bean.BeanUtil;
 
 import java.util.Collection;
 import java.util.Map;
