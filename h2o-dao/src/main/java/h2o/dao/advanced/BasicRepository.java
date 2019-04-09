@@ -2,6 +2,7 @@ package h2o.dao.advanced;
 
 import h2o.common.bean.page.Page;
 import h2o.common.bean.page.PageRequest;
+import h2o.common.bean.page.SortInfo;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.util.lang.GenericsUtil;
 
@@ -85,6 +86,14 @@ public class BasicRepository<E> {
         return this.createDaoBasicUtil(this.getEntityClass()).loadAll();
     }
 
+    public List<E> loadByAttr(E entity, String[] attrNames , SortInfo... sortInfos ) {
+        return this.createDaoBasicUtil(entity).loadByAttr(entity, attrNames , sortInfos );
+    }
+
+    public List<E> loadAll( SortInfo... sortInfos  ) {
+        return this.createDaoBasicUtil(this.getEntityClass()).loadAll( sortInfos );
+    }
+
 
     public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String... attrNames) {
         return this.createDaoBasicUtil(entity).pagingLoadByAttr(pageRequest, entity, attrNames);
@@ -145,6 +154,14 @@ public class BasicRepository<E> {
 
     public List<E> selectAll( String[] fields) {
         return this.createDaoBasicUtil(this.getEntityClass()).selectAll( fields );
+    }
+
+    public List<E> selectByAttr(String[] fields , E entity, String[] attrNames , SortInfo... sortInfos ) {
+        return this.createDaoBasicUtil(entity).selectByAttr( fields , entity, attrNames , sortInfos);
+    }
+
+    public List<E> selectAll( String[] fields ,SortInfo... sortInfos ) {
+        return this.createDaoBasicUtil(this.getEntityClass()).selectAll( fields , sortInfos );
     }
 
 

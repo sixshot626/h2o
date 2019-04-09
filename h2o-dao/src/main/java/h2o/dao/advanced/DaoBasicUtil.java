@@ -170,16 +170,7 @@ public final class DaoBasicUtil<E> {
 
 
     public List<E> selectByAttr( String[] fields  , E entity  , String... attrNames  ) {
-
-        List<ColInfo> cis = checkAndGetAttrs(attrNames);
-
-        StringBuilder sql = new StringBuilder();
-
-        StringUtil.append( sql , "select " , this.connectSelectFileds( fields ) ,
-                " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
-
-        return (List<E>)dao.load( entity.getClass() , sql.toString() , entity );
-
+        return selectByAttr( fields , entity , attrNames , (SortInfo[]) null );
     }
 
 
@@ -188,19 +179,74 @@ public final class DaoBasicUtil<E> {
     }
 
     public List<E> selectAll( String[] fields ) {
+        return selectAll(fields,(SortInfo[]) null);
+    }
+
+
+
+    public List<E> loadByAttr( E entity , String[] attrNames , SortInfo... sortInfos  ) {
+        return selectByAttr( null , entity , attrNames , sortInfos );
+    }
+
+
+    public List<E> selectByAttr( String[] fields  , E entity  , String[] attrNames , SortInfo... sortInfos  ) {
+
+        List<ColInfo> cis = checkAndGetAttrs(attrNames);
+
+        StringBuilder sql = new StringBuilder();
+
+        StringUtil.append( sql , "select " , this.connectSelectFileds( fields ) ,
+                " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
+
+        return (List<E>)dao.load( entity.getClass() , orderProc( sql.toString() , sortInfos ) , entity );
+
+    }
+
+
+    public List<E> loadAll( SortInfo... sortInfos  ) {
+        return selectAll( null , sortInfos );
+    }
+
+    public List<E> selectAll( String[] fields , SortInfo... sortInfos ) {
 
         StringBuilder sql = new StringBuilder();
 
         StringUtil.append(sql , "select " , this.connectSelectFileds( fields ) ,
                 " from " , this.entityParser.getTableName() );
 
-        return (List<E>)dao.load( this.entityClazz , sql.toString() );
+        return (List<E>)dao.load( this.entityClazz , orderProc( sql.toString() , sortInfos ) );
 
     }
 
 
 
-    public Page<E> pagingLoadByAttr(PageRequest pageRequest , E entity , String... attrNames  ) {
+    private String orderProc( String sql, SortInfo... strts ) {
+
+        if (CollectionUtil.argsIsBlank(strts)) {
+            return sql;
+        }
+
+        List<SortInfo> strtList = convertSorts(ListBuilder.newList(strts));
+
+        StringBuilder orderSql = new StringBuilder();
+        orderSql.append( sql );
+        orderSql.append( " order by " );
+        int i = 0;
+        for (SortInfo sortInfo : strtList) {
+            if (i++ > 0) {
+                orderSql.append(",");
+            }
+            orderSql.append(sortInfo.toSqlString());
+        }
+
+        return orderSql.toString();
+
+    }
+
+
+
+
+    public Page<E> pagingLoadByAttr( PageRequest pageRequest , E entity , String... attrNames  ) {
         return pagingSelectByAttr( null , pageRequest , entity , attrNames );
     }
 
@@ -214,7 +260,9 @@ public final class DaoBasicUtil<E> {
         StringUtil.append( sql , "select " , this.connectSelectFileds( fields ) ,
                 " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
 
-        return (Page<E>)dao.pagingLoad( entity.getClass() , sql.toString() , convertSortAttr(pageRequest)  , entity );
+        return (Page<E>)dao.pagingLoad( entity.getClass() , sql.toString() ,
+                new PageRequest( pageRequest.getPageNo() , pageRequest.getPageRecordSize() ,
+                        convertSorts(pageRequest.getSorts()) )  , entity );
 
     }
 
@@ -230,32 +278,44 @@ public final class DaoBasicUtil<E> {
         StringUtil.append(sql , "select " , this.connectSelectFileds( fields ) ,
                 " from " , this.entityParser.getTableName() );
 
-        return dao.pagingLoad( this.entityClazz , sql.toString() , convertSortAttr(pageRequest) );
+        return dao.pagingLoad( this.entityClazz , sql.toString() ,
+                new PageRequest( pageRequest.getPageNo() , pageRequest.getPageRecordSize() ,
+                        convertSorts(pageRequest.getSorts()) ) );
 
     }
 
 
-    private PageRequest convertSortAttr( PageRequest pageRequest ) {
-        List<SortInfo> sortInfos = pageRequest.getSorts();
+    private List<SortInfo> convertSorts(List<SortInfo> sortInfos  ) {
+
         if ( CollectionUtil.isBlank( sortInfos ) ) {
-            return pageRequest;
+            return sortInfos;
         }
 
-        Map<String,SortInfo> sortInfoMap = MapBuilder.newMap();
+        int size = sortInfos.size();
+
+        Map<String,SortInfo> sortInfoMap = MapBuilder.newMap(size);
         for ( SortInfo sortInfo : sortInfos ) {
             sortInfoMap.put( sortInfo.getName() , sortInfo );
         }
 
-        List<SortInfo> newSortInfos = ListBuilder.newList(sortInfos.size());
-        List<ColInfo> attrs = entityParser.getAllAttrs();
-        for ( ColInfo colInfo : attrs ) {
+        Map<String,String> attrMap = MapBuilder.newMap( size );
+        for ( ColInfo colInfo : entityParser.getAllAttrs() ) {
             if ( sortInfoMap.containsKey( colInfo.attrName ) ) {
-                newSortInfos.add( new SortInfo( colInfo.colName ,
-                        sortInfoMap.get( colInfo.attrName  ).getDirection() ) );
+                attrMap.put( colInfo.attrName , colInfo.colName );
             }
         }
 
-        return new PageRequest( pageRequest.getPageNo() , pageRequest.getPageRecordSize() , newSortInfos );
+        List<SortInfo> newSortInfos = ListBuilder.newList( size );
+        for ( SortInfo sortInfo : sortInfos ) {
+
+            String colName = attrMap.containsKey( sortInfo.getName() ) ?
+                    attrMap.get( sortInfo.getName() ) : sortInfo.getName();
+
+            newSortInfos.add( new SortInfo( colName , sortInfo.getDirection() ) );
+
+        }
+
+        return newSortInfos;
 
     }
 
