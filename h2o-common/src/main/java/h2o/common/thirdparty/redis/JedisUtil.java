@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 public class JedisUtil extends AbstractJedisProvider implements JedisProvider {
 
@@ -13,17 +14,27 @@ public class JedisUtil extends AbstractJedisProvider implements JedisProvider {
 
 	private volatile int ji = -1;
 
-	public JedisUtil(String... confs ) {
+	public JedisUtil( String... confs ) {
+	    this.redisConfigs = parseConfig( confs );
+	}
 
-		redisConfigs = new RedisConfig[confs.length];
 
-		int i = 0;
-		for( String conf : confs ) {
+    public JedisUtil( RedisConfig... confs ) {
+        this.redisConfigs = confs;
+    }
 
-		    //host:port_1@abcd
 
-		    String pass = null;
-		    if( StringUtils.contains( conf , '@' ) ) {
+    public static RedisConfig[] parseConfig( String... confs ) {
+
+        RedisConfig[] redisConfigs = new RedisConfig[confs.length];
+
+        int i = 0;
+        for( String conf : confs ) {
+
+            //host:port_1@abcd
+
+            String pass = null;
+            if( StringUtils.contains( conf , '@' ) ) {
                 pass = StringUtils.substringAfter( conf , "@");
                 conf = StringUtils.substringBefore( conf , "@");
             }
@@ -34,21 +45,19 @@ public class JedisUtil extends AbstractJedisProvider implements JedisProvider {
                 conf = StringUtils.substringBefore( conf , "_");
             }
 
-			String host = StringUtils.substringBefore( conf , ":");
-			String p = StringUtils.substringAfter( conf , ":");
-			Integer port = StringUtils.isBlank(p) ? 6379 : new Integer(p);
+            String host = StringUtils.substringBefore( conf , ":");
+            String p = StringUtils.substringAfter( conf , ":");
+            Integer port = StringUtils.isBlank(p) ? 6379 : new Integer(p);
 
-			redisConfigs[i++] = new RedisConfig( host , port , pass  ,  db );
-		}
+            redisConfigs[i++] = new RedisConfig( host , port , pass  ,  db );
+        }
 
-	}
-
-
-    public JedisUtil(RedisConfig... confs ) {
-        redisConfigs = confs;
+        return redisConfigs;
     }
 
 
+
+    @Override
 	public Jedis getJedis() {
 
 		int i = ji;
@@ -139,9 +148,9 @@ public class JedisUtil extends AbstractJedisProvider implements JedisProvider {
 	}
 
 
-
-    public void release( Jedis jedis ) {
-		close( jedis );
+    @Override
+    public void release( JedisCommands jedis ) {
+		close( (Jedis) jedis );
 	}
 
 

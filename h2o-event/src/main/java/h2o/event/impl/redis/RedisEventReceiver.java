@@ -7,7 +7,7 @@ import h2o.event.EventReceiver;
 import h2o.event.impl.AbstractDispatcherEventReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class RedisEventReceiver extends AbstractDispatcherEventReceiver implemen
         helper.jedisProvider.callback(new JedisCallBack<Void>() {
 
             @Override
-            public Void doCallBack(Jedis jedis) throws Exception {
+            public Void doCallBack(JedisCommands jedis) throws Exception {
 
                 for(int i = 0 ; i < 5 ; i++ ) {
                     String strEvent = jedis.rpop(helper.eventQueueName);

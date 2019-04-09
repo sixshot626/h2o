@@ -5,7 +5,7 @@ import h2o.common.thirdparty.redis.JedisProvider;
 import h2o.common.util.id.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +19,7 @@ public class ClusterLock {
 
     private final JedisProvider jedisProvider;
 
-    private final Jedis _jedis;
+    private final JedisCommands _jedis;
 
     private final String key;
 
@@ -37,7 +37,7 @@ public class ClusterLock {
         this.expire = expire;
     }
 
-    public ClusterLock( Jedis jedis, String key, int expire ) {
+    public ClusterLock( JedisCommands jedis, String key, int expire ) {
         this.jedisProvider = null;
         this._jedis = jedis;
         this.key = "H2OClusterLock_" + key;
@@ -45,7 +45,7 @@ public class ClusterLock {
     }
 
 
-    private void tryLock( Jedis jedis ) {
+    private void tryLock( JedisCommands jedis ) {
 
         if ( "OK".equals(jedis.set( key, id ,  "NX" , "EX" , expire ) ) ) {
 
@@ -75,7 +75,7 @@ public class ClusterLock {
             } else jedisProvider.callback(new JedisCallBack<Void>() {
 
                 @Override
-                public Void doCallBack(Jedis jedis) throws Exception {
+                public Void doCallBack( JedisCommands jedis) throws Exception {
 
                     tryLock( jedis );
 
@@ -128,7 +128,7 @@ public class ClusterLock {
 
 
 
-    private void unlock( Jedis jedis ) {
+    private void unlock( JedisCommands jedis ) {
 
         if ( id.equals( jedis.get(key) ) ) {
             jedis.del(key);
@@ -149,7 +149,7 @@ public class ClusterLock {
             } else jedisProvider.callback(new JedisCallBack<Void>() {
 
                 @Override
-                public Void doCallBack(Jedis jedis) throws Exception {
+                public Void doCallBack( JedisCommands jedis ) throws Exception {
 
                     unlock( jedis );
 

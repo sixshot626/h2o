@@ -11,9 +11,9 @@ import h2o.common.exception.ExceptionUtil;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
 import h2o.flow.pvm.elements.SignalNode;
+import h2o.flow.pvm.runtime.FlowTransactionManager;
 import h2o.flow.pvm.runtime.RunContext;
 import h2o.flow.pvm.runtime.RunStatus;
-import h2o.flow.pvm.runtime.FlowTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,12 +1,12 @@
 package h2o.common.thirdparty.redis;
 
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 public interface JedisProvider {
 
-    Jedis getJedis();
+    JedisCommands getJedis();
 
-    void release( Jedis jedis );
+    void release( JedisCommands jedis );
 
     <T> T callback( JedisCallBack<T> jedisCallBack);
 

@@ -3,6 +3,7 @@ package h2o.common.thirdparty.redis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 import redis.clients.jedis.JedisPool;
 
 public class JedisPoolProvider extends AbstractJedisProvider implements JedisProvider{
@@ -31,7 +32,7 @@ public class JedisPoolProvider extends AbstractJedisProvider implements JedisPro
     }
 
     @Override
-    public void release(Jedis jedis) {
-        JedisUtil.close(jedis);
+    public void release( JedisCommands jedis ) {
+        JedisUtil.close( (Jedis) jedis);
     }
 }

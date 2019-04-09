@@ -3,7 +3,7 @@ package h2o.event.impl.redis;
 import h2o.common.thirdparty.redis.JedisCallBack;
 import h2o.event.Event;
 import h2o.event.EventSender;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 /**
  * Created by zhangjianwei on 16/7/3.
@@ -23,7 +23,7 @@ public class RedisEventSender implements EventSender {
         helper.jedisProvider.callback(new JedisCallBack<Void>() {
 
             @Override
-            public Void doCallBack(Jedis jedis) throws Exception {
+            public Void doCallBack( JedisCommands jedis ) throws Exception {
 
                 for( Event event : events ) {
                     String strEvent = helper.encode(event);

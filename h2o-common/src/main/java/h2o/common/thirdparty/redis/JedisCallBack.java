@@ -1,9 +1,9 @@
 package h2o.common.thirdparty.redis;
 
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 public interface JedisCallBack<T> {
 	
-	T doCallBack(Jedis jedis) throws Exception;
+	T doCallBack(JedisCommands jedis) throws Exception;
 
 }

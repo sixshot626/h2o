@@ -5,7 +5,7 @@ import h2o.common.thirdparty.redis.JedisProvider;
 import h2o.common.thirdparty.spring.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 /**
  * Created by zhangjianwei on 2017/6/18.
@@ -32,7 +32,7 @@ public abstract class AbstractExecuteOneTime<C> {
             Boolean jr =  jedisProvider.callback(new JedisCallBack<Boolean>() {
 
                 @Override
-                public Boolean doCallBack(Jedis jedis) throws Exception {
+                public Boolean doCallBack( JedisCommands jedis) throws Exception {
 
                     if ( "OK".equals( jedis.set( jobId , "1" , "NX" , "EX" , timeout ) ) ) {
                         return true;

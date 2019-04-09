@@ -1,7 +1,7 @@
 package h2o.common.thirdparty.redis;
 
 import h2o.common.exception.ExceptionUtil;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCommands;
 
 public abstract class AbstractJedisProvider implements JedisProvider {
 
@@ -13,7 +13,9 @@ public abstract class AbstractJedisProvider implements JedisProvider {
 
     @Override
     public <T> T callback(JedisCallBack<T> jedisCallBack, boolean isSilently) {
-        Jedis jedis = getJedis();
+
+        JedisCommands jedis = getJedis();
+
         if( jedis == null ) {
             if(isSilently) {
                 return null;

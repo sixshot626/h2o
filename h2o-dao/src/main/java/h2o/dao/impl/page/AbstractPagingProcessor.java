@@ -4,7 +4,6 @@ import h2o.common.bean.page.SortInfo;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.tuple.Tuple2;
 import h2o.common.collections.tuple.TupleUtil;
-import h2o.common.util.lang.StringUtil;
 import h2o.dao.page.PagingProcessor;
 import org.apache.commons.lang.StringUtils;
 

@@ -2,8 +2,8 @@ package h2o.utils.key;
 
 
 import h2o.dao.Dao;
-import h2o.dao.DbUtil;
 import h2o.dao.DaoCallback;
+import h2o.dao.DbUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
