@@ -24,6 +24,35 @@ db 	= * h2o.dao.impl.DbImpl( $0 , $1 ).setScopeManager( scopeManager )
                                       .setTransactionManager( transactionManager );
 
 
+/*
+ds = 1 com.zaxxer.hikari.HikariDataSource()
+					.setDriverClassName("com.mysql.jdbc.Driver")
+					.setJdbcUrl("jdbc:mysql://host:3306/db?useUnicode=true&amp;characterEncoding=utf-8")
+					.setUsername("user")
+					.setPassword("pwd")
+					.setMaximumPoolSize("50")
+					.setMinimumIdle("10")
+					.setConnectionTestQuery("select 1 from dual")
+					.setDataSourceProperties( java.util.Properties().putAll(<
+					        'cachePrepStmts':'true',
+					        'prepStmtCacheSize':'250',
+					        'prepStmtCacheSqlLimit':'2048',
+					        'useServerPrepStmts':'true' >)
+					 );
+
+
+ds2 = 1 org.springframework.jdbc.datasource.DriverManagerDataSource()
+                    .setDriverClassName("com.mysql.jdbc.Driver")
+                    .setUrl("jdbc:mysql://host:3306/db?useUnicode=true&amp;characterEncoding=utf-8")
+                    .setUsername("user")
+                    .setPassword("pwd");
+
+
+
+dss = 1 <'default':ds , 'common':ds , 'db2':ds2>;
+
+*/
+
 
 /* dbUtil = 1 h2o.dao.DbUtil().setDataSources(dss); */
 
