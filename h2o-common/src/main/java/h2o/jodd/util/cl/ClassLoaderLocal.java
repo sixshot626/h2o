@@ -25,6 +25,7 @@
 
 package h2o.jodd.util.cl;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -35,7 +36,7 @@ import java.util.WeakHashMap;
  */
 public class ClassLoaderLocal<T> {
 
-	private final Map<ClassLoader, T> weakMap = new WeakHashMap<ClassLoader, T>();
+	private final Map<ClassLoader, T> weakMap = Collections.synchronizedMap(new WeakHashMap<ClassLoader, T>());
 	private T value;
 	private boolean initialized;
 

@@ -25,10 +25,11 @@
 
 package h2o.jodd.util;
 
+
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Locale utilities.
@@ -50,7 +51,7 @@ public class LocaleUtil {
 
 	// ---------------------------------------------------------------- locale cache
 
-	protected static Map<String, LocaleData> locales = new HashMap<String, LocaleData>();
+	protected static Map<String, LocaleData> locales = new ConcurrentHashMap<String, LocaleData>();
 
 	/**
 	 * Lookups for locale data and creates new if it doesn't exist.

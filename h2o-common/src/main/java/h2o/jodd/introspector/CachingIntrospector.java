@@ -25,8 +25,7 @@
 
 package h2o.jodd.introspector;
 
-import java.util.HashMap;
-import java.util.Map;
+import h2o.jodd.cache.TypeCache;
 
 /**
  * Default {@link Introspector introspector} that caches all class descriptors.
@@ -36,7 +35,7 @@ import java.util.Map;
  */
 public class CachingIntrospector implements Introspector {
 
-	protected final Map<Class, ClassDescriptor> cache;
+	protected final TypeCache<ClassDescriptor> cache;
 	protected final boolean scanAccessible;
 	protected final boolean enhancedProperties;
 	protected final boolean includeFieldsAsProperties;
@@ -55,7 +54,7 @@ public class CachingIntrospector implements Introspector {
 	 * constructors.
 	 */
 	public CachingIntrospector(boolean scanAccessible, boolean enhancedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
-		this.cache = new HashMap<Class, ClassDescriptor>();
+		this.cache = TypeCache.<ClassDescriptor>create().threadsafe(true).weak(true).get();
 		this.scanAccessible = scanAccessible;
 		this.enhancedProperties = enhancedProperties;
 		this.includeFieldsAsProperties = includeFieldsAsProperties;
@@ -68,7 +67,6 @@ public class CachingIntrospector implements Introspector {
 	public ClassDescriptor lookup(Class type) {
 		ClassDescriptor cd = cache.get(type);
 		if (cd != null) {
-			cd.increaseUsageCount();
 			return cd;
 		}
 		cd = describeClass(type);

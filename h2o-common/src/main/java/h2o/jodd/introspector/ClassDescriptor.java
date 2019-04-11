@@ -58,7 +58,6 @@ public class ClassDescriptor {
 	protected final String[] propertyFieldPrefix;
 	protected final Class[] interfaces;
 	protected final Class[] superclasses;
-	protected int usageCount;
 
 	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
 		this.type = type;
@@ -117,22 +116,7 @@ public class ClassDescriptor {
 		return propertyFieldPrefix;
 	}
 
-	/**
-	 * Increases usage count.
-	 */
-	protected void increaseUsageCount() {
-		usageCount++;
-	}
 
-	/**
-	 * Returns number of class descriptor usages. That is number
-	 * of times when class descriptor for some class has been
-	 * lookuped. Higher usage count means that some class is
-	 * more frequently being used.
-	 */
-	public int getUsageCount() {
-		return usageCount;
-	}
 
 	// ---------------------------------------------------------------- special
 

@@ -26,6 +26,7 @@
 package h2o.jodd.util;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Resolves messages from resource bundles.
@@ -169,7 +170,7 @@ public class ResourceBundleMessageResolver {
 	// ---------------------------------------------------------------- resource bundles
 
 	protected final Set<String> misses = new HashSet<String>();
-	protected final Map<String, ResourceBundle> notmisses = new HashMap<String, ResourceBundle>();
+	protected final Map<String, ResourceBundle> notmisses = new ConcurrentHashMap<String, ResourceBundle>();
 
 	/**
 	 * Finds resource bundle by it's name. Missed and founded resource bundles are cached for

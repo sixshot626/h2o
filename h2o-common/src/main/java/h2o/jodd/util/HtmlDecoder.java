@@ -29,6 +29,7 @@ import h2o.jodd.io.StreamUtil;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * HTML decoder.
@@ -54,7 +55,7 @@ public class HtmlDecoder {
 			StreamUtil.close(is);
 		}
 
-		ENTITY_MAP = new HashMap<String, char[]>(entityReferences.size());
+		ENTITY_MAP = new ConcurrentHashMap<String, char[]>(entityReferences.size());
 
 		Enumeration keys = entityReferences.propertyNames();
 		while (keys.hasMoreElements()) {

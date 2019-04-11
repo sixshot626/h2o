@@ -30,6 +30,7 @@ import h2o.jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Methods collection.
@@ -37,14 +38,14 @@ import java.util.*;
 public class Methods {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final HashMap<String, MethodDescriptor[]> methodsMap;
+	protected final Map<String, MethodDescriptor[]> methodsMap = new ConcurrentHashMap<String, MethodDescriptor[]>();
 
 	// cache
 	private MethodDescriptor[] allMethods;
 
 	public Methods(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
-		this.methodsMap = inspectMethods();
+		this.methodsMap.putAll(inspectMethods());
 	}
 
 	/**

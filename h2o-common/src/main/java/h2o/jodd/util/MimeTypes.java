@@ -29,7 +29,11 @@ import h2o.jodd.io.StreamUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Map file extensions to MIME types. Based on the most recent Apache mime.types file.
@@ -50,7 +54,7 @@ public class MimeTypes {
 	public static final String MIME_TEXT_PLAIN 					= "text/plain";
 	public static final String MIME_TEXT_HTML					= "text/html";
 
-	private static final HashMap<String, String> MIME_TYPE_MAP;	// extension -> mime-type map
+	private static final Map<String, String> MIME_TYPE_MAP;	// extension -> mime-type map
 
 	static {
 		Properties mimes = new Properties();
@@ -69,7 +73,7 @@ public class MimeTypes {
 			StreamUtil.close(is);
 		}
 
-		MIME_TYPE_MAP = new HashMap<String, String>(mimes.size() * 2);
+		MIME_TYPE_MAP = new ConcurrentHashMap<String, String>(mimes.size() * 2) ;
 
 		Enumeration keys = mimes.propertyNames();
 		while (keys.hasMoreElements()) {

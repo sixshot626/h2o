@@ -33,6 +33,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Bean properties collection. Property in Java is defined as a pair of
@@ -43,14 +45,14 @@ import java.util.HashMap;
 public class Properties {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final HashMap<String, PropertyDescriptor> propertyDescriptors;
+	protected final Map<String, PropertyDescriptor> propertyDescriptors = new ConcurrentHashMap<String, PropertyDescriptor>();
 
 	// cache
 	private PropertyDescriptor[] allProperties;
 
 	public Properties(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
-		this.propertyDescriptors = inspectProperties();
+		this.propertyDescriptors.putAll(inspectProperties());
 	}
 
 	/**
