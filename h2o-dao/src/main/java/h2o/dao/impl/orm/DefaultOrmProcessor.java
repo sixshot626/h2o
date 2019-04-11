@@ -1,8 +1,6 @@
 package h2o.dao.impl.orm;
 
-import h2o.common.Tools;
 import h2o.common.util.lang.InstanceUtil;
-import h2o.dao.DbUtil;
 import h2o.dao.exception.DaoException;
 import h2o.dao.orm.OrmProcessor;
 

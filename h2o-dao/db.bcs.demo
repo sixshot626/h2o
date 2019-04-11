@@ -2,8 +2,6 @@
 sqlTable 		= 1 h2o.common.dao.SqlTable();
 sqlTemplateUtil = 1 h2o.common.thirdparty.freemarker.TemplateUtil();
 sqlBuilder 		= 1	h2o.dao.SqlBuilder();
-map2BeanUtil	= 1 h2o.dao.impl.orm.DbMap2BeanUtil();
-
 
 
 argProcessor    = 1 h2o.dao.impl.orm.DefaultArgProcessor();

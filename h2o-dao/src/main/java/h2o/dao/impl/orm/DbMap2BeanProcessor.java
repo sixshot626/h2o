@@ -6,8 +6,6 @@ import h2o.common.util.bean.BeanUtil;
 import h2o.dao.colinfo.ColInfo;
 import h2o.dao.colinfo.ColInfoUtil;
 
-
-
 import java.util.List;
 import java.util.Map;
 
