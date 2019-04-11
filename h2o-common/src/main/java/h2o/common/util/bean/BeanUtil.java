@@ -140,6 +140,10 @@ public class BeanUtil {
 
 	}
 
+	public BeanUtil copy() {
+		return new BeanUtil(this);
+	}
+
 	public BeanUtil cover( boolean cover ) {
 		return new BeanUtil(this).setCover( cover );
 	}

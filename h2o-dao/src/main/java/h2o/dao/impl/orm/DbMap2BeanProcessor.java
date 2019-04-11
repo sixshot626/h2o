@@ -1,28 +1,37 @@
 package h2o.dao.impl.orm;
 
+import h2o.common.Tools;
 import h2o.common.collections.builder.MapBuilder;
-import h2o.common.util.bean.Map2BeanProcessor;
-import h2o.common.util.bean.support.DefaultMap2BeanProcessor;
+import h2o.common.util.bean.BeanUtil;
 import h2o.dao.colinfo.ColInfo;
 import h2o.dao.colinfo.ColInfoUtil;
+
+
 
 import java.util.List;
 import java.util.Map;
 
-public class DbMap2BeanProcessor extends DefaultMap2BeanProcessor implements Map2BeanProcessor {
-	
-	
+public class DbMap2BeanProcessor {
+
+	private final BeanUtil beanUtil;
+
 	private final Map<String,String> colAttrMap;
+
+
+
+	public DbMap2BeanProcessor( Class<?> beanClazz ) {
+		this( beanClazz , Tools.bi );
+	}
 	
-	public DbMap2BeanProcessor( Class<?> clazz ) {
+	public DbMap2BeanProcessor( Class<?> beanClazz , BeanUtil beanUtil ) {
 	
 		
 		Map<String,String> caMap = null;
-		if( ColInfoUtil.hasTableAnnotation( clazz ) ) {
+		if( ColInfoUtil.hasTableAnnotation( beanClazz ) ) {
 			
 			caMap = MapBuilder.newMap();
 			
-			List<ColInfo> cis = ColInfoUtil.getColInfos( clazz );
+			List<ColInfo> cis = ColInfoUtil.getColInfos( beanClazz );
 			for( ColInfo ci : cis ) {
 				caMap.put( ci.attrName , ci.colName );
 			}
@@ -30,17 +39,17 @@ public class DbMap2BeanProcessor extends DefaultMap2BeanProcessor implements Map
 		}
 		
 		colAttrMap = caMap;
+		this.beanUtil = beanUtil;
 				
 	}
 
-	@Override
-	public <T> T map2bean(Map<?, ?> m, T bean) {
-		
+	public <T> T toBean( Map<?, ?> m , T bean) {
+
 		if( colAttrMap == null ) {
-			return super.map2bean(m, bean);
+			return beanUtil.map2JavaBean(m, bean );
 		}
 		
-		String[] prepNames = super.beanUtil.getPrepNames(bean);
+		String[] prepNames = beanUtil.getPrepNames(bean);
 		String[] srcpNames = new String[ prepNames.length ];
 		
 		for( int i = 0 ; i < prepNames.length ; i++ ) {
@@ -49,9 +58,12 @@ public class DbMap2BeanProcessor extends DefaultMap2BeanProcessor implements Map
 		}	
 		
 		
-		return super.beanUtil.map2JavaBean(m, bean, srcpNames, prepNames );
+		return beanUtil.map2JavaBean(m, bean , srcpNames, prepNames );
 		
 	}
+
+
+
 	
 	
 	

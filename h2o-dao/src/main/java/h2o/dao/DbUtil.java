@@ -5,7 +5,6 @@ import h2o.common.collections.builder.MapBuilder;
 import h2o.common.dao.SqlTable;
 import h2o.common.ioc.Factory;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
-import h2o.common.util.bean.Map2BeanUtil;
 import h2o.dao.exception.DaoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ public final class DbUtil {
 
     public static final String SQLTABLE_BEANID         = "sqlTable";
     public static final String SQLBUILDER_BEANID       = "sqlBuilder";
-    public static final String MAP2BEANUTIL_BEANID     = "map2BeanUtil";
     public static final String SQLTEMPLATEUTIL_BEANID  = "sqlTemplateUtil";
 
     public static final String DEFAULT_DATASOURCE_NAME = "default";
@@ -38,7 +36,6 @@ public final class DbUtil {
 
 
 	public static final SqlBuilder 		sqlBuilder 			= dbConfig.get(SQLBUILDER_BEANID);
-	public static final Map2BeanUtil 	map2BeanUtil 		= dbConfig.get(MAP2BEANUTIL_BEANID);
 	public static final TemplateUtil 	sqlTemplateUtil 	= dbConfig.get(SQLTEMPLATEUTIL_BEANID);
 
 
