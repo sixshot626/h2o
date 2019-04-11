@@ -39,71 +39,72 @@ public class BeanUtil {
 	private volatile BeanDescriptor beanDescriptor = new BeanDescriptorImpl();
 	private volatile BeanPropertyInfo beanPropertyInfo = new DefaultBeanPropertyInfoImpl();
 
+
 	public ValOperate getBeanVo() {
 		return beanVo;
-	}
-
-	public BeanUtil setBeanVo(ValOperate beanVo) {
-		this.beanVo = beanVo;
-		return this;
 	}
 
 	public ValOperate getMapVo() {
 		return mapVo;
 	}
 
-	public BeanUtil setMapVo(ValOperate mapVo) {
-		this.mapVo = mapVo;
-        return this;
-	}
-
 	public boolean isCover() {
 		return cover;
 	}
 
-	public BeanUtil setCover(boolean cover) {
-		this.cover = cover;
-        return this;
+	public boolean isProcNull() {
+		return procNull;
 	}
 
-    public boolean isProcNull() {
-        return procNull;
-    }
-
-	public BeanUtil setProcNull(boolean procNull) {
-		this.procNull = procNull;
-        return this;
+	public boolean isIgnoreCase() {
+		return ignoreCase;
 	}
 
-    public boolean isIgnoreCase() {
-        return ignoreCase;
-    }
-
-    public BeanUtil setIgnoreCase(boolean ignoreCase) {
-        this.ignoreCase = ignoreCase;
-        return this;
-    }
-
-
-    public BeanDescriptor getBeanDescriptor() {
+	public BeanDescriptor getBeanDescriptor() {
 		return beanDescriptor;
-	}
-
-	public BeanUtil setBeanDescriptor(BeanDescriptor beanDescriptor) {
-		this.beanDescriptor = beanDescriptor;
-        return this;
 	}
 
 	public BeanPropertyInfo getBeanPropertyInfo() {
 		return beanPropertyInfo;
 	}
 
-	public BeanUtil setBeanPropertyInfo(BeanPropertyInfo beanPropertyInfo) {
-		this.beanPropertyInfo = beanPropertyInfo;
-        return this;
+
+	private BeanUtil setBeanVo(ValOperate beanVo) {
+		this.beanVo = beanVo;
+		return this;
 	}
-	
-	
+
+	private BeanUtil setMapVo(ValOperate mapVo) {
+		this.mapVo = mapVo;
+		return this;
+	}
+
+	private BeanUtil setCover(boolean cover) {
+		this.cover = cover;
+		return this;
+	}
+
+	private BeanUtil setProcNull(boolean procNull) {
+		this.procNull = procNull;
+		return this;
+	}
+
+	private BeanUtil setIgnoreCase(boolean ignoreCase) {
+		this.ignoreCase = ignoreCase;
+		return this;
+	}
+
+	private BeanUtil setBeanDescriptor(BeanDescriptor beanDescriptor) {
+		this.beanDescriptor = beanDescriptor;
+		return this;
+	}
+
+	private BeanUtil setBeanPropertyInfo(BeanPropertyInfo beanPropertyInfo) {
+		this.beanPropertyInfo = beanPropertyInfo;
+		return this;
+	}
+
+
 
 	public BeanUtil() {
 		this(null,null );
@@ -139,6 +140,84 @@ public class BeanUtil {
 		this.beanPropertyInfo 	= beanUtil.beanPropertyInfo;
 
 	}
+
+	public static Builder build() {
+		return new Builder();
+	}
+
+
+	public static class Builder {
+
+		private Builder() {}
+
+		private  ValOperate beanVo ;
+
+		private  ValOperate mapVo;
+
+		private  boolean cover = true;
+
+		private  boolean procNull = true;
+
+		private  boolean ignoreCase;
+
+		private  BeanDescriptor beanDescriptor = new BeanDescriptorImpl();
+		private  BeanPropertyInfo beanPropertyInfo = new DefaultBeanPropertyInfoImpl();
+
+		public Builder setBeanVo(ValOperate beanVo) {
+			this.beanVo = beanVo;
+			return this;
+		}
+
+		public Builder setMapVo(ValOperate mapVo) {
+			this.mapVo = mapVo;
+			return this;
+		}
+
+		public Builder setCover(boolean cover) {
+			this.cover = cover;
+			return this;
+		}
+
+		public Builder setProcNull(boolean procNull) {
+			this.procNull = procNull;
+			return this;
+		}
+
+		public Builder setIgnoreCase(boolean ignoreCase) {
+			this.ignoreCase = ignoreCase;
+			return this;
+		}
+
+		public Builder setBeanDescriptor(BeanDescriptor beanDescriptor) {
+			this.beanDescriptor = beanDescriptor;
+			return this;
+		}
+
+		public Builder setBeanPropertyInfo(BeanPropertyInfo beanPropertyInfo) {
+			this.beanPropertyInfo = beanPropertyInfo;
+			return this;
+		}
+
+		public BeanUtil get() {
+
+			BeanUtil beanUtil = new BeanUtil( this.beanVo , Builder.this.mapVo );
+
+			beanUtil.setCover( this.cover );
+			beanUtil.setProcNull( this.procNull );
+			beanUtil.setIgnoreCase( this.ignoreCase );
+
+			beanUtil.setBeanDescriptor( this.beanDescriptor );
+			beanUtil.setBeanPropertyInfo( this.beanPropertyInfo );
+
+			return beanUtil;
+		}
+
+	}
+
+
+
+
+
 
 	public BeanUtil copy() {
 		return new BeanUtil(this);
