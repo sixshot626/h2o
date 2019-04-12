@@ -1,7 +1,6 @@
 package h2o.common.cluster;
 
 import h2o.common.Mode;
-import h2o.common.Tools;
 import h2o.common.thirdparty.redis.JedisCallBack;
 import h2o.common.thirdparty.redis.JedisProvider;
 import h2o.common.util.id.UuidUtil;
@@ -166,19 +165,24 @@ public class ClusterLock {
                 List<String> keys = Collections.singletonList( key );
                 List<String> values = Collections.singletonList( id );
 
-                if (jedis instanceof JedisClusterScriptingCommands) {
+                Long result = 0L;
+                if (jedis instanceof JedisCluster) {
 
-                    (( JedisClusterScriptingCommands) jedis).eval(UNLOCK_LUA, keys, values);
+                    result = (Long) (( JedisClusterScriptingCommands) jedis).eval(UNLOCK_LUA, keys, values);
 
-                } else if (jedis instanceof ScriptingCommands) {
+                } else if ( jedis instanceof Jedis) {
 
-                    (( ScriptingCommands ) jedis).eval(UNLOCK_LUA, keys, values);
+                    result = (Long) (( ScriptingCommands ) jedis).eval(UNLOCK_LUA, keys, values);
 
+                }
+
+                if ( result == null || result.longValue() != 1L ) {
+                    unlockUNLUA(jedis);
                 }
 
         } catch (Throwable e) {
 
-            Tools.log.error(e);
+            log.error( "" , e);
 
             unlockUNLUA(jedis);
 
