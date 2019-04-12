@@ -1,4 +1,4 @@
-package h2o.common.util.io.file.monitor;
+package h2o.common.util.io.monitor;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;

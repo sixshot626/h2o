@@ -1,4 +1,4 @@
-package h2o.common.util.io.file.monitor;
+package h2o.common.util.io.monitor;
 
 import java.io.File;
 
