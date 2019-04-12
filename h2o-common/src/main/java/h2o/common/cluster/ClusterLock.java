@@ -1,12 +1,16 @@
 package h2o.common.cluster;
 
+import h2o.common.Mode;
+import h2o.common.Tools;
 import h2o.common.thirdparty.redis.JedisCallBack;
 import h2o.common.thirdparty.redis.JedisProvider;
 import h2o.common.util.id.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisCommands;
+import redis.clients.jedis.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ClusterLock {
@@ -128,13 +132,62 @@ public class ClusterLock {
 
 
 
-    private void unlock( JedisCommands jedis ) {
+    private void unlockUNLUA( JedisCommands jedis ) {
 
         if ( id.equals( jedis.get(key) ) ) {
             jedis.del(key);
         }
 
     }
+
+    private boolean UNSUPPORT_LUA = Mode.isUserMode("REDIS_UNSUPPORT_LUA");
+
+    private static final String UNLOCK_LUA;
+
+    static {
+        StringBuilder sb = new StringBuilder();
+        sb.append("if redis.call(\"get\",KEYS[1]) == ARGV[1] ");
+        sb.append("then ");
+        sb.append("    return redis.call(\"del\",KEYS[1]) ");
+        sb.append("else ");
+        sb.append("    return 0 ");
+        sb.append("end ");
+        UNLOCK_LUA = sb.toString();
+    }
+
+    private void unlock( JedisCommands jedis ) {
+
+        if ( UNSUPPORT_LUA ) {
+
+            unlockUNLUA(jedis);
+
+        } else  try {
+
+                List<String> keys = Collections.singletonList( key );
+                List<String> values = Collections.singletonList( id );
+
+                if (jedis instanceof JedisClusterScriptingCommands) {
+
+                    (( JedisClusterScriptingCommands) jedis).eval(UNLOCK_LUA, keys, values);
+
+                } else if (jedis instanceof ScriptingCommands) {
+
+                    (( ScriptingCommands ) jedis).eval(UNLOCK_LUA, keys, values);
+
+                }
+
+        } catch (Throwable e) {
+
+            Tools.log.error(e);
+
+            unlockUNLUA(jedis);
+
+        }
+    }
+
+
+
+
 
     public void unlock() {
 
