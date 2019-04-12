@@ -6,10 +6,7 @@ import h2o.common.exception.ExceptionUtil;
 import h2o.common.thirdparty.spring.util.Assert;
 import h2o.common.util.bean.serialize.BeanEncoder;
 import h2o.common.util.bean.serialize.BeanSerializer;
-import h2o.common.util.bean.support.BeanDescriptorImpl;
-import h2o.common.util.bean.support.BeanUtilVOImpl;
-import h2o.common.util.bean.support.DefaultBeanPropertyInfoImpl;
-import h2o.common.util.bean.support.MapVOImpl;
+import h2o.common.util.bean.support.*;
 import h2o.common.util.lang.InstanceUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -26,18 +23,18 @@ public class BeanUtil {
     private final BeanSerializer beanSerializer =  new BeanEncoder();
 	
 
-	private volatile ValOperate beanVo ;
+	private final ValOperate beanVo ;
 
-	private volatile ValOperate mapVo;
+	private final ValOperate mapVo;
 	
-	private volatile boolean cover = true;
+	private final boolean cover;
 	
-	private volatile boolean procNull = true;
+	private final boolean procNull;
 
-    private volatile boolean ignoreCase;
+    private final boolean ignoreCase;
 	
-	private volatile BeanDescriptor beanDescriptor = new BeanDescriptorImpl();
-	private volatile BeanPropertyInfo beanPropertyInfo = new DefaultBeanPropertyInfoImpl();
+	private final BeanDescriptor beanDescriptor;
+	private final BeanPropertyInfo beanPropertyInfo;
 
 
 	public ValOperate getBeanVo() {
@@ -69,75 +66,28 @@ public class BeanUtil {
 	}
 
 
-	private BeanUtil setBeanVo(ValOperate beanVo) {
-		this.beanVo = beanVo;
-		return this;
-	}
-
-	private BeanUtil setMapVo(ValOperate mapVo) {
-		this.mapVo = mapVo;
-		return this;
-	}
-
-	private BeanUtil setCover(boolean cover) {
-		this.cover = cover;
-		return this;
-	}
-
-	private BeanUtil setProcNull(boolean procNull) {
-		this.procNull = procNull;
-		return this;
-	}
-
-	private BeanUtil setIgnoreCase(boolean ignoreCase) {
-		this.ignoreCase = ignoreCase;
-		return this;
-	}
-
-	private BeanUtil setBeanDescriptor(BeanDescriptor beanDescriptor) {
-		this.beanDescriptor = beanDescriptor;
-		return this;
-	}
-
-	private BeanUtil setBeanPropertyInfo(BeanPropertyInfo beanPropertyInfo) {
-		this.beanPropertyInfo = beanPropertyInfo;
-		return this;
-	}
-
-
 
 	public BeanUtil() {
 		this(null,null );
 	}
 	
-
-	
 	public BeanUtil( ValOperate beanVo , ValOperate mapVo ) {
-        if( beanVo != null ) {
-            this.setBeanVo(beanVo);
-        } else {
-            this.setBeanVo(new BeanUtilVOImpl());
-        }
-
-        if( mapVo != null ) {
-            this.setMapVo(mapVo);
-        } else {
-            this.setMapVo(new MapVOImpl());
-        }
+	    this( new Builder().setBeanVo(beanVo).setMapVo(mapVo) );
 	}
-	
 
-	private BeanUtil( BeanUtil beanUtil ) {
 
-		this.beanVo 	= beanUtil.beanVo;
-		this.mapVo  	= beanUtil.mapVo;
 
-		this.cover 		= beanUtil.cover;
-		this.procNull 	= beanUtil.procNull;
-		this.ignoreCase = beanUtil.ignoreCase;
+	private BeanUtil( Builder builder ) {
 
-		this.beanDescriptor 	= beanUtil.beanDescriptor;
-		this.beanPropertyInfo 	= beanUtil.beanPropertyInfo;
+		this.beanVo 	= builder.beanVo;
+		this.mapVo  	= builder.mapVo;
+
+		this.cover 		= builder.cover;
+		this.procNull 	= builder.procNull;
+		this.ignoreCase = builder.ignoreCase;
+
+		this.beanDescriptor 	= builder.beanDescriptor;
+		this.beanPropertyInfo 	= builder.beanPropertyInfo;
 
 	}
 
@@ -150,9 +100,22 @@ public class BeanUtil {
 
 		private Builder() {}
 
-		private  ValOperate beanVo ;
+		private Builder( BeanUtil beanUtil ) {
 
-		private  ValOperate mapVo;
+            this.beanVo 	= beanUtil.beanVo;
+            this.mapVo  	= beanUtil.mapVo;
+
+            this.cover 		= beanUtil.cover;
+            this.procNull 	= beanUtil.procNull;
+            this.ignoreCase = beanUtil.ignoreCase;
+
+            this.beanDescriptor 	= beanUtil.beanDescriptor;
+            this.beanPropertyInfo 	= beanUtil.beanPropertyInfo;
+        }
+
+		private  ValOperate beanVo = new JoddBeanUtilVOImpl();
+
+		private  ValOperate mapVo = new MapVOImpl();
 
 		private  boolean cover = true;
 
@@ -160,20 +123,24 @@ public class BeanUtil {
 
 		private  boolean ignoreCase;
 
-		private  BeanDescriptor beanDescriptor = new BeanDescriptorImpl();
+		private  BeanDescriptor beanDescriptor = new JoddBeanDescriptorImpl();
 		private  BeanPropertyInfo beanPropertyInfo = new DefaultBeanPropertyInfoImpl();
 
-		public Builder setBeanVo(ValOperate beanVo) {
-			this.beanVo = beanVo;
-			return this;
-		}
+        public Builder setBeanVo(ValOperate beanVo) {
+            if ( beanVo != null ) {
+                this.beanVo = beanVo;
+            }
+            return this;
+        }
 
-		public Builder setMapVo(ValOperate mapVo) {
-			this.mapVo = mapVo;
-			return this;
-		}
+        public Builder setMapVo(ValOperate mapVo) {
+            if ( mapVo != null ) {
+                this.mapVo = mapVo;
+            }
+            return this;
+        }
 
-		public Builder setCover(boolean cover) {
+        public Builder setCover(boolean cover) {
 			this.cover = cover;
 			return this;
 		}
@@ -199,17 +166,7 @@ public class BeanUtil {
 		}
 
 		public BeanUtil get() {
-
-			BeanUtil beanUtil = new BeanUtil( this.beanVo , Builder.this.mapVo );
-
-			beanUtil.setCover( this.cover );
-			beanUtil.setProcNull( this.procNull );
-			beanUtil.setIgnoreCase( this.ignoreCase );
-
-			beanUtil.setBeanDescriptor( this.beanDescriptor );
-			beanUtil.setBeanPropertyInfo( this.beanPropertyInfo );
-
-			return beanUtil;
+			return new BeanUtil( this );
 		}
 
 	}
@@ -217,32 +174,26 @@ public class BeanUtil {
 
 
 
-
-
-	public BeanUtil copy() {
-		return new BeanUtil(this);
-	}
-
 	public BeanUtil cover( boolean cover ) {
-		return new BeanUtil(this).setCover( cover );
+		return new BeanUtil( new Builder(this).setCover( cover ) );
 	}
 
 	public BeanUtil procNull( boolean procNull ) {
-	    return new BeanUtil(this).setProcNull( procNull );
+	    return new BeanUtil( new Builder(this).setProcNull( procNull ) );
 	}
 
     public BeanUtil ignoreCase( boolean ignoreCase ) {
-        return new BeanUtil(this).setIgnoreCase( ignoreCase );
+        return new BeanUtil( new Builder(this).setIgnoreCase( ignoreCase ) );
     }
 
 
 
 	public BeanUtil beanVo( ValOperate beanVo ) {
-        return new BeanUtil(this).setBeanVo( beanVo );
+        return new BeanUtil(new Builder(this).setBeanVo( beanVo ) );
 	}
 
 	public BeanUtil mapVo( ValOperate mapVo ) {
-        return new BeanUtil(this).setMapVo( mapVo );
+        return new BeanUtil(new Builder(this).setMapVo( mapVo ) );
 	}
 
 
@@ -357,7 +308,8 @@ public class BeanUtil {
                     srcBean = new IgnoreCaseMap<Object>((Map<String,Object>)m);
                 }
             } else {
-                srcBean = new IgnoreCaseMap<Object>( this.ignoreCase(false).setBeanVo(svo).javaBean2Map( srcBean ) );
+
+                srcBean = new IgnoreCaseMap<Object>( this.ignoreCase(false).beanVo(svo).javaBean2Map( srcBean ) );
                 svo = this.mapVo;
             }
 
