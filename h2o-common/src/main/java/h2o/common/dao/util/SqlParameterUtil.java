@@ -1,5 +1,6 @@
 package h2o.common.dao.util;
 
+import h2o.common.Tools;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.collections.builder.MapBuilder;
@@ -8,7 +9,6 @@ import h2o.common.collections.tuple.TupleUtil;
 import h2o.common.dao.util.namedparam.NamedParameterUtils;
 import h2o.common.dao.util.namedparam.SqlParameterInfo;
 import h2o.common.util.bean.BeanUtil;
-import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +20,7 @@ public class SqlParameterUtil {
 	private final BeanUtil beanUtil;
 	
 	public SqlParameterUtil() {
-		this.beanUtil = new BeanUtil( new JoddBeanUtilVOImpl(true,false) , null );
+		this( Tools.bnc );
 	}
 	
 	

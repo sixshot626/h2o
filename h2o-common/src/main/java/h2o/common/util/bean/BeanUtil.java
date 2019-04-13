@@ -6,12 +6,18 @@ import h2o.common.collections.builder.ListBuilder;
 import h2o.common.collections.builder.MapBuilder;
 import h2o.common.collections.tuple.Entry;
 import h2o.common.thirdparty.spring.util.Assert;
-import h2o.common.util.bean.support.*;
+import h2o.common.util.bean.support.DefaultBeanPropertyInfoImpl;
+import h2o.common.util.bean.support.JoddBeanDescriptorImpl;
+import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
+import h2o.common.util.bean.support.MapVOImpl;
 import h2o.common.util.lang.InstanceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public final class BeanUtil {
