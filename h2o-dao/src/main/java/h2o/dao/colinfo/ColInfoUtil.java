@@ -111,7 +111,7 @@ public class ColInfoUtil {
 			for( ColInfo ci :  colInfos ) {
 				if( defValMap.containsKey(ci.attrName) ) {
 				    ColInfoVar vci = new ColInfoVar( ci );
-                    vci.defVal = new ColumnDefValue( defValMap.get(ci.attrName) );
+                    vci.defVal = defValMap.get(ci.attrName);
                     defColInfos.add( vci.get() );
 				} else {
 				    defColInfos.add( ci );
@@ -173,9 +173,12 @@ public class ColInfoUtil {
 			}
 			
 			String colName = colAnn.name();
-			ci.colName =  StringUtils.isBlank( colName ) ? fieldName.toLowerCase() : colName;
-			
-			ci.defVal = new ColumnDefValue( colAnn.defaultValue() );
+			ci.colName =  StringUtils.isBlank( colName ) ? fieldName : colName;
+
+            DefaultValue dv = f.getAnnotation( DefaultValue.class );
+            if ( dv != null ) {
+                ci.defVal = dv.value();
+            }
 
             PK id = f.getAnnotation( PK.class );
             if( id != null ) {

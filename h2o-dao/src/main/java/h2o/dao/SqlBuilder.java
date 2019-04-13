@@ -118,7 +118,7 @@ public class SqlBuilder {
 			
 			Object val =getVal( bean , ci.attrName );
 					
-			if( !includeNull && val == null && ci.defVal.isUndefined() ) {
+			if( !includeNull && val == null && ci.defVal == null) {
 				continue;
 			}
 			
@@ -243,7 +243,7 @@ public class SqlBuilder {
 			
 			Object val =getVal( bean , ci.attrName );
 						
-			if( !includeNull && val == null && ci.defVal.isUndefined() ) {
+			if( !includeNull && val == null && ci.defVal == null ) {
 				continue;
 			}
 			

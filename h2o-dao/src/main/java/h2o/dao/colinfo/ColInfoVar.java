@@ -1,12 +1,10 @@
 package h2o.dao.colinfo;
 
-import h2o.dao.annotation.ColumnDefValue;
-
 public class ColInfoVar {
 
     String attrName;
     String colName;
-    ColumnDefValue defVal;
+    String defVal;
 
     boolean pk;
     String[] uniqueNames;
@@ -32,7 +30,7 @@ public class ColInfoVar {
         return this;
     }
 
-    public ColInfoVar setDefVal(ColumnDefValue defVal) {
+    public ColInfoVar setDefVal( String defVal ) {
         this.defVal = defVal;
         return this;
     }
@@ -42,7 +40,7 @@ public class ColInfoVar {
         return this;
     }
 
-    public ColInfoVar setUniqueNames(String[] uniqueNames) {
+    public ColInfoVar setUniqueNames( String[] uniqueNames) {
         this.uniqueNames = uniqueNames;
         return this;
     }

@@ -1,12 +1,12 @@
 package h2o.dao.colinfo;
 
-import h2o.dao.annotation.ColumnDefValue;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ColInfo {
 
 	public final String attrName;
 	public final String colName;
-	public final ColumnDefValue defVal;
+	public final String defVal;
 
 	public final boolean pk;
 	public final String[] uniqueNames;
@@ -21,13 +21,13 @@ public class ColInfo {
     }
 
     @Override
-	public String toString() {			
-		return "ColInfo:{colName:" + colName  + ",attrName:" + attrName + ",defVal:" + defVal.getVal() + "}";
-	}
-	
-	public Object value( boolean isNull ) {
-		if( isNull && !this.defVal.isUndefined() ) {
-			return this.defVal.getVal();
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    public Object value( boolean isNull ) {
+		if( isNull && this.defVal != null ) {
+			return this.defVal;
 		}
 		return ":" + this.attrName;
 	}
@@ -43,7 +43,7 @@ public class ColInfo {
 		return colName;
 	}
 
-	public ColumnDefValue getDefVal() {
+	public String getDefVal() {
 		return defVal;
 	}
 
