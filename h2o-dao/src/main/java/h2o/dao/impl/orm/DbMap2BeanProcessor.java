@@ -18,7 +18,7 @@ public class DbMap2BeanProcessor {
 
 
 	public DbMap2BeanProcessor( Class<?> beanClazz ) {
-		this( beanClazz , Tools.bi );
+		this( beanClazz , Tools.bic );
 	}
 	
 	public DbMap2BeanProcessor( Class<?> beanClazz , BeanUtil beanUtil ) {
@@ -44,10 +44,10 @@ public class DbMap2BeanProcessor {
 	public <T> T toBean( Map<?, ?> m , T bean) {
 
 		if( colAttrMap == null ) {
-			return beanUtil.map2JavaBean(m, bean );
+			return beanUtil.beanCopy(m, bean );
 		}
 		
-		String[] prepNames = beanUtil.getPrepNames(bean);
+		String[] prepNames = beanUtil.analysePrepNames(bean);
 		String[] srcpNames = new String[ prepNames.length ];
 		
 		for( int i = 0 ; i < prepNames.length ; i++ ) {
@@ -56,7 +56,7 @@ public class DbMap2BeanProcessor {
 		}	
 		
 		
-		return beanUtil.map2JavaBean(m, bean , srcpNames, prepNames );
+		return beanUtil.beanCopy(m, bean , srcpNames, prepNames );
 		
 	}
 

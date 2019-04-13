@@ -56,7 +56,7 @@ public class SqlParameterUtil {
 				
 			} else {
 				
-				Map<String, Object> sqlPara = beanUtil.javaBean2Map(a);
+				Map<String, Object> sqlPara = beanUtil.bean2Map(a);
 				for( Map.Entry<String, Object> e : sqlPara.entrySet()) {
 					m.put( e.getKey() , valConvert(e.getValue()) );
 				}

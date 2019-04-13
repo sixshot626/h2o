@@ -4,12 +4,11 @@ public class Entry<K,V> implements java.io.Serializable {
 
     private static final long serialVersionUID = -8304096067686246637L;
 
-    private K key;
+    public final K key;
+
+    public final V value;
 	
-	private V value;
-	
-	public Entry() {}
-	
+
 	public Entry( K key , V value ) {
 		this.key = key;
 		this.value = value;
@@ -19,17 +18,10 @@ public class Entry<K,V> implements java.io.Serializable {
 		return key;
 	}
 
-	public void setKey(K key) {
-		this.key = key;
-	}
-
 	public V getValue() {
 		return value;
 	}
 
-	public void setValue(V value) {
-		this.value = value;
-	}
 
 	@Override
 	public int hashCode() {

@@ -3,7 +3,6 @@ package h2o.common.util.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import h2o.common.util.bean.Beanfilter;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
@@ -31,15 +30,6 @@ public class GsonUtil {
 		this.creater = creater;
 	}
 
-	public String toJson(Object obj , Map<String,String[][]> filter ) {
-		Object o = Beanfilter.filter( obj , filter );
-		return toJson(o);
-	}
-	
-	public String toJson( Object obj , Beanfilter bf , Map<String,String[][]> filter ) {
-		Object o = bf.filterObject( obj , filter );
-		return toJson(o);
-	}
 
 	public String toJson( Object obj ) {
 		return this.creater.create().toJson( obj );
