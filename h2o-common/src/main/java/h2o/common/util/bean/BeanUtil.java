@@ -113,7 +113,7 @@ public class BeanUtil {
             this.beanPropertyInfo 	= beanUtil.beanPropertyInfo;
         }
 
-		private  ValOperate beanVo = new JoddBeanUtilVOImpl();
+		private  ValOperate beanVo = new JoddBeanUtilVOImpl(true,false);
 
 		private  ValOperate mapVo = new MapVOImpl();
 
