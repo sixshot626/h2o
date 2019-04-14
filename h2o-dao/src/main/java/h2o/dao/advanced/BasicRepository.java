@@ -12,22 +12,22 @@ import java.util.List;
 
 public abstract class BasicRepository<E> {
 
-    private final String dateSourceName;
+    private final String dataSourceName;
 
     private final Dao dao;
 
     protected BasicRepository() {
-        this.dateSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
     }
 
-    protected BasicRepository(String dateSourceName) {
-        this.dateSourceName = dateSourceName;
+    protected BasicRepository(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
         this.dao = null;
     }
 
     protected BasicRepository(Dao dao) {
-        this.dateSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = dao;
     }
 
@@ -234,7 +234,7 @@ public abstract class BasicRepository<E> {
     }
 
     protected final Dao getDao() {
-        return dao == null ? DbUtil.getDao( this.dateSourceName ) : dao;
+        return dao == null ? DbUtil.getDao( this.dataSourceName) : dao;
     }
 
 }
