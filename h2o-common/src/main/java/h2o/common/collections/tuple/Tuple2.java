@@ -1,5 +1,8 @@
 package h2o.common.collections.tuple;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Tuple2<A,B> implements Tuple {
 
 	private static final long serialVersionUID = 5786178318377966323L;
@@ -32,39 +35,29 @@ public class Tuple2<A,B> implements Tuple {
 		return 2;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((e0 == null) ? 0 : e0.hashCode());
-		result = prime * result + ((e1 == null) ? 0 : e1.hashCode());
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		@SuppressWarnings("rawtypes")
-		Tuple2 other = (Tuple2) obj;
-		if (e0 == null) {
-			if (other.e0 != null)
-				return false;
-		} else if (!e0.equals(other.e0))
-			return false;
-		if (e1 == null) {
-			if (other.e1 != null)
-				return false;
-		} else if (!e1.equals(other.e1))
-			return false;
-		return true;
-	}
+        if (o == null || getClass() != o.getClass()) return false;
 
-	@Override
+        Tuple2<?, ?> tuple2 = (Tuple2<?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(e0, tuple2.e0)
+                .append(e1, tuple2.e1)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(e0)
+                .append(e1)
+                .toHashCode();
+    }
+
+    @Override
 	public String toString() {
 		return String.format("Tuple2[e0=%s, e1=%s]", e0, e1);
 	}

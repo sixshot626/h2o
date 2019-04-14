@@ -1,5 +1,8 @@
 package h2o.common.collections.tuple;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Tuple3<A,B,C> implements Tuple {
 
 
@@ -22,12 +25,9 @@ public class Tuple3<A,B,C> implements Tuple {
         return e0;
     }
 
-
-
     public B getE1() {
         return e1;
     }
-
 
     public C getE2() {
         return e2;
@@ -38,12 +38,9 @@ public class Tuple3<A,B,C> implements Tuple {
         return e0;
     }
 
-
-
     public B _2() {
         return e1;
     }
-
 
     public C _3() {
         return e2;
@@ -55,48 +52,29 @@ public class Tuple3<A,B,C> implements Tuple {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tuple3<?, ?, ?> tuple3 = (Tuple3<?, ?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(e0, tuple3.e0)
+                .append(e1, tuple3.e1)
+                .append(e2, tuple3.e2)
+                .isEquals();
+    }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((e0 == null) ? 0 : e0.hashCode());
-        result = prime * result + ((e1 == null) ? 0 : e1.hashCode());
-        result = prime * result + ((e2 == null) ? 0 : e2.hashCode());
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(e0)
+                .append(e1)
+                .append(e2)
+                .toHashCode();
     }
-
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        @SuppressWarnings("rawtypes")
-        Tuple3 other = (Tuple3) obj;
-        if (e0 == null) {
-            if (other.e0 != null)
-                return false;
-        } else if (!e0.equals(other.e0))
-            return false;
-        if (e1 == null) {
-            if (other.e1 != null)
-                return false;
-        } else if (!e1.equals(other.e1))
-            return false;
-        if (e2 == null) {
-            if (other.e2 != null)
-                return false;
-        } else if (!e2.equals(other.e2))
-            return false;
-        return true;
-    }
-
-
 
     @Override
     public String toString() {

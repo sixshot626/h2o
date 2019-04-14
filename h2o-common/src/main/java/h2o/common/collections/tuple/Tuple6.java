@@ -1,5 +1,8 @@
 package h2o.common.collections.tuple;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public final class Tuple6<A,B,C,D,E,F> implements Tuple {
 	
 
@@ -27,30 +30,21 @@ public final class Tuple6<A,B,C,D,E,F> implements Tuple {
 		return e0;
 	}
 
-
-
 	public B getE1() {
 		return e1;
 	}
-
-
 
 	public C getE2() {
 		return e2;
 	}
 
-
-
 	public D getE3() {
 		return e3;
 	}
-	
 
 	public E getE4() {
 		return e4;
 	}
-
-
 
 	public F getE5() {
 		return e5;
@@ -61,26 +55,21 @@ public final class Tuple6<A,B,C,D,E,F> implements Tuple {
         return e0;
     }
 
-
     public B _2() {
         return e1;
     }
-
 
     public C _3() {
         return e2;
     }
 
-
     public D _4() {
         return e3;
     }
 
-
     public E _5() {
         return e4;
     }
-
 
     public F _6() {
         return e5;
@@ -92,68 +81,37 @@ public final class Tuple6<A,B,C,D,E,F> implements Tuple {
 	}
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((e0 == null) ? 0 : e0.hashCode());
-		result = prime * result + ((e1 == null) ? 0 : e1.hashCode());
-		result = prime * result + ((e2 == null) ? 0 : e2.hashCode());
-		result = prime * result + ((e3 == null) ? 0 : e3.hashCode());
-		result = prime * result + ((e4 == null) ? 0 : e4.hashCode());
-		result = prime * result + ((e5 == null) ? 0 : e5.hashCode());
-		return result;
-	}
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Tuple6<?, ?, ?, ?, ?, ?> tuple6 = (Tuple6<?, ?, ?, ?, ?, ?>) o;
 
+        return new EqualsBuilder()
+                .append(e0, tuple6.e0)
+                .append(e1, tuple6.e1)
+                .append(e2, tuple6.e2)
+                .append(e3, tuple6.e3)
+                .append(e4, tuple6.e4)
+                .append(e5, tuple6.e5)
+                .isEquals();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		@SuppressWarnings("rawtypes")
-		Tuple6 other = (Tuple6) obj;
-		if (e0 == null) {
-			if (other.e0 != null)
-				return false;
-		} else if (!e0.equals(other.e0))
-			return false;
-		if (e1 == null) {
-			if (other.e1 != null)
-				return false;
-		} else if (!e1.equals(other.e1))
-			return false;
-		if (e2 == null) {
-			if (other.e2 != null)
-				return false;
-		} else if (!e2.equals(other.e2))
-			return false;
-		if (e3 == null) {
-			if (other.e3 != null)
-				return false;
-		} else if (!e3.equals(other.e3))
-			return false;
-		if (e4 == null) {
-			if (other.e4 != null)
-				return false;
-		} else if (!e4.equals(other.e4))
-			return false;
-		if (e5 == null) {
-			if (other.e5 != null)
-				return false;
-		} else if (!e5.equals(other.e5))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(e0)
+                .append(e1)
+                .append(e2)
+                .append(e3)
+                .append(e4)
+                .append(e5)
+                .toHashCode();
+    }
 
-
-
-	@Override
+    @Override
 	public String toString() {
 		return String.format("Tuple6[e0=%s, e1=%s, e2=%s, e3=%s, e4=%s, e5=%s]", e0, e1, e2, e3, e4, e5);
 	}

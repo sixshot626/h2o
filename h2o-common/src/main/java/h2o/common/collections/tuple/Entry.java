@@ -1,5 +1,8 @@
 package h2o.common.collections.tuple;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Entry<K,V> implements java.io.Serializable {
 
     private static final long serialVersionUID = -8304096067686246637L;
@@ -23,39 +26,29 @@ public class Entry<K,V> implements java.io.Serializable {
 	}
 
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Entry other = (Entry) obj;
-		if (key == null) {
-			if (other.key != null)
-				return false;
-		} else if (!key.equals(other.key))
-			return false;
-		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.value))
-			return false;
-		return true;
-	}
+        if (o == null || getClass() != o.getClass()) return false;
 
-	@Override
+        Entry<?, ?> entry = (Entry<?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(key, entry.key)
+                .append(value, entry.value)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(key)
+                .append(value)
+                .toHashCode();
+    }
+
+    @Override
 	public String toString() {
 		return String.format("Entry[key=%s, value=%s]", key, value);
 	}

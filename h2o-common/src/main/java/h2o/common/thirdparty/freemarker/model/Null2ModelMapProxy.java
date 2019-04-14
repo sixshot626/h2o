@@ -1,6 +1,8 @@
 package h2o.common.thirdparty.freemarker.model;
 
 import freemarker.template.*;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.util.Collection;
 import java.util.Map;
@@ -97,53 +99,28 @@ public class Null2ModelMapProxy<K,V> implements Map<K,V> , java.io.Serializable 
 		return this.map.toString();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((map == null) ? 0 : map.hashCode());
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null ) {
-			if( this.map != null ) {
-				return false;
-			}
-		} else {
-			if (getClass() != obj.getClass()) {	
-				
-				if( obj instanceof Map ) {
-						if( map == null ) {
-							return false;
-						} else {
-							return map.equals(obj);
-						}
-				} else {
-					return false;
-				}
-				
-			} else {
-				
-				@SuppressWarnings("rawtypes")
-				final Null2ModelMapProxy other = (Null2ModelMapProxy) obj;
-				if (map == null) {
-					if (other.map != null) {
-						return false;
-					}
-				} else {
-					return map.equals(other.map);
-				}
-				
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-	@Override
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Null2ModelMapProxy<?, ?> that = (Null2ModelMapProxy<?, ?>) o;
+
+        return new EqualsBuilder()
+                .append(map, that.map)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(map)
+                .toHashCode();
+    }
+
+    @Override
 	public String toString() {		
 		return String.valueOf(this.map);
 	}
