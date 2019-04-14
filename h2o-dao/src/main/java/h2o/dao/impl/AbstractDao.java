@@ -188,7 +188,7 @@ public abstract class AbstractDao implements Dao {
 
 
 	@Override
-	public Page<Map<String, Object>> pagingLoad(String sql, PageRequest pageRequest, Object... args) {
+	public Page<Map<String, Object>> pagingLoad(String sql, PageRequest pageRequest, Object... args) throws DaoException {
 		return this.pagingLoad( new TSql(sql), pageRequest , args );
 	}
 

@@ -5,6 +5,7 @@ import h2o.common.bean.page.PageRequest;
 import h2o.dao.exception.DaoException;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
+import h2o.dao.page.PagingProcessor;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -20,6 +21,8 @@ public interface Dao {
 	void setArgProcessor(ArgProcessor argProcessor);
 
 	void setOrmProcessor(OrmProcessor ormProcessor);
+
+	void setPagingProcessor(PagingProcessor pagingProcessor);
 
 
 	
@@ -71,9 +74,9 @@ public interface Dao {
 	
 
 
-	Page<Map<String,Object>> pagingLoad(String sql, PageRequest pageRequest,  Object... args);
+	Page<Map<String,Object>> pagingLoad(String sql, PageRequest pageRequest,  Object... args) throws DaoException;;
 
-    Page<Map<String,Object>> pagingLoad(SqlSource sqlSource, PageRequest pageRequest,  Object... args);
+    Page<Map<String,Object>> pagingLoad(SqlSource sqlSource, PageRequest pageRequest,  Object... args) throws DaoException;;
 
 
 
