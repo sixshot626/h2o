@@ -14,14 +14,6 @@ public class Var<T> {
         this.v = v;
     }
 
-    public T get() {
-        return v;
-    }
-
-    public void set(T v) {
-        this.v = v;
-    }
-
 
     @Override
     public boolean equals(Object o) {
