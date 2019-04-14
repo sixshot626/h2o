@@ -27,6 +27,7 @@ public abstract class AbstractDao implements Dao {
 
     private static final Logger log = LoggerFactory.getLogger( AbstractDao.class.getName() );
 
+
 	private volatile ArgProcessor argProcessor;
 
 	private volatile OrmProcessor ormProcessor;
@@ -84,6 +85,8 @@ public abstract class AbstractDao implements Dao {
 		}
 	}
 
+
+
 	@Override
 	public <T> List<T> load(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
 		try {
@@ -101,8 +104,6 @@ public abstract class AbstractDao implements Dao {
 			throw new DaoException(e);
 		}
 	}
-
-
 
 
 
@@ -129,7 +130,6 @@ public abstract class AbstractDao implements Dao {
 
 		return new Page<Map<String, Object>>(pageInfo , records);
 	}
-
 
 	@Override
 	public <T> Page<T> pagingLoad(Class<T> clazz, SqlSource sqlSource, PageRequest pageRequest, Object... args) throws DaoException {

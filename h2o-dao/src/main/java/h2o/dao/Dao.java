@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface Dao {
-	
-	
-	
+
+
+
 	void setArgProcessor(ArgProcessor argProcessor);
 
 	void setOrmProcessor(OrmProcessor ormProcessor);
@@ -25,53 +25,47 @@ public interface Dao {
 	void setPagingProcessor(PagingProcessor pagingProcessor);
 
 
-	
+
 	<T> T getField(String sql, String fieldName, Object... args) throws DaoException;
 
 	<T> T getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
 
-	
-	
-	
+
+
 	<T> List<T> loadFields(String sql, String fieldName, Object... args) throws DaoException;
 	
 	<T> List<T> loadFields(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
-	
 
-	
-	
+
+
 	Map<String,Object> get(String sql, Object... args)  throws DaoException;
 	
 	Map<String,Object> get(SqlSource sqlSource, Object... args)  throws DaoException;
-	
 
 
-	
+
 	List<Map<String,Object>> load(String sql, Object... args)  throws DaoException;
 	
 	List<Map<String,Object>> load(SqlSource sqlSource, Object... args)  throws DaoException;
-	
-	
-	
-	
+
+
+
 	<T> T get(Class<T> clazz, String sql, Object... args)  throws DaoException;
 	
 	<T> T get(Class<T> clazz, SqlSource sqlSource, Object... args)  throws DaoException;
-	
 
 
-	
+
 	<T> List<T> load(Class<T> clazz, String sql, Object... args)  throws DaoException;
 	
 	<T> List<T> load(Class<T> clazz, SqlSource sqlSource, Object... args)  throws DaoException;
-	
-	
-	
-	
+
+
+
 	<T> T load(ResultSetCallback<T> rsCallback, String sql, Object... args)   throws DaoException;
 	
 	<T> T load(ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args)   throws DaoException;
-	
+
 
 
 	Page<Map<String,Object>> pagingLoad(String sql, PageRequest pageRequest,  Object... args) throws DaoException;;
@@ -84,24 +78,26 @@ public interface Dao {
 
     <T> Page<T> pagingLoad(Class<T> clazz, SqlSource sqlSource, PageRequest pageRequest, Object... args)  throws DaoException;
 
-	
-	
+
+
 	int update(String sql, Object... args)  throws DaoException;
 	
 	int update(SqlSource sqlSource, Object... args)  throws DaoException;
-	
-	
-	
-	
+
+
+
 	int[] batchUpdate(String sql, Collection<?> args)  throws DaoException;
 	
 	int[] batchUpdate(SqlSource sqlSource, Collection<?> args)  throws DaoException;
 
 
+
 	DataSource getDataSource();
 
     Connection getConnection() throws SQLException;
-	
+
+
+
 	void close() throws DaoException;
 	
 
