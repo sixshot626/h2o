@@ -11,7 +11,7 @@ public final class DbConfigProvider {
 
     public static Factory getDbConfig() {
 
-        ButterflyFactory dbButterflyFactory = new ButterflyFactory( "db" , Mode.prodMode ? "db.bcs" : "db." + Mode.name + ".bcs" );
+        ButterflyFactory dbButterflyFactory = new ButterflyFactory( "db" , Mode.prodMode ? "db.bcs" : "db-" + Mode.name + ".bcs" );
 
         Factory factory = null;
 

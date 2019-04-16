@@ -7,7 +7,7 @@ public class ObjectFactory {
 	
 	private ObjectFactory() {}	
 	
-	private static final ButterflyFactory bf = new ButterflyFactory( "app" , Mode.prodMode ? "app.bcs" : "app." + Mode.name + ".bcs");
+	private static final ButterflyFactory bf = new ButterflyFactory( "app" , Mode.prodMode ? "app.bcs" : "app-" + Mode.name + ".bcs");
 	
 	
 	public static <T> T get( String id , Object... args) {
