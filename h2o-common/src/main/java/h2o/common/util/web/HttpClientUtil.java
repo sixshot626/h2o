@@ -1,6 +1,7 @@
 package h2o.common.util.web;
 
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.util.io.CharsetWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -34,7 +35,7 @@ public class HttpClientUtil {
 
 		HttpGet httpget = new HttpGet(uri);
 
-		return echo(httpget,null);
+		return echo(httpget,CharsetWrapper.UNSET);
 
 	}
 
@@ -42,11 +43,11 @@ public class HttpClientUtil {
 
 		HttpGet httpget = new HttpGet(url);
 
-		return echo(httpget,null);
+		return echo(httpget,CharsetWrapper.UNSET);
 
 	}
 	
-	public static String get(URI uri , String charset) {
+	public static String get(URI uri , CharsetWrapper charset) {
 
 		HttpGet httpget = new HttpGet(uri);
 
@@ -54,7 +55,7 @@ public class HttpClientUtil {
 
 	}
 
-	public static String get(String url , String charset) {
+	public static String get(String url , CharsetWrapper charset) {
 
 		HttpGet httpget = new HttpGet(url);
 
@@ -65,23 +66,23 @@ public class HttpClientUtil {
 	
 	public static String post(URI uri) {
 
-		return post( uri , (Map<String,String>)null , null );
+		return post( uri , (Map<String,String>)null , CharsetWrapper.UNSET );
 
 	}
 	
 	public static String post(String url) {
 
-		return post( url , (Map<String,String>)null , null);
+		return post( url , (Map<String,String>)null , CharsetWrapper.UNSET);
 
 	}
 	
-	public static String post(URI uri , String charset) {
+	public static String post(URI uri , CharsetWrapper charset) {
 
 		return post( uri , (Map<String,String>)null , charset );
 
 	}
 	
-	public static String post(String url , String charset) {
+	public static String post(String url , CharsetWrapper charset) {
 
 		return post( url , (Map<String,String>)null , charset);
 
@@ -90,18 +91,18 @@ public class HttpClientUtil {
 	public static String post(URI uri , Map<String,String> para ) {
 
 		HttpPost httppost = new HttpPost(uri);		
-		return post(httppost , para , null);
+		return post(httppost , para , CharsetWrapper.UNSET);
 
 	}
 	
 	public static String post(String url , Map<String,String> para ) {
 
 		HttpPost httppost = new HttpPost(url);		
-		return post(httppost , para , null);
+		return post(httppost , para , CharsetWrapper.UNSET);
 
 	}
 	
-	public static String post(URI uri , Map<String,String> para , String charset ) {
+	public static String post(URI uri , Map<String,String> para , CharsetWrapper charset ) {
 
         HttpPost httppost = new HttpPost(uri);
 
@@ -110,7 +111,7 @@ public class HttpClientUtil {
     }
 
 
-    public static String post(URI uri , Map<String,String> para , String sendCharset , String charset ) {
+    public static String post(URI uri , Map<String,String> para , CharsetWrapper sendCharset , CharsetWrapper charset ) {
 
         HttpPost httppost = new HttpPost(uri);
 
@@ -121,14 +122,14 @@ public class HttpClientUtil {
 
 
 	
-	public static String post(String url , Map<String,String> para , String charset ) {
+	public static String post(String url , Map<String,String> para , CharsetWrapper charset ) {
 
 		HttpPost httppost = new HttpPost(url);
 
 		return post(httppost , para , charset);
 	}
 
-    public static String post(String url , Map<String,String> para , String sendCharset , String charset ) {
+    public static String post(String url , Map<String,String> para , CharsetWrapper sendCharset , CharsetWrapper charset ) {
 
         HttpPost httppost = new HttpPost(url);
 
@@ -139,18 +140,18 @@ public class HttpClientUtil {
 
 
 
-    public static String post(HttpPost httppost , Map<String,String> para , String charset) {
-	    return post( httppost , para , (String)null , charset );
+    public static String post(HttpPost httppost , Map<String,String> para , CharsetWrapper charset) {
+	    return post( httppost , para , CharsetWrapper.UNSET , charset );
     }
 	
-	public static String post( HttpPost httppost , Map<String,String> para , String sendCharset , String charset ) {
+	public static String post(HttpPost httppost , Map<String,String> para , CharsetWrapper sendCharset , CharsetWrapper charset ) {
 		
 		try {
 			
 			HttpEntity entity = null;
 
 			if(para != null && !para.isEmpty()) {
-				entity = new UrlEncodedFormEntity( para2nvList(para) , sendCharset  );
+				entity = new UrlEncodedFormEntity( para2nvList(para) , sendCharset.charset  );
 			}
 			
 			return post(httppost , entity , charset );
@@ -167,30 +168,30 @@ public class HttpClientUtil {
 	
 	
 	
-	public static String post(URI uri , String data , String charset ) {
+	public static String post(URI uri , String data , CharsetWrapper charset ) {
 
 		return post(uri , data , null , charset);
 
 	}
 	
-	public static String post(String url , String data , String charset ) {
+	public static String post(String url , String data , CharsetWrapper charset ) {
 
 		return post(url , data , null , charset);
 
 	}
 	
 	
-	public static String post(URI uri , String data , String contentType ,  String charset ) {
+	public static String post(URI uri , String data , String contentType ,  CharsetWrapper charset ) {
 
-		HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset) : new StringEntity(data , ContentType.create(contentType, charset));
+		HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset.charset) : new StringEntity(data , ContentType.create(contentType, charset.charset));
 
 		return post(uri , entity , charset);
 
 	}
 	
-	public static String post(String url , String data , String contentType ,String charset ) {
+	public static String post(String url , String data , String contentType , CharsetWrapper charset ) {
 
-		HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset) : new StringEntity(data , ContentType.create(contentType, charset));
+		HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset.charset) : new StringEntity(data , ContentType.create(contentType, charset.charset));
 
 		return post(url , entity , charset);
 
@@ -198,7 +199,7 @@ public class HttpClientUtil {
 
 
 
-	public static String post(URI uri , HttpEntity entity , String charset ) {
+	public static String post(URI uri , HttpEntity entity , CharsetWrapper charset ) {
 
 		HttpPost httppost = new HttpPost(uri);
 
@@ -206,7 +207,7 @@ public class HttpClientUtil {
 
 	}
 	
-	public static String post(String url , HttpEntity entity , String charset ) {
+	public static String post(String url , HttpEntity entity , CharsetWrapper charset ) {
 
 		HttpPost httppost = new HttpPost(url);
 
@@ -217,7 +218,7 @@ public class HttpClientUtil {
 	
 	
 	
-	public static String post(HttpPost httppost, HttpEntity entity, String charset) {
+	public static String post(HttpPost httppost, HttpEntity entity, CharsetWrapper charset) {
 
 		if (entity != null) {
 			httppost.setEntity(entity);
@@ -240,14 +241,14 @@ public class HttpClientUtil {
 		
 	}
 	
-	public static String echo(HttpUriRequest request , String charset ) {
+	public static String echo(HttpUriRequest request , CharsetWrapper charset ) {
 
         return echo( HttpClients.createDefault() , true , request, charset , null );
 
 	}
 
 
-    public static String echo( CloseableHttpClient httpclient , boolean close , HttpUriRequest request , String charset , HttpEchoCallback  callback ) {
+    public static String echo(CloseableHttpClient httpclient , boolean close , HttpUriRequest request , CharsetWrapper charset , HttpEchoCallback  callback ) {
 
         CloseableHttpResponse response = null;
         try {
@@ -258,7 +259,7 @@ public class HttpClientUtil {
 
                 HttpEntity entity = response.getEntity();
 
-                return entity == null ? null : EntityUtils.toString(entity,charset);
+                return entity == null ? null : EntityUtils.toString(entity,charset.charset);
 
             } else {
 

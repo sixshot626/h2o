@@ -1,6 +1,7 @@
 package h2o.common.util.web;
 
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.util.io.CharsetWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -27,9 +28,9 @@ public class HttpClient {
 
 	private volatile String contentType;
 
-    private volatile String sendCharset;
+    private volatile CharsetWrapper sendCharset;
 	
-	private volatile String charset;
+	private volatile CharsetWrapper charset;
 
 	private volatile HttpEchoCallback callback = null;
 
@@ -40,12 +41,12 @@ public class HttpClient {
     }
 
     public HttpClient setSendCharset(String sendCharset) {
-        this.sendCharset = sendCharset;
+        this.sendCharset = new CharsetWrapper(sendCharset);
         return this;
     }
 
     public HttpClient setCharset(String charset) {
-        this.charset = charset;
+        this.charset = new CharsetWrapper(charset);
         return this;
     }
 
@@ -126,7 +127,7 @@ public class HttpClient {
             HttpEntity entity = null;
 
             if(para != null && !para.isEmpty()) {
-                entity = new UrlEncodedFormEntity(HttpClientUtil.para2nvList(para) , sendCharset );
+                entity = new UrlEncodedFormEntity(HttpClientUtil.para2nvList(para) , sendCharset.charset );
             }
 
             return post( httppost , entity );
@@ -147,7 +148,7 @@ public class HttpClient {
 
     public String post(URI uri , String data ) {
 
-        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset) : new StringEntity(data , ContentType.create(contentType, charset));
+        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset.charset) : new StringEntity(data , ContentType.create(contentType, charset.charset));
 
         return post(uri , entity);
 
@@ -155,7 +156,7 @@ public class HttpClient {
 
     public String post(String url , String data ) {
 
-        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset) : new StringEntity(data , ContentType.create(contentType, charset));
+        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset.charset) : new StringEntity(data , ContentType.create(contentType, charset.charset));
 
         return post(url , entity);
 

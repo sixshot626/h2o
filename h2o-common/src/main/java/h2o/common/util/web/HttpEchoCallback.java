@@ -1,5 +1,6 @@
 package h2o.common.util.web;
 
+import h2o.common.util.io.CharsetWrapper;
 import org.apache.http.HttpResponse;
 
 /**
@@ -7,6 +8,6 @@ import org.apache.http.HttpResponse;
  */
 public interface HttpEchoCallback {
 
-    String getString( HttpResponse response , String charset );
+    String getString( HttpResponse response , CharsetWrapper charset );
 
 }

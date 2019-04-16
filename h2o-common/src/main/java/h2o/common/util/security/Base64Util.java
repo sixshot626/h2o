@@ -84,9 +84,9 @@ public class Base64Util {
 		return encode(s, "UTF-8");
 	}
 
-	public String encode(String s, String charSet) {
+	public String encode(String s, String charset) {
 		try {
-			return encode(s.getBytes(charSet));
+			return encode(s.getBytes(charset));
 		} catch (UnsupportedEncodingException e) {
 			log.debug("encode", e);
 			throw ExceptionUtil.toRuntimeException(e);
@@ -98,9 +98,9 @@ public class Base64Util {
 		return decode2s(b64, "UTF-8");
 	}
 
-	public String decode2s(String b64, String charSet) {
+	public String decode2s(String b64, String charset) {
 		try {
-			return new String(decode(b64), charSet);
+			return new String(decode(b64), charset);
 		} catch (UnsupportedEncodingException e) {
 			log.debug("decode2s", e);
 			throw ExceptionUtil.toRuntimeException(e);
