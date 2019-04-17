@@ -28,9 +28,9 @@ public class OraclePagingProcessor extends AbstractPagingProcessor implements Pa
                 .put( P2 , pageRowNum2 ).get();
 
         StringBuilder pageSql = new StringBuilder();
-        pageSql.append("select * from (\n    select page_query.*, rownum as row_num from (\n");
+        pageSql.append("select * from (\n    select page_query.*, rownum as page_row_num from (\n");
         pageSql.append( this.orderProc( sql , pageRequest.getSorts() ) );
-        StringUtil.append(pageSql , "\n    ) page_query  where rownum <= :" , P2 , " \n) where row_num >= :" , P1);
+        StringUtil.append(pageSql , "\n    ) page_query  where rownum <= :" , P2 , " \n) where page_row_num >= :" , P1);
 
         return TupleUtil.t( pageSql.toString() , args);
     }
