@@ -13,7 +13,7 @@ public class CharsetWrapper {
         this.charset = charset;
     }
 
-    public boolean unset() {
+    public boolean isNotSet() {
         return charset == null;
     }
 
