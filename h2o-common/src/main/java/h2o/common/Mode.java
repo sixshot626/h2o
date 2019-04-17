@@ -64,7 +64,7 @@ public class Mode {
 			String userModes = config.getString("userMode","").trim().toUpperCase();
 			
 			if( !"".equals(userModes) ) {
-                List<String> ums =  CollectionUtil.string2List( false , userModes, new String[] {":",",",";"," ", "\t"} , null );
+                List<String> ums =  CollectionUtil.toList( userModes, new String[] {":",",",";"," ", "\t"}  );
                 uma = ums.toArray( new String[ums.size()] );
 			}
 			

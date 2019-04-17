@@ -35,12 +35,12 @@ public class CollectionUtil {
 	
 
 	@SuppressWarnings("rawtypes")
-	public static String collection2s(Collection c) {
-		return collection2s(c, true);
+	public static String toString(Collection c) {
+		return toString(c, true);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static String collection2s(Collection c, boolean is_string) {
+	public static String toString(Collection c, boolean is_string) {
 		if (c == null || c.isEmpty()) {
 			return null;
 		}
@@ -62,39 +62,20 @@ public class CollectionUtil {
 		return r.substring(1);
 	}
 
-	public static <T> List<T> toList(T[] array, PreOperate<T>... pos) {
-		return toList(Arrays.asList(array), pos);
-	}
 
-	public static <T> List<T> toList(Collection<T> c, PreOperate<T>... pos) {
-
-		ArrayList<T> r = new ArrayList<T>();
-
-		Iterator<T> itr = c.iterator();
-		while (itr.hasNext()) {
-			T ai = itr.next();
-			if (pos != null) {
-				for (PreOperate<T> po : pos) {
-					ai = po.doOperate(ai);
-				}
-			}
-			if (ai != null) {
-				r.add(ai);
-			}
-		}
-		return r;
+	public static List<String> all2List( String str, String[] tns , String def) {
+		return toList(true, str, tns , def);
 	}
 	
-	
-	public static List<String> string2List( String str, String[] tns , String def) {
-		return string2List(true, str, tns , def);
-	}
-	
-	public static List<String> string2List(  String str, String... tns) {
-		return string2List(true, str, tns, "");
+	public static List<String> all2List(  String str, String... tns) {
+		return toList(true, str, tns, "");
 	}
 
-	public static List<String> string2List( boolean isAll , String str ,  String[] tns , String def) {
+	public static List<String> toList(  String str, String... tns) {
+		return toList(false, str, tns, "");
+	}
+
+	private static List<String> toList( boolean isAll , String str ,  String[] tns , String def) {
 
 		ArrayList<String> r = new ArrayList<String>();
 		r.add(str);
