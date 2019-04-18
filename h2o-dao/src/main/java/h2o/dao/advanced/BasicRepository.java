@@ -167,7 +167,7 @@ public abstract class BasicRepository<E> {
     private final EntityParser entityParser = new EntityParser( this.getEntityClass() );
 
     protected EntityParser getEntityParser() {
-        return entityParser;
+        return this.entityParser;
     }
 
     protected Dao getDao() {
