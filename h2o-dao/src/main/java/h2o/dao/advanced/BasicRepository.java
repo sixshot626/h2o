@@ -164,12 +164,20 @@ public abstract class BasicRepository<E> {
         return this.entityClazz;
     }
 
+    private final EntityParser entityParser = new EntityParser( this.getEntityClass() );
+
+    protected EntityParser getEntityParser() {
+        return entityParser;
+    }
+
     protected Dao getDao() {
         return dao == null ? DbUtil.getDao( this.dataSourceName) : dao;
     }
 
+
     protected DaoBasicUtil<E> createDaoBasicUtil() {
-        return new DaoBasicUtil<E>(this.getEntityClass(), this.getDao());
+        return new DaoBasicUtil<E>( this.getEntityClass(), this.getEntityParser() , this.getDao() );
     }
+
 
 }

@@ -38,7 +38,6 @@ public final class DaoBasicUtil<E> {
     private final Dao dao;
     private final EntityParser entityParser;
 
-
     private final Class<E> entityClazz;
 
     public DaoBasicUtil( Class<?> entityClazz ) {
@@ -53,13 +52,33 @@ public final class DaoBasicUtil<E> {
                 new EntityParser( entityClazz );
     }
 
+    public DaoBasicUtil( Class<E> entityClazz, EntityParser entityParser, Dao dao ) {
+        this.entityClazz = entityClazz;
+        this.dao = dao;
+        this.entityParser = entityParser;
+    }
+
+
+
+
+    public Class<E> getEntityClass() {
+        return entityClazz;
+    }
+
     public EntityParser getEntityParser() {
         return entityParser;
+    }
+
+    public Dao getDao() {
+        return dao;
     }
 
     public String tableName() {
         return this.entityParser.getTableName();
     }
+
+
+
 
 
     public void add( E entity ) {
