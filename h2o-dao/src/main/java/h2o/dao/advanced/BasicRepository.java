@@ -31,6 +31,8 @@ public abstract class BasicRepository<E> {
     }
 
 
+
+
     public void add(E entity) {
         createDaoBasicUtil().add(entity);
     }
@@ -154,18 +156,20 @@ public abstract class BasicRepository<E> {
 
 
 
-    protected final DaoBasicUtil<E> createDaoBasicUtil() {
-        return new DaoBasicUtil<E>(this.getEntityClass(), this.getDao());
-    }
+
 
     private final Class<E> entityClazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
 
-    protected final Class<E> getEntityClass() {
+    protected Class<E> getEntityClass() {
         return this.entityClazz;
     }
 
-    protected final Dao getDao() {
+    protected Dao getDao() {
         return dao == null ? DbUtil.getDao( this.dataSourceName) : dao;
+    }
+
+    protected DaoBasicUtil<E> createDaoBasicUtil() {
+        return new DaoBasicUtil<E>(this.getEntityClass(), this.getDao());
     }
 
 }
