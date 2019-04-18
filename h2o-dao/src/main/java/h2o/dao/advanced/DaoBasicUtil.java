@@ -102,23 +102,29 @@ public final class DaoBasicUtil<E> {
 
 
     public E get( E entity ) {
-        return this.get( entity , false );
+        return getByColInfos( entity , checkAndGetPk() , false );
     }
 
     public E getAndLock( E entity ) {
-        return this.get( entity , true );
+        return getByColInfos( entity , checkAndGetPk() , true );
     }
 
-    public E get( E entity , boolean lock ) {
-        return getByColInfos( entity , checkAndGetPk() , lock );
+
+    public E getByUnique( E entity , String uniqueName  ) {
+        return getByColInfos( entity , checkAndGetUnique(uniqueName) , false );
     }
 
-    public E getByUnique( E entity , boolean lock , String uniqueName  ) {
-        return getByColInfos( entity , checkAndGetUnique(uniqueName) , lock );
+    public E getAndLockByUnique( E entity ,  String uniqueName  ) {
+        return getByColInfos( entity , checkAndGetUnique(uniqueName) , true );
     }
 
-    public E getByAttr( E entity , boolean lock , String... attrNames  ) {
-        return getByColInfos( entity , checkAndGetAttrs(attrNames) , lock );
+
+    public E getByAttr( E entity ,  String... attrNames  ) {
+        return getByColInfos( entity , checkAndGetAttrs(attrNames) , false );
+    }
+
+    public E getAndLockByAttr( E entity , String... attrNames  ) {
+        return getByColInfos( entity , checkAndGetAttrs(attrNames) , true );
     }
 
     private E getByColInfos( E entity , List<ColInfo> cis , boolean lock  ){
@@ -128,26 +134,28 @@ public final class DaoBasicUtil<E> {
 
 
     public E selectOne( String[] fields , E entity  ) {
-        return this.selectOne( fields , entity , false );
+        return selectOneByColInfos( fields , entity , checkAndGetPk() , false );
     }
 
     public E selectOneAndLock( String[] fields , E entity ) {
-        return this.selectOne( fields ,  entity , true );
+        return selectOneByColInfos( fields , entity , checkAndGetPk() , true );
     }
 
-    public E selectOne( String[] fields , E entity ,  boolean lock ) {
-        return selectOneByColInfos( fields , entity , checkAndGetPk() , lock );
+    public E selectOneByUnique( String[] fields , E entity , String uniqueName  ) {
+        return selectOneByColInfos( fields , entity , checkAndGetUnique(uniqueName) , false );
     }
 
-    public E selectOneByUnique( String[] fields , E entity ,  boolean lock , String uniqueName  ) {
-        return selectOneByColInfos( fields , entity , checkAndGetUnique(uniqueName) , lock );
+    public E selectOneAndLockByUnique( String[] fields , E entity ,  String uniqueName  ) {
+        return selectOneByColInfos( fields , entity , checkAndGetUnique(uniqueName) , true );
     }
 
-    public E selectOneByAttr( String[] fields , E entity ,  boolean lock , String... attrNames  ) {
-        return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , lock );
+    public E selectOneByAttr( String[] fields , E entity , String... attrNames  ) {
+        return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , false );
     }
 
-
+    public E selectOneAndLockByAttr( String[] fields , E entity , String... attrNames  ) {
+        return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , true );
+    }
 
     private E selectOneByColInfos( String[] fields , E entity ,  List<ColInfo> cis , boolean lock  ) {
 
@@ -164,32 +172,21 @@ public final class DaoBasicUtil<E> {
     }
 
 
+
     public List<E> loadByAttr( E entity , String... attrNames  ) {
-        return selectByAttr( null , entity , attrNames );
+        return selectByAttr( null , null , entity , attrNames );
     }
 
 
     public List<E> selectByAttr( String[] fields  , E entity  , String... attrNames  ) {
-        return selectByAttr( fields , entity , attrNames , (SortInfo[]) null );
+        return selectByAttr( fields , null, entity , attrNames  );
     }
 
-
-    public List<E> loadAll() {
-        return selectAll( null );
+    public List<E> loadByAttr( SortInfo[] sortInfos ,  E entity , String... attrNames ) {
+        return selectByAttr( null , sortInfos , entity , attrNames );
     }
 
-    public List<E> selectAll( String[] fields ) {
-        return selectAll(fields,(SortInfo[]) null);
-    }
-
-
-
-    public List<E> loadByAttr( E entity , String[] attrNames , SortInfo... sortInfos  ) {
-        return selectByAttr( null , entity , attrNames , sortInfos );
-    }
-
-
-    public List<E> selectByAttr( String[] fields  , E entity  , String[] attrNames , SortInfo... sortInfos  ) {
+    public List<E> selectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , String... attrNames  ) {
 
         List<ColInfo> cis = checkAndGetAttrs(attrNames);
 
@@ -201,7 +198,6 @@ public final class DaoBasicUtil<E> {
         return (List<E>)dao.load( entity.getClass() , orderProc( sql.toString() , sortInfos ) , entity );
 
     }
-
 
     public List<E> loadAll( SortInfo... sortInfos  ) {
         return selectAll( null , sortInfos );
@@ -217,7 +213,6 @@ public final class DaoBasicUtil<E> {
         return (List<E>)dao.load( this.entityClazz , orderProc( sql.toString() , sortInfos ) );
 
     }
-
 
 
     private String orderProc( String sql, SortInfo... strts ) {
@@ -251,7 +246,7 @@ public final class DaoBasicUtil<E> {
     }
 
 
-    public Page<E> pagingSelectByAttr(String[] fields , PageRequest pageRequest , E entity  , String... attrNames  ) {
+    public Page<E> pagingSelectByAttr( String[] fields , PageRequest pageRequest , E entity , String... attrNames  ) {
 
         List<ColInfo> cis = checkAndGetAttrs(attrNames);
 
@@ -414,5 +409,6 @@ public final class DaoBasicUtil<E> {
         return sb.toString();
 
     }
+
 
 }
