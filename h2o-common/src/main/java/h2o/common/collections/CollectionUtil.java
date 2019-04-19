@@ -1,6 +1,6 @@
 package h2o.common.collections;
 
-import h2o.common.util.bean.PreOperate;
+import h2o.common.collections.builder.ListBuilder;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -117,6 +117,35 @@ public class CollectionUtil {
 		}
 		
 		return r;		
+
+	}
+
+
+	@SuppressWarnings("rawtypes")
+	public static <E> List<E>[] split( Collection<E> data , int length ) {
+
+		if ( length <= 0 ) {
+			throw new IllegalArgumentException( "length" );
+		}
+
+		List<Object> rls = ListBuilder.newList();
+
+		int n = 0;
+		List<E> ltmp = ListBuilder.newList( length );
+		for ( E e : data ) {
+			ltmp.add( e );
+			if ( ++n == length ) {
+				rls.add( ltmp );
+				ltmp = ListBuilder.newList( length );
+				n = 0;
+			}
+		}
+
+		if ( n > 0 ) {
+			rls.add( ltmp );
+		}
+
+		return rls.toArray( (List<E>[]) new List[ rls.size() ]  );
 
 	}
 
