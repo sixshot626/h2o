@@ -109,12 +109,12 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().selectByAttr(fields, entity, attrNames);
     }
 
-    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, String... attrNames) {
-        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrNames);
+    public List<E> sortLoadByAttr(SortInfo[] sortInfos, E entity, String... attrNames) {
+        return createDaoBasicUtil().sortLoadByAttr(sortInfos, entity, attrNames);
     }
 
-    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, String... attrNames) {
-        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrNames);
+    public List<E> sortSelectByAttr(String[] fields, SortInfo[] sortInfos, E entity, String... attrNames) {
+        return createDaoBasicUtil().sortSelectByAttr(fields, sortInfos, entity, attrNames);
     }
 
     public List<E> loadAll(SortInfo... sortInfos) {

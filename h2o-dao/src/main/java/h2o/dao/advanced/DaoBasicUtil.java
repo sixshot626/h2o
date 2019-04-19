@@ -193,19 +193,19 @@ public final class DaoBasicUtil<E> {
 
 
     public List<E> loadByAttr( E entity , String... attrNames  ) {
-        return selectByAttr( null , null , entity , attrNames );
+        return sortSelectByAttr( null , null , entity , attrNames );
     }
 
 
     public List<E> selectByAttr( String[] fields  , E entity  , String... attrNames  ) {
-        return selectByAttr( fields , null, entity , attrNames  );
+        return sortSelectByAttr( fields , null, entity , attrNames  );
     }
 
-    public List<E> loadByAttr( SortInfo[] sortInfos ,  E entity , String... attrNames ) {
-        return selectByAttr( null , sortInfos , entity , attrNames );
+    public List<E> sortLoadByAttr( SortInfo[] sortInfos ,  E entity , String... attrNames ) {
+        return sortSelectByAttr( null , sortInfos , entity , attrNames );
     }
 
-    public List<E> selectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , String... attrNames  ) {
+    public List<E> sortSelectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , String... attrNames  ) {
 
         List<ColInfo> cis = checkAndGetAttrs(attrNames);
 
