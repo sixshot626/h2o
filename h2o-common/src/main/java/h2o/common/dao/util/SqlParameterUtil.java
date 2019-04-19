@@ -79,12 +79,12 @@ public class SqlParameterUtil {
 
             return ((Enum)val).name();
 
-        } else if( val instanceof List ) {
+        } else if( val instanceof Collection ) {
 
-            List<Object> ll = (List)val;
-            List<Object> nl = ListBuilder.newList(ll.size());
+			Collection<Object> ol = (Collection)val;
+            List<Object> nl = ListBuilder.newList(ol.size());
 
-            for( Object l : ll ) {
+            for( Object l : ol ) {
                 nl.add( valConvert(l) );
             }
             return nl;
