@@ -36,7 +36,7 @@ public class CollectionUtil {
 
 	@SuppressWarnings("rawtypes")
 	public static String toString(Collection c) {
-		return toString(c, true);
+		return toString(c , false);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -122,7 +122,7 @@ public class CollectionUtil {
 
 
 	@SuppressWarnings("rawtypes")
-	public static <E> List<E>[] split( Collection<E> data , int length ) {
+	public static <E> List<E>[] split( Collection<E> c , int length ) {
 
 		if ( length <= 0 ) {
 			throw new IllegalArgumentException( "length" );
@@ -132,7 +132,7 @@ public class CollectionUtil {
 
 		int n = 0;
 		List<E> ltmp = ListBuilder.newList( length );
-		for ( E e : data ) {
+		for ( E e : c ) {
 			ltmp.add( e );
 			if ( ++n == length ) {
 				rls.add( ltmp );
