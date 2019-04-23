@@ -66,7 +66,7 @@ public final class DateTime {
 
 
 
-    public String toString(Date d, String fmt) {
+    public String toString( Date d, String fmt ) {
 		return new SimpleDateFormat(fmt).format(d);
 	}
 	
@@ -93,13 +93,13 @@ public final class DateTime {
 	}
 	
 
-	public int getDaysOfMonth(String year, String month) {
+	public int getDaysOfMonth( String year, String month ) {
 		Calendar cal = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month) - 1, 1);
 		int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		return days;
 	}
 
-	public int getDaysBetween(Date date_start, Date date_end) {
+	public int getDaysBetween( Date date_start, Date date_end ) {
         try {
 
             Calendar d1 = Calendar.getInstance();

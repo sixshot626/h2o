@@ -1,8 +1,8 @@
 package h2o.common.util.id;
 
+import h2o.common.util.date.DateUtil;
 import h2o.common.util.security.RadixConvertUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.FastDateFormat;
 
 import java.util.Date;
 
@@ -17,20 +17,18 @@ public class TimeIdUtil {
 		return getDateTimeId( new Date() );
 	}
 	
-	private static final FastDateFormat DATETIMEFMT = FastDateFormat.getInstance("yyyyMMddHHmmssSSS");
 	public static String getDateTimeId( Date d ) {
-		return DATETIMEFMT.format( d );
+		return DateUtil.toString( d , "yyyyMMddHHmmssSSS" );
 	}
 	
 
 	
-	public String getTimeId() {
+	public static String getTimeId() {
 		return getTimeId( new Date() );
 	}
 	
-	private static final FastDateFormat TIMEFMT = FastDateFormat.getInstance("HHmmssSSS");
 	public static String getTimeId( Date d ) {
-		return TIMEFMT.format( d );
+		return DateUtil.toString( d , "HHmmssSSS" );
 	}
 	
 	
