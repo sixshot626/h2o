@@ -28,16 +28,12 @@ public class KeyGen {
     private static final LockMap lockMap = new LockMap();
 
 
-
-
-
-
     private static final String SELSEQ;
     private static final String INSSEQ;
     private static final String UPDSEQ;
 
     static {
-        
+
         String selSql;
         String insSql;
         String udpSql;
