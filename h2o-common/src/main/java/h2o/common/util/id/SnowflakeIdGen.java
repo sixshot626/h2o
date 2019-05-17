@@ -1,3 +1,5 @@
+package h2o.common.util.id;
+
 /**
  * Twitter_Snowflake<br>
  * SnowFlake的结构如下(每部分用-分开):<br>
@@ -14,9 +16,9 @@ public class SnowflakeIdGen {
 
     // ==============================Fields===========================================
     /**
-     * 开始时间截 (2015-01-01)
+     * 开始时间截
      */
-    private final long twepoch = 1420041600000L;
+    private final long twepoch = 1500000000000L;
 
     /**
      * 机器id所占的位数
