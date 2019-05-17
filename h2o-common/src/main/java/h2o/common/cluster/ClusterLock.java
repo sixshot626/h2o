@@ -18,7 +18,7 @@ public class ClusterLock {
 
     private static final long DEFAULT_TIME_OUT = 30000;
 
-    private final String id = UuidUtil.getUuid();
+    private final String id;
 
     private final JedisProvider jedisProvider;
 
@@ -33,19 +33,33 @@ public class ClusterLock {
     private volatile boolean locked = false;
 
 
-    public ClusterLock(JedisProvider jedisProvider, String key, int expire ) {
+    public ClusterLock( JedisProvider jedisProvider, String key, int expire ) {
+        this( uuid(), jedisProvider , key , expire  );
+    }
+
+    public ClusterLock( String id, JedisProvider jedisProvider, String key, int expire ) {
+        this.id = id;
         this.jedisProvider = jedisProvider;
         this._jedis = null;
         this.key = "H2OClusterLock_" + key;
         this.expire = expire;
     }
 
+
     public ClusterLock( JedisCommands jedis, String key, int expire ) {
+        this( uuid(), jedis , key , expire  );
+    }
+
+    public ClusterLock( String id, JedisCommands jedis, String key, int expire ) {
+        this.id = id;
         this.jedisProvider = null;
         this._jedis = jedis;
         this.key = "H2OClusterLock_" + key;
         this.expire = expire;
     }
+
+
+
 
 
     private void tryLock( JedisCommands jedis ) {
@@ -227,6 +241,11 @@ public class ClusterLock {
 
     public boolean isLocked() {
         return run && locked;
+    }
+
+
+    private static synchronized String uuid() {
+        return UuidUtil.getUuid();
     }
 
 }
