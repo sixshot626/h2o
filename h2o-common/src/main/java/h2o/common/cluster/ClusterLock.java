@@ -1,6 +1,7 @@
 package h2o.common.cluster;
 
 import h2o.common.Mode;
+import h2o.common.exception.ExceptionUtil;
 import h2o.common.thirdparty.redis.JedisCallBack;
 import h2o.common.thirdparty.redis.JedisProvider;
 import h2o.common.util.id.UuidUtil;
@@ -16,7 +17,7 @@ public class ClusterLock {
 
     private static final Logger log = LoggerFactory.getLogger( ClusterLock.class.getName() );
 
-    private static final long DEFAULT_TIME_OUT = 30000;
+    private static final long DEFAULT_TIME_OUT = 5000;
 
     private final String id;
 
@@ -108,6 +109,8 @@ public class ClusterLock {
             log.error( "" , e);
 
             locked = false;
+
+            throw ExceptionUtil.toRuntimeException( e );
 
         }
 
