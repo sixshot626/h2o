@@ -160,7 +160,9 @@ public abstract class BasicRepository<E> {
     }
 
 
-
+    public int delWhere( E entity , String where , Object... args  ) {
+        return createDaoBasicUtil().delWhere( entity , where , args );
+    }
 
 
 

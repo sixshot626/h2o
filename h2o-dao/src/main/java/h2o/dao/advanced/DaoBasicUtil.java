@@ -124,7 +124,9 @@ public final class DaoBasicUtil<E> {
 
         Object[] sqlArgs = new Object[ args.length + 1 ];
         sqlArgs[0] = entity;
-        System.arraycopy( args , 0 , sqlArgs , 1 , args.length );
+        if ( args.length > 0 ) {
+            System.arraycopy(args, 0, sqlArgs, 1, args.length);
+        }
 
         return dao.update( DbUtil.sqlBuilder.buildUpdateSql( entity , where , null , null ) , sqlArgs );
 
@@ -363,6 +365,23 @@ public final class DaoBasicUtil<E> {
     private int delByColInfos( E entity , List<ColInfo> cis  ) {
         return dao.update( "delete from " + this.entityParser.getTableName() +
                 " where " +  buildWhereStr( cis ) , entity );
+    }
+
+
+    public int delWhere( E entity , String where , Object... args  ) {
+
+        if ( CollectionUtil.argsIsBlank( args ) ) {
+            args = new Object[0];
+        }
+
+        Object[] sqlArgs = new Object[ args.length + 1 ];
+        sqlArgs[0] = entity;
+        if ( args.length > 0 ) {
+            System.arraycopy(args, 0, sqlArgs, 1, args.length);
+        }
+
+        return dao.update( "delete from " + this.entityParser.getTableName() + " where " +  where , sqlArgs );
+
     }
 
 
