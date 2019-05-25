@@ -265,7 +265,7 @@ public class SqlBuilder {
 		}
 		
 		sb.append(" ");
-		if( !StringUtils.isBlank(where)) {
+		if( StringUtils.isNotBlank(where) ) {
 			sb.append("where ");
 			sb.append(where);
 		}

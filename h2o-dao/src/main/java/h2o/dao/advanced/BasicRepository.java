@@ -53,6 +53,12 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().editByAttr(entity, attrNames);
     }
 
+
+    public int editWhere( E entity , String where , Object... args  ) {
+        return createDaoBasicUtil().editWhere( entity, where , args );
+    }
+
+
     public E get(E entity) {
         return createDaoBasicUtil().get(entity);
     }

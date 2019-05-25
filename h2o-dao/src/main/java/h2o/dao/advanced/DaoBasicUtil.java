@@ -116,8 +116,19 @@ public final class DaoBasicUtil<E> {
     }
 
 
+    public int editWhere( E entity , String where , Object... args  ) {
 
+        if ( CollectionUtil.argsIsBlank( args ) ) {
+            args = new Object[0];
+        }
 
+        Object[] sqlArgs = new Object[ args.length + 1 ];
+        sqlArgs[0] = entity;
+        System.arraycopy( args , 0 , sqlArgs , 1 , args.length );
+
+        return dao.update( DbUtil.sqlBuilder.buildUpdateSql3( entity , where ) , sqlArgs );
+
+    }
 
 
     public E get( E entity ) {
