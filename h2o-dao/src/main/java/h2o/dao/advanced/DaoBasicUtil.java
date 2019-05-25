@@ -82,11 +82,11 @@ public final class DaoBasicUtil<E> {
 
 
     public void add( E entity ) {
-        dao.update( DbUtil.sqlBuilder.buildInsertSql(entity) , entity );
+        dao.update( DbUtil.sqlBuilder.buildInsertSql(entity , null , null ) , entity );
     }
 
     public void batAdd( List<E> entities ) {
-        dao.batchUpdate( DbUtil.sqlBuilder.buildInsertSqlIncludeNull( entities.get(0) ) , entities );
+        dao.batchUpdate( DbUtil.sqlBuilder.buildInsertSqlIncludeNull( entities.get(0) , null , null ) , entities );
     }
 
 
@@ -110,8 +110,8 @@ public final class DaoBasicUtil<E> {
             ks.add( ci.attrName );
         }
 
-        return dao.update( DbUtil.sqlBuilder.buildUpdateSql3(
-                entity , buildWhereStr( cis )  , (String[])ks.toArray( new String[ks.size() ] )
+        return dao.update( DbUtil.sqlBuilder.buildUpdateSql(
+                entity , buildWhereStr( cis )  , null ,  (String[])ks.toArray( new String[ks.size() ] )
         ) , entity );
     }
 
@@ -126,7 +126,7 @@ public final class DaoBasicUtil<E> {
         sqlArgs[0] = entity;
         System.arraycopy( args , 0 , sqlArgs , 1 , args.length );
 
-        return dao.update( DbUtil.sqlBuilder.buildUpdateSql3( entity , where ) , sqlArgs );
+        return dao.update( DbUtil.sqlBuilder.buildUpdateSql( entity , where , null , null ) , sqlArgs );
 
     }
 

@@ -28,69 +28,22 @@ public class SqlBuilder {
 	}
 	
 
-	
-	
-	public SqlSource buildInsertSql( Object bean  , String... attrNames ) throws DaoException {
-		return this.buildInsertSql(false, false, bean, (String[])attrNames);
-	}
-	
-	public SqlSource buildInsertSql2( Object bean  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
-		return this.buildInsertSql2(false, false, bean, attrNames , skipAttrNames );
-	}
-	
-	public SqlSource buildInsertSql3( Object bean  ,  String... skipAttrNames  ) throws DaoException {
-		return this.buildInsertSql2(false, false, bean, (String[])null , (String[])skipAttrNames );
-	}
-	
-	
-	
-	
-	
-	public SqlSource buildAllInsertSql( Object bean  , String... attrNames ) throws DaoException {
-		return this.buildInsertSql(false, true, bean, (String[])attrNames);
-	}
-	
-	public SqlSource buildAllInsertSql2( Object bean  , String[] attrNames , String[] skipAttrNames ) {
-		return this.buildInsertSql2(false, true, bean, attrNames , skipAttrNames);
-	}
-	
-
-	
-	
-	public SqlSource buildInsertSqlIncludeNull( Object bean  , String... attrNames ) throws DaoException {
-		return this.buildInsertSql(true, false, bean, (String[])attrNames);
-	}
-	
-	public SqlSource buildInsertSqlIncludeNull2( Object bean  ,  String[] attrNames , String[] skipAttrNames ) throws DaoException {
-		return this.buildInsertSql2(true, false, bean, attrNames , skipAttrNames);
-	}
-	
-	public SqlSource buildInsertSqlIncludeNull3( Object bean  ,  String... skipAttrNames ) throws DaoException {
-		return this.buildInsertSql2(true, false, bean, (String[])null , (String[])skipAttrNames);
-	}
-	
-	
-	
-	
-	
-	
-	public SqlSource buildAllInsertSqlIncludeNull( Object bean  , String... attrNames ) throws DaoException {
-		return this.buildInsertSql(true, true, bean, (String[])attrNames);
-	}
-	
-	public SqlSource buildAllInsertSqlIncludeNull2( Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
-		return this.buildInsertSql2(true, true, bean, attrNames , skipAttrNames );
+	public SqlSource buildInsertSql( Object bean  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
+		return this.buildInsertSql(false, false, bean, attrNames , skipAttrNames );
 	}
 
 	
-	
-	
+	public SqlSource buildInsertSqlIncludeNull( Object bean  ,  String[] attrNames , String[] skipAttrNames ) throws DaoException {
+		return this.buildInsertSql(true, false, bean, attrNames , skipAttrNames);
+	}
 
-	public SqlSource buildInsertSql( boolean includeNull , boolean isAllattr , Object bean  , String... attrNames ) throws DaoException {
-		return this.buildInsertSql2(includeNull, isAllattr, bean, attrNames, (String[])null );
-	}	
 	
-	public SqlSource buildInsertSql2( boolean includeNull , boolean isAllattr , Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
+	public SqlSource buildAllInsertSqlIncludeNull( Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
+		return this.buildInsertSql(true, true, bean, attrNames , skipAttrNames );
+	}
+
+	
+	private SqlSource buildInsertSql( boolean includeNull , boolean isAllattr , Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
 		
 		String tabName = ColInfoUtil.getTableName(bean);		
 		List<ColInfo> colInfos = ColInfoUtil.getColInfoInAttrNames( bean , isAllattr , attrNames , skipAttrNames , this.isSilently);		
@@ -152,76 +105,29 @@ public class SqlBuilder {
 		
 	}
 	
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	public SqlSource buildUpdateSql( Object bean  , String where , String... attrNames ) throws DaoException {
-		return this.buildUpdateSql(false, false, bean, where , (String[])attrNames);
-	}
-	
-	public SqlSource buildUpdateSql2( Object bean  , String where , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
-		return this.buildUpdateSql2(false, false, bean, where , attrNames , skipAttrNames );
-	}
-	
-	public SqlSource buildUpdateSql3( Object bean  , String where , String... skipAttrNames  ) throws DaoException {
-		return this.buildUpdateSql2(false, false, bean, where , (String[])null , (String[])skipAttrNames );
-	}
-	
-	
-	
-	
-	
-	
-	
-	public SqlSource buildAllUpdateSql( Object bean  , String where , String... attrNames ) throws DaoException {
-		return this.buildUpdateSql(false, true, bean, where , (String[])attrNames);
-	}
-	
-	public SqlSource buildAllUpdateSql2( Object bean  , String where , String[] attrNames , String[] skipAttrNames ) throws DaoException {
-		return this.buildUpdateSql2(false, true, bean, where , attrNames , skipAttrNames );
+	public SqlSource buildUpdateSql( Object bean  , String where , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
+		return this.buildUpdateSql(false, false, bean, where , attrNames , skipAttrNames );
 	}
 
 	
-	
-	
-	public SqlSource buildUpdateSqlIncludeNull( Object bean  , String where , String... attrNames ) throws DaoException {
-		return this.buildUpdateSql(true, false, bean, where , (String[])attrNames);
-	}
-	
-	public SqlSource buildUpdateSqlIncludeNull2( Object bean  , String where , String[] attrNames , String[] skipAttrNames ) throws DaoException {
-		return this.buildUpdateSql2(true, false, bean, where , attrNames , skipAttrNames );
-	}
-	
-	public SqlSource buildUpdateSqlIncludeNull3( Object bean  , String where , String... skipAttrNames ) throws DaoException {
-		return this.buildUpdateSql2(true, false, bean, where , (String[])null , (String[])skipAttrNames );
-	}
-	
-	
-	
-	
-	public SqlSource buildAllUpdateSqlIncludeNull( Object bean  , String where , String... attrNames ) throws DaoException {
-		return this.buildUpdateSql(true, true, bean, where , (String[])attrNames);
-	}
-	
-	public SqlSource buildAllUpdateSqlIncludeNull2( Object bean  , String where , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
-		return this.buildUpdateSql2(true, true, bean, where , attrNames , skipAttrNames);
+	public SqlSource buildAllUpdateSql( Object bean  , String where , String[] attrNames , String[] skipAttrNames ) throws DaoException {
+		return this.buildUpdateSql(false, true, bean, where , attrNames , skipAttrNames );
 	}
 
 	
-	
-	
-	public SqlSource buildUpdateSql( boolean includeNull , boolean isAllattr , Object bean ,  String where  , String... attrNames ) throws DaoException {		
-		return this.buildUpdateSql2(includeNull, isAllattr, bean, where, attrNames, (String[])null );
+	public SqlSource buildUpdateSqlIncludeNull( Object bean  , String where , String[] attrNames , String[] skipAttrNames ) throws DaoException {
+		return this.buildUpdateSql(true, false, bean, where , attrNames , skipAttrNames );
 	}
+
 	
+	public SqlSource buildAllUpdateSqlIncludeNull( Object bean  , String where , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
+		return this.buildUpdateSql(true, true, bean, where , attrNames , skipAttrNames);
+	}
+
 	
-	public SqlSource buildUpdateSql2( boolean includeNull , boolean isAllattr , Object bean ,  String where  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {	
+	private SqlSource buildUpdateSql( boolean includeNull , boolean isAllattr , Object bean ,  String where  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
 		
 		
 		String tabName = ColInfoUtil.getTableName(bean);		
