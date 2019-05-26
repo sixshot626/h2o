@@ -17,9 +17,8 @@ public class TransResult<S,R> extends TransStatus<S> implements Serializable {
         super(transStatus);
     }
 
-
     @Override
-    public TransResult<S,R> from(TransResponse transResponse) {
+    public TransResult<S,R> from( TransResponse transResponse ) {
         super.from(transResponse);
         return this;
     }

@@ -26,16 +26,6 @@ public class TransResponse implements Serializable {
         this.setMsg( transResponse.getMsg() );
     }
 
-
-    public TransResponse from( TransResponse transResponse ) {
-        this.setFinal( transResponse.isFinal() );
-        this.setSuccess( transResponse.isSuccess() );
-        this.setCode( transResponse.getCode() );
-        this.setMsg( transResponse.getMsg() );
-        return this;
-    }
-
-
     public boolean isFinal() {
         return isFinal;
     }

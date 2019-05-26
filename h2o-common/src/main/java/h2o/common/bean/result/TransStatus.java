@@ -21,9 +21,11 @@ public class TransStatus<S> extends TransResponse implements Serializable {
         this.setStatus( transStatus.getStatus() );
     }
 
-    @Override
-    public TransStatus<S> from(TransResponse transResponse) {
-        super.from(transResponse);
+    public TransStatus<S> from( TransResponse transResponse ) {
+        this.setFinal( transResponse.isFinal() );
+        this.setSuccess( transResponse.isSuccess() );
+        this.setCode( transResponse.getCode() );
+        this.setMsg( transResponse.getMsg() );
         return this;
     }
 
