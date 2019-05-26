@@ -18,11 +18,18 @@ public class TransResult<S,R> extends TransStatus<S> implements Serializable {
     }
 
 
+    @Override
+    public TransResult<S,R> from(TransResponse transResponse) {
+        super.from(transResponse);
+        return this;
+    }
+
     private R result;
 
     private Throwable e;
 
 
+    @Override
     public R getResult() {
         return result;
     }
