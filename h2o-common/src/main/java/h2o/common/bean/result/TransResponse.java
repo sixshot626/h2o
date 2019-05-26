@@ -73,7 +73,7 @@ public class TransResponse implements Serializable {
     }
 
     public <R> R getResult() {
-       throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
