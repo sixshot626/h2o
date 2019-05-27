@@ -48,8 +48,8 @@ public class TransResult<S,R> extends TransStatus<S> implements Serializable {
     }
 
     @Override
-    public TransResult<S,R> setFinal(boolean aFinal) {
-        super.setFinal(aFinal);
+    public TransResult<S,R> setFinalState(boolean finalState) {
+        super.setFinalState(finalState);
         return this;
     }
 

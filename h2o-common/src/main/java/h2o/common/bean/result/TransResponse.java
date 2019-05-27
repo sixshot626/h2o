@@ -8,7 +8,7 @@ public class TransResponse implements Serializable {
 
     private static final long serialVersionUID = -4600331310699408740L;
 
-    private boolean isFinal;
+    private boolean finalState;
 
     private boolean success;
 
@@ -20,18 +20,18 @@ public class TransResponse implements Serializable {
     }
 
     public TransResponse( TransResponse transResponse ) {
-        this.setFinal( transResponse.isFinal() );
+        this.setFinalState( transResponse.isFinalState() );
         this.setSuccess( transResponse.isSuccess() );
         this.setCode( transResponse.getCode() );
         this.setMsg( transResponse.getMsg() );
     }
 
-    public boolean isFinal() {
-        return isFinal;
+    public boolean isFinalState() {
+        return finalState;
     }
 
-    public TransResponse setFinal(boolean aFinal) {
-        isFinal = aFinal;
+    public TransResponse setFinalState(boolean finalState) {
+        this.finalState = finalState;
         return this;
     }
 

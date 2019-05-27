@@ -22,15 +22,15 @@ public class TransStatus<S> extends TransResponse implements Serializable {
     }
 
     public TransStatus<S> from( TransResponse transResponse ) {
-        this.setFinal( transResponse.isFinal() );
+        this.setFinalState( transResponse.isFinalState() );
         this.setSuccess( transResponse.isSuccess() );
         this.setCode( transResponse.getCode() );
         this.setMsg( transResponse.getMsg() );
         return this;
     }
 
-    public TransStatus<S> setFinal(boolean aFinal) {
-        super.setFinal(aFinal);
+    public TransStatus<S> setFinalState(boolean finalState) {
+        super.setFinalState(finalState);
         return this;
     }
 
