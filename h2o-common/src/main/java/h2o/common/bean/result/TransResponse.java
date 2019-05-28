@@ -4,7 +4,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.io.Serializable;
 
-public class TransResponse implements Serializable {
+public class TransResponse implements ErrorInfo , Serializable {
 
     private static final long serialVersionUID = -4600331310699408740L;
 
@@ -25,6 +25,26 @@ public class TransResponse implements Serializable {
         this.setCode( transResponse.getCode() );
         this.setMsg( transResponse.getMsg() );
     }
+
+
+    public TransResponse error( String code , String msg ) {
+
+        this.setSuccess( false );
+        this.setCode( code );
+        this.setMsg( msg );
+
+        return this;
+    }
+
+    public TransResponse error( ErrorInfo errorInfo ) {
+
+        this.setSuccess( false );
+        this.setCode( errorInfo.errorCode() );
+        this.setMsg( errorInfo.errorMsg() );
+
+        return this;
+    }
+
 
     public boolean isFinalState() {
         return finalState;
@@ -60,6 +80,16 @@ public class TransResponse implements Serializable {
     public TransResponse setMsg(String msg) {
         this.msg = msg;
         return this;
+    }
+
+    @Override
+    public String errorCode() {
+        return code;
+    }
+
+    @Override
+    public String errorMsg() {
+        return msg;
     }
 
     public <R> R getResult() {

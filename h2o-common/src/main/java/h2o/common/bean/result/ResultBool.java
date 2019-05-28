@@ -3,7 +3,7 @@ package h2o.common.bean.result;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class ResultBool implements java.io.Serializable {
+public class ResultBool implements ErrorInfo , java.io.Serializable {
 
     private static final long serialVersionUID = 2317776198697479575L;
 
@@ -35,6 +35,17 @@ public class ResultBool implements java.io.Serializable {
     }
 
     public String getMsg() {
+        return msg;
+    }
+
+
+    @Override
+    public String errorCode() {
+        return Boolean.toString(success);
+    }
+
+    @Override
+    public String errorMsg() {
         return msg;
     }
 

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by zhangjianwei on 2017/6/7.
  */
-public class TransResult<S,R> extends TransStatus<S> implements Serializable {
+public class TransResult<S,R> extends TransStatus<S> implements ErrorInfo , Serializable {
 
     private static final long serialVersionUID = -1448116426261181686L;
 
@@ -20,6 +20,18 @@ public class TransResult<S,R> extends TransStatus<S> implements Serializable {
     @Override
     public TransResult<S,R> from( TransResponse transResponse ) {
         super.from(transResponse);
+        return this;
+    }
+
+    @Override
+    public TransResult<S,R> error( String code, String msg ) {
+        super.error(code, msg);
+        return this;
+    }
+
+    @Override
+    public TransResult<S,R> error( ErrorInfo errorInfo ) {
+        super.error(errorInfo);
         return this;
     }
 

@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by zhangjianwei on 2017/6/7.
  */
-public class TransStatus<S> extends TransResponse implements Serializable {
+public class TransStatus<S> extends TransResponse implements ErrorInfo , Serializable {
 
     private static final long serialVersionUID = -8626841949944329920L;
 
@@ -28,6 +28,19 @@ public class TransStatus<S> extends TransResponse implements Serializable {
         this.setMsg( transResponse.getMsg() );
         return this;
     }
+
+    @Override
+    public TransStatus<S> error(String code, String msg) {
+        super.error(code, msg);
+        return this;
+    }
+
+    @Override
+    public TransStatus<S> error( ErrorInfo errorInfo ) {
+        super.error(errorInfo);
+        return this;
+    }
+
 
     public TransStatus<S> setFinalState(boolean finalState) {
         super.setFinalState(finalState);
