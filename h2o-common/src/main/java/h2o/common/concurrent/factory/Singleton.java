@@ -20,6 +20,6 @@ public abstract class Singleton<T> {
         return ins;
     }
 
-    abstract T create();
+    protected abstract T create();
 
 }
