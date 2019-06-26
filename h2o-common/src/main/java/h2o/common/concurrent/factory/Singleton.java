@@ -1,25 +1,19 @@
 package h2o.common.concurrent.factory;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 public abstract class Singleton<T> {
 
-    private final Lock lock = new ReentrantLock();
-
-    private volatile T instance = null;
+    private volatile T instance;
 
     public T get() {
+
         T ins = instance;
         if ( ins == null ) {
-            lock.lock();
-            try {
+            synchronized (this) {
                 ins = instance;
                 if ( ins == null ) {
-                    ins = instance = create();
+                    ins = create();
+                    instance = ins;
                 }
-            }finally {
-                lock.unlock();
             }
         }
 
