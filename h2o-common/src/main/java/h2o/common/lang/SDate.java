@@ -28,11 +28,15 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         this( toDate( date , fmt ) );
     }
 
-    private static Date toDate(String date , String fmt ) {
+    private static Date toDate( String date , String fmt ) {
         if ( date == null ) {
             return null;
         }
-        return DateUtil.toDate( date , fmt );
+        try {
+            return DateUtil.toDate(date, fmt);
+        } catch ( Exception e ) {
+            throw new IllegalArgumentException();
+        }
     }
 
 
@@ -46,6 +50,9 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
 
     public String get() {
+        if ( this.date == null ) {
+            throw new NullPointerException();
+        }
         return date;
     }
 
@@ -53,13 +60,13 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         return date == null ? other : date;
     }
 
-    public String fmt(String fmt ) {
+    public String fmt( String fmt ) {
 
         if ( DATE_FMT.equals( fmt ) ) {
-            return date;
+            return this.get();
         }
 
-        return DateUtil.str2Str( date , DATE_FMT , fmt );
+        return DateUtil.str2Str( this.get() , DATE_FMT , fmt );
 
     }
 
@@ -76,6 +83,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
