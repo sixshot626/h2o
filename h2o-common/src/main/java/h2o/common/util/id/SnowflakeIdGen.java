@@ -31,12 +31,12 @@ public class SnowflakeIdGen {
     private final long timerIdBits = 3L;
 
     /**
-     * 支持的最大机器ID，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
+     * 支持的最大机器ID，结果是127 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
      */
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
 
     /**
-     * 支持的最大数据标识id，结果是31
+     * 支持的最大时钟标识id，结果是7
      */
     private final long maxTimerId = -1L ^ (-1L << timerIdBits);
 
