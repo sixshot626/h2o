@@ -7,25 +7,25 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Date;
 
-public final class STime implements Comparable<STime>, java.io.Serializable {
+public final class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
-    private static final String DATE_FMT = "HH:mm:ss";
+    private static final String DATE_FMT = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * 时间 HH:mm:ss
+     * 日期时间 yyyy-MM-dd HH:mm:ss
      */
-    private final String time;
+    private final String dateTime;
 
-    public STime() {
-        time = null;
+    public SDateTime() {
+        dateTime = null;
     }
 
-    public STime(String time ) {
-        this( toDate( time , DATE_FMT ) );
+    public SDateTime(String dateTime) {
+        this( toDate(dateTime, DATE_FMT ) );
     }
 
-    public STime(String time , String fmt ) {
-        this( toDate( time , fmt ) );
+    public SDateTime(String dateTime, String fmt ) {
+        this( toDate(dateTime, fmt ) );
     }
 
     private static Date toDate( String date , String fmt ) {
@@ -40,24 +40,24 @@ public final class STime implements Comparable<STime>, java.io.Serializable {
     }
 
 
-    public STime( Date date ) {
-        this.time = date == null ? null : DateUtil.toTimeString( date );
+    public SDateTime(Date dateTime) {
+        this.dateTime = dateTime == null ? null : DateUtil.toString(dateTime);
     }
 
     public boolean isPresent() {
-        return time != null;
+        return dateTime != null;
     }
 
 
     public String get() {
-        if ( this.time == null ) {
+        if ( this.dateTime == null ) {
             throw new NullPointerException();
         }
-        return time;
+        return dateTime;
     }
 
     public String orElse(String other) {
-        return time == null ? other : time;
+        return dateTime == null ? other : dateTime;
     }
 
     public String fmt( String fmt ) {
@@ -72,7 +72,7 @@ public final class STime implements Comparable<STime>, java.io.Serializable {
 
 
     @Override
-    public int compareTo( STime other ) {
+    public int compareTo( SDateTime other ) {
 
         String l = this.orElse("");
         String r = other.orElse("");
@@ -88,24 +88,24 @@ public final class STime implements Comparable<STime>, java.io.Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        STime sDate = (STime) o;
+        SDateTime sDate = (SDateTime) o;
 
         return new EqualsBuilder()
-                .append(time, sDate.time)
+                .append(dateTime, sDate.dateTime)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(time)
+                .append(dateTime)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("time", this.orElse("<null>"))
+                .append("dateTime", this.orElse("<null>"))
                 .toString();
     }
 }

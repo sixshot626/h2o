@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Date;
 
-public class SDate implements Comparable<SDate>, java.io.Serializable {
+public final class SDate implements Comparable<SDate>, java.io.Serializable {
 
     private static final String DATE_FMT = "yyyy-MM-dd";
 
@@ -21,7 +21,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
     }
 
     public SDate( String date ) {
-        this( toDate( date , DATE_FMT ) );
+        this( toDate( date , "yyyy-MM-dd" ) );
     }
 
     public SDate( String date , String fmt ) {
