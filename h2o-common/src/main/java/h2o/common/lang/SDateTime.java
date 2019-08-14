@@ -24,8 +24,8 @@ public final class SDateTime implements Comparable<SDateTime>, java.io.Serializa
         this( toDate(dateTime, DATE_FMT ) );
     }
 
-    public SDateTime(String dateTime, String fmt ) {
-        this( toDate(dateTime, fmt ) );
+    public static SDateTime from( String dateTime, String fmt ) {
+        return new SDateTime( toDate(dateTime, fmt ) );
     }
 
     private static Date toDate( String date , String fmt ) {
@@ -49,12 +49,33 @@ public final class SDateTime implements Comparable<SDateTime>, java.io.Serializa
     }
 
 
+    public String getValue() {
+        return dateTime;
+    }
+
+
     public String get() {
         if ( this.dateTime == null ) {
             throw new NullPointerException();
         }
         return dateTime;
     }
+
+    public SDate getDate() {
+        if ( this.dateTime == null ) {
+            return new SDate();
+        }
+        return SDate.from( this.dateTime , DATE_FMT );
+    }
+
+
+    public STime getTime() {
+        if ( this.dateTime == null ) {
+            return new STime();
+        }
+        return STime.from( this.dateTime , DATE_FMT );
+    }
+
 
     public String orElse(String other) {
         return dateTime == null ? other : dateTime;

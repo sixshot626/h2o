@@ -24,8 +24,8 @@ public final class SDate implements Comparable<SDate>, java.io.Serializable {
         this( toDate( date , "yyyy-MM-dd" ) );
     }
 
-    public SDate( String date , String fmt ) {
-        this( toDate( date , fmt ) );
+    public static SDate from( String date , String fmt ) {
+        return new SDate( toDate( date , fmt ) );
     }
 
     private static Date toDate( String date , String fmt ) {
@@ -48,6 +48,9 @@ public final class SDate implements Comparable<SDate>, java.io.Serializable {
         return date != null;
     }
 
+    public String getValue() {
+        return date;
+    }
 
     public String get() {
         if ( this.date == null ) {

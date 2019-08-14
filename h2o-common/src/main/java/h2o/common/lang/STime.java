@@ -24,8 +24,8 @@ public final class STime implements Comparable<STime>, java.io.Serializable {
         this( toDate( time , DATE_FMT ) );
     }
 
-    public STime(String time , String fmt ) {
-        this( toDate( time , fmt ) );
+    public static STime from(String time , String fmt ) {
+        return new STime( toDate( time , fmt ) );
     }
 
     private static Date toDate( String date , String fmt ) {
@@ -48,6 +48,9 @@ public final class STime implements Comparable<STime>, java.io.Serializable {
         return time != null;
     }
 
+    public String getValue() {
+        return time;
+    }
 
     public String get() {
         if ( this.time == null ) {
