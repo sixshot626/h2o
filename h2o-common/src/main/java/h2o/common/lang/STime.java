@@ -21,11 +21,15 @@ public class STime implements Comparable<STime>, java.io.Serializable {
     }
 
     public STime(String time ) {
-        this( SDate.toDate( time , DATE_FMT ) );
+        this( toDate( time , DATE_FMT ) );
     }
 
     public static STime from(String time , String fmt ) {
-        return new STime( SDate.toDate( time , fmt ) );
+        return new STime( toDate( time , fmt ) );
+    }
+
+    protected static Date toDate( String date , String fmt ) {
+        return SDate.toDate( date, fmt );
     }
 
     public STime( Date date ) {

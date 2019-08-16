@@ -21,11 +21,15 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
     }
 
     public SDateTime(String dateTime) {
-        this( SDate.toDate(dateTime, DATE_FMT ) );
+        this( toDate(dateTime, DATE_FMT ) );
     }
 
     public static SDateTime from( String dateTime, String fmt ) {
-        return new SDateTime( SDate.toDate(dateTime, fmt ) );
+        return new SDateTime( toDate(dateTime, fmt ) );
+    }
+
+    protected static Date toDate( String date , String fmt ) {
+       return SDate.toDate( date, fmt );
     }
 
 
