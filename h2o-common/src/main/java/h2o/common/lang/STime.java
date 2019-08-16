@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Date;
 
-public final class STime implements Comparable<STime>, java.io.Serializable {
+public class STime implements Comparable<STime>, java.io.Serializable {
 
     private static final String DATE_FMT = "HH:mm:ss";
 
