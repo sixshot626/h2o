@@ -28,7 +28,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         return new SDate( toDate( date , fmt ) );
     }
 
-    static Date toDate( String date , String fmt ) {
+    protected static Date toDate( String date , String fmt ) {
         if ( date == null ) {
             return null;
         }
