@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class SDate implements Comparable<SDate>, java.io.Serializable {
 
-    private static final String DATE_FMT = "yyyy-MM-dd";
+    protected static final String DATE_FMT = "yyyy-MM-dd";
 
     /**
      * 日期 yyyy-MM-dd
