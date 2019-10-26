@@ -28,9 +28,9 @@ public class HttpClient {
 
 	private volatile String contentType;
 
-    private volatile CharsetWrapper sendCharset;
+    private volatile CharsetWrapper sendCharset = new CharsetWrapper("UTF-8");
 	
-	private volatile CharsetWrapper charset;
+	private volatile CharsetWrapper charset = new CharsetWrapper("UTF-8");
 
 	private volatile HttpEchoCallback callback = null;
 
