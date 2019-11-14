@@ -1,5 +1,7 @@
 package h2o.common.util.id;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Twitter_Snowflake<br>
  * SnowFlake的结构如下(每部分用-分开):<br>
@@ -116,6 +118,16 @@ public class SnowflakeIdGen {
     }
 
     // ==============================Methods==========================================
+
+
+    public String nextKey() {
+        return nextKey(19);
+    }
+
+    public String nextKey( int n ) {
+        return StringUtils.leftPad( Long.toString( nextId() ) ,  n , '0' );
+    }
+
 
     /**
      * 获得下一个ID (该方法是线程安全的)
