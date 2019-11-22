@@ -96,8 +96,16 @@ public class StreamUtil {
 			}
 		}
 	}
-	
-	
+
+
+	public static InputStream string2InputStream( String data , CharsetWrapper charsetWrapper  ) {
+    	try {
+			return new ByteArrayInputStream( data.getBytes( charsetWrapper.charset ) );
+		} catch (UnsupportedEncodingException e) {
+			throw ExceptionUtil.toRuntimeException(e);
+		}
+	}
+
 
 	public static Reader toReader(InputStream is) {
 		return toReader(is, null);
