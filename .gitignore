@@ -10,7 +10,7 @@
 *.war
 *.ear
 
-/target/
+target/
 
 /deploy/mvn-repo/
 
