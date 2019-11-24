@@ -10,8 +10,8 @@ import org.apache.commons.lang.StringUtils;
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000 <br>
  * 1位标识，由于long基本类型在Java中是带符号的，最高位是符号位，正数是0，负数是1，所以id一般是正数，最高位是0<br>
  * 35位时间截(毫秒级)，注意，35位时间截不是存储当前时间的时间截，而是存储时间截的差值（当前时间截 - 开始时间截)
- * 得到的值），这里的的开始时间截，一般是我们的id生成器开始使用的时间，由我们程序来指定的（如下下面程序IdWorker类的startTime属性）。41位的时间截，可以使用69年，年T = (1L << 41) / (1000L * 60 * 60 * 24 * 365) = 69<br>
- * 16位的数据机器位，可以部署在1024个节点，包括8位timerId和8位workerId<br>
+ * 得到的值），这里的的开始时间截，一般是我们的id生成器开始使用的时间，由我们程序来指定的（如下下面程序IdWorker类的startTime属性）。35位的时间截，可以使用397天，年T = (1L << 35) / (1000L * 60 * 60 * 24 ) = 397<br>
+ * 16位的数据机器位，可以部署在1024个节点，包括6位timerId和10位workerId<br>
  * 12位序列，毫秒内的计数，12位的计数顺序号支持每个节点每毫秒(同一机器，同一时间截)产生4096个ID序号<br>
  * 加起来刚好64位，为一个Long型。<br>
  * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，经测试，SnowFlake每秒能够产生26万ID左右。
@@ -27,12 +27,12 @@ public class MiniSnowflakeIdGen {
     /**
      * 机器ID所占的位数
      */
-    private final long workerIdBits = 8L;
+    private final long workerIdBits = 10L;
 
     /**
      * 时钟ID所占的位数
      */
-    private final long timerIdBits = 8L;
+    private final long timerIdBits = 6L;
 
     /**
      * 支持的最大机器ID，结果是127 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
@@ -55,12 +55,12 @@ public class MiniSnowflakeIdGen {
     private final long workerIdShift = sequenceBits;
 
     /**
-     * 时钟ID向左移19位(12+8)
+     * 时钟ID向左移19位(12+10)
      */
     private final long timerIdShift = sequenceBits + workerIdBits;
 
     /**
-     * 时间截向左移22位(12+8+8)
+     * 时间截向左移22位(12+10+6)
      */
     private final long timestampLeftShift = sequenceBits + workerIdBits + timerIdBits;
 
@@ -75,12 +75,12 @@ public class MiniSnowflakeIdGen {
     private final long timeMask = -1L ^ (-1L << timerIdBits);
 
     /**
-     * 工作机器ID(0~127)
+     * 工作机器ID(0~1023)
      */
     private long workerId;
 
     /**
-     * 时钟ID(0~7)
+     * 时钟ID(0~63)
      */
     private long timerId;
 
@@ -104,8 +104,8 @@ public class MiniSnowflakeIdGen {
     /**
      * 构造函数
      *
-     * @param workerId     工作ID (0~255)
-     * @param timerId      时钟ID (0~255)
+     * @param workerId     工作ID (0~1023)
+     * @param timerId      时钟ID (0~63)
      */
     public MiniSnowflakeIdGen( long twepoch , long workerId, long timerId) {
 

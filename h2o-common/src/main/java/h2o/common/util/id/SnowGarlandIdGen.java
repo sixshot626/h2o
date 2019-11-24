@@ -17,8 +17,8 @@ public class SnowGarlandIdGen {
     public SnowGarlandIdGen( long workerId) {
         this.workerId = workerId;
 
-        if (workerId > 255 || workerId < 0) {
-            throw new IllegalArgumentException("worker Id can't be greater than 255 or less than 0");
+        if (workerId > 1023 || workerId < 0) {
+            throw new IllegalArgumentException("worker Id can't be greater than 1023 or less than 0");
         }
     }
 
