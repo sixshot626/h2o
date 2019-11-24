@@ -1,7 +1,5 @@
 package h2o.common.util.id;
 
-import h2o.common.lang.SDate;
-import h2o.common.util.date.DateUtil;
 import org.apache.commons.lang.StringUtils;
 
 /**
