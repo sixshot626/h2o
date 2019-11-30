@@ -52,12 +52,12 @@ public class MiniSnowflakeIdGen {
     private final long workerIdShift = sequenceBits;
 
     /**
-     * 时钟ID向左移19位(12+10)
+     * 时钟ID向左移(12+10)
      */
     private final long timerIdShift = sequenceBits + workerIdBits;
 
     /**
-     * 时间截向左移22位(12+10+6)
+     * 时间截向左移(12+10+5)
      */
     private final long timestampLeftShift = sequenceBits + workerIdBits + timerIdBits;
 
@@ -102,7 +102,7 @@ public class MiniSnowflakeIdGen {
      * 构造函数
      *
      * @param workerId     工作ID (0~1023)
-     * @param timerId      时钟ID (0~63)
+     * @param timerId      时钟ID (0~31)
      */
     public MiniSnowflakeIdGen( long twepoch , long workerId, long timerId) {
 
