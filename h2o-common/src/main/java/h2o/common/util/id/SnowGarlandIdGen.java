@@ -36,7 +36,7 @@ public class SnowGarlandIdGen {
         if ( idGen == null || !cyclicSpace.equals( this.cyclicSpace ) ) {
             this.cyclicSpace = cyclicSpace;
 
-            long twepoch = DateUtil.toDate( cyclicSpace.get() ).getTime() -  ( 1000L * 31 * 24 * 60 * 60  );
+            long twepoch = DateUtil.toDate( cyclicSpace.get() ).getTime() -  ( 1000L * 24 * 60 * 60 * 397  );
             this.idGen = new MiniSnowflakeIdGen( twepoch , this.workerId );
         }
 
