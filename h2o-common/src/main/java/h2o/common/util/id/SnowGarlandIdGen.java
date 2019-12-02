@@ -45,4 +45,7 @@ public class SnowGarlandIdGen {
     }
 
 
+    public long getWorkerId() {
+        return workerId;
+    }
 }

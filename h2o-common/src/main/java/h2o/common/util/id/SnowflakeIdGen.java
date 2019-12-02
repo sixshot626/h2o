@@ -191,7 +191,7 @@ public class SnowflakeIdGen {
     }
 
 
-    protected long getWorkerId() {
+    public long getWorkerId() {
         return workerId;
     }
 
@@ -199,7 +199,7 @@ public class SnowflakeIdGen {
         this.workerId = workerId;
     }
 
-    protected long getTimerId() {
+    public long getTimerId() {
         return timerId;
     }
 

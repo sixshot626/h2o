@@ -193,7 +193,7 @@ public class MiniSnowflakeIdGen {
     }
 
 
-    protected long getWorkerId() {
+    public long getWorkerId() {
         return workerId;
     }
 
@@ -201,7 +201,7 @@ public class MiniSnowflakeIdGen {
         this.workerId = workerId;
     }
 
-    protected long getTimerId() {
+    public long getTimerId() {
         return timerId;
     }
 
