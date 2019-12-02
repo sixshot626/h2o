@@ -5,13 +5,16 @@ public class TimestampSequence {
 
     public static class Sequence {
 
+        public final long workerId;
+
         public final long timeId;
 
         public final long timestamp;
 
         public final long sequence;
 
-        public Sequence(long timeId, long timestamp, long sequence) {
+        public Sequence(long workerId , long timeId, long timestamp, long sequence) {
+            this.workerId = workerId;
             this.timeId = timeId;
             this.timestamp = timestamp;
             this.sequence = sequence;
@@ -96,7 +99,7 @@ public class TimestampSequence {
         lastTimestamp = timestamp;
 
         //移位并通过或运算拼到一起组成64位的ID
-        return new Sequence( timerId , timestamp , sequence );
+        return new Sequence( workerId , timerId , timestamp , sequence );
 
     }
 
