@@ -4,6 +4,7 @@ import h2o.common.Mode;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.thirdparty.redis.JedisCallBack;
 import h2o.common.thirdparty.redis.JedisProvider;
+import h2o.common.util.id.RandomString;
 import h2o.common.util.id.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -248,7 +249,7 @@ public class ClusterLock {
 
 
     private static synchronized String uuid() {
-        return UuidUtil.getUuid();
+        return UuidUtil.getUuid() + "-" + new RandomString().makeNumberCode(10);
     }
 
 }
