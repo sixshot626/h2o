@@ -36,7 +36,7 @@ public class JdbcDao implements IJdbcDao {
     }
 
     public Long readLong(String sql) throws PersistenceException {
-        return (Long) readLong(sql, null);
+        return (Long) readLong(sql, (Object[])null);
     }
 
     public Long readLong(String sql, Object ... parameters) throws PersistenceException {
