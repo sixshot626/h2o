@@ -92,7 +92,7 @@ public class StreamUtil {
 			throw ExceptionUtil.toRuntimeException(e);
 		} finally {
 			if( closeReader ) {
-				closeReader(r);
+				close(r);
 			}
 		}
 	}
@@ -183,62 +183,26 @@ public class StreamUtil {
 		}
 	}
 
-	public static void closeReader(Reader reader) {
-		if (reader != null) {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				log.error("Reader.close()", e);
+
+
+	public static void close( Closeable closeable ) {
+		if (closeable != null) {
+			if (closeable instanceof Flushable) {
+				try {
+					((Flushable)closeable).flush();
+				} catch (IOException e) {
+					log.error("close" , e);
+				}
 			}
-		}
-	}
-	
-	public static void closeWriter(Writer writer) {
-		if (writer != null) {
+
 			try {
-				writer.close();
+				closeable.close();
 			} catch (IOException e) {
-				log.error("Writer.close()", e);
+				log.error("close" , e);
 			}
 		}
 	}
 
-	
-	
-	public static void closeInputStream( InputStream in) {
-		if (in != null) {
-			try {
-				in.close();
-			} catch (IOException e) {
-				log.error("InputStream.close()", e);
-			}
-		}
-	}
 
-	public static void closeOutputStream( OutputStream out ) {
-		if ( out != null) {
-			try {
-				out.close();
-			} catch (IOException e) {
-				log.error("OutputStream.close()", e);
-			}
-		}
-	}
-	
-	public static void close(Reader reader) {
-		closeReader(reader);
-	}
-	
-	public static void close(Writer writer) {
-		closeWriter(writer);
-	}
-	
-	public static void close( InputStream in ) {
-		closeInputStream(in);
-	}
-	
-	public static void close( OutputStream out ) {
-		closeOutputStream(out);
-	}
 
 }

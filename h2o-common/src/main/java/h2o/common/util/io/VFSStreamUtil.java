@@ -90,7 +90,7 @@ public class VFSStreamUtil {
 			throw ExceptionUtil.toRuntimeException(e);
 		} finally {
 			
-			StreamUtil.closeReader(r.e0);
+			StreamUtil.close(r.e0);
 			closeFileObject(r.e1);
 		}
 
