@@ -13,7 +13,7 @@ public abstract class ClusterUtil {
     private ClusterUtil() {}
 
     public static long getWorkerId() {
-        long workerId = Long.parseLong(h2o.jodd.util.SystemUtil.get("workerId" , "0"));
+        long workerId = Long.parseLong(h2o.jodd.util.SystemUtil.get("H2OWorkerId" , "0"));
         Tools.log.info("SYS PARA - workerId : {}" , workerId );
         return workerId;
     }
