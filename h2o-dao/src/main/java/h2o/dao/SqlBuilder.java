@@ -42,8 +42,8 @@ public class SqlBuilder {
 		return this.buildInsertSql(true, true, bean, attrNames , skipAttrNames );
 	}
 
-	
-	private SqlSource buildInsertSql( boolean includeNull , boolean isAllattr , Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
+
+	public SqlSource buildInsertSql( boolean includeNull , boolean isAllattr , Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
 		
 		String tabName = ColInfoUtil.getTableName(bean);		
 		List<ColInfo> colInfos = ColInfoUtil.getColInfoInAttrNames( bean , isAllattr , attrNames , skipAttrNames , this.isSilently);		
@@ -126,8 +126,8 @@ public class SqlBuilder {
 		return this.buildUpdateSql(true, true, bean, where , attrNames , skipAttrNames);
 	}
 
-	
-	private SqlSource buildUpdateSql( boolean includeNull , boolean isAllattr , Object bean ,  String where  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
+
+	public SqlSource buildUpdateSql( boolean includeNull , boolean isAllattr , Object bean ,  String where  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
 		
 		
 		String tabName = ColInfoUtil.getTableName(bean);		

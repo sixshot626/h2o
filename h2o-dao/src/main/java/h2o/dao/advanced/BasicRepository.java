@@ -41,6 +41,8 @@ public abstract class BasicRepository<E> {
         createDaoBasicUtil().batAdd(entities);
     }
 
+
+
     public int edit(E entity) {
         return createDaoBasicUtil().edit(entity);
     }
@@ -57,6 +59,28 @@ public abstract class BasicRepository<E> {
     public int editWhere( E entity , String where , Object... args  ) {
         return createDaoBasicUtil().editWhere( entity, where , args );
     }
+
+
+
+
+    public int update(E entity) {
+        return createDaoBasicUtil().update(entity);
+    }
+
+    public int updateByUnique(E entity, String uniqueName) {
+        return createDaoBasicUtil().updateByUnique(entity, uniqueName);
+    }
+
+    public int updateByAttr(E entity, String... attrNames) {
+        return createDaoBasicUtil().updateByAttr(entity, attrNames);
+    }
+
+
+    public int updateWhere( E entity , String where , Object... args  ) {
+        return createDaoBasicUtil().updateWhere( entity, where , args );
+    }
+
+
 
 
     public E get(E entity) {
