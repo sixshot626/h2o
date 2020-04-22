@@ -92,44 +92,80 @@ public final class DaoBasicUtil<E> {
 
 
     public int edit( E entity ) {
-        return updateByColInfos( false , entity , checkAndGetPk() );
+        return updateByColInfos( false , (String[])null , entity ,  checkAndGetPk() );
     }
 
     public int editByUnique( E entity , String uniqueName ) {
-        return updateByColInfos( false , entity , checkAndGetUnique(uniqueName) );
+        return updateByColInfos( false , (String[])null , entity , checkAndGetUnique(uniqueName) );
     }
 
     public int editByAttr( E entity , String... attrNames  ) {
-        return updateByColInfos( false , entity , checkAndGetAttrs(attrNames) );
+        return updateByColInfos( false , (String[])null , entity , checkAndGetAttrs(attrNames) );
     }
 
     public int editWhere( E entity , String where , Object... args  ) {
-        return updateWhere( false , entity , where , args );
+        return updateWhere( false , (String[])null , entity ,  where , args );
+    }
+
+
+
+    public int edit( String[] fields , E entity ) {
+        return updateByColInfos( false , fields , entity  , checkAndGetPk() );
+    }
+
+    public int editByUnique( String[] fields , E entity , String uniqueName ) {
+        return updateByColInfos( false , fields , entity , checkAndGetUnique(uniqueName) );
+    }
+
+    public int editByAttr( String[] fields , E entity , String... attrNames  ) {
+        return updateByColInfos( false , fields , entity ,  checkAndGetAttrs(attrNames) );
+    }
+
+    public int editWhere( String[] fields , E entity , String where , Object... args  ) {
+        return updateWhere( false , fields , entity ,  where , args );
+    }
+
+
+
+    public int update(  E entity ) {
+        return updateByColInfos( true , (String[])null , entity ,  checkAndGetPk() );
+    }
+
+    public int updateByUnique(  E entity  ,  String uniqueName ) {
+        return updateByColInfos( true , (String[])null , entity ,  checkAndGetUnique(uniqueName) );
+    }
+
+    public int updateByAttr(  E entity ,  String... attrNames  ) {
+        return updateByColInfos( true , (String[])null , entity  , checkAndGetAttrs(attrNames) );
+    }
+
+    public int updateWhere(  E entity ,  String where  , Object... args  ) {
+        return updateWhere( true , (String[])null , entity  , where  , args );
+    }
+
+
+
+    public int update( String[] fields , E entity ) {
+        return updateByColInfos( true , fields , entity ,  checkAndGetPk() );
+    }
+
+    public int updateByUnique( String[] fields , E entity  ,  String uniqueName ) {
+        return updateByColInfos( true , fields , entity ,  checkAndGetUnique(uniqueName) );
+    }
+
+    public int updateByAttr( String[] fields , E entity ,  String... attrNames  ) {
+        return updateByColInfos( true , fields , entity  , checkAndGetAttrs(attrNames) );
+    }
+
+
+    public int updateWhere( String[] fields , E entity ,  String where  , Object... args  ) {
+        return updateWhere( true , fields , entity  , where  , args );
     }
 
 
 
 
-    public int update( E entity ) {
-        return updateByColInfos( true ,  entity , checkAndGetPk() );
-    }
-
-    public int updateByUnique( E entity , String uniqueName ) {
-        return updateByColInfos( true , entity , checkAndGetUnique(uniqueName) );
-    }
-
-    public int updateByAttr( E entity , String... attrNames  ) {
-        return updateByColInfos( true , entity , checkAndGetAttrs(attrNames) );
-    }
-
-
-    public int updateWhere( E entity , String where , Object... args  ) {
-        return updateWhere( true , entity , where , args );
-    }
-
-
-
-    private int updateByColInfos( boolean includeNull , E entity , List<ColInfo> cis ) {
+    private int updateByColInfos( boolean includeNull , String[] fields , E entity , List<ColInfo> cis ) {
 
         List<String> ks = ListBuilder.newList();
         for ( ColInfo ci : cis ) {
@@ -137,12 +173,12 @@ public final class DaoBasicUtil<E> {
         }
 
         return dao.update( DbUtil.sqlBuilder.buildUpdateSql( includeNull , false ,
-                entity , buildWhereStr( cis )  , null ,  (String[])ks.toArray( new String[ks.size() ] )
+                entity , buildWhereStr( cis )  , fields ,  (String[])ks.toArray( new String[ks.size() ] )
         ) , entity );
     }
 
 
-    private int updateWhere(  boolean includeNull , E entity , String where , Object... args  ) {
+    private int updateWhere(  boolean includeNull , String[] fields , E entity ,  String where  , Object... args  ) {
 
         if ( CollectionUtil.argsIsBlank( args ) ) {
             args = new Object[0];
@@ -154,7 +190,7 @@ public final class DaoBasicUtil<E> {
             System.arraycopy(args, 0, sqlArgs, 1, args.length);
         }
 
-        return dao.update( DbUtil.sqlBuilder.buildUpdateSql( includeNull , false , entity , where , null , null ) , sqlArgs );
+        return dao.update( DbUtil.sqlBuilder.buildUpdateSql( includeNull , false , entity , where , fields , null ) , sqlArgs );
 
     }
 

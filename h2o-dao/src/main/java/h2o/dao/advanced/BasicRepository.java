@@ -55,19 +55,34 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().editByAttr(entity, attrNames);
     }
 
-
     public int editWhere( E entity , String where , Object... args  ) {
         return createDaoBasicUtil().editWhere( entity, where , args );
     }
 
 
+    public int edit( String[] fields , E entity) {
+        return createDaoBasicUtil().edit( fields , entity );
+    }
+
+    public int editByUnique( String[] fields , E entity, String uniqueName) {
+        return createDaoBasicUtil().editByUnique(  fields ,  entity, uniqueName );
+    }
+
+    public int editByAttr( String[] fields , E entity, String... attrNames) {
+        return createDaoBasicUtil().editByAttr(  fields ,  entity, attrNames );
+    }
+
+    public int editWhere( String[] fields , E entity , String where , Object... args  ) {
+        return createDaoBasicUtil().editWhere( fields ,  entity, where , args );
+    }
 
 
-    public int update(E entity) {
+
+    public int update( E entity  ) {
         return createDaoBasicUtil().update(entity);
     }
 
-    public int updateByUnique(E entity, String uniqueName) {
+    public int updateByUnique(E entity , String uniqueName) {
         return createDaoBasicUtil().updateByUnique(entity, uniqueName);
     }
 
@@ -75,10 +90,29 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().updateByAttr(entity, attrNames);
     }
 
-
     public int updateWhere( E entity , String where , Object... args  ) {
         return createDaoBasicUtil().updateWhere( entity, where , args );
     }
+
+
+
+    public int update( String[] fields , E entity  ) {
+        return createDaoBasicUtil().update( fields , entity);
+    }
+
+    public int updateByUnique( String[] fields , E entity , String uniqueName) {
+        return createDaoBasicUtil().updateByUnique( fields , entity, uniqueName);
+    }
+
+    public int updateByAttr(String[] fields , E entity, String... attrNames) {
+        return createDaoBasicUtil().updateByAttr( fields , entity, attrNames);
+    }
+
+
+    public int updateWhere( String[] fields , E entity , String where , Object... args  ) {
+        return createDaoBasicUtil().updateWhere( fields , entity, where , args );
+    }
+
 
 
 
