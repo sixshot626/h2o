@@ -8,11 +8,7 @@ import h2o.flow.pvm.runtime.RunContext;
 
 
 public interface Line extends FlowElement {
-	
-	  Node getSource();
-	  
-	  Node getDestination();
-	  
+
 	  Node pass(RunContext runContext) throws FlowException;
 
 }
