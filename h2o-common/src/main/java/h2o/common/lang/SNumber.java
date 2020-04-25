@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class SNumber extends Number {
+public class SNumber extends Number implements Comparable<SNumber> {
 
     private final String num;
 
@@ -68,6 +68,17 @@ public class SNumber extends Number {
     }
 
     @Override
+    public int compareTo(SNumber o) {
+        if ( this.isPresent() && o.isPresent() ) {
+            return this.bigDecimalValue().compareTo( o.bigDecimalValue() );
+        } else if ( ( ! this.isPresent() )&&  ( ! o.isPresent())  ) {
+            return 0;
+        } else {
+            return this.isPresent() ? 1 : -1;
+        }
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -92,4 +103,6 @@ public class SNumber extends Number {
     public String toString() {
         return this.orElse("<null>");
     }
+
+
 }
