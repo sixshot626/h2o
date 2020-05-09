@@ -14,13 +14,12 @@ public class RunContext {
 
 	private final FlowData runData;
 
-	private final Object transactionStatus;
+	private Object transactionStatus;
 
 
-	public RunContext( FlowInstance flowInstance, FlowData runData, Object transactionStatus ) {
+	public RunContext( FlowInstance flowInstance, FlowData runData ) {
 		this.flowInstance = flowInstance;
 		this.runData = runData;
-		this.transactionStatus = transactionStatus;
 	}
 
 	public FlowInstance getFlowInstance() {
@@ -31,15 +30,22 @@ public class RunContext {
 		return runData;
 	}
 
+	public void setTransactionStatus(Object transactionStatus) {
+		this.transactionStatus = transactionStatus;
+	}
+
 	public Object getTransactionStatus() {
 		return transactionStatus;
 	}
 
 	public RunContext copy() {
 
-		return new RunContext( this.flowInstance ,
-				this.runData == null ? null : this.runData.copy(),
-				this.transactionStatus );
+		RunContext runContextCopy = new RunContext( this.flowInstance ,
+				this.runData == null ? null : this.runData.copy());
+
+		runContextCopy.setTransactionStatus( transactionStatus );
+
+		return runContextCopy;
 
 	}
 

@@ -109,22 +109,22 @@ public final class ProcessVirtualMachine {
 	//=================================================
 
 	
-	public  RunStatus start( FlowInstance flowInstance , FlowData runData  ) throws FlowException {
-		return run( flowInstance , flowInstance.getStartNode() , runData , false );
+	public  RunStatus start( RunContext runContext  ) throws FlowException {
+		return run( runContext , runContext.getFlowInstance().getStartNode() , false );
 	}
 	
-	public  RunStatus run(  FlowInstance flowInstance ,  Object nodeId , FlowData runData ) throws FlowException {
-		return run( flowInstance , flowInstance.findNode( nodeId ) , runData , true );
+	public  RunStatus run(  RunContext runContext ,  Object nodeId  ) throws FlowException {
+		return run( runContext , runContext.getFlowInstance().findNode( nodeId )  , true );
 	}
 	
 
-	private RunStatus run(  FlowInstance flowInstance , Node node , FlowData runData , boolean isSignal ) throws FlowException  {
+	private RunStatus run(  RunContext runContext , Node node  , boolean isSignal ) throws FlowException  {
 
 		FlowTransactionManager tx = this.transactionManager;
 
-		Object transactionObj = tx == null ? null : tx.beginTransaction(flowInstance, runData);
+		Object transactionObj = tx == null ? null : tx.beginTransaction(runContext);
 
-		RunContext runContext = new RunContext( flowInstance , runData , transactionObj );
+		runContext.setTransactionStatus( transactionObj );
 
 		
 		try {

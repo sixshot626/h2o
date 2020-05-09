@@ -8,7 +8,7 @@ import h2o.flow.pvm.FlowInstance;
 
 public interface FlowTransactionManager {
 
-	Object beginTransaction(FlowInstance flowInstance , FlowData runData );
+	Object beginTransaction( RunContext runContext );
 
 	void commit( Object transactionObj );
 
