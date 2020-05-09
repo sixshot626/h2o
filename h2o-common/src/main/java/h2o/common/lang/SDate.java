@@ -21,7 +21,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
     }
 
     public SDate( String date ) {
-        this( toDate( date , "yyyy-MM-dd" ) );
+        this( toDate( date , DATE_FMT ) );
     }
 
     public static SDate from( String date , String fmt ) {
@@ -41,7 +41,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
 
     public SDate( Date date ) {
-        this.date = date == null ? null : DateUtil.toShortString( date );
+        this.date = date == null ? null : DateUtil.toString( date , DATE_FMT );
     }
 
     public boolean isPresent() {

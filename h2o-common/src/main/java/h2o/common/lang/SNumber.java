@@ -5,36 +5,55 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 public class SNumber extends Number implements Comparable<SNumber> {
 
-    private final String num;
+    private final String value;
 
     public SNumber() {
-        this.num = null;
+        this.value = null;
+    }
+
+    public SNumber( BigDecimal value ) {
+        if ( value == null ) {
+            this.value = null;
+        } else {
+            this.value = value.toString();
+        }
+    }
+
+    public SNumber( Number number ) {
+        if ( number == null ) {
+            this.value = null;
+        } else if ( number instanceof BigDecimal ) {
+            this.value = number.toString();
+        } else {
+            this.value = new BigDecimal(number.toString()).toString();
+        }
     }
 
     public SNumber(String num) {
-        this.num = new BigDecimal(num).toString();
+        this.value = new BigDecimal(num).toString();
     }
 
     public boolean isPresent() {
-        return num != null;
+        return value != null;
     }
 
     public String getValue() {
-        return num;
+        return value;
     }
 
     public String get() {
-        if ( this.num == null ) {
+        if ( this.value == null ) {
             throw new NullPointerException();
         }
-        return num;
+        return value;
     }
 
     public String orElse(String other) {
-        return num == null ? other : num;
+        return value == null ? other : value;
     }
 
     public BigDecimal bigDecimalValue() {
@@ -67,6 +86,38 @@ public class SNumber extends Number implements Comparable<SNumber> {
         return this.bigDecimalValue().doubleValue();
     }
 
+
+
+    public SNumber add(SNumber augend) {
+        return new SNumber(new BigDecimal(value).add( new BigDecimal( augend.value) ));
+    }
+
+    public SNumber subtract(SNumber subtrahend) {
+        return new SNumber( new BigDecimal(value).subtract( new BigDecimal(subtrahend.value) ));
+    }
+
+    public SNumber multiply(SNumber multiplicand) {
+        return new SNumber( new BigDecimal(value).multiply( new BigDecimal( multiplicand.value) ));
+    }
+
+    public SNumber divide(SNumber divisor) {
+        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) ));
+    }
+
+    public SNumber divide(SNumber divisor , RoundingMode roundingMode) {
+        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , roundingMode ) );
+    }
+
+    public SNumber divide(SNumber divisor, int scale, RoundingMode roundingMode) {
+        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , scale, roundingMode));
+    }
+
+
+
+
+
+
+
     @Override
     public int compareTo(SNumber o) {
         if ( this.isPresent() && o.isPresent() ) {
@@ -87,14 +138,14 @@ public class SNumber extends Number implements Comparable<SNumber> {
         SNumber sNumber = (SNumber) o;
 
         return new EqualsBuilder()
-                .append(num, sNumber.num)
+                .append(value, sNumber.value)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(num)
+                .append(value)
                 .toHashCode();
     }
 

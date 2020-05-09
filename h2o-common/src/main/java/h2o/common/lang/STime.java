@@ -33,7 +33,7 @@ public class STime implements Comparable<STime>, java.io.Serializable {
     }
 
     public STime( Date date ) {
-        this.time = date == null ? null : DateUtil.toTimeString( date );
+        this.time = date == null ? null : DateUtil.toString( date , DATE_FMT );
     }
 
     public boolean isPresent() {

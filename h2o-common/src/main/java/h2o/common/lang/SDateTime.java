@@ -34,7 +34,7 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
 
     public SDateTime(Date dateTime) {
-        this.dateTime = dateTime == null ? null : DateUtil.toString(dateTime);
+        this.dateTime = dateTime == null ? null : DateUtil.toString( dateTime , DATE_FMT );
     }
 
     public boolean isPresent() {
