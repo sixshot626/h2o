@@ -19,7 +19,9 @@ public abstract class ClusterUtil {
     }
 
 
-    private static class IdGenerator {
+    public static class IdGenerator {
+
+        private static final IdGenerator DEFAULT_IDGENERATOR = new IdGenerator();
 
         private final SnowGarlandIdGen idGen = new SnowGarlandIdGen( ClusterUtil.getWorkerId() );
 
@@ -28,16 +30,6 @@ public abstract class ClusterUtil {
             return DateUtil.toString(cd , "yy") + idGen.nextKey( new SDate( DateUtil.toString(cd , "yyyy") + "-01-01" ) );
         }
 
-    }
-
-    private static final IdGenerator IDGENERATOR = new IdGenerator();
-
-    public String makeId() {
-        return IDGENERATOR.makeId();
-    }
-
-    public static IdGenerator createIdGenerator() {
-        return new IdGenerator();
     }
 
 }
