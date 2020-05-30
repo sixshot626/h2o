@@ -19,15 +19,25 @@ public abstract class ClusterUtil {
     }
 
 
-    public static class IdGenerator {
+    private static class IdGenerator {
 
-        private static final SnowGarlandIdGen idGen = new SnowGarlandIdGen( ClusterUtil.getWorkerId() );
+        private final SnowGarlandIdGen idGen = new SnowGarlandIdGen( ClusterUtil.getWorkerId() );
 
-        public static String makeId() {
+        public synchronized String makeId() {
             Date cd = new Date();
             return DateUtil.toString(cd , "yy") + idGen.nextKey( new SDate( DateUtil.toString(cd , "yyyy") + "-01-01" ) );
         }
 
+    }
+
+    private static final IdGenerator IDGENERATOR = new IdGenerator();
+
+    public String makeId() {
+        return IDGENERATOR.makeId();
+    }
+
+    public static IdGenerator createIdGenerator() {
+        return new IdGenerator();
     }
 
 }
