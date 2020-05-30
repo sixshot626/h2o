@@ -21,7 +21,7 @@ public abstract class ClusterUtil {
 
     public static class IdGenerator {
 
-        public static final IdGenerator GLOBAL_IDGENERATOR = new IdGenerator();
+        public static final IdGenerator GLOBAL = new IdGenerator();
 
         private final SnowGarlandIdGen idGen = new SnowGarlandIdGen( ClusterUtil.getWorkerId() );
 
