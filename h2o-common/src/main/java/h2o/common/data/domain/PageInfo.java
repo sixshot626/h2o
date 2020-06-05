@@ -1,4 +1,4 @@
-package h2o.common.bean.page;
+package h2o.common.data.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 

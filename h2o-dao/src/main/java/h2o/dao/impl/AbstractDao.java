@@ -1,8 +1,8 @@
 package h2o.dao.impl;
 
-import h2o.common.bean.page.Page;
-import h2o.common.bean.page.PageInfo;
-import h2o.common.bean.page.PageRequest;
+import h2o.common.data.domain.Page;
+import h2o.common.data.domain.PageInfo;
+import h2o.common.data.domain.PageRequest;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.collections.tuple.Tuple2;
 import h2o.dao.Dao;

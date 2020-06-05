@@ -1,9 +1,9 @@
 package h2o.dao.advanced;
 
 import h2o.common.Mode;
-import h2o.common.bean.page.Page;
-import h2o.common.bean.page.PageRequest;
-import h2o.common.bean.page.SortInfo;
+import h2o.common.data.domain.Page;
+import h2o.common.data.domain.PageRequest;
+import h2o.common.data.domain.SortInfo;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.collections.builder.MapBuilder;

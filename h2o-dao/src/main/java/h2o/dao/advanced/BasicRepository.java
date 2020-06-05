@@ -1,8 +1,8 @@
 package h2o.dao.advanced;
 
-import h2o.common.bean.page.Page;
-import h2o.common.bean.page.PageRequest;
-import h2o.common.bean.page.SortInfo;
+import h2o.common.data.domain.Page;
+import h2o.common.data.domain.PageRequest;
+import h2o.common.data.domain.SortInfo;
 import h2o.common.util.lang.GenericsUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;

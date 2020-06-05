@@ -1,7 +1,7 @@
 package h2o.dao;
 
-import h2o.common.bean.page.Page;
-import h2o.common.bean.page.PageRequest;
+import h2o.common.data.domain.Page;
+import h2o.common.data.domain.PageRequest;
 import h2o.dao.exception.DaoException;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;

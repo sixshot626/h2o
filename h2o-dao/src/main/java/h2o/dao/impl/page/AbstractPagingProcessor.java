@@ -1,6 +1,6 @@
 package h2o.dao.impl.page;
 
-import h2o.common.bean.page.SortInfo;
+import h2o.common.data.domain.SortInfo;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.tuple.Tuple2;
 import h2o.common.collections.tuple.TupleUtil;

@@ -1,4 +1,4 @@
-package h2o.common.bean.page;
+package h2o.common.data.domain;
 
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;

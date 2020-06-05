@@ -1,4 +1,4 @@
-package h2o.common.bean.result;
+package h2o.common.result;
 
 public interface ErrorInfo {
 
