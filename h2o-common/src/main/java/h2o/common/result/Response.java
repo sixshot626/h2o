@@ -1,6 +1,6 @@
 package h2o.common.result;
 
-public interface Response {
+public interface Response extends ErrorInfo {
 
     boolean isFinalState();
 

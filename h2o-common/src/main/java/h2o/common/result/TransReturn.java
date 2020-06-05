@@ -1,6 +1,10 @@
 package h2o.common.result;
 
-public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, TransResult<R>, Response, ErrorInfo , java.io.Serializable {
+import java.io.Serializable;
+
+public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, TransResult<R>, Response, ErrorInfo , Serializable {
+
+    private static final long serialVersionUID = 2603355001138198223L;
 
     private boolean finalState;
 
