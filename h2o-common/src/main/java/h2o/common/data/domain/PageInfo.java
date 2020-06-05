@@ -17,10 +17,8 @@ public class PageInfo implements Pageable, Serializable {
 	public PageInfo() {}
 
 	public PageInfo(long pageNo, long pageRecordSize) {
-
 		this.pageNo = pageNo;
 		this.pageRecordSize = pageRecordSize;
-
 	}
 
     public PageInfo( PageRequest pageRequest ) {
@@ -29,20 +27,16 @@ public class PageInfo implements Pageable, Serializable {
     }
 
     public PageInfo( PageRequest pageRequest , long totalRecord ){
-
         this( pageRequest );
 
         this.totalRecord = totalRecord;
-
         this.calcTotalPage();
     }
 
     public PageInfo(long pageNo, long pageRecordSize, long totalRecord) {
-
 		this(pageNo, pageRecordSize);
 
 		this.totalRecord = totalRecord;
-
         this.calcTotalPage();
 	}
 
