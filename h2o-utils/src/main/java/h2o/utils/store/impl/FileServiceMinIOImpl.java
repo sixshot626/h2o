@@ -16,6 +16,7 @@ import h2o.utils.store.*;
 import io.minio.MinioClient;
 import io.minio.ObjectStat;
 import io.minio.PutObjectOptions;
+import io.minio.errors.ErrorResponseException;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedInputStream;
@@ -56,13 +57,23 @@ public class FileServiceMinIOImpl implements FileService {
 
         try {
 
-            if ( ! mc.bucketExists( bucket ) ) {
-                mc.makeBucket( bucket );
+            if (!mc.bucketExists(bucket)) {
+                mc.makeBucket(bucket);
             }
+        } catch ( Exception e ) {
+            Tools.log.error(e);
+            return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+        }
+
+        try {
 
             PutObjectOptions options = new PutObjectOptions(file.getObjectSize(),file.getPartSize());
-            options.setContentType( file.getContentType() );
-            options.setHeaders( file.getExtInfo() );
+            if ( file.getContentType() != null ) {
+                options.setContentType(file.getContentType());
+            }
+            if ( file.getExtInfo() != null ) {
+                options.setHeaders(file.getExtInfo());
+            }
 
             mc.putObject( bucket , fileId ,
                     new ByteArrayInputStream( file.getFileContent() ), options );
@@ -72,7 +83,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             Tools.log.error(e);
-            return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false);
+            return new TransReturn<TriState, Object>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
         }
 
 
@@ -82,13 +93,26 @@ public class FileServiceMinIOImpl implements FileService {
     public TransStatus<TriState> putFile(String bucket, String fileId, FileSource source ) {
         try {
 
-            if ( ! mc.bucketExists( bucket ) ) {
-                mc.makeBucket( bucket );
+            if (!mc.bucketExists(bucket)) {
+                mc.makeBucket(bucket);
             }
 
+        } catch ( Exception e ) {
+
+                Tools.log.error(e);
+                return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+
+        }
+
+        try {
+
             PutObjectOptions options = new PutObjectOptions( source.getObjectSize(), source.getPartSize() );
-            options.setContentType( source.getContentType() );
-            options.setHeaders( source.getExtInfo() );
+            if ( source.getContentType() != null ) {
+                options.setContentType(source.getContentType());
+            }
+            if ( source.getExtInfo() != null ) {
+                options.setHeaders(source.getExtInfo());
+            }
 
             mc.putObject( bucket , fileId ,
                     source.getInputStream() , options  );
@@ -99,7 +123,7 @@ public class FileServiceMinIOImpl implements FileService {
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false);
+            return new TransReturn<TriState, Object>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
 
         } finally {
             StreamUtil.close( source );
@@ -111,19 +135,26 @@ public class FileServiceMinIOImpl implements FileService {
     @Override
     public TransResponse<TriState, FileMeta> getFileMeta(String bucket, String fileId) {
 
+        ObjectStat stat;
         try {
+            stat = mc.statObject(bucket, fileId);
 
-            ObjectStat stat = mc.statObject(bucket, fileId);
+            FileMeta meta = new FileMeta(stat.bucketName(), stat.name(),
+                    stat.length(), stat.contentType(),
+                    parseExtInfo(stat.httpHeaders()));
 
-            FileMeta meta = new FileMeta( stat.bucketName() , stat.name() ,
-                     stat.length() , stat.contentType() ,
-                    parseExtInfo( stat.httpHeaders() ) );
+            return new TransReturn<TriState, FileMeta>().setResult(meta).setStatus(TriState.Success).setSuccess(true);
 
-            return new TransReturn<TriState, FileMeta>().setResult(meta).setStatus( TriState.Success ).setSuccess(true);
+        } catch ( ErrorResponseException e ) {
+
+            Tools.log.error(e);
+            return new TransReturn<TriState, FileMeta>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
 
         } catch ( Exception e ) {
+
             Tools.log.error(e);
-            return new TransReturn<TriState, FileMeta>().setStatus( TriState.Failure ).setSuccess(false);
+            return new TransReturn<TriState, FileMeta>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+
         }
 
     }
@@ -146,10 +177,15 @@ public class FileServiceMinIOImpl implements FileService {
 
             return new TransReturn<TriState, FileObject>().setResult( fileObject ).setStatus( TriState.Success ).setSuccess(true);
 
+        } catch ( ErrorResponseException e ) {
+
+            Tools.log.error(e);
+            return new TransReturn<TriState, FileObject>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
+
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, FileObject>().setStatus( TriState.Failure ).setSuccess(false);
+            return new TransReturn<TriState, FileObject>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
 
         } finally {
             StreamUtil.close( fileIn );
@@ -163,8 +199,6 @@ public class FileServiceMinIOImpl implements FileService {
 
         FileSource source = null;
         try {
-
-
 
             ObjectStat stat = mc.statObject(bucket, fileId);
 
