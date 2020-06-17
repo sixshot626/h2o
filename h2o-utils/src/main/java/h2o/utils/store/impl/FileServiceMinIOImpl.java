@@ -60,7 +60,7 @@ public class FileServiceMinIOImpl implements FileService {
                 mc.makeBucket( bucket );
             }
 
-            PutObjectOptions options = new PutObjectOptions(-1,-1);
+            PutObjectOptions options = new PutObjectOptions(file.getObjectSize(),file.getPartSize());
             options.setContentType( file.getContentType() );
             options.setHeaders( file.getExtInfo() );
 
@@ -86,7 +86,7 @@ public class FileServiceMinIOImpl implements FileService {
                 mc.makeBucket( bucket );
             }
 
-            PutObjectOptions options = new PutObjectOptions(-1,-1);
+            PutObjectOptions options = new PutObjectOptions( source.getObjectSize(), source.getPartSize() );
             options.setContentType( source.getContentType() );
             options.setHeaders( source.getExtInfo() );
 
@@ -164,9 +164,11 @@ public class FileServiceMinIOImpl implements FileService {
         FileSource source = null;
         try {
 
-            source = new FileSource( mc.getObject( bucket , fileId) );
+
 
             ObjectStat stat = mc.statObject(bucket, fileId);
+
+            source = new FileSource( mc.getObject( bucket , fileId) , stat.length() );
 
             source.setContentType( stat.contentType() );
             source.setExtInfo( parseExtInfo( stat.httpHeaders() ) );

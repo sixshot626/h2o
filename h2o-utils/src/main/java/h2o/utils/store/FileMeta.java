@@ -44,12 +44,13 @@ public class FileMeta implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "FileMeta{" +
-                "bucketName='" + bucketName + '\'' +
-                ", name='" + name + '\'' +
-                ", size=" + size +
-                ", contentType='" + contentType + '\'' +
-                ", extInfo=" + extInfo +
-                '}';
+        final StringBuilder sb = new StringBuilder("FileMeta{");
+        sb.append("bucketName='").append(bucketName).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", size=").append(size);
+        sb.append(", contentType='").append(contentType).append('\'');
+        sb.append(", extInfo=").append(extInfo);
+        sb.append('}');
+        return sb.toString();
     }
 }
