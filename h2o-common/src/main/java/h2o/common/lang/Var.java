@@ -15,6 +15,28 @@ public class Var<T> {
     }
 
 
+
+
+    public boolean isPresent() {
+        return v != null;
+    }
+
+    public T getValue() {
+        return v;
+    }
+
+    public T get() {
+        if ( this.v == null ) {
+            throw new NullPointerException();
+        }
+        return v;
+    }
+
+    public T orElse( T other) {
+        return v == null ? other : v;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
