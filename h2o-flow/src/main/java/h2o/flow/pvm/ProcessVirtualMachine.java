@@ -12,6 +12,7 @@ import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
 import h2o.flow.pvm.elements.SignalNode;
 import h2o.flow.pvm.runtime.FlowTransactionManager;
+import h2o.flow.pvm.runtime.NodeRunScoeObject;
 import h2o.flow.pvm.runtime.RunContext;
 import h2o.flow.pvm.runtime.RunStatus;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public final class ProcessVirtualMachine {
 		return this;
 	}
 	
-	private void fireStart( RunContext runContext , boolean signal ) {
+	private void fireStartEvent(RunContext runContext , boolean signal ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.onStart(runContext , signal );
@@ -55,23 +56,23 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireInNode(  RunContext runContext , Node node ) {
+	private void fireEnterNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.inNode( runContext , node );
+				processRunListener.enterNode( nodeRunScoeObject , runContext , node );
 			}
 		}
 	}
 	
-	private void fireOutNode(  RunContext runContext , Node node , RunStatus runStatus , List<Line> lines ) {
+	private void fireLeaveNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node , RunStatus runStatus , List<Line> lines ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.outNode( runContext , node , runStatus , lines );
+				processRunListener.leaveNode( nodeRunScoeObject ,  runContext , node , runStatus , lines );
 			}
 		}
 	}
 	
-	private void firePassLine( RunContext runContext , Line line ) {
+	private void firePassLineEvent(RunContext runContext , Line line ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.passLine(runContext, line);
@@ -79,7 +80,7 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireEnd( RunContext runContext , RunStatus runStatus ) {
+	private void fireEndEvent(RunContext runContext , RunStatus runStatus ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.onEnd(runContext , runStatus );
@@ -87,7 +88,7 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireException( RunContext runContext , Throwable e ) {
+	private void fireExceptionEvent(RunContext runContext , Throwable e ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.onException(runContext, e);
@@ -129,13 +130,13 @@ public final class ProcessVirtualMachine {
 		
 		try {
 			
-			fireStart( runContext , isSignal );
+			fireStartEvent( runContext , isSignal );
 			
 			Engine engine = new Engine();
 			
 			engine.runNode( runContext , node , isSignal  );
 			
-			fireEnd( runContext , engine.getRunStatus() );
+			fireEndEvent( runContext , engine.getRunStatus() );
 			
 			if( tx != null ) {
 				tx.commit( transactionObj );
@@ -145,8 +146,8 @@ public final class ProcessVirtualMachine {
 			
 		} catch( Throwable e ) {	
 			
-			fireException( runContext , e );
-			fireEnd( runContext , RunStatus.EXCEPTION );
+			fireExceptionEvent( runContext , e );
+			fireEndEvent( runContext , RunStatus.EXCEPTION );
 			
 			if( tx != null ) try {
 				tx.rollBack( transactionObj );
@@ -187,12 +188,18 @@ public final class ProcessVirtualMachine {
 
 
 		public void runNode( RunContext runContext ,  Node node , boolean isSignal ) throws FlowException {
-			
-			fireInNode( runContext , node );
-			
-			Tuple2<RunStatus, List<Line>> r = isSignal ? ((SignalNode)node).signal(runContext) : node.exec(runContext);
-			
-			fireOutNode( runContext , node  , r.e0 , r.e1 );
+
+			Tuple2<RunStatus, List<Line>> r = null;
+			{
+				NodeRunScoeObject nodeRunScoeObject = new NodeRunScoeObject();
+
+				fireEnterNodeEvent(nodeRunScoeObject , runContext, node);
+
+				r = isSignal ? ((SignalNode) node).signal(runContext) : node.exec(runContext);
+
+				fireLeaveNodeEvent(nodeRunScoeObject , runContext, node, r.e0, r.e1);
+
+			}
 			
 			if( r.e0 == RunStatus.RUNNING && this.runStatus != RunStatus.END ) {
 				
@@ -201,7 +208,7 @@ public final class ProcessVirtualMachine {
 					
 					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;					
 					
-					firePassLine( nextRunContext , line );
+					firePassLineEvent( nextRunContext , line );
 					
 					Node nextNode = line.pass( nextRunContext );
 					runNode( nextRunContext , nextNode , false  );					
