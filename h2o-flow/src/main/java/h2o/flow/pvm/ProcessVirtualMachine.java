@@ -6,10 +6,10 @@ package h2o.flow.pvm;
 
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
 import h2o.common.exception.ExceptionUtil;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
+import h2o.flow.pvm.elements.NodeExecResult;
 import h2o.flow.pvm.elements.SignalNode;
 import h2o.flow.pvm.runtime.FlowTransactionManager;
 import h2o.flow.pvm.runtime.NodeRunScoeObject;
@@ -189,22 +189,22 @@ public final class ProcessVirtualMachine {
 
 		public void runNode( RunContext runContext ,  Node node , boolean isSignal ) throws FlowException {
 
-			Tuple2<RunStatus, List<Line>> r = null;
+			NodeExecResult nodeExecResult = null;
 			{
 				NodeRunScoeObject nodeRunScoeObject = new NodeRunScoeObject();
 
 				fireEnterNodeEvent(nodeRunScoeObject , runContext, node);
 
-				r = isSignal ? ((SignalNode) node).signal(runContext) : node.exec(runContext);
+				nodeExecResult = isSignal ? ((SignalNode) node).signal(runContext) : node.exec(runContext);
 
-				fireLeaveNodeEvent(nodeRunScoeObject , runContext, node, r.e0, r.e1);
+				fireLeaveNodeEvent(nodeRunScoeObject , runContext, node, nodeExecResult.getStatus(), nodeExecResult.getLines());
 
 			}
 			
-			if( r.e0 == RunStatus.RUNNING && this.runStatus != RunStatus.END ) {
+			if( nodeExecResult.getStatus() == RunStatus.RUNNING && this.runStatus != RunStatus.END ) {
 				
-				int n = r.e1.size();
-				for( Line line : r.e1 ) {					
+				int n = nodeExecResult.getLines().size();
+				for( Line line : nodeExecResult.getLines() ) {
 					
 					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;					
 					
@@ -219,7 +219,7 @@ public final class ProcessVirtualMachine {
 				}			
 				
 			} else {
-				this.runStatus = r.e0;
+				this.runStatus = nodeExecResult.getStatus();
 			}
 			
 		}

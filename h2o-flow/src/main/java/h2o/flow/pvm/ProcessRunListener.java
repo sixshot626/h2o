@@ -15,7 +15,7 @@ public interface ProcessRunListener {
 	
 	void onStart(RunContext runContext, boolean signal);
 	
-	void enterNode(NodeRunScoeObject nodeRunScoeObject , RunContext runContext, Node node);
+	void enterNode( NodeRunScoeObject nodeRunScoeObject , RunContext runContext, Node node);
 	
 	void leaveNode( NodeRunScoeObject nodeRunScoeObject , RunContext runContext, Node node, RunStatus runStatus, List<Line> lines);
 	
