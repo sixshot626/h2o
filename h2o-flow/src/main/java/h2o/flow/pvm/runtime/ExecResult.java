@@ -6,18 +6,20 @@ import h2o.flow.pvm.elements.Line;
 import java.util.Collections;
 import java.util.List;
 
-public class NodeExecResult implements java.io.Serializable {
+public class ExecResult implements java.io.Serializable {
 
     private final RunStatus status;
 
     private final List<Line> lines;
 
-    public NodeExecResult( RunStatus status, Line line ) {
+    private Object result;
+
+    public ExecResult(RunStatus status, Line line ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(ListBuilder.newList(line));
     }
 
-    public NodeExecResult( RunStatus status, List<Line> lines ) {
+    public ExecResult(RunStatus status, List<Line> lines ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(lines);
     }
@@ -30,11 +32,20 @@ public class NodeExecResult implements java.io.Serializable {
         return lines;
     }
 
+    public Object getResult() {
+        return result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("NodeExecResult{");
         sb.append("status=").append(status);
         sb.append(", lines=").append(lines);
+        sb.append(", result=").append(result);
         sb.append('}');
         return sb.toString();
     }

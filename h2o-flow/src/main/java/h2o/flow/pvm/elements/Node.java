@@ -4,11 +4,11 @@
 package h2o.flow.pvm.elements;
 
 import h2o.flow.pvm.FlowException;
-import h2o.flow.pvm.runtime.NodeExecResult;
+import h2o.flow.pvm.runtime.ExecResult;
 import h2o.flow.pvm.runtime.RunContext;
 
 public interface Node extends FlowElement {
 
-	NodeExecResult exec(RunContext runContext) throws FlowException;
+	ExecResult exec(RunContext runContext , Object... args ) throws FlowException;
 
 }

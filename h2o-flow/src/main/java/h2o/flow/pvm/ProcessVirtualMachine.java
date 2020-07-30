@@ -7,18 +7,16 @@ package h2o.flow.pvm;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.thirdparty.spring.util.Assert;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
-import h2o.flow.pvm.runtime.NodeExecResult;
+import h2o.flow.pvm.runtime.*;
 import h2o.flow.pvm.elements.SignalNode;
-import h2o.flow.pvm.runtime.FlowTransactionManager;
-import h2o.flow.pvm.runtime.NodeRunScoeObject;
-import h2o.flow.pvm.runtime.RunContext;
-import h2o.flow.pvm.runtime.RunStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public final class ProcessVirtualMachine {
@@ -48,26 +46,26 @@ public final class ProcessVirtualMachine {
 		return this;
 	}
 	
-	private void fireStartEvent(RunContext runContext , boolean signal ) {
+	private void fireStartEvent(RunContext runContext , Node node , boolean signal , Object[] args ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.onStart(runContext , signal );
+				processRunListener.onStart(runContext , node , signal , args );
 			}
 		}
 	}
 	
-	private void fireEnterNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node ) {
+	private void fireEnterNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node , boolean signal , Object[] args ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.enterNode( nodeRunScoeObject , runContext , node );
+				processRunListener.enterNode( nodeRunScoeObject , runContext , node , signal , args );
 			}
 		}
 	}
 	
-	private void fireLeaveNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node , RunStatus runStatus , List<Line> lines ) {
+	private void fireLeaveNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node , ExecResult execResult ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.leaveNode( nodeRunScoeObject ,  runContext , node , runStatus , lines );
+				processRunListener.leaveNode( nodeRunScoeObject ,  runContext , node , execResult );
 			}
 		}
 	}
@@ -80,10 +78,10 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireEndEvent(RunContext runContext , RunStatus runStatus ) {
+	private void fireEndEvent(RunContext runContext , ExecResult execResult ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.onEnd(runContext , runStatus );
+				processRunListener.onEnd(runContext , execResult );
 			}
 		}
 	}
@@ -110,16 +108,20 @@ public final class ProcessVirtualMachine {
 	//=================================================
 
 	
-	public  RunStatus start( RunContext runContext  ) throws FlowException {
-		return run( runContext , runContext.getFlowInstance().getStartNode() , false );
+	public Object start( RunContext runContext , Object... args ) throws FlowException {
+		return exec( runContext , runContext.getFlowInstance().getStartNode() , false , args );
 	}
 	
-	public  RunStatus run(  RunContext runContext ,  Object nodeId  ) throws FlowException {
-		return run( runContext , runContext.getFlowInstance().findNode( nodeId )  , true );
+	public Object run( RunContext runContext , Object nodeId , Object... args ) throws FlowException {
+		return exec( runContext , runContext.getFlowInstance().findNode( nodeId )  , false , args );
+	}
+
+	public Object signal( RunContext runContext , Object nodeId , Object... args ) throws FlowException {
+		return exec( runContext , runContext.getFlowInstance().findNode( nodeId )  , true , args);
 	}
 	
 
-	private RunStatus run(  RunContext runContext , Node node  , boolean isSignal ) throws FlowException  {
+	private Object exec( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException  {
 
 		FlowTransactionManager tx = this.transactionManager;
 
@@ -130,24 +132,24 @@ public final class ProcessVirtualMachine {
 		
 		try {
 			
-			fireStartEvent( runContext , isSignal );
+			fireStartEvent( runContext , node , isSignal , args );
 			
 			Engine engine = new Engine();
+
+			ExecResult execResult = engine.runNode( runContext, node, isSignal , args );
 			
-			engine.runNode( runContext , node , isSignal  );
-			
-			fireEndEvent( runContext , engine.getRunStatus() );
+			fireEndEvent( runContext , execResult );
 			
 			if( tx != null ) {
 				tx.commit( transactionObj );
 			}
-			
-			return engine.getRunStatus();
+
+			return execResult.getResult();
 			
 		} catch( Throwable e ) {	
 			
 			fireExceptionEvent( runContext , e );
-			fireEndEvent( runContext , RunStatus.EXCEPTION );
+			fireEndEvent( runContext , new ExecResult( RunStatus.EXCEPTION , Collections.EMPTY_LIST ) );
 			
 			if( tx != null ) try {
 				tx.rollBack( transactionObj );
@@ -175,55 +177,51 @@ public final class ProcessVirtualMachine {
 	//=======================================
 	// 流程发动机
 	//=======================================
-	
+
 	private class Engine {
-		
-		private RunStatus runStatus = RunStatus.RUNNING;	
-		
-		
-		public RunStatus getRunStatus() {
-			return runStatus;
-		}
 
+		private RunStatus runStatus = RunStatus.RUNNING;
 
+		public ExecResult runNode( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException {
 
-		public void runNode( RunContext runContext ,  Node node , boolean isSignal ) throws FlowException {
+			NodeRunScoeObject nodeRunScoeObject = new NodeRunScoeObject();
 
-			NodeExecResult nodeExecResult = null;
-			{
-				NodeRunScoeObject nodeRunScoeObject = new NodeRunScoeObject();
+			fireEnterNodeEvent( nodeRunScoeObject , runContext, node , isSignal , args );
 
-				fireEnterNodeEvent(nodeRunScoeObject , runContext, node);
+			final ExecResult nodeExecResult = isSignal ? ( (SignalNode) node).signal( runContext , args ) : node.exec( runContext , args );
 
-				nodeExecResult = isSignal ? ((SignalNode) node).signal(runContext) : node.exec(runContext);
+			fireLeaveNodeEvent(nodeRunScoeObject , runContext, node, nodeExecResult );
 
-				fireLeaveNodeEvent(nodeRunScoeObject , runContext, node, nodeExecResult.getStatus(), nodeExecResult.getLines());
-
-			}
-			
 			if( nodeExecResult.getStatus() == RunStatus.RUNNING && this.runStatus != RunStatus.END ) {
-				
+
+				List<Line> lines = nodeExecResult.getLines();
+				if( CollectionUtil.isBlank( lines ) ) {
+					throw new NoLineExcepion();
+				}
+
 				int n = nodeExecResult.getLines().size();
 				for( Line line : nodeExecResult.getLines() ) {
-					
-					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;					
-					
+
+					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;
+
 					firePassLineEvent( nextRunContext , line );
-					
+
 					Node nextNode = line.pass( nextRunContext );
-					runNode( nextRunContext , nextNode , false  );					
-					
+					runNode( nextRunContext , nextNode , false , args );
+
 					if( this.runStatus == RunStatus.END ) {
 						break;
 					}
-				}			
-				
+				}
+
 			} else {
 				this.runStatus = nodeExecResult.getStatus();
 			}
-			
+
+			return nodeExecResult;
+
 		}
-		
+
 	}
 	
 
