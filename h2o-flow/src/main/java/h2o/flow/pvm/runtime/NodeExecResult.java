@@ -29,4 +29,13 @@ public class NodeExecResult implements java.io.Serializable {
     public List<Line> getLines() {
         return lines;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("NodeExecResult{");
+        sb.append("status=").append(status);
+        sb.append(", lines=").append(lines);
+        sb.append('}');
+        return sb.toString();
+    }
 }
