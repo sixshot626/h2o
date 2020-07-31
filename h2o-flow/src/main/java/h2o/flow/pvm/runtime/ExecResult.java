@@ -20,14 +20,14 @@ public class ExecResult implements java.io.Serializable {
         this.lines = Collections.emptyList();
     }
 
-    public ExecResult(RunStatus status, Line line ) {
+    public ExecResult(RunStatus status, Line... lines ) {
         this.status = status;
-        this.lines = Collections.unmodifiableList(ListBuilder.newList(line));
+        this.lines = Collections.unmodifiableList(ListBuilder.newList(lines));
     }
 
-    public ExecResult(RunStatus status, List<Line> lines ) {
+    public ExecResult(RunStatus status, Collection<Line> lines ) {
         this.status = status;
-        this.lines = Collections.unmodifiableList(lines);
+        this.lines = Collections.unmodifiableList(ListBuilder.newListAndAddAll( lines ) );
     }
 
 
