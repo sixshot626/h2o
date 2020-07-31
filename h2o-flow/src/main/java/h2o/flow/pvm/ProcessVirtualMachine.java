@@ -7,11 +7,10 @@ package h2o.flow.pvm;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.exception.ExceptionUtil;
-import h2o.common.thirdparty.spring.util.Assert;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
-import h2o.flow.pvm.runtime.*;
 import h2o.flow.pvm.elements.SignalNode;
+import h2o.flow.pvm.runtime.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
