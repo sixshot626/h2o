@@ -13,7 +13,10 @@ public class ExecResult implements java.io.Serializable {
 
     private final List<Line> lines;
 
+    private boolean present;
     private Object result;
+
+
 
     public ExecResult(RunStatus status) {
         this.status = status;
@@ -60,12 +63,18 @@ public class ExecResult implements java.io.Serializable {
         return lines;
     }
 
+
+    public boolean isPresent() {
+        return present;
+    }
+
     public Object getResult() {
         return result;
     }
 
     public ExecResult setResult(Object result) {
         this.result = result;
+        this.present = true;
         return this;
     }
 

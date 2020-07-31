@@ -6,7 +6,9 @@ package h2o.flow.pvm;
 
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
+import h2o.common.collections.tuple.Tuple2;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.Var;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
 import h2o.flow.pvm.elements.SignalNode;
@@ -107,20 +109,20 @@ public final class ProcessVirtualMachine {
 	//=================================================
 
 	
-	public Object start( RunContext runContext , Object... args ) throws FlowException {
+	public Var<Object> start( RunContext runContext , Object... args ) throws FlowException {
 		return exec( runContext , runContext.getFlowInstance().getStartNode() , false , args );
 	}
 	
-	public Object run( RunContext runContext , Object nodeId , Object... args ) throws FlowException {
+	public Var<Object> run( RunContext runContext , Object nodeId , Object... args ) throws FlowException {
 		return exec( runContext , runContext.getFlowInstance().findNode( nodeId )  , false , args );
 	}
 
-	public Object signal( RunContext runContext , Object nodeId , Object... args ) throws FlowException {
+	public Var<Object> signal( RunContext runContext , Object nodeId , Object... args ) throws FlowException {
 		return exec( runContext , runContext.getFlowInstance().findNode( nodeId )  , true , args);
 	}
 	
 
-	private Object exec( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException  {
+	private Var<Object> exec( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException  {
 
 		FlowTransactionManager tx = this.transactionManager;
 
@@ -143,7 +145,7 @@ public final class ProcessVirtualMachine {
 				tx.commit( transactionObj );
 			}
 
-			return execResult.getResult();
+			return engine.result;
 			
 		} catch( Throwable e ) {	
 			
@@ -179,6 +181,8 @@ public final class ProcessVirtualMachine {
 
 	private class Engine {
 
+		private Var<Object> result;
+
 		private RunStatus runStatus = RunStatus.RUNNING;
 
 		public ExecResult runNode( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException {
@@ -188,6 +192,9 @@ public final class ProcessVirtualMachine {
 			fireEnterNodeEvent( nodeRunScoeObject , runContext, node , isSignal , args );
 
 			final ExecResult nodeExecResult = isSignal ? ( (SignalNode) node).signal( runContext , args ) : node.exec( runContext , args );
+			if ( this.result == null && nodeExecResult.isPresent() ) {
+				this.result = new Var<Object>( nodeExecResult.getResult() );
+			}
 
 			fireLeaveNodeEvent(nodeRunScoeObject , runContext, node, nodeExecResult );
 
@@ -221,6 +228,9 @@ public final class ProcessVirtualMachine {
 
 		}
 
+		public Var<Object> getResult() {
+			return result;
+		}
 	}
 	
 
