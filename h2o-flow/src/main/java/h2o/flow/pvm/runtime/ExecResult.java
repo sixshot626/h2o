@@ -3,6 +3,7 @@ package h2o.flow.pvm.runtime;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.flow.pvm.elements.Line;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +15,11 @@ public class ExecResult implements java.io.Serializable {
 
     private Object result;
 
+    public ExecResult(RunStatus status) {
+        this.status = status;
+        this.lines = Collections.emptyList();
+    }
+
     public ExecResult(RunStatus status, Line line ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(ListBuilder.newList(line));
@@ -23,6 +29,28 @@ public class ExecResult implements java.io.Serializable {
         this.status = status;
         this.lines = Collections.unmodifiableList(lines);
     }
+
+
+    public ExecResult pause() {
+        return new ExecResult( RunStatus.PAUSE );
+    }
+
+    public ExecResult end() {
+        return new ExecResult( RunStatus.END );
+    }
+
+    public ExecResult exception() {
+        return new ExecResult( RunStatus.EXCEPTION );
+    }
+
+    public ExecResult goOn( Line... lines ) {
+        return new ExecResult( RunStatus.RUNNING , ListBuilder.newList(lines) );
+    }
+
+    public ExecResult goOn( Collection<Line> lines ) {
+        return new ExecResult( RunStatus.RUNNING , ListBuilder.newListAndAddAll(lines) );
+    }
+
 
     public RunStatus getStatus() {
         return status;
@@ -43,11 +71,12 @@ public class ExecResult implements java.io.Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("NodeExecResult{");
+        final StringBuilder sb = new StringBuilder("ExecResult{");
         sb.append("status=").append(status);
         sb.append(", lines=").append(lines);
         sb.append(", result=").append(result);
         sb.append('}');
         return sb.toString();
     }
+
 }
