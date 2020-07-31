@@ -31,24 +31,24 @@ public class ExecResult implements java.io.Serializable {
     }
 
 
-    public ExecResult pause() {
+    public static ExecResult pause() {
         return new ExecResult( RunStatus.PAUSE );
     }
 
-    public ExecResult end() {
+    public static ExecResult end() {
         return new ExecResult( RunStatus.END );
     }
 
-    public ExecResult exception() {
+    public static ExecResult exception() {
         return new ExecResult( RunStatus.EXCEPTION );
     }
 
-    public ExecResult goOn( Line... lines ) {
-        return new ExecResult( RunStatus.RUNNING , ListBuilder.newList(lines) );
+    public static ExecResult goOn( Line... lines ) {
+        return new ExecResult( RunStatus.RUNNING , lines );
     }
 
-    public ExecResult goOn( Collection<Line> lines ) {
-        return new ExecResult( RunStatus.RUNNING , ListBuilder.newListAndAddAll(lines) );
+    public static ExecResult goOn( Collection<Line> lines ) {
+        return new ExecResult( RunStatus.RUNNING , lines );
     }
 
 
