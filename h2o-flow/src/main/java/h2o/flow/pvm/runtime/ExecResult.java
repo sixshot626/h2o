@@ -36,8 +36,9 @@ public class ExecResult implements java.io.Serializable {
         return result;
     }
 
-    public void setResult(Object result) {
+    public ExecResult setResult(Object result) {
         this.result = result;
+        return this;
     }
 
     @Override
