@@ -35,10 +35,18 @@ public class DataGetter {
     }
 
     public DataGetter get2DG( String pname ) {
-        return new DataGetter( this.get(pname) , this.silent );
+        return this.get2DG( pname , this.silent );
+    }
+
+    public DataGetter get2DG( String pname , boolean silent ) {
+        return new DataGetter( this.get(pname) , silent );
     }
 
     public List<DataGetter> get2DGList( String pname ) {
+        return this.get2DGList( pname , this.silent );
+    }
+
+    public List<DataGetter> get2DGList( String pname , boolean silent ) {
 
         Collection<Object> c = this.get( pname );
 
@@ -51,7 +59,7 @@ public class DataGetter {
             List<DataGetter> dgList = ListBuilder.newList();
 
             for ( Object o : c ) {
-                dgList.add( new DataGetter(o,this.silent) );
+                dgList.add( new DataGetter(o,silent) );
             }
 
             return dgList;
