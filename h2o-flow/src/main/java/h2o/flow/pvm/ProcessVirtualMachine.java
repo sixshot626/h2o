@@ -137,9 +137,9 @@ public final class ProcessVirtualMachine {
 			
 			Engine engine = new Engine();
 
-			ExecResult execResult = engine.runNode( runContext, node, isSignal , args );
+			engine.runNode( runContext, node, isSignal , args );
 			
-			fireEndEvent( runContext , execResult );
+			fireEndEvent( runContext , new ExecResult(engine.runStatus).setResult( engine.result ) );
 			
 			if( tx != null ) {
 				tx.commit( transactionObj );
@@ -150,7 +150,7 @@ public final class ProcessVirtualMachine {
 		} catch( Throwable e ) {	
 			
 			fireExceptionEvent( runContext , e );
-			fireEndEvent( runContext , new ExecResult( RunStatus.EXCEPTION , Collections.EMPTY_LIST ) );
+			fireEndEvent( runContext , new ExecResult( RunStatus.EXCEPTION ) );
 			
 			if( tx != null ) try {
 				tx.rollBack( transactionObj );
@@ -228,9 +228,7 @@ public final class ProcessVirtualMachine {
 
 		}
 
-		public Var<Object> getResult() {
-			return result;
-		}
+
 	}
 	
 
