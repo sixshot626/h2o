@@ -26,13 +26,13 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
 
     public TransReturn( Response response ) {
 
-        this.finalState = response.isFinalState();
-        this.success = response.isSuccess();
-        this.code = response.getCode();
-        this.msg = response.getMsg();
-        this.e = response.getE();
-        this.presentResult = response.isPresentResult();
-        this.result = response.getResult();
+        this.finalState         = response.isFinalState();
+        this.success            = response.isSuccess();
+        this.code               = response.getCode();
+        this.msg                = response.getMsg();
+        this.e                  = response.getE();
+        this.presentResult      = response.isPresentResult();
+        this.result             = response.getResult();
 
         if ( response instanceof TransStatus) {
             Object status = ((TransStatus)response).getStatus();
