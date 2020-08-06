@@ -107,7 +107,6 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
     }
 
     public TransReturn<S,R> setStatus(Object status) {
-        this.presentResult = true;
         this.status = status;
         return this;
     }
@@ -148,6 +147,7 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
     }
 
     public TransReturn<S,R> setResult(Object result) {
+        this.presentResult = true;
         this.result = result;
         return this;
     }
