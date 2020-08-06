@@ -16,6 +16,8 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
 
     private Object status;
 
+    private boolean presentResult;
+
     private Object result;
 
     private Throwable e;
@@ -29,6 +31,7 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
         this.code = response.getCode();
         this.msg = response.getMsg();
         this.e = response.getE();
+        this.presentResult = response.isPresentResult();
         this.result = response.getResult();
 
         if ( response instanceof TransStatus) {
@@ -104,6 +107,7 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
     }
 
     public TransReturn<S,R> setStatus(Object status) {
+        this.presentResult = true;
         this.status = status;
         return this;
     }
@@ -131,6 +135,11 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
     public TransReturn<S,R> setE(Throwable e) {
         this.e = e;
         return this;
+    }
+
+    @Override
+    public boolean isPresentResult() {
+        return presentResult;
     }
 
     @Override

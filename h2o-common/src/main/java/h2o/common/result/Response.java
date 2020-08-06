@@ -14,6 +14,8 @@ public interface Response extends ErrorInfo {
 
     Throwable getE();
 
+    boolean isPresentResult();
+
     Object getResult();
 
 }
