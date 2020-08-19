@@ -48,10 +48,10 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
 
     public String get() {
-        if ( this.dateTime == null ) {
-            throw new NullPointerException();
+        if ( this.isPresent() ) {
+            return dateTime;
         }
-        return dateTime;
+        throw new IllegalStateException();
     }
 
     public SDate getDate() {
@@ -71,7 +71,7 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
 
     public String orElse(String other) {
-        return dateTime == null ? other : dateTime;
+        return this.isPresent() ?  dateTime : other;
     }
 
     public String fmt( String fmt ) {

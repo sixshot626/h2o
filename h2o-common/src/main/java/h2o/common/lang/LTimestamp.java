@@ -7,52 +7,41 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Date;
 
-public class STime implements Comparable<STime>, java.io.Serializable {
+public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable {
 
-    protected static final String DATE_FMT = "HH:mm:ss";
+    protected static final String DATE_FMT = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    /**
-     * 时间 HH:mm:ss
-     */
-    private final String time;
+    private final Long timestamp;
 
-    public STime() {
-        time = null;
+    public LTimestamp() {
+        this.timestamp = null;
     }
 
-    public STime(String time ) {
-        this( toDate( time , DATE_FMT ) );
+    public LTimestamp( Long timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public static STime from(String time , String fmt ) {
-        return new STime( toDate( time , fmt ) );
-    }
-
-    protected static Date toDate( String date , String fmt ) {
-        return SDate.toDate( date, fmt );
-    }
-
-    public STime( Date date ) {
-        this.time = date == null ? null : DateUtil.toString( date , DATE_FMT );
+    public LTimestamp( Date date ) {
+        this.timestamp = date == null ? null : date.getTime();
     }
 
     public boolean isPresent() {
-        return time != null;
+        return timestamp != null;
     }
 
-    public String getValue() {
-        return time;
+    public Long getValue() {
+        return timestamp;
     }
 
     public String get() {
         if ( this.isPresent() ) {
-            return time;
+            return DateUtil.toString( new Date(this.timestamp) , DATE_FMT );
         }
         throw new IllegalStateException();
     }
 
     public String orElse(String other) {
-        return this.isPresent() ? time : other;
+        return this.isPresent() ? this.get() : other;
     }
 
     public String fmt( String fmt ) {
@@ -67,10 +56,10 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
 
     @Override
-    public int compareTo( STime other ) {
+    public int compareTo( LTimestamp other ) {
 
-        String l = this.orElse("");
-        String r = other.orElse("");
+        Long l = this.isPresent() ? this.timestamp : new Long(0);
+        Long r = this.isPresent() ? other.timestamp : new Long(0);
 
         return l.compareTo(r);
 
@@ -83,24 +72,25 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        STime sDate = (STime) o;
+        LTimestamp that = (LTimestamp) o;
 
         return new EqualsBuilder()
-                .append(time, sDate.time)
+                .append(timestamp, that.timestamp)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(time)
+                .append(timestamp)
                 .toHashCode();
     }
+
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("time", this.orElse("<null>"))
+                .append("timestamp", timestamp)
                 .toString();
     }
 }
