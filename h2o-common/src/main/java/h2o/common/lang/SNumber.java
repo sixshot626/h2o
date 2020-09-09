@@ -46,10 +46,13 @@ public class SNumber extends Number implements Comparable<SNumber> {
     }
 
     public String get() {
-        if ( this.value == null ) {
-            throw new NullPointerException();
+
+        if ( this.isPresent() ) {
+            return value;
         }
-        return value;
+
+        throw new IllegalStateException();
+
     }
 
     public String orElse(String other) {

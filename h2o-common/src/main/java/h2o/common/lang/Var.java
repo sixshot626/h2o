@@ -26,10 +26,12 @@ public class Var<T> {
     }
 
     public T get() {
-        if ( this.v == null ) {
-            throw new NullPointerException();
+
+        if ( this.isPresent() ) {
+            return v;
         }
-        return v;
+
+        throw new IllegalStateException();
     }
 
     public T orElse( T other) {
