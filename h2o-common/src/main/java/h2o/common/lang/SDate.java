@@ -53,10 +53,13 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
     }
 
     public String get() {
+
         if ( this.isPresent() ) {
             return date;
         }
+
         throw new IllegalStateException();
+
     }
 
     public String orElse(String other) {

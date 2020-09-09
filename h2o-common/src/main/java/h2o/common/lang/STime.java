@@ -45,10 +45,13 @@ public class STime implements Comparable<STime>, java.io.Serializable {
     }
 
     public String get() {
+
         if ( this.isPresent() ) {
             return time;
         }
+
         throw new IllegalStateException();
+
     }
 
     public String orElse(String other) {

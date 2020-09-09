@@ -48,25 +48,34 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
 
     public String get() {
+
         if ( this.isPresent() ) {
             return dateTime;
         }
+
         throw new IllegalStateException();
+
     }
 
     public SDate getDate() {
-        if ( this.dateTime == null ) {
-            return new SDate();
+
+        if ( this.isPresent() ) {
+            return SDate.from( this.dateTime , DATE_FMT );
         }
-        return SDate.from( this.dateTime , DATE_FMT );
+
+        return new SDate();
+
     }
 
 
     public STime getTime() {
-        if ( this.dateTime == null ) {
-            return new STime();
+
+        if ( this.isPresent() ) {
+            return STime.from( this.dateTime , DATE_FMT );
         }
-        return STime.from( this.dateTime , DATE_FMT );
+
+        return new STime();
+
     }
 
 

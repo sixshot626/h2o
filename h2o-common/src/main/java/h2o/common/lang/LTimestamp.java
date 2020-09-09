@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable {
 
-    protected static final String DATE_FMT = "yyyy-MM-dd HH:mm:ss.SSS";
+    protected static final String DATE_FMT = "yyyyMMddHHmmssSSS";
 
     private final Long timestamp;
 
@@ -34,10 +34,23 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
     }
 
     public String get() {
+
         if ( this.isPresent() ) {
             return DateUtil.toString( new Date(this.timestamp) , DATE_FMT );
         }
+
         throw new IllegalStateException();
+
+    }
+
+    public SDateTime getDateTime() {
+
+        if ( this.isPresent() ) {
+            return new SDateTime( new Date( this.timestamp ) );
+        }
+
+        return new SDateTime();
+
     }
 
     public String orElse(String other) {
