@@ -25,8 +25,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -88,8 +88,8 @@ public class ScopingDataSource implements DataSource{
 
     protected DataSource dataSource = null;
 
-    public Map connectionScopes  = new HashMap();
-    public Map transactionScopes = new HashMap();
+    public final Map connectionScopes  = new ConcurrentHashMap();
+    public final Map transactionScopes = new ConcurrentHashMap();
 
     public ScopingDataSource(DataSource dataSource) {
         this.dataSource = dataSource;

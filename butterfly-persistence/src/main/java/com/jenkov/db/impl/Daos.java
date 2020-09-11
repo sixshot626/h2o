@@ -18,7 +18,6 @@
 
 package com.jenkov.db.impl;
 
-import com.jenkov.db.PersistenceManager;
 import com.jenkov.db.itf.*;
 
 import java.sql.Connection;
@@ -29,17 +28,17 @@ import java.sql.SQLException;
  */
 public class Daos implements IDaos {
 
-    protected PersistenceManager persistenceManager   = null;
-    protected Connection                connection    = null;
-    protected IPersistenceConfiguration configuration = null;
-    protected IJdbcDao                  jdbcDao       = null;
-    protected IMapDao                   mapDao        = null;
+    private final Connection                connection;
+    private final IPersistenceConfiguration configuration;
+    private final IJdbcDao                  jdbcDao;
+    private final IMapDao                   mapDao;
 
 
-    public Daos(Connection connection, IPersistenceConfiguration configuration, PersistenceManager manager) {
+    public Daos(Connection connection, IPersistenceConfiguration configuration) {
         this.connection = connection;
         this.configuration = configuration;
-        this.persistenceManager = manager;
+        this.jdbcDao = new JdbcDao(this);
+        this.mapDao = new MapDao(this);
     }
 
     public Connection getConnection() {
@@ -52,17 +51,11 @@ public class Daos implements IDaos {
 
 
 
-    public synchronized IJdbcDao getJdbcDao() {
-        if(this.jdbcDao == null){
-            this.jdbcDao = new JdbcDao(this);
-        }
+    public IJdbcDao getJdbcDao() {
         return jdbcDao;
     }
 
-    public synchronized IMapDao getMapDao() {
-        if(this.mapDao == null){
-            this.mapDao = new MapDao(this);
-        }
+    public IMapDao getMapDao() {
         return this.mapDao;
     }
 

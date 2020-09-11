@@ -18,11 +18,7 @@
 
 package com.jenkov.db.impl;
 
-import com.jenkov.db.PersistenceManager;
-import com.jenkov.db.impl.init.DatabaseInitializer;
 import com.jenkov.db.itf.IPersistenceConfiguration;
-import com.jenkov.db.scope.IScopeFactory;
-import com.jenkov.db.scope.ScopeFactory;
 
 import javax.sql.DataSource;
 
@@ -33,56 +29,15 @@ import javax.sql.DataSource;
 
 public class PersistenceConfiguration implements IPersistenceConfiguration{
 
-    protected PersistenceManager  persistenceManager       = null;
-    protected Object              configurationKey         = null;
+    private final DataSource          dataSource;
 
-
-
-    protected DataSource          dataSource               = null;
-
-    protected DatabaseInitializer databaseInitializer      = new DatabaseInitializer();
-    protected IScopeFactory       scopeFactory             = null;
-
-
-
-    public PersistenceConfiguration( PersistenceManager persistenceManager){
-        this.persistenceManager = persistenceManager;
+    public PersistenceConfiguration( DataSource dataSource ) {
+        this.dataSource = dataSource;
     }
 
-    public synchronized DataSource getDataSource() {
+    @Override
+    public DataSource getDataSource() {
         return dataSource;
     }
 
-    public synchronized void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-        setScopeFactory(new ScopeFactory(dataSource));
-    }
-
-    public IScopeFactory getScopeFactory() {
-        return scopeFactory;
-    }
-
-    public void setScopeFactory(IScopeFactory scopeFactory) {
-        this.scopeFactory = scopeFactory;
-    }
-
-    public synchronized Object getConfigurationKey() {
-        return configurationKey;
-    }
-
-    public synchronized void setConfigurationKey(Object configurationKey) {
-        this.configurationKey = configurationKey;
-    }
-
-    public synchronized PersistenceManager getPersistenceManager() {
-        return persistenceManager;
-    }
-
-    public DatabaseInitializer getDatabaseInitializer() {
-        return databaseInitializer;
-    }
-
-    public void setDatabaseInitializer(DatabaseInitializer databaseInitializer) {
-        this.databaseInitializer = databaseInitializer;
-    }
 }

@@ -59,7 +59,6 @@ public interface IDaos {
      */
     public IMapDao                   getMapDao();
 
-//    public ResultSetView             getResultSetView(Object objectMappingKey, ResultSet result) throws PersistenceException;
 
     /**
      * Closes the connection used by this IDaos instance. If closing the connection fails

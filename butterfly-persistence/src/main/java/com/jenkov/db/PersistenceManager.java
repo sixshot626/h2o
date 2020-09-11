@@ -20,7 +20,6 @@ package com.jenkov.db;
 
 import com.jenkov.db.impl.Daos;
 import com.jenkov.db.impl.PersistenceConfiguration;
-import com.jenkov.db.impl.init.DatabaseInitializer;
 import com.jenkov.db.itf.IDaos;
 import com.jenkov.db.itf.IPersistenceConfiguration;
 import com.jenkov.db.itf.PersistenceException;
@@ -58,66 +57,27 @@ import java.sql.SQLException;
  *
  * @author Jakob Jenkov - Copyright 2005 Jenkov Development
  */
-public class PersistenceManager {
+public final class PersistenceManager {
 
-    private IPersistenceConfiguration        configuration        = null;
-
-
-    /**
-     * Creates an empty PersistenceManager instance.
-     */
-    public PersistenceManager(){
-        init();
-    }
+    private final IPersistenceConfiguration configuration;
 
     /**
      * Creates a PersistenceManager instance and stores the given DataSource in the default persistence configuration.
      * @param dataSource
      */
     public PersistenceManager(DataSource dataSource){
-        init();
-        this.configuration.setDataSource(dataSource);
+        this.configuration = new PersistenceConfiguration( dataSource );
     }
 
-    /**
-     * Creates a PersistenceManager instance and stores the given <code>DatabaseInitiazliser</code>
-     * in the default persistence configuration.
-     *
-     * <br/><br/>
-     * You don't have to set a <code>DatabaseInitializer</code>
-     * as the persistence configuration has a default instance you can access via the
-     * <code>getConfiguration().getDatabaseInitializer()</code> method call. But sometimes when configuring
-     * the <code>PersistenceManager</code> via dependency injection, it can be handy to be able to configure
-     * the <code>DatabaseInitializer</code> separately, and pass it to the <code>PersistenceManager</code>
-     * afterwards.
-     *
-     * @param databaseInitializer The <code>DatabaseInitializer</code> to use in this <code>PersistenceManager</code>.
-     */
+//    /**
+//     * Returns the persistence configuration of this PersistenceManager.
+//     * @return default persistence configuration of this PersistenceManager.
+//     */
+//    public IPersistenceConfiguration getConfiguration(){
+//        return this.configuration;
+//    }
 
-    public PersistenceManager(DatabaseInitializer databaseInitializer){
-        init();
-        this.configuration.setDatabaseInitializer(databaseInitializer);
-    }
-
-    public PersistenceManager(DataSource dataSource, DatabaseInitializer databaseInitializer){
-        init();
-        this.configuration.setDataSource(dataSource);
-        this.configuration.setDatabaseInitializer(databaseInitializer);
-    }
-
-    private void init(){
-        configuration               = new PersistenceConfiguration(this);
-    }
-
-    /**
-     * Returns the persistence configuration of this PersistenceManager.
-     * @return default persistence configuration of this PersistenceManager.
-     */
-    public IPersistenceConfiguration getConfiguration(){
-        return this.configuration;
-    }
-
-    public synchronized ScopingDataSource getScopingDataSource(){
+    public ScopingDataSource getScopingDataSource(){
         if(!(getDataSource() instanceof ScopingDataSource))
             throw new IllegalStateException("The DataSource set on the PersistenceManager is not a ScopingDataSource");
 
@@ -128,115 +88,8 @@ public class PersistenceManager {
      * Returns the <code>DataSource</code> used by this <code>PersistenceManager</code> .
      * @return the <code>DataSource</code> used by this <code>PersistenceManager</code> .
      */
-    public synchronized DataSource getDataSource(){
+    public DataSource getDataSource(){
         return this.configuration.getDataSource();
-    }
-
-
-    /**
-     * Sets the default data source used by this PeristenceManager instance, and used by the default
-     * IPersistenceConfiguration instance too.
-     * @param dataSource The data source to set as default.
-     */
-    public synchronized void setDataSource(DataSource dataSource){
-        this.configuration.setDataSource(dataSource);
-    }
-
-    /**
-     * Sets the <code>DatabaseIntializer</code> to be used by this PersistenceManager.
-     *
-     * <br/><br/>
-     * You don't have to set a <code>DatabaseInitializer</code>
-     * as the persistence configuration has a default instance you can access via the
-     * <code>getConfiguration().getDatabaseInitializer()</code> method call. But sometimes when configuring
-     * the <code>PersistenceManager</code> via dependency injection, it can be handy to be able to configure
-     * the <code>DatabaseInitializer</code> separately, and pass it to the <code>PersistenceManager</code>
-     * afterwards.
-     *
-     * @param databaseInitializer The <code>DatabaseIntializer</code> to be used by this PersistenceManager.
-     */
-
-    public synchronized void setDatabaseInitializer(DatabaseInitializer databaseInitializer){
-        this.configuration.setDatabaseInitializer(databaseInitializer);
-    }
-
-
-
-    //CONVENIENCE METHODS... shortcuts to doing the most common things done with the factories.
-
-    /**
-     * This method will call the <code>DatabaseInitializer.initialize()</code> method, which will
-     * initialize the database. A database connection will be obtained from the <code>DataSource</code>
-     * set on this <code>PersistenceManager</code> instance. The connection will be closed after
-     * the initialization.
-     */
-    public void initializeDatabase() throws PersistenceException{
-        IDaos daos = null;
-        try{
-            daos = createDaos();
-            this.configuration.getDatabaseInitializer().initialize(daos);
-        } finally {
-            if(daos != null){
-                try {
-                    daos.getConnection().close();
-                } catch (SQLException e) {
-                    throw new PersistenceException("Error closing connection after initialization of database", e);
-                }
-            }
-        }
-    }
-
-
-    /**
-     * This method will call the <code>DatabaseInitializer.initialize()</code> method which will initialize
-     * the database. The provided database connection will be used during the initialization. The database
-     * connection will <b>not</b> be closed afterwards.
-     *
-     * @param connection The database connection to use during the database initialization. This connection
-     *                   will not be closed after the initialization.
-     */
-    public void initializeDatabase(Connection connection) throws PersistenceException {
-        IDaos daos = null;
-        daos = createDaos(connection);
-        this.configuration.getDatabaseInitializer().initialize(daos);
-    }
-
-
-    /**
-     * This method removes the db_info table which contains the version number for the database. Then it
-     * initializes the database. The effect is that the database is re-created from scratch. If you only
-     * want to upgrade the database from one version to another (or make sure it is upgraded), call the
-     * <code>initializeDatabase()</code> method instead.
-     */
-    public void resetDatabase() throws PersistenceException{
-        IDaos daos = null;
-
-        try{
-            daos = createDaos();
-            this.configuration.getDatabaseInitializer().reset(daos);
-        } finally {
-            if(daos != null){
-                try {
-                    daos.getConnection().close();
-                } catch (SQLException e) {
-                    throw new PersistenceException("Error closing connection after reset of database", e);
-                }
-            }
-        }
-    }
-
-
-    /**
-     * This method removes the db_info table which contains the version number for the database. Then it initializes the database.
-     * The effect is that the database is re-created from scratch. If you only
-     * want to upgrade the database from one version to another (or make sure it is upgraded), call the
-     * <code>initializeDatabase()</code> method instead.
-     *
-     * @param connection The database connection to use for resetting the database. 
-     */
-    public void resetDatabase(Connection connection) throws PersistenceException {
-        IDaos daos = createDaos(connection);
-        this.configuration.getDatabaseInitializer().reset(daos);
     }
 
 
@@ -260,7 +113,7 @@ public class PersistenceManager {
      * @return An IDaos instance containing the connection passed as parameter.
      */
     public IDaos createDaos(Connection connection){
-        return new Daos(connection, getConfiguration(), this);
+        return new Daos(connection, configuration);
     }
 
 

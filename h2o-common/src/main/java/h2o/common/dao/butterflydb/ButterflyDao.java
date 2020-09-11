@@ -25,7 +25,7 @@ public class ButterflyDao {
 
     private static boolean SHOWSQL = Mode.isUserMode("DONT_SHOW_SQL") ? false : true;
 
-    private IDaos daos;
+    private final IDaos daos;
 	private final IJdbcDao jdbcDao;
 	private final IMapDao mapDao;
 	
