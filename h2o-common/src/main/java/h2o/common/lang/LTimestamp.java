@@ -67,6 +67,10 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
 
     }
 
+    public String fmt( String fmt , String def ) {
+        return this.isPresent() ? this.fmt( fmt ) : def;
+    }
+
 
     @Override
     public int compareTo( LTimestamp other ) {
@@ -103,7 +107,7 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("timestamp", timestamp)
+                .append("timestamp", this.orElse("<null>"))
                 .toString();
     }
 }

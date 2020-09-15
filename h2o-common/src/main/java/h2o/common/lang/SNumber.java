@@ -6,6 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class SNumber extends Number implements Comparable<SNumber> {
 
@@ -58,6 +59,18 @@ public class SNumber extends Number implements Comparable<SNumber> {
     public String orElse(String other) {
         return value == null ? other : value;
     }
+
+
+    public String fmt( String fmt ) {
+       return new DecimalFormat(fmt).format( this.bigDecimalValue() );
+    }
+
+
+    public String fmt( String fmt , String def ) {
+        return this.isPresent() ? this.fmt( fmt ) : def;
+    }
+
+
 
     public BigDecimal bigDecimalValue() {
         return new BigDecimal( this.get() );

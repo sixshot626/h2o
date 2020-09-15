@@ -68,6 +68,10 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
     }
 
+    public String fmt( String fmt , String def ) {
+        return this.isPresent() ? this.fmt( fmt ) : def;
+    }
+
 
     @Override
     public int compareTo( STime other ) {

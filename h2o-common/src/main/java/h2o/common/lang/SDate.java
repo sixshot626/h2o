@@ -77,6 +77,11 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
     }
 
 
+    public String fmt( String fmt , String def ) {
+        return this.isPresent() ? this.fmt( fmt ) : def;
+    }
+
+
     @Override
     public int compareTo( SDate other ) {
 

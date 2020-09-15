@@ -5,21 +5,35 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Var<T> {
 
-	public T v;
+	private T v;
+
+	private boolean setted;
 
     public Var() {
     }
 
     public Var(T v) {
         this.v = v;
+        this.setted = true;
     }
-
-
-
 
     public boolean isPresent() {
         return v != null;
     }
+
+    public T getV() {
+        return v;
+    }
+
+    public void setV(T v) {
+        this.v = v;
+        this.setted = true;
+    }
+
+    public boolean isSetted() {
+        return setted;
+    }
+
 
     public T getValue() {
         return v;
@@ -61,7 +75,7 @@ public class Var<T> {
 
     @Override
 	public String toString() {
-		return v == null ? null : v.toString();
+		return v == null ? "<null>" : v.toString();
 	}
 	
 

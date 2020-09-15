@@ -93,6 +93,10 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
     }
 
+    public String fmt( String fmt , String def ) {
+        return this.isPresent() ? this.fmt( fmt ) : def;
+    }
+
 
     @Override
     public int compareTo( SDateTime other ) {
