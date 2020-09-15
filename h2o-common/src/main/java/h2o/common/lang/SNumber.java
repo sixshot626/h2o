@@ -132,6 +132,22 @@ public class SNumber extends Number implements Comparable<SNumber> {
         }
     }
 
+
+
+
+    public boolean valueEquals( SNumber o ) {
+
+       if ( o == null ) {
+           return ! this.isPresent();
+       }
+
+       return this.compareTo( o ) == 0;
+
+    }
+
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
