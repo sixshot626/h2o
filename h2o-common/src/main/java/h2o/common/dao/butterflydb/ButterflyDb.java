@@ -3,7 +3,6 @@ package h2o.common.dao.butterflydb;
 import com.jenkov.db.PersistenceManager;
 import com.jenkov.db.itf.IDaos;
 import com.jenkov.db.itf.PersistenceException;
-import com.jenkov.db.scope.ScopingDataSource;
 import h2o.common.exception.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +15,12 @@ public class ButterflyDb {
 
     private static final Logger log = LoggerFactory.getLogger( ButterflyDb.class.getName() );
 
-    private volatile boolean isRollBack = false;
+    private volatile boolean rollBack = false;
 	
 	private volatile boolean autoClose = false;
 
 	public void needRollBack(boolean isRollBack) {
-		this.isRollBack = isRollBack;
+		this.rollBack = isRollBack;
 	}
 
 	public void setAutoClose(boolean autoClose) {
@@ -33,8 +32,7 @@ public class ButterflyDb {
 	public final PersistenceManager persistenceManager;
 
 	public ButterflyDb(DataSource dataSource) {		
-		ScopingDataSource scopingDataSource = dataSource instanceof ScopingDataSource ? (ScopingDataSource)dataSource : new ScopingDataSource(dataSource);
-		this.persistenceManager = new PersistenceManager(scopingDataSource);
+		this.persistenceManager = new PersistenceManager(dataSource);
 	}
 
 	public IDaos getDaos() {
@@ -99,7 +97,7 @@ public class ButterflyDb {
 
 			T r = butterflyDbCallback.doCallBack(this, null);
 
-			if( this.isRollBack ) {
+			if( this.rollBack) {
 				
 				log.debug("NeedRollBack!!!");
 				
@@ -140,7 +138,7 @@ public class ButterflyDb {
 
 			T r = butterflyDbCallback.doCallBack(this, connection);
 			
-			if( this.isRollBack ) {
+			if( this.rollBack) {
 				try {
 					connection.rollback();
 				} catch (SQLException e1) {
