@@ -129,9 +129,7 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("time", this.orElse("<null>"))
-                .toString();
+        return this.orElse("<null>");
     }
 
 }

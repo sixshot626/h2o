@@ -146,8 +146,6 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("dateTime", this.orElse("<null>"))
-                .toString();
+        return this.orElse("<null>");
     }
 }

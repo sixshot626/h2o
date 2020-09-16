@@ -137,9 +137,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("date", this.orElse("<null>"))
-                .toString();
+        return this.orElse("<null>");
     }
 
 

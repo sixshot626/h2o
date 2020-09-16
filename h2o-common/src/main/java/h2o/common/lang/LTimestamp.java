@@ -106,8 +106,6 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("timestamp", this.orElse("<null>"))
-                .toString();
+        return this.orElse("<null>");
     }
 }
