@@ -5,7 +5,6 @@ import h2o.common.collections.builder.ListBuilder;
 import h2o.jodd.bean.BeanUtil;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**

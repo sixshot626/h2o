@@ -16,22 +16,29 @@ public class SNumber extends Number implements Comparable<SNumber> {
         this.value = null;
     }
 
-    public SNumber( BigDecimal value ) {
-        if ( value == null ) {
-            this.value = null;
-        } else {
-            this.value = value.toString();
-        }
+
+    public SNumber( long value ) {
+        this.value = BigDecimal.valueOf(value).toString();
+    }
+
+    public SNumber( double value ) {
+        this.value = BigDecimal.valueOf(value).toString();
     }
 
     public SNumber( Number number ) {
+
         if ( number == null ) {
             this.value = null;
-        } else if ( number instanceof BigDecimal ) {
+        } else if ( number instanceof Integer || number instanceof Double || number instanceof Long ||
+                         number instanceof BigDecimal || number instanceof Float ||
+                        number instanceof BigInteger || number instanceof Short  ) {
             this.value = number.toString();
+        } else if ( number instanceof SNumber ) {
+            this.value = ((SNumber)number).value;
         } else {
-            this.value = new BigDecimal(number.toString()).toString();
+            this.value = BigDecimal.valueOf(number.doubleValue()).toString();
         }
+
     }
 
     public SNumber(String num) {
