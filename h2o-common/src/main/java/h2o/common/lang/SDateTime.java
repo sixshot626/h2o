@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -27,6 +28,19 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
     public static SDateTime from( String dateTime, String fmt ) {
         return new SDateTime( toDate(dateTime, fmt ) );
     }
+
+
+    public SDateTime( int year , int month , int day , int hour, int minute, int second ) {
+
+        this( StringUtils.leftPad( Integer.toString(year) , 4 , '0') + "-" +
+                StringUtils.leftPad( Integer.toString(month) , 2 , '0') + "-" +
+                StringUtils.leftPad( Integer.toString(day) , 2 , '0')  + " " +
+                StringUtils.leftPad( Integer.toString(hour) , 2 , '0') + ":" +
+                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') + ":" +
+                StringUtils.leftPad( Integer.toString(second) , 2 , '0')  );
+
+    }
+
 
     protected static Date toDate( String date , String fmt ) {
        return SDate.toDate( date, fmt );
@@ -96,6 +110,7 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
     public String fmt( String fmt , String def ) {
         return this.isPresent() ? this.fmt( fmt ) : def;
     }
+
 
 
     @Override

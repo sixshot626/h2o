@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -37,6 +38,14 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         } catch ( Exception e ) {
             throw new IllegalArgumentException();
         }
+    }
+
+
+
+    public SDate( int year , int month , int day ) {
+        this( StringUtils.leftPad( Integer.toString(year) , 4 , '0') + "-" +
+                StringUtils.leftPad( Integer.toString(month) , 2 , '0') + "-" +
+                StringUtils.leftPad( Integer.toString(day) , 2 , '0')  );
     }
 
 
@@ -82,6 +91,19 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
     }
 
 
+    public int getYear() {
+        return Integer.parseInt(StringUtils.substringBefore( this.get() , "-" ) );
+    }
+
+    public int getMonth() {
+        return Integer.parseInt(StringUtils.substringBetween( this.get() , "-" ) );
+    }
+
+    public int getDay() {
+        return Integer.parseInt(StringUtils.substringAfterLast( this.get() , "-" ) );
+    }
+
+
     @Override
     public int compareTo( SDate other ) {
 
@@ -119,4 +141,6 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
                 .append("date", this.orElse("<null>"))
                 .toString();
     }
+
+
 }

@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -26,6 +27,12 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
     public static STime from(String time , String fmt ) {
         return new STime( toDate( time , fmt ) );
+    }
+
+    public STime( int hour, int minute, int second ) {
+        this( StringUtils.leftPad( Integer.toString(hour) , 2 , '0') + ":" +
+                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') + ":" +
+                StringUtils.leftPad( Integer.toString(second) , 2 , '0')  );
     }
 
     protected static Date toDate( String date , String fmt ) {
@@ -73,6 +80,22 @@ public class STime implements Comparable<STime>, java.io.Serializable {
     }
 
 
+
+    public int getHour() {
+        return Integer.parseInt(StringUtils.substringBefore( this.get() , ":" ) );
+    }
+
+    public int getMinute() {
+        return Integer.parseInt(StringUtils.substringBetween( this.get() , ":" ) );
+    }
+
+    public int getSecond() {
+        return Integer.parseInt(StringUtils.substringAfterLast( this.get() , ":" ) );
+    }
+
+
+
+
     @Override
     public int compareTo( STime other ) {
 
@@ -110,4 +133,5 @@ public class STime implements Comparable<STime>, java.io.Serializable {
                 .append("time", this.orElse("<null>"))
                 .toString();
     }
+
 }
