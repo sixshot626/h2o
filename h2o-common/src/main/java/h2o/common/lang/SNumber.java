@@ -122,31 +122,85 @@ public class SNumber extends Number implements Comparable<SNumber> {
 
 
     public SNumber add(SNumber augend) {
-        return new SNumber(new BigDecimal(value).add( new BigDecimal( augend.value) ));
+
+        if ( augend == null || ( !augend.isPresent() ) ) {
+            throw new IllegalArgumentException();
+        }
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
+
+        return new SNumber(new BigDecimal(value).add( new BigDecimal(augend.value) ) );
     }
 
     public SNumber subtract(SNumber subtrahend) {
-        return new SNumber( new BigDecimal(value).subtract( new BigDecimal(subtrahend.value) ));
+
+        if ( subtrahend == null || ( !subtrahend.isPresent() ) ) {
+            throw new IllegalArgumentException();
+        }
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
+
+        return new SNumber( new BigDecimal(value).subtract( new BigDecimal(subtrahend.value) ) );
     }
 
     public SNumber multiply(SNumber multiplicand) {
-        return new SNumber( new BigDecimal(value).multiply( new BigDecimal( multiplicand.value) ));
+
+        if ( multiplicand == null || ( !multiplicand.isPresent() ) ) {
+            throw new IllegalArgumentException();
+        }
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
+
+        return new SNumber( new BigDecimal(value).multiply( new BigDecimal(multiplicand.value) ) );
     }
 
     public SNumber divide(SNumber divisor) {
-        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) ));
+
+        if ( divisor == null || ( !divisor.isPresent() ) ) {
+            throw new IllegalArgumentException();
+        }
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
+
+        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) ) );
     }
 
     public SNumber divide(SNumber divisor , RoundingMode roundingMode) {
+
+        if ( divisor == null || ( !divisor.isPresent() ) ) {
+            throw new IllegalArgumentException();
+        }
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
+
         return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , roundingMode ) );
     }
 
     public SNumber divide(SNumber divisor, int scale, RoundingMode roundingMode) {
-        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , scale, roundingMode));
+
+        if ( divisor == null || ( !divisor.isPresent() ) ) {
+            throw new IllegalArgumentException();
+        }
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
+
+        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , scale, roundingMode ) );
     }
 
+    public SNumber toScale(int scale, RoundingMode roundingMode) {
 
+        if ( !this.isPresent() ) {
+            throw new IllegalStateException();
+        }
 
+        return new SNumber( new BigDecimal(value).setScale( scale , roundingMode ) );
+    }
 
 
 
