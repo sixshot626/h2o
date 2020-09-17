@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 
 public class SNumber extends Number implements Comparable<SNumber> {
 
+    public static final SNumber ZERO = new SNumber("0",true);
+
     private final String value;
 
     public SNumber() {
@@ -42,7 +44,15 @@ public class SNumber extends Number implements Comparable<SNumber> {
     }
 
     public SNumber(String num) {
-        this.value = new BigDecimal(num).toString();
+       this( num , false );
+    }
+
+    public SNumber( String num , boolean direct ) {
+       if ( direct ) {
+           this.value = num;
+       } else {
+           this.value = new BigDecimal(num).toString();
+       }
     }
 
     public boolean isPresent() {

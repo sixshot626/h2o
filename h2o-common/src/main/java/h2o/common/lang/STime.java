@@ -21,8 +21,16 @@ public class STime implements Comparable<STime>, java.io.Serializable {
         time = null;
     }
 
-    public STime(String time ) {
-        this( toDate( time , DATE_FMT ) );
+    public STime( String time ) {
+        this( time,false );
+    }
+
+    public STime( String time ,  boolean direct ) {
+        if ( direct ) {
+            this.time = time;
+        } else {
+            this.time = time == null ? null : DateUtil.toString( toDate( time , DATE_FMT ) , DATE_FMT );
+        }
     }
 
     public static STime from(String time , String fmt ) {

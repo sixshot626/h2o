@@ -17,7 +17,7 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
         this.timestamp = null;
     }
 
-    public LTimestamp( Long timestamp) {
+    public LTimestamp( Long timestamp ) {
         this.timestamp = timestamp;
     }
 

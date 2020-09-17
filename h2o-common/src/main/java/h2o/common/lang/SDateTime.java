@@ -21,8 +21,16 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
         dateTime = null;
     }
 
-    public SDateTime(String dateTime) {
-        this( toDate(dateTime, DATE_FMT ) );
+    public SDateTime( String dateTime ) {
+        this( dateTime , false );
+    }
+
+    public SDateTime( String dateTime , boolean direct ) {
+        if ( direct ) {
+            this.dateTime = dateTime;
+        } else {
+            this.dateTime = dateTime == null ? null : DateUtil.toString( toDate(dateTime, DATE_FMT ) , DATE_FMT );
+        }
     }
 
     public static SDateTime from( String dateTime, String fmt ) {

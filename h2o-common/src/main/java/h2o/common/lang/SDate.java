@@ -22,7 +22,15 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
     }
 
     public SDate( String date ) {
-        this( toDate( date , DATE_FMT ) );
+        this( date , false );
+    }
+
+    public SDate( String date , boolean direct ) {
+        if ( direct ) {
+            this.date = date;
+        } else {
+            this.date = date == null ? null : DateUtil.toString( toDate( date , DATE_FMT ) , DATE_FMT );
+        }
     }
 
     public static SDate from( String date , String fmt ) {
