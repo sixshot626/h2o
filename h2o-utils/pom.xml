@@ -23,7 +23,7 @@
         <dependency>
             <groupId>h2o</groupId>
             <artifactId>h2o-common</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>${versions.h2o}-SNAPSHOT</version>
         </dependency>
 
         <dependency>
