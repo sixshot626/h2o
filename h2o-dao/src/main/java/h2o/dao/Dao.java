@@ -8,13 +8,14 @@ import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
 
 import javax.sql.DataSource;
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public interface Dao {
+public interface Dao extends Closeable {
 
 
 
