@@ -9,7 +9,10 @@ import java.util.Date;
 
 public class SDate implements Comparable<SDate>, java.io.Serializable {
 
+    private static final long serialVersionUID = 9012516608507340072L;
+
     protected static final String DATE_FMT = "yyyy-MM-dd";
+
 
     /**
      * 日期 yyyy-MM-dd

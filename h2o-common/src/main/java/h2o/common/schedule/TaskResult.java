@@ -8,13 +8,16 @@ enum TaskState {
 
 
 
-public class TaskResult {
+public class TaskResult implements java.io.Serializable {
+
+    private static final long serialVersionUID = 7956881167239663534L;
 
     public static final TaskResult OK   = new TaskResult( TaskState.Ok );
     public static final TaskResult FREE = new TaskResult( TaskState.Free );
     public static final TaskResult CONTINUE = new TaskResult( TaskState.Continue );
     public static final TaskResult BREAK = new TaskResult( TaskState.Break );
     public static final TaskResult WAIT = new TaskResult( TaskState.Wait );
+
 
     public static TaskResult SLEEP( long time ) {
         TaskResult tr = new TaskResult( TaskState.Sleep );

@@ -6,7 +6,6 @@ package h2o.flow.pvm;
 
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.Var;
 import h2o.flow.pvm.elements.Line;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public final class ProcessVirtualMachine {

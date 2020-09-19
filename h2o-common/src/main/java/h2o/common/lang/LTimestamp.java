@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable {
 
+    private static final long serialVersionUID = -6995945806906201103L;
+
     protected static final String DATE_FMT = "yyyyMMddHHmmssSSS";
 
     private final Long timestamp;

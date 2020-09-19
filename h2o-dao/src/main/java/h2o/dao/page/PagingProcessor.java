@@ -1,7 +1,7 @@
 package h2o.dao.page;
 
-import h2o.common.data.domain.PageRequest;
 import h2o.common.collections.tuple.Tuple2;
+import h2o.common.data.domain.PageRequest;
 
 import java.util.Map;
 

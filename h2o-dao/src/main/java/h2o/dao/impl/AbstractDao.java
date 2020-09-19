@@ -1,10 +1,10 @@
 package h2o.dao.impl;
 
+import h2o.common.collections.builder.ListBuilder;
+import h2o.common.collections.tuple.Tuple2;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageInfo;
 import h2o.common.data.domain.PageRequest;
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
 import h2o.dao.Dao;
 import h2o.dao.ResultSetCallback;
 import h2o.dao.SqlSource;

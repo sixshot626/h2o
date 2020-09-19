@@ -6,7 +6,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * Created by zhangjianwei on 2017/7/3.
  */
-public class RedisConfig {
+public class RedisConfig implements java.io.Serializable {
+
+    private static final long serialVersionUID = 182367304712521431L;
 
     public final String host;
 

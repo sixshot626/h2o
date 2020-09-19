@@ -4,6 +4,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class SortInfo implements java.io.Serializable {
 
+    private static final long serialVersionUID = 4094699421665186848L;
+
     public enum Direction {
         ASC, DESC
     }

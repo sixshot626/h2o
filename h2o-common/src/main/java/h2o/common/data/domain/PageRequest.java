@@ -8,6 +8,8 @@ import java.util.List;
 
 public class PageRequest implements java.io.Serializable {
 
+    private static final long serialVersionUID = 1445323518186619685L;
+
     private long pageNo;
 
     private long pageRecordSize;

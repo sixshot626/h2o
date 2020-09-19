@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class STime implements Comparable<STime>, java.io.Serializable {
 
+    private static final long serialVersionUID = -3750549384074422469L;
+
     protected static final String DATE_FMT = "HH:mm:ss";
 
     /**

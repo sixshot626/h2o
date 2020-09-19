@@ -2,10 +2,9 @@ package h2o.common.data.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class ResultInfo implements Serializable {
+public class ResultInfo implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1607703985782895368L;
 
