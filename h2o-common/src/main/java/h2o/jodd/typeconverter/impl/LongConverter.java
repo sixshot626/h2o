@@ -25,6 +25,8 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.LTimestamp;
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -49,11 +51,22 @@ public class LongConverter implements TypeConverter<Long> {
 		if (value.getClass() == Long.class) {
 			return (Long) value;
 		}
+		if ( value instanceof SNumber ) {
+			SNumber number = (SNumber) value;
+			if ( number.isPresent() ) {
+				return Long.valueOf(number.longValue());
+			} else {
+				return null;
+			}
+		}
 		if (value instanceof Number) {
 			return Long.valueOf(((Number)value).longValue());
 		}
 		if (value instanceof Boolean) {
 			return ((Boolean) value).booleanValue() ? Long.valueOf(1L) : Long.valueOf(0L);
+		}
+		if (value instanceof LTimestamp) {
+			return ((LTimestamp)value).getValue();
 		}
 
 		try {

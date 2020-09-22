@@ -70,7 +70,7 @@ public class STimeConverter implements TypeConverter<STime> {
 			return ((SDateTime) value).getTime();
 		}
 		if (value instanceof LTimestamp) {
-			return ((LTimestamp) value).getDateTime().getTime();
+			return ((LTimestamp) value).toSDateTime().getTime();
 		}
 		if (value instanceof Date) {
 			return new STime((Date) value);

@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import h2o.common.util.lang.StringUtil;
 import h2o.jodd.time.TimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -55,9 +56,14 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
 
     public SDate( int year , int month , int day ) {
-        this( StringUtils.leftPad( Integer.toString(year) , 4 , '0') + "-" +
-                StringUtils.leftPad( Integer.toString(month) , 2 , '0') + "-" +
-                StringUtils.leftPad( Integer.toString(day) , 2 , '0')  );
+        this( StringUtil.build( StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(month) , 2 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(day) , 2 , '0') ) );
+    }
+
+
+    public SDate( LocalDate date ) {
+        this( date.getYear() , date.getMonthValue() , date.getDayOfMonth() );
     }
 
 

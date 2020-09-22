@@ -56,6 +56,7 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 
 	@Override
 	public Time convert(final Object value) {
+
 		if (value == null) {
 			return null;
 		}

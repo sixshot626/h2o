@@ -36,6 +36,7 @@ import h2o.jodd.util.StringUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -90,6 +91,9 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 		}
 		if (value instanceof LocalDate) {
 			return new SDateTime(TimeUtil.toDate((LocalDate)value));
+		}
+		if (value instanceof LocalTime) {
+			throw new TypeConversionException("Can't convert to date just from time: " + value);
 		}
 		if (value instanceof Number) {
 			return new SDateTime(new Date(((Number) value).longValue()));

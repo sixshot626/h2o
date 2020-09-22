@@ -44,15 +44,6 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
 
     }
 
-    public SDateTime getDateTime() {
-
-        if ( this.isPresent() ) {
-            return new SDateTime( new Date( this.timestamp ) );
-        }
-
-        return new SDateTime();
-
-    }
 
     public String orElse(String other) {
         return this.isPresent() ? this.get() : other;
@@ -71,6 +62,34 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
     public String fmt( String fmt , String def ) {
         return this.isPresent() ? this.fmt( fmt ) : def;
     }
+
+
+    public Date toDate() {
+
+        if ( this.isPresent() ) {
+            return new Date(this.timestamp);
+        }
+
+        throw new IllegalStateException();
+    }
+
+    public SDateTime toSDateTime() {
+
+        if ( this.isPresent() ) {
+            return new SDateTime( new Date( this.timestamp ) );
+        }
+
+        return new SDateTime();
+
+    }
+
+    public SNumber toSNumber() {
+        if ( this.isPresent() ) {
+            return new SNumber( this.timestamp );
+        }
+        return new SNumber();
+    }
+
 
 
     @Override

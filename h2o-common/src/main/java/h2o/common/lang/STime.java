@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import h2o.common.util.lang.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -41,10 +42,15 @@ public class STime implements Comparable<STime>, java.io.Serializable {
     }
 
     public STime( int hour, int minute, int second ) {
-        this( StringUtils.leftPad( Integer.toString(hour) , 2 , '0') + ":" +
-                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') + ":" +
-                StringUtils.leftPad( Integer.toString(second) , 2 , '0')  );
+        this( StringUtil.build(StringUtils.leftPad( Integer.toString(hour) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(second) , 2 , '0') ) );
     }
+
+    public STime( LocalTime time ) {
+        this( time.getHour() , time.getMinute() , time.getSecond() );
+    }
+
 
     protected static Date toDate( String date , String fmt ) {
         return SDate.toDate( date, fmt );

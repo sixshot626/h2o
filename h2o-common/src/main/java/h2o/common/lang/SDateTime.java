@@ -53,6 +53,13 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
     }
 
+    public SDateTime( LocalDateTime dateTime ) {
+
+        this( dateTime.getYear() , dateTime.getMonthValue() , dateTime.getDayOfMonth() ,
+                dateTime.getHour(), dateTime.getMinute() , dateTime.getSecond());
+
+    }
+
 
     protected static Date toDate( String date , String fmt ) {
        return SDate.toDate( date, fmt );
