@@ -43,7 +43,6 @@ package h2o.jodd.util;
  */
 public interface StringPool {
 
-	String JODD        		= "jodd";
 	String AMPERSAND        = "&";
 	String AND              = "and";
 	String AT               = "@";
@@ -56,8 +55,7 @@ public interface StringPool {
 	String DOLLAR           = "$";
 	String DOT              = ".";
 	String DOTDOT           = "..";
-	String DOT_CLASS        = ".class";
-	String DOT_JAVA         = ".java";
+
 	String EMPTY            = "";
 	String EQUALS           = "=";
 	String FALSE            = "false";
@@ -93,21 +91,11 @@ public interface StringPool {
 	String RIGHT_SQ_BRACKET = "]";
 	String TRUE             = "true";
 	String UNDERSCORE       = "_";
-	String UTF_8            = "UTF-8";
-	String US_ASCII			= "US-ASCII";
-	String ISO_8859_1       = "ISO-8859-1";
 	String Y                = "y";
 	String YES              = "yes";
 	String ONE 				= "1";
 	String ZERO				= "0";
-	String DOLLAR_LEFT_BRACE= "${";
 	String CRLF				= "\r\n";
-
-	String HTML_NBSP		= "&nbsp;";
-	String HTML_AMP			= "&amp";
-	String HTML_QUOTE 		= "&quot;";
-	String HTML_LT 			= "&lt;";
-	String HTML_GT 			= "&gt;";
 
 	// ---------------------------------------------------------------- array
 

@@ -22,25 +22,12 @@
 
     <properties>
         <project.encoding>UTF-8</project.encoding>
-        <versions.jdk>1.6</versions.jdk>
+        <versions.jdk>1.8</versions.jdk>
         <versions.spring>3.2.2.RELEASE</versions.spring>
         <versions.h2o>5.1.0</versions.h2o>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>jdk</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-                <jdk>${versions.jdk}</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>${versions.jdk}</maven.compiler.source>
-                <maven.compiler.target>${versions.jdk}</maven.compiler.target>
-                <maven.compiler.compilerVersion>${versions.jdk}</maven.compiler.compilerVersion>
-            </properties>
-        </profile>
-    </profiles>
+
 
     <build>
         <plugins>

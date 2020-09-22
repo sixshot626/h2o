@@ -29,9 +29,25 @@ import h2o.jodd.util.StringPool;
 import h2o.jodd.util.StringUtil;
 import h2o.jodd.util.Wildcard;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.zip.*;
+import java.util.List;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Performs zip/gzip/zlib operations on files and directories.
@@ -53,14 +69,14 @@ public class ZipUtil {
 	/**
 	 * Compresses a file into zlib archive.
 	 */
-	public static File zlib(String file) throws IOException {
+	public static File zlib(final String file) throws IOException {
 		return zlib(new File(file));
 	}
 
 	/**
 	 * Compresses a file into zlib archive.
 	 */
-	public static File zlib(File file) throws IOException {
+	public static File zlib(final File file) throws IOException {
 		if (file.isDirectory()) {
 			throw new IOException("Can't zlib folder");
 		}
@@ -72,10 +88,10 @@ public class ZipUtil {
 		DeflaterOutputStream dos = new DeflaterOutputStream(new FileOutputStream(zlibFileName), deflater);
 
 		try {
-			StreamUtil.copy(fis, dos);
+			IOUtil.copy(fis, dos);
 		} finally {
-			StreamUtil.close(dos);
-			StreamUtil.close(fis);
+			IOUtil.close(dos);
+			IOUtil.close(fis);
 		}
 
 		return new File(zlibFileName);
@@ -86,14 +102,14 @@ public class ZipUtil {
 	/**
 	 * Compresses a file into gzip archive.
 	 */
-	public static File gzip(String fileName) throws IOException {
+	public static File gzip(final String fileName) throws IOException {
 		return gzip(new File(fileName));
 	}
 
 	/**
 	 * Compresses a file into gzip archive.
 	 */
-	public static File gzip(File file) throws IOException {
+	public static File gzip(final File file) throws IOException {
 		if (file.isDirectory()) {
 			throw new IOException("Can't gzip folder");
 		}
@@ -103,10 +119,10 @@ public class ZipUtil {
 
 		GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(gzipName));
 		try {
-			StreamUtil.copy(fis, gzos);
+			IOUtil.copy(fis, gzos);
 		} finally {
-			StreamUtil.close(gzos);
-			StreamUtil.close(fis);
+			IOUtil.close(gzos);
+			IOUtil.close(fis);
 		}
 
 		return new File(gzipName);
@@ -115,14 +131,14 @@ public class ZipUtil {
 	/**
 	 * Decompress gzip archive.
 	 */
-	public static File ungzip(String file) throws IOException {
+	public static File ungzip(final String file) throws IOException {
 		return ungzip(new File(file));
 	}
 
 	/**
 	 * Decompress gzip archive.
 	 */
-	public static File ungzip(File file) throws IOException {
+	public static File ungzip(final File file) throws IOException {
 		String outFileName = FileNameUtil.removeExtension(file.getAbsolutePath());
 		File out = new File(outFileName);
 		out.createNewFile();
@@ -130,10 +146,10 @@ public class ZipUtil {
 		FileOutputStream fos = new FileOutputStream(out);
 		GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(file));
 		try {
-			StreamUtil.copy(gzis, fos);
+			IOUtil.copy(gzis, fos);
 		} finally {
-			StreamUtil.close(fos);
-			StreamUtil.close(gzis);
+			IOUtil.close(fos);
+			IOUtil.close(gzis);
 		}
 
 		return out;
@@ -143,16 +159,16 @@ public class ZipUtil {
 
 	/**
 	 * Zips a file or a folder.
-	 * @see #zip(File)
+	 * @see #zip(java.io.File)
 	 */
-	public static File zip(String file) throws IOException {
+	public static File zip(final String file) throws IOException {
 		return zip(new File(file));
 	}
 
 	/**
 	 * Zips a file or a folder. If adding a folder, all its content will be added.
 	 */
-	public static File zip(File file) throws IOException {
+	public static File zip(final File file) throws IOException {
 		String zipFile = file.getAbsolutePath() + ZIP_EXT;
 
 		return ZipBuilder.createZipFile(zipFile)
@@ -163,10 +179,29 @@ public class ZipUtil {
 	// ---------------------------------------------------------------- unzip
 
 	/**
-	 * Extracts zip file content to the target directory.
-	 * @see #unzip(File, File, String...)
+	 * Lists zip content.
 	 */
-	public static void unzip(String zipFile, String destDir, String... patterns) throws IOException {
+	public static List<String> listZip(final File zipFile) throws IOException {
+		List<String> entries = new ArrayList<>();
+
+		ZipFile zip = new ZipFile(zipFile);
+		Enumeration zipEntries = zip.entries();
+
+		while (zipEntries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) zipEntries.nextElement();
+			String entryName = entry.getName();
+
+			entries.add(entryName);
+		}
+
+		return Collections.unmodifiableList(entries);
+	}
+
+	/**
+	 * Extracts zip file content to the target directory.
+	 * @see #unzip(java.io.File, java.io.File, String...)
+	 */
+	public static void unzip(final String zipFile, final String destDir, final String... patterns) throws IOException {
 		unzip(new File(zipFile), new File(destDir), patterns);
 	}
 
@@ -178,7 +213,7 @@ public class ZipUtil {
 	 * @param destDir destination directory
 	 * @param patterns optional wildcard patterns of files to extract, may be <code>null</code>
 	 */
-	public static void unzip(File zipFile, File destDir, String... patterns) throws IOException {
+	public static void unzip(final File zipFile, final File destDir, final String... patterns) throws IOException {
 		ZipFile zip = new ZipFile(zipFile);
 		Enumeration zipEntries = zip.entries();
 
@@ -192,7 +227,14 @@ public class ZipUtil {
 				}
 			}
 
-			File file = (destDir != null) ? new File(destDir, entryName) : new File(entryName);
+			final File file = (destDir != null) ? new File(destDir, entryName) : new File(entryName);
+
+			// check for Zip slip FLAW
+			final File rootDir = destDir != null ? destDir : new File(".");
+			if (!FileUtil.isAncestor(rootDir, file, true)) {
+				throw new IOException("Unzipping");
+			}
+
 			if (entry.isDirectory()) {
 				if (!file.mkdirs()) {
 					if (!file.isDirectory()) {
@@ -213,10 +255,10 @@ public class ZipUtil {
 				OutputStream out = null;
 				try {
 					out = new FileOutputStream(file);
-					StreamUtil.copy(in, out);
+					IOUtil.copy(in, out);
 				} finally {
-					StreamUtil.close(out);
-					StreamUtil.close(in);
+					IOUtil.close(out);
+					IOUtil.close(in);
 				}
 			}
 		}
@@ -235,7 +277,7 @@ public class ZipUtil {
 	 * @param comment optional comment
 	 * @param recursive when set to <code>true</code> content of added folders will be added, too
 	 */
-	public static void addToZip(ZipOutputStream zos, File file, String path, String comment, boolean recursive) throws IOException {
+	public static void addToZip(final ZipOutputStream zos, final File file, String path, final String comment, final boolean recursive) throws IOException {
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.toString());
 		}
@@ -274,9 +316,9 @@ public class ZipUtil {
 		if (!isDir) {
 			InputStream is = new FileInputStream(file);
 			try {
-				StreamUtil.copy(is, zos);
+				IOUtil.copy(is, zos);
 			} finally {
-				StreamUtil.close(is);
+				IOUtil.close(is);
 			}
 		}
 
@@ -302,7 +344,7 @@ public class ZipUtil {
 	/**
 	 * Adds byte content into the zip as a file.
 	 */
-	public static void addToZip(ZipOutputStream zos, byte[] content, String path, String comment) throws IOException {
+	public static void addToZip(final ZipOutputStream zos, final byte[] content, String path, final String comment) throws IOException {
 		while (path.length() != 0 && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
@@ -322,15 +364,15 @@ public class ZipUtil {
 
 		InputStream is = new ByteArrayInputStream(content);
 		try {
-			StreamUtil.copy(is, zos);
+			IOUtil.copy(is, zos);
 		} finally {
-			StreamUtil.close(is);
+			IOUtil.close(is);
 		}
 
 		zos.closeEntry();
 	}
 
-	public static void addFolderToZip(ZipOutputStream zos, String path, String comment) throws IOException {
+	public static void addFolderToZip(final ZipOutputStream zos, String path, final String comment) throws IOException {
 		while (path.length() != 0 && path.charAt(0) == '/') {
 			path = path.substring(1);
 		}
@@ -360,7 +402,7 @@ public class ZipUtil {
 	/**
 	 * Closes zip file safely.
 	 */
-	public static void close(ZipFile zipFile) {
+	public static void close(final ZipFile zipFile) {
 		if (zipFile != null) {
 			try {
 				zipFile.close();

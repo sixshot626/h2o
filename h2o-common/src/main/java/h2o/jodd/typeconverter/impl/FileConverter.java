@@ -28,7 +28,6 @@ package h2o.jodd.typeconverter.impl;
 import h2o.jodd.io.FileUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
-import h2o.jodd.util.ArraysUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,18 +48,8 @@ import java.io.IOException;
  */
 public class FileConverter implements TypeConverter<File> {
 
-	protected TypeConverter<File>[] addonFileConverters;
-
-	@SuppressWarnings("unchecked")
-	public void registerAddonConverter(TypeConverter<File> fileTypeConverter) {
-		if (addonFileConverters == null) {
-			addonFileConverters = new TypeConverter[0];
-		}
-
-		addonFileConverters = ArraysUtil.append(addonFileConverters, fileTypeConverter);
-	}
-
-	public File convert(Object value) {
+	@Override
+	public File convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -68,34 +57,6 @@ public class FileConverter implements TypeConverter<File> {
 		if (value instanceof File) {
 			return (File) value;
 		}
-
-		if (addonFileConverters != null) {
-			for (TypeConverter<File> addonFileConverter : addonFileConverters) {
-				File file = addonFileConverter.convert(value);
-
-				if (file != null) {
-					return file;
-				}
-			}
-		}
-
-/*
-		if (value instanceof FileUpload) {
-			FileUpload fileUpload = (FileUpload) value;
-
-			InputStream in = null;
-			try {
-				in = fileUpload.getFileInputStream();
-				File tempFile = FileUtil.createTempFile();
-				FileUtil.writeStream(tempFile, in);
-				return tempFile;
-			} catch (IOException ioex) {
-				throw new TypeConversionException(ioex);
-			} finally {
-				StreamUtil.close(in);
-			}
-		}
-*/
 
 		Class type = value.getClass();
 		if (type == byte[].class) {

@@ -28,38 +28,42 @@ package h2o.jodd.typeconverter.impl;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.typeconverter.TypeConverterManager;
-import h2o.jodd.typeconverter.TypeConverterManagerBean;
 import h2o.jodd.util.CsvUtil;
 
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Collection converter.
  */
 public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 
-	protected final TypeConverterManagerBean typeConverterManagerBean;
+	protected final TypeConverterManager typeConverterManager;
 	protected final Class<? extends Collection> collectionType;
 	protected final Class<T> targetComponentType;
 
 	public CollectionConverter(
-			Class<? extends Collection> collectionType,
-			Class<T> targetComponentType) {
-		this(TypeConverterManager.getDefaultTypeConverterManager(), collectionType, targetComponentType);
+		final Class<? extends Collection> collectionType,
+		final Class<T> targetComponentType) {
+		this(TypeConverterManager.get(), collectionType, targetComponentType);
 	}
 
 	public CollectionConverter(
-			TypeConverterManagerBean typeConverterManagerBean,
-			Class<? extends Collection> collectionType,
-			Class<T> targetComponentType) {
+		final TypeConverterManager typeConverterManager,
+		final Class<? extends Collection> collectionType,
+		final Class<T> targetComponentType) {
 
-		this.typeConverterManagerBean = typeConverterManagerBean;
+		this.typeConverterManager = typeConverterManager;
 		this.collectionType = collectionType;
 		this.targetComponentType = targetComponentType;
 	}
 
-	public Collection<T> convert(Object value) {
+	@Override
+	public Collection<T> convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -76,8 +80,8 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	/**
 	 * Converts type using type converter manager.
 	 */
-	protected T convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, targetComponentType);
+	protected T convertType(final Object value) {
+		return typeConverterManager.convertType(value, targetComponentType);
 	}
 
 	/**
@@ -86,21 +90,21 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * an collection of target type. Override it for better performances.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Collection<T> createCollection(int length) {
+	protected Collection<T> createCollection(final int length) {
 		if (collectionType.isInterface()) {
 			if (collectionType == List.class) {
 				if (length > 0) {
-					return new ArrayList<T>(length);
+					return new ArrayList<>(length);
 				} else {
-					return new ArrayList<T>();
+					return new ArrayList<>();
 				}
 			}
 
 			if (collectionType == Set.class) {
 				if (length > 0) {
-					return new HashSet<T>(length);
+					return new HashSet<>(length);
 				} else {
-					return new HashSet<T>();
+					return new HashSet<>();
 				}
 			}
 
@@ -116,7 +120,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 		}
 
 		try {
-			return collectionType.newInstance();
+			return collectionType.getDeclaredConstructor().newInstance();
 		} catch (Exception ex) {
 			throw new TypeConversionException(ex);
 		}
@@ -125,9 +129,10 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	/**
 	 * Creates a collection with single element.
 	 */
-	protected Collection<T> convertToSingleElementCollection(Object value) {
+	protected Collection<T> convertToSingleElementCollection(final Object value) {
 		Collection<T> collection = createCollection(0);
 
+		//noinspection unchecked
 		collection.add((T) value);
 
 		return collection;
@@ -177,7 +182,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * Converts collection value to target collection.
 	 * Each element is converted to target component type.
 	 */
-	protected Collection<T> convertCollectionToCollection(Collection value) {
+	protected Collection<T> convertCollectionToCollection(final Collection value) {
 		Collection<T> collection = createCollection(value.size());
 
 		for (Object v : value) {
@@ -191,7 +196,7 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	 * Converts primitive array to target collection.
 	 */
 	@SuppressWarnings("AutoBoxing")
-	protected Collection<T> convertPrimitiveArrayToCollection(Object value, Class primitiveComponentType) {
+	protected Collection<T> convertPrimitiveArrayToCollection(final Object value, final Class primitiveComponentType) {
 		Collection<T> result = null;
 
 		if (primitiveComponentType == int.class) {

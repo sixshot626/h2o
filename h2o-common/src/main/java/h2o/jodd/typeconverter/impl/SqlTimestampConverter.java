@@ -25,12 +25,15 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.jodd.datetime.JDateTime;
+import h2o.jodd.time.JulianDate;
+import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,15 +45,17 @@ import java.util.Date;
  * <li>object of destination type is simply casted</li>
  * <li><code>Calendar</code> object is converted</li>
  * <li><code>Date</code> object is converted</li>
- * <li><code>JDateTime</code> object is converted</li>
+ * <li><code>JulianDate</code> object is converted</li>
+ * <li><code>LocalDateTime</code> object is converted</li>
+ * <li><code>LocalDate</code> object is converted</li>
  * <li><code>Number</code> is used as number of milliseconds</li>
- * <li>finally, if string value contains only numbers it is parsed as milliseconds;
- * otherwise as JDateTime pattern</li>
+ * <li>finally, if string value contains only numbers it is parsed as milliseconds</li>
  * </ul>
  */
 public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 
-	public Timestamp convert(Object value) {
+	@Override
+	public Timestamp convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -65,8 +70,14 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 			Date date = (Date) value;
 			return new Timestamp(date.getTime());
 		}
-		if (value instanceof JDateTime) {
-			return ((JDateTime) value).convertToSqlTimestamp();
+		if (value instanceof JulianDate) {
+			return new Timestamp(((JulianDate) value).toMilliseconds());
+		}
+		if (value instanceof LocalDateTime) {
+			return new Timestamp(TimeUtil.toMilliseconds((LocalDateTime) value));
+		}
+		if (value instanceof LocalDate) {
+			return new Timestamp(TimeUtil.toMilliseconds((LocalDate) value));
 		}
 
 		if (value instanceof Number) {

@@ -33,17 +33,25 @@ public class Args implements java.io.Serializable {
 	public volatile Object a10;
 	
 	public Args() {}
-	
-	public Args( int c , Object a0 ) { 
+
+	public Args( int c , Object... args ) {
+
 		this.c = c;
-		this.a0 = a0;
-	}
-	
-	public Args( Object... args ) {
+
 		try {
-			for( int i = 0 , len = args.length > 10 ? 10 : args.length ; i < len ; i++ ) {
-                h2o.jodd.util.ReflectUtil.invoke(this, "setA" + ( i  + 1 ), new Class[] { Object.class } , new Object[] { args[i] } );
-			}
+			int len = args.length;
+			if ( len > 0 ) this.a0 = args[0];
+			if ( len > 1 ) this.a1 = args[1];
+			if ( len > 2 ) this.a2 = args[2];
+			if ( len > 3 ) this.a3 = args[3];
+			if ( len > 4 ) this.a4 = args[4];
+			if ( len > 5 ) this.a5 = args[5];
+			if ( len > 6 ) this.a6 = args[6];
+			if ( len > 7 ) this.a7 = args[7];
+			if ( len > 8 ) this.a8 = args[8];
+			if ( len > 9 ) this.a9 = args[9];
+			if ( len > 10 ) this.a10 = args[10];
+
 		} catch( Exception e ) {
 			throw ExceptionUtil.toRuntimeException(e);
 		}

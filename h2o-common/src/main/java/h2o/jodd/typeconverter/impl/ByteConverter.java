@@ -41,7 +41,8 @@ import h2o.jodd.util.StringUtil;
  */
 public class ByteConverter implements TypeConverter<Byte> {
 
-	public Byte convert(Object value) {
+	@Override
+	public Byte convert(final Object value) {
 		if (value == null) {
 			return null;
 		}

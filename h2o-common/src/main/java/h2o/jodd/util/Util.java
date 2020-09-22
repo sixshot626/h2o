@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Some general utilities.
@@ -38,20 +39,9 @@ import java.util.Map;
 public class Util {
 
 	/**
-	 * Safely compares two objects just like <code>equals()</code> would, except
-	 * it allows any of the 2 objects to be <code>null</code>.
-	 *
-	 * @return <code>true</code> if arguments are equal, otherwise <code>false</code>
-	 */
-	public static boolean equals(Object obj1, Object obj2) {
-		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
-	}
-
-
-	/**
 	 * Returns string representation of an object, while checking for <code>null</code>.
 	 */
-	public static String toString(Object value) {
+	public static String toString(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -64,7 +54,7 @@ public class Util {
 	 * Returns length of the object. Returns <code>0</code> for <code>null</code>.
 	 * Returns <code>-1</code> for objects without a length.
 	 */
-	public static int length(Object obj) {
+	public static int length(final Object obj) {
 		if (obj == null) {
 			return 0;
 		}
@@ -80,7 +70,7 @@ public class Util {
 
 		int count;
 		if (obj instanceof Iterator) {
-			Iterator iter = (Iterator) obj;
+			final Iterator iter = (Iterator) obj;
 			count = 0;
 			while (iter.hasNext()) {
 				count++;
@@ -89,7 +79,7 @@ public class Util {
 			return count;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration enumeration = (Enumeration) obj;
+			final Enumeration enumeration = (Enumeration) obj;
 			count = 0;
 			while (enumeration.hasMoreElements()) {
 				count++;
@@ -107,7 +97,7 @@ public class Util {
 	 * Returns <code>true</code> if first argument contains provided element.
 	 * It works for strings, collections, maps and arrays.
 s	 */
-	public static boolean containsElement(Object obj, Object element) {
+	public static boolean containsElement(final Object obj, final Object element) {
 		if (obj == null) {
 			return false;
 		}
@@ -125,30 +115,30 @@ s	 */
 		}
 
 		if (obj instanceof Iterator) {
-			Iterator iter = (Iterator) obj;
+			final Iterator iter = (Iterator) obj;
 			while (iter.hasNext()) {
-				Object o = iter.next();
-				if (equals(o, element)) {
+				final Object o = iter.next();
+				if (Objects.equals(o, element)) {
 					return true;
 				}
 			}
 			return false;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration enumeration = (Enumeration) obj;
+			final Enumeration enumeration = (Enumeration) obj;
 			while (enumeration.hasMoreElements()) {
-				Object o = enumeration.nextElement();
-				if (equals(o, element)) {
+				final Object o = enumeration.nextElement();
+				if (Objects.equals(o, element)) {
 					return true;
 				}
 			}
 			return false;
 		}
 		if (obj.getClass().isArray()) {
-			int len = Array.getLength(obj);
+			final int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
-				Object o = Array.get(obj, i);
-				if (equals(o, element)) {
+				final Object o = Array.get(obj, i);
+				if (Objects.equals(o, element)) {
 					return true;
 				}
 			}
@@ -156,4 +146,78 @@ s	 */
 		return false;
 	}
 
+	/**
+	 * Converts object into pretty string. All arrays are iterated.
+	 */
+	public static String toPrettyString(final Object value) {
+		if (value == null) {
+			return StringPool.NULL;
+		}
+
+		final Class<?> type = value.getClass();
+
+		if (type.isArray()) {
+			final Class componentType = type.getComponentType();
+
+			if (componentType.isPrimitive()) {
+				final StringBuilder sb = new StringBuilder();
+				sb.append('[');
+
+				if (componentType == int.class) {
+					sb.append(ArraysUtil.toString((int[]) value));
+				}
+				else if (componentType == long.class) {
+					sb.append(ArraysUtil.toString((long[]) value));
+				}
+				else if (componentType == double.class) {
+					sb.append(ArraysUtil.toString((double[]) value));
+				}
+				else if (componentType == float.class) {
+					sb.append(ArraysUtil.toString((float[]) value));
+				}
+				else if (componentType == boolean.class) {
+					sb.append(ArraysUtil.toString((boolean[]) value));
+				}
+				else if (componentType == short.class) {
+					sb.append(ArraysUtil.toString((short[]) value));
+				}
+				else if (componentType == byte.class) {
+					sb.append(ArraysUtil.toString((byte[]) value));
+				} else {
+					throw new IllegalArgumentException();
+				}
+				sb.append(']');
+				return sb.toString();
+			} else {
+				final StringBuilder sb = new StringBuilder();
+				sb.append('[');
+
+				final Object[] array = (Object[]) value;
+				for (int i = 0; i < array.length; i++) {
+					if (i > 0) {
+						sb.append(',');
+					}
+					sb.append(toPrettyString(array[i]));
+				}
+				sb.append(']');
+				return sb.toString();
+			}
+		} else if (value instanceof Iterable) {
+			final Iterable iterable = (Iterable) value;
+			final StringBuilder sb = new StringBuilder();
+			sb.append('{');
+			int i = 0;
+			for (final Object o : iterable) {
+				if (i > 0) {
+					sb.append(',');
+				}
+				sb.append(toPrettyString(o));
+				i++;
+			}
+			sb.append('}');
+			return sb.toString();
+		}
+
+		return value.toString();
+	}
 }

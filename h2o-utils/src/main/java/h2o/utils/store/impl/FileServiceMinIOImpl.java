@@ -11,7 +11,7 @@ import h2o.common.result.TransReturn;
 import h2o.common.result.TransStatus;
 import h2o.common.result.TriState;
 import h2o.common.util.date.DateUtil;
-import h2o.jodd.io.StreamUtil;
+import h2o.common.util.io.StreamUtil;
 import h2o.utils.store.*;
 import io.minio.MinioClient;
 import io.minio.ObjectStat;
@@ -167,7 +167,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             fileIn = new BufferedInputStream( mc.getObject( bucket , fileId) );
 
-            byte[] fileContent = StreamUtil.readBytes(fileIn);
+            byte[] fileContent = h2o.jodd.io.IOUtil.readBytes(fileIn);
             FileObject fileObject = new FileObject( fileContent );
 
             ObjectStat stat = mc.statObject(bucket, fileId);

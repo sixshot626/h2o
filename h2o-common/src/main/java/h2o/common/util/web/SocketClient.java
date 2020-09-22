@@ -1,7 +1,7 @@
 package h2o.common.util.web;
 
 import h2o.common.exception.ExceptionUtil;
-import h2o.jodd.io.StreamUtil;
+import h2o.jodd.io.IOUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,10 +94,10 @@ public class SocketClient {
         out.flush();
 
 
-        byte[] l = StreamUtil.readBytes( in , this.headLen );
+        byte[] l = IOUtil.readBytes( in , this.headLen );
         int inlen = Integer.parseInt( new String(l) );
 
-        byte[] inbuf = StreamUtil.readBytes( in, inlen );
+        byte[] inbuf = IOUtil.readBytes( in, inlen );
         String res = new String(inbuf, revCharacterEncoding);
 
 

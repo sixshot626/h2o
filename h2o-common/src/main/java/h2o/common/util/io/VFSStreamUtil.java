@@ -84,7 +84,7 @@ public class VFSStreamUtil {
 		Tuple2<Reader, FileObject> r = readFile(path, characterEncoding);
 
 		try {
-			return new String( h2o.jodd.io.StreamUtil.readChars(r.e0));
+			return new String( h2o.jodd.io.IOUtil.readChars(r.e0));
 		} catch (IOException e) {
 			log.debug("readFileContent", e);
 			throw ExceptionUtil.toRuntimeException(e);

@@ -1,6 +1,7 @@
 package h2o.utils.store;
 
-import h2o.jodd.io.StreamUtil;
+
+import h2o.common.util.io.StreamUtil;
 
 import java.io.Closeable;
 import java.io.IOException;

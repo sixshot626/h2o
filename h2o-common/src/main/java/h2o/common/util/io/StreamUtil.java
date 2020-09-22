@@ -85,7 +85,7 @@ public class StreamUtil {
 		
 		try {
 			
-			return new String( h2o.jodd.io.StreamUtil.readChars(r));
+			return new String( h2o.jodd.io.IOUtil.readChars(r));
 			
 		} catch (IOException e) {
 			log.debug("readReaderContent", e);

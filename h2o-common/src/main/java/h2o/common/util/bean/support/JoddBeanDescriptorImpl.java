@@ -13,7 +13,7 @@ public class JoddBeanDescriptorImpl implements BeanDescriptor {
     @Override
     public String[] getPrepNames(Object bean) {
 
-        ClassDescriptor classDescriptor = ClassIntrospector.lookup(bean.getClass());
+        ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(bean.getClass());
 
         PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 

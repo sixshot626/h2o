@@ -27,7 +27,7 @@ package h2o.jodd.bean;
 
 import h2o.jodd.introspector.Getter;
 import h2o.jodd.introspector.Setter;
-import h2o.jodd.util.ReflectUtil;
+import h2o.jodd.util.ClassUtil;
 import h2o.jodd.util.StringUtil;
 
 import java.lang.reflect.Array;
@@ -43,7 +43,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	/**
 	 * Sets the declared flag.
 	 */
-	public BeanUtilBean declared(boolean declared) {
+	public BeanUtilBean declared(final boolean declared) {
 		this.isDeclared = declared;
 		return this;
 	}
@@ -51,7 +51,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	/**
 	 * Sets the forced flag.
 	 */
-	public BeanUtilBean forced(boolean forced) {
+	public BeanUtilBean forced(final boolean forced) {
 		this.isForced = forced;
 		return this;
 	}
@@ -59,7 +59,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	/**
 	 * Sets the silent flag.
 	 */
-	public BeanUtilBean silent(boolean silent) {
+	public BeanUtilBean silent(final boolean silent) {
 		this.isSilent = silent;
 		return this;
 	}
@@ -70,31 +70,31 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	 * Resolves nested property name to the very last indexed property.
 	 * If forced, <code>null</code> or non-existing properties will be created.
 	 */
-	protected void resolveNestedProperties(BeanProperty bp) {
+	protected void resolveNestedProperties(final BeanProperty bp) {
 		String name = bp.name;
 		int dotNdx;
 		while ((dotNdx = indexOfDot(name)) != -1) {
 			bp.last = false;
 			bp.setName(name.substring(0, dotNdx));
-			bp.setBean(getIndexProperty(bp));
+			bp.updateBean(getIndexProperty(bp));
 			name = name.substring(dotNdx + 1);
 		}
 		bp.last = true;
 		bp.setName(name);
 	}
 
-	protected boolean resolveExistingNestedProperties(BeanProperty bp) {
+	protected boolean resolveExistingNestedProperties(final BeanProperty bp) {
 		String name = bp.name;
 		int dotNdx;
 		while ((dotNdx = indexOfDot(name)) != -1) {
 			bp.last = false;
 			bp.setName(name.substring(0, dotNdx));
-			String temp = bp.name;
+			final String temp = bp.name;
 			if (!hasIndexProperty(bp)) {
 				return false;
 			}
 			bp.setName(temp);
-			bp.setBean(getIndexProperty(bp));
+			bp.updateBean(getIndexProperty(bp));
 			name = name.substring(dotNdx + 1);
 		}
 		bp.last = true;
@@ -106,24 +106,24 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	// ---------------------------------------------------------------- simple property
 
 	@Override
-	public boolean hasSimpleProperty(Object bean, String property) {
+	public boolean hasSimpleProperty(final Object bean, final String property) {
 		return hasSimpleProperty(new BeanProperty(this, bean, property));
 	}
 
-	protected boolean hasSimpleProperty(BeanProperty bp) {
+	protected boolean hasSimpleProperty(final BeanProperty bp) {
 		if (bp.bean == null) {
 			return false;
 		}
 
 		// try: getter
-		Getter getter = bp.getGetter(isDeclared);
+		final Getter getter = bp.getGetter(isDeclared);
 		if (getter != null) {
 			return true;
 		}
 
 		// try: (Map) get("property")
 		if (bp.isMap()) {
-			Map map = (Map) bp.bean;
+			final Map map = (Map) bp.bean;
 			if (map.containsKey(bp.name)) {
 				return true;
 			}
@@ -133,13 +133,13 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public <T> T getSimpleProperty(Object bean, String property) {
+	public <T> T getSimpleProperty(final Object bean, final String property) {
 		return (T) getSimpleProperty(new BeanProperty(this, bean, property));
 	}
 
-	protected Object getSimpleProperty(BeanProperty bp) {
+	protected Object getSimpleProperty(final BeanProperty bp) {
 
-		if (bp.name.length() == 0) {
+		if (bp.name.isEmpty()) {
 			if (bp.indexString != null) {
 				// index string exist, but property name is missing
 				return bp.bean;
@@ -147,13 +147,13 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 			throw new BeanException("Invalid property", bp);
 		}
 
-		Getter getter = bp.getGetter(isDeclared);
+		final Getter getter = bp.getGetter(isDeclared);
 
 		if (getter != null) {
 			Object result;
 			try {
 				result = getter.invokeGetter(bp.bean);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				if (isSilent) {
 					return null;
 				}
@@ -168,8 +168,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 		// try: (Map) get("property")
 		if (bp.isMap()) {
-			Map map = (Map) bp.bean;
-			Object key = convertIndexToMapKey(getter, bp.name);
+			final Map map = (Map) bp.bean;
+			final Object key = convertIndexToMapKey(getter, bp.name);
 
 			if (!map.containsKey(key)) {
 				if (!isForced) {
@@ -178,7 +178,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 					}
 					throw new BeanException("Map key not found: " + bp.name, bp);
 				}
-				Map value = new HashMap();
+				final Map value = new HashMap();
 				//noinspection unchecked
 				map.put(key, value);
 				return value;
@@ -194,7 +194,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public void setSimpleProperty(Object bean, String property, Object value) {
+	public void setSimpleProperty(final Object bean, final String property, final Object value) {
 		setSimpleProperty(new BeanProperty(this, bean, property), value);
 	}
 
@@ -202,8 +202,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	 * Sets a value of simple property.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected void setSimpleProperty(BeanProperty bp, Object value) {
-		Setter setter = bp.getSetter(isDeclared);
+	protected void setSimpleProperty(final BeanProperty bp, final Object value) {
+		final Setter setter = bp.getSetter(isDeclared);
 
 		// try: setter
 		if (setter != null) {
@@ -224,18 +224,18 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	// ---------------------------------------------------------------- indexed property
 
-	protected boolean hasIndexProperty(BeanProperty bp) {
+	protected boolean hasIndexProperty(final BeanProperty bp) {
 
 		if (bp.bean == null) {
 			return false;
 		}
-		String indexString = extractIndex(bp);
+		final String indexString = extractIndex(bp);
 
 		if (indexString == null) {
 			return hasSimpleProperty(bp);
 		}
 
-		Object resultBean = getSimpleProperty(bp);
+		final Object resultBean = getSimpleProperty(bp);
 
 		if (resultBean == null) {
 			return false;
@@ -243,13 +243,13 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 		// try: property[index]
 		if (resultBean.getClass().isArray()) {
-			int index = parseInt(indexString, bp);
+			final int index = parseInt(indexString, bp);
 			return (index >= 0) && (index < Array.getLength(resultBean));
 		}
 
 		// try: list.get(index)
 		if (resultBean instanceof List) {
-			int index = parseInt(indexString, bp);
+			final int index = parseInt(indexString, bp);
 			return (index >= 0) && (index < ((List)resultBean).size());
 		}
 		if (resultBean instanceof Map) {
@@ -261,12 +261,12 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public <T> T getIndexProperty(Object bean, String property, int index) {
-		BeanProperty bp = new BeanProperty(this, bean, property);
+	public <T> T getIndexProperty(final Object bean, final String property, final int index) {
+		final BeanProperty bp = new BeanProperty(this, bean, property);
 
 		bp.indexString = bp.index = String.valueOf(index);
 
-		Object value = _getIndexProperty(bp);
+		final Object value = _getIndexProperty(bp);
 
 		bp.indexString = null;
 
@@ -277,19 +277,19 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	 * Get non-nested property value: either simple or indexed property.
 	 * If forced, missing bean will be created if possible.
 	 */
-	protected Object getIndexProperty(BeanProperty bp) {
+	protected Object getIndexProperty(final BeanProperty bp) {
 		bp.indexString = extractIndex(bp);
 
-		Object value = _getIndexProperty(bp);
+		final Object value = _getIndexProperty(bp);
 
 		bp.indexString = null;
 
 		return value;
 	}
 
-	private Object _getIndexProperty(BeanProperty bp) {
-		Object resultBean = getSimpleProperty(bp);
-		Getter getter = bp.getGetter(isDeclared);
+	private Object _getIndexProperty(final BeanProperty bp) {
+		final Object resultBean = getSimpleProperty(bp);
+		final Getter getter = bp.getGetter(isDeclared);
 
 		if (bp.indexString == null) {
 			return resultBean;	// no index, just simple bean
@@ -303,7 +303,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 		// try: property[index]
 		if (resultBean.getClass().isArray()) {
-			int index = parseInt(bp.indexString, bp);
+			final int index = parseInt(bp.indexString, bp);
 			if (isForced) {
 				return arrayForcedGet(bp, resultBean, index);
 			} else {
@@ -313,8 +313,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 		// try: list.get(index)
 		if (resultBean instanceof List) {
-			int index = parseInt(bp.indexString, bp);
-			List list = (List) resultBean;
+			final int index = parseInt(bp.indexString, bp);
+			final List list = (List) resultBean;
 			if (!isForced) {
 				return list.get(index);
 			}
@@ -329,8 +329,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 					listComponentType = Map.class;
 				}
 				try {
-					value = ReflectUtil.newInstance(listComponentType);
-				} catch (Exception ex) {
+					value = ClassUtil.newInstance(listComponentType);
+				} catch (final Exception ex) {
 					if (isSilent) {
 						return null;
 					}
@@ -344,8 +344,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 		// try: map.get('index')
 		if (resultBean instanceof Map) {
-			Map map = (Map) resultBean;
-			Object key = convertIndexToMapKey(getter, bp.indexString);
+			final Map map = (Map) resultBean;
+			final Object key = convertIndexToMapKey(getter, bp.indexString);
 
 			if (!isForced) {
 				return map.get(key);
@@ -358,8 +358,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 						mapComponentType = Map.class;
 					}
 					try {
-						value = ReflectUtil.newInstance(mapComponentType);
-					} catch (Exception ex) {
+						value = ClassUtil.newInstance(mapComponentType);
+					} catch (final Exception ex) {
 						if (isSilent) {
 							return null;
 						}
@@ -381,8 +381,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public void setIndexProperty(Object bean, String property, int index, Object value) {
-		BeanProperty bp = new BeanProperty(this, bean, property);
+	public void setIndexProperty(final Object bean, final String property, final int index, final Object value) {
+		final BeanProperty bp = new BeanProperty(this, bean, property);
 
 		bp.indexString = bp.index = String.valueOf(index);
 
@@ -394,7 +394,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	/**
 	 * Sets indexed or regular properties (no nested!).
 	 */
-	protected void setIndexProperty(BeanProperty bp, Object value) {
+	protected void setIndexProperty(final BeanProperty bp, final Object value) {
 		bp.indexString = extractIndex(bp);
 
 		_setIndexProperty(bp, value);
@@ -403,15 +403,15 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private void _setIndexProperty(BeanProperty bp, Object value) {
+	private void _setIndexProperty(final BeanProperty bp, Object value) {
 		if (bp.indexString == null) {
 			setSimpleProperty(bp, value);
 			return;
 		}
 
 		// try: getInner()
-		Object nextBean = getSimpleProperty(bp);
-		Getter getter = bp.getGetter(isDeclared);
+		final Object nextBean = getSimpleProperty(bp);
+		final Getter getter = bp.getGetter(isDeclared);
 
 		if (nextBean == null) {
 			if (isSilent) {
@@ -422,7 +422,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 		// inner bean found
 		if (nextBean.getClass().isArray()) {
-			int index = parseInt(bp.indexString, bp);
+			final int index = parseInt(bp.indexString, bp);
 			if (isForced) {
 				arrayForcedSet(bp, nextBean, index, value);
 			} else {
@@ -432,12 +432,12 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		}
 
 		if (nextBean instanceof List) {
-			int index = parseInt(bp.indexString, bp);
-			Class listComponentType = extractGenericComponentType(getter);
+			final int index = parseInt(bp.indexString, bp);
+			final Class listComponentType = extractGenericComponentType(getter);
 			if (listComponentType != Object.class) {
 				value = convertType(value, listComponentType);
 			}
-			List list = (List) nextBean;
+			final List list = (List) nextBean;
 			if (isForced) {
 				ensureListSize(list, index);
 			}
@@ -445,10 +445,10 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 			return;
 		}
 		if (nextBean instanceof Map) {
-			Map map = (Map) nextBean;
-			Object key = convertIndexToMapKey(getter, bp.indexString);
+			final Map map = (Map) nextBean;
+			final Object key = convertIndexToMapKey(getter, bp.indexString);
 
-			Class mapComponentType = extractGenericComponentType(getter);
+			final Class mapComponentType = extractGenericComponentType(getter);
 			if (mapComponentType != Object.class) {
 				value = convertType(value, mapComponentType);
 			}
@@ -467,8 +467,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	// ---------------------------------------------------------------- SET
 
 	@Override
-	public void setProperty(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(this, bean, name);
+	public void setProperty(final Object bean, final String name, final Object value) {
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
 
 		if (!isSilent) {
 			resolveNestedProperties(beanProperty);
@@ -479,7 +479,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 				resolveNestedProperties(beanProperty);
 				setIndexProperty(beanProperty, value);
 			}
-			catch (Exception ignore) {}
+			catch (final Exception ignore) {}
 		}
 	}
 
@@ -489,8 +489,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	 * Returns value of bean's property.
 	 */
 	@Override
-	public <T> T getProperty(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(this, bean, name);
+	public <T> T getProperty(final Object bean, final String name) {
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
 		if (!isSilent) {
 			resolveNestedProperties(beanProperty);
 			return (T) getIndexProperty(beanProperty);
@@ -500,7 +500,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 				resolveNestedProperties(beanProperty);
 				return (T) getIndexProperty(beanProperty);
 			}
-			catch (Exception ignore) {
+			catch (final Exception ignore) {
 				return null;
 			}
 		}
@@ -509,8 +509,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	// ---------------------------------------------------------------- HAS
 
 	@Override
-	public boolean hasProperty(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(this, bean, name);
+	public boolean hasProperty(final Object bean, final String name) {
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
 		if (!resolveExistingNestedProperties(beanProperty)) {
 			return false;
 		}
@@ -518,12 +518,12 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public boolean hasRootProperty(Object bean, String name) {
-		int dotNdx = indexOfDot(name);
+	public boolean hasRootProperty(final Object bean, String name) {
+		final int dotNdx = indexOfDot(name);
 		if (dotNdx != -1) {
 			name = name.substring(0, dotNdx);
 		}
-		BeanProperty beanProperty = new BeanProperty(this, bean, name);
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
 		extractIndex(beanProperty);
 		return hasSimpleProperty(beanProperty);
 	}
@@ -531,8 +531,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	// ---------------------------------------------------------------- type
 
 	@Override
-	public Class<?> getPropertyType(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(this, bean, name);
+	public Class<?> getPropertyType(final Object bean, final String name) {
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
 		if (!resolveExistingNestedProperties(beanProperty)) {
 			return null;
 		}
@@ -548,8 +548,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	 * Extract the first name of this reference.
 	 */
 	@Override
-	public String extractThisReference(String propertyName) {
-		int ndx = StringUtil.indexOfChars(propertyName, INDEX_CHARS);
+	public String extractThisReference(final String propertyName) {
+		final int ndx = StringUtil.indexOfChars(propertyName, INDEX_CHARS);
 		if (ndx == -1) {
 			return propertyName;
 		}

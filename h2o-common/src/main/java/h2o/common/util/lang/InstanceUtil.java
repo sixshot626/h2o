@@ -24,7 +24,7 @@ public class InstanceUtil {
 			
 			
 			if( argsTypes == null || argsTypes.length == 0 ) {
-				argsTypes = h2o.jodd.util.ReflectUtil.getClasses(args);
+				argsTypes = h2o.jodd.util.ClassUtil.getClasses(args);
 			}
 			
 			

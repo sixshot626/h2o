@@ -35,11 +35,11 @@ public class ThreadUtil {
 	 *
 	 * @param ms     the length of time to sleep in milliseconds
 	 */
-	public static void sleep(long ms) {
+	public static void sleep(final long ms) {
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException iex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -51,7 +51,7 @@ public class ThreadUtil {
 		try {
 			Thread.sleep(Long.MAX_VALUE);
 		} catch (InterruptedException iex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -61,12 +61,12 @@ public class ThreadUtil {
 	/**
 	 * Waits for a object for synchronization purposes.
 	 */
-	public static void wait(Object obj) {
+	public static void wait(final Object obj) {
 		synchronized (obj) {
 			try {
 				obj.wait();
 			} catch (InterruptedException inex) {
-				//ignore
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -74,12 +74,12 @@ public class ThreadUtil {
 	/**
 	 * Waits for a object or a timeout for synchronization purposes.
 	 */
-	public static void wait(Object obj, long timeout) {
+	public static void wait(final Object obj, final long timeout) {
 		synchronized (obj) {
 			try {
 				obj.wait(timeout);
 			} catch (InterruptedException inex) {
-				// ignore
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -87,7 +87,7 @@ public class ThreadUtil {
 	/**
 	 * Notifies an object for synchronization purposes.
 	 */
-	public static void notify(Object obj){
+	public static void notify(final Object obj){
 		synchronized (obj) {
 			obj.notify();
 		}
@@ -96,7 +96,7 @@ public class ThreadUtil {
 	/**
 	 * Notifies an object for synchronization purposes.
 	 */
-	public static void notifyAll(Object obj){
+	public static void notifyAll(final Object obj){
 		synchronized (obj) {
 			obj.notifyAll();
 		}
@@ -106,27 +106,27 @@ public class ThreadUtil {
 	// ---------------------------------------------------------------- join
 
 
-	public static void join(Thread thread) {
+	public static void join(final Thread thread) {
 		try {
 			thread.join();
 		} catch (InterruptedException inex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
-	public static void join(Thread thread, long millis) {
+	public static void join(final Thread thread, final long millis) {
 		try {
 			thread.join(millis);
 		} catch (InterruptedException inex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
-	public static void join(Thread thread, long millis, int nanos) {
+	public static void join(final Thread thread, final long millis, final int nanos) {
 		try {
 			thread.join(millis, nanos);
 		} catch (InterruptedException inex) {
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 

@@ -26,7 +26,7 @@ public class ColInfoUtil {
 		boolean isClass = (bean instanceof Class);
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		Class<Object> beanClass = isClass ? (Class)bean : bean.getClass();
+		Class<Object> beanClass = isClass ? (Class<Object>)bean : (Class<Object>) bean.getClass();
 		
 		return beanClass.getAnnotation(Table.class) != null;
 	}
@@ -43,8 +43,8 @@ public class ColInfoUtil {
 		boolean isClass = (bean instanceof Class);
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		Class<Object> beanClass = isClass ? (Class)bean : bean.getClass();
-		
+		Class<Object> beanClass = isClass ? (Class<Object>)bean : (Class<Object>) bean.getClass();
+
 		Table tableAnn = beanClass.getAnnotation(Table.class);
 		
 		if( tableAnn != null && !StringUtils.isBlank(tableAnn.name())) {
@@ -155,7 +155,7 @@ public class ColInfoUtil {
 		
 		List<ColInfo> colInfos = new ArrayList<ColInfo>();
 		
-		Field[] fs = h2o.jodd.util.ReflectUtil.getSupportedFields(beanClass);
+		Field[] fs = h2o.jodd.util.ClassUtil.getSupportedFields(beanClass);
 		for( Field f : fs ) {
 			
 			Column colAnn = f.getAnnotation(Column.class);			

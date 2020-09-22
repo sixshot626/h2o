@@ -25,8 +25,11 @@
 
 package h2o.jodd.util;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Various math utilities.
+ * <b>note:</b> Any random values from this class are not cryptographically secure!
  */
 public class MathUtil {
 
@@ -34,7 +37,7 @@ public class MathUtil {
 	 * Converts char digit into integer value.
 	 * Accepts numeric chars (0 - 9) as well as letter (A-z).
 	 */
-	public static int parseDigit(char digit) {
+	public static int parseDigit(final char digit) {
 		if ((digit >= '0') && (digit <= '9')) {
 			return digit - '0';
 		}
@@ -47,7 +50,6 @@ public class MathUtil {
 	/**
 	 * Generates pseudo-random long from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
-	 * Uses {@link Math#random()}.
 	 *
 	 * @param min    lower (inclusive) boundary
 	 * @param max    higher (exclusive) boundary
@@ -55,53 +57,49 @@ public class MathUtil {
 	 * @return pseudo-random value
 	 */
 
-	public static long randomLong(long min, long max) {
-		return min + (long)(Math.random() * (max - min));
+	public static long randomLong(final long min, final long max) {
+		return min + (long)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 
 	/**
 	 * Generates pseudo-random integer from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
-	 * Uses {@link Math#random()}. 
 	 *
 	 * @param min    lower (inclusive) boundary
 	 * @param max    higher (exclusive) boundary
 	 *
 	 * @return pseudo-random value
 	 */
-	public static int randomInt(int min, int max) {
-		return min + (int)(Math.random() * (max - min));
+	public static int randomInt(final int min, final int max) {
+		return min + (int)(ThreadLocalRandom.current().nextDouble() * (max - min));
 	}
 
 	/**
 	 * Returns <code>true</code> if a number is even.
 	 */
-	public static boolean isEven(int x) {
+	public static boolean isEven(final int x) {
 		return (x % 2) == 0;
 	}
 
 	/**
 	 * Returns <code>true</code> if a number is odd.
 	 */
-	public static boolean isOdd(int x) {
+	public static boolean isOdd(final int x) {
 		return (x % 2) != 0;
 	}
 
 	/**
-	 * Calculates factorial of given number.
+	 * Formats byte size to human readable bytecount.
+	 * https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java/3758880#3758880
 	 */
-	public static long factorial(long x) {
-		if (x < 0) {
-			return 0;
+	public static String humanReadableByteCount(final long bytes, final boolean useSi) {
+		final int unit = useSi ? 1000 : 1024;
+		if (bytes < unit) {
+			return bytes + " B";
 		}
-		long factorial = 1;
-
-		while (x > 1) {
-			factorial *= x;
-			x--;
-		}
-
-		return factorial;
+		final int exp = (int) (Math.log(bytes) / Math.log(unit));
+		final String pre = (useSi ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (useSi ? "" : "i");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 }

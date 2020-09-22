@@ -25,9 +25,12 @@
 
 package h2o.jodd.bean;
 
-import h2o.jodd.util.StringPool;
-
 import java.util.Map;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
+import static h2o.jodd.util.StringPool.LEFT_SQ_BRACKET;
+import static h2o.jodd.util.StringPool.RIGHT_SQ_BRACKET;
 
 /**
  * Powerful tool for copying properties from one bean into another.
@@ -35,12 +38,16 @@ import java.util.Map;
  *
  * @see BeanVisitor
  */
-public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
+public class BeanCopy {
 
-	protected Object destination;
-	protected boolean forced;
-	protected boolean declaredTarget;
-	protected boolean isTargetMap;
+	private final Object source;
+	private Object destination;
+	private boolean forced;
+	private boolean declared;
+	private boolean isTargetMap;
+	private Predicate<String> filter;
+	private BiPredicate<String, Object> filter2;
+	private boolean includeFields;
 
 	// ---------------------------------------------------------------- ctor
 
@@ -48,81 +55,29 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	 * Creates new BeanCopy process between the source and the destination.
 	 * Both source and destination can be a POJO object or a <code>Map</code>.
 	 */
-	public BeanCopy(Object source, Object destination) {
+	public BeanCopy(final Object source, final Object destination) {
 		this.source = source;
 		this.destination = destination;
+		this.isTargetMap = destination instanceof Map;
 	}
 
-	private BeanCopy(Object source) {
+	private BeanCopy(final Object source) {
 		this.source = source;
 	}
 
 	/**
-	 * Simple static factory for <code>BeanCopy</code>.
-	 * @see #BeanCopy(Object, Object)
+	 * Creates <code>BeanCopy</code> with given POJO bean as a source.
 	 */
-	public static BeanCopy beans(Object source, Object destination) {
-		return new BeanCopy(source, destination);
-	}
-
-	/**
-	 * Creates <copy>BeanCopy</copy> with given POJO bean as a source.
-	 */
-	public static BeanCopy fromBean(Object source) {
+	public static BeanCopy from(final Object source) {
 		return new BeanCopy(source);
-	}
-
-	/**
-	 * Creates <copy>BeanCopy</copy> with given <code>Map</code> as a source.
-	 */
-	public static BeanCopy fromMap(Map source) {
-		BeanCopy beanCopy = new BeanCopy(source);
-
-		beanCopy.isSourceMap = true;
-
-		return beanCopy;
-	}
-
-	/**
-	 * Defines source, detects a map.
-	 */
-	public static BeanCopy from(Object source) {
-		BeanCopy beanCopy = new BeanCopy(source);
-
-		beanCopy.isSourceMap = source instanceof Map;
-
-		return beanCopy;
-	}
-
-	// ---------------------------------------------------------------- destination
-
-	/**
-	 * Defines destination bean.
-	 */
-	public BeanCopy toBean(Object destination) {
-		this.destination = destination;
-		return this;
-	}
-
-	/**
-	 * Defines destination map.
-	 */
-	public BeanCopy toMap(Map destination) {
-		this.destination = destination;
-
-		isTargetMap = true;
-
-		return this;
 	}
 
 	/**
 	 * Defines destination, detects a map.
 	 */
-	public BeanCopy to(Object destination) {
+	public BeanCopy to(final Object destination) {
 		this.destination = destination;
-
 		this.isTargetMap = destination instanceof Map;
-
 		return this;
 	}
 
@@ -132,55 +87,64 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 	 * Defines if all properties should be copied (when set to <code>true</code>)
 	 * or only public (when set to <code>false</code>, default).
 	 */
-	public BeanCopy declared(boolean declared) {
+	public BeanCopy declared(final boolean declared) {
 		this.declared = declared;
-		this.declaredTarget = declared;
 		return this;
 	}
 
-	/**
-	 * Fine-tuning of the declared behaviour.
-	 */
-	public BeanCopy declared(boolean declaredSource, boolean declaredTarget) {
-		this.declared = declaredSource;
-		this.declaredTarget = declaredTarget;
-		return this;
-	}
-
-	public BeanCopy forced(boolean forced) {
+	public BeanCopy forced(final boolean forced) {
 		this.forced = forced;
 		return this;
 	}
 
-	// ---------------------------------------------------------------- visitor
+	public BeanCopy filter(final Predicate<String> filter) {
+		this.filter = filter;
+		return this;
+	}
 
-	protected BeanUtil beanUtil;
+	public BeanCopy filter(final BiPredicate<String, Object> filter) {
+		this.filter2 = filter;
+		return this;
+	}
+
+	public BeanCopy includeFields(final boolean includeFields) {
+		this.includeFields = includeFields;
+		return this;
+	}
+
+
+	// ---------------------------------------------------------------- visitor
 
 	/**
 	 * Performs the copying.
 	 */
 	public void copy() {
-		beanUtil = new BeanUtilBean()
+		final BeanUtil beanUtil = new BeanUtilBean()
 						.declared(declared)
 						.forced(forced)
 						.silent(true);
-		visit();
-	}
 
-	/**
-	 * Copies single property to the destination.
-	 * Exceptions are ignored, so copying continues if
-	 * destination does not have some of the sources properties.
-	 */
-	@Override
-	protected boolean visitProperty(String name, Object value) {
-		if (isTargetMap) {
-			name = StringPool.LEFT_SQ_BRACKET + name + StringPool.RIGHT_SQ_BRACKET;
-		}
+		new BeanVisitor(source)
+				.declared(declared)
+				.includeFields(includeFields)
+				.visit((name, value) -> {
+					if (isTargetMap) {
+						name = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
+					}
 
-		beanUtil.setProperty(destination, name, value);
+					if (filter != null) {
+						if (!filter.test(name)) {
+							return;
+						}
+					}
+					if (filter2 != null) {
+						if (!filter2.test(name, value)) {
+							return;
+						}
+					}
 
-		return true;
+					beanUtil.setProperty(destination, name, value);
+				});
 	}
 
 }

@@ -27,7 +27,8 @@ package h2o.jodd.typeconverter.impl;
 
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
-import h2o.jodd.util.StringPool;
+
+import static h2o.jodd.util.StringPool.*;
 
 /**
  * Converts given object to <code>Boolean</code>.
@@ -42,7 +43,7 @@ import h2o.jodd.util.StringPool;
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 
-	public Boolean convert(Object value) {
+	public Boolean convert(final Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -51,19 +52,24 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 			return (Boolean) value;
 		}
 
-		String stringValue = value.toString().trim().toLowerCase();
-		if (stringValue.equals(StringPool.YES) ||
-				stringValue.equals(StringPool.Y) ||
-				stringValue.equals(StringPool.TRUE) ||
-				stringValue.equals(StringPool.ON) ||
-				stringValue.equals(StringPool.ONE)) {
+		String stringValue = value.toString();
+		if (stringValue.isEmpty()) {
+			return Boolean.FALSE;
+		}
+
+		stringValue = stringValue.trim().toLowerCase();
+		if (stringValue.equals(YES) ||
+				stringValue.equals(Y) ||
+				stringValue.equals(TRUE) ||
+				stringValue.equals(ON) ||
+				stringValue.equals(ONE)) {
 			return Boolean.TRUE;
 		}
-		if (stringValue.equals(StringPool.NO) ||
-				stringValue.equals(StringPool.N) ||
-				stringValue.equals(StringPool.FALSE) ||
-				stringValue.equals(StringPool.OFF) ||
-				stringValue.equals(StringPool.ZERO)) {
+		if (stringValue.equals(NO) ||
+				stringValue.equals(N) ||
+				stringValue.equals(FALSE) ||
+				stringValue.equals(OFF) ||
+				stringValue.equals(ZERO)) {
 			return Boolean.FALSE;
 		}
 

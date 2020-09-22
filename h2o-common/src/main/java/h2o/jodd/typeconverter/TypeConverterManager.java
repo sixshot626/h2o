@@ -25,45 +25,232 @@
 
 package h2o.jodd.typeconverter;
 
+import h2o.jodd.util.TypeCache;
+import h2o.jodd.typeconverter.impl.ArrayConverter;
+import h2o.jodd.typeconverter.impl.BigDecimalConverter;
+import h2o.jodd.typeconverter.impl.BigIntegerConverter;
+import h2o.jodd.typeconverter.impl.BooleanArrayConverter;
+import h2o.jodd.typeconverter.impl.BooleanConverter;
+import h2o.jodd.typeconverter.impl.ByteArrayConverter;
+import h2o.jodd.typeconverter.impl.ByteConverter;
+import h2o.jodd.typeconverter.impl.CalendarConverter;
+import h2o.jodd.typeconverter.impl.CharacterArrayConverter;
+import h2o.jodd.typeconverter.impl.CharacterConverter;
+import h2o.jodd.typeconverter.impl.ClassArrayConverter;
+import h2o.jodd.typeconverter.impl.ClassConverter;
+import h2o.jodd.typeconverter.impl.CollectionConverter;
+import h2o.jodd.typeconverter.impl.DateConverter;
+import h2o.jodd.typeconverter.impl.DoubleArrayConverter;
+import h2o.jodd.typeconverter.impl.DoubleConverter;
+import h2o.jodd.typeconverter.impl.FileConverter;
+import h2o.jodd.typeconverter.impl.FloatArrayConverter;
+import h2o.jodd.typeconverter.impl.FloatConverter;
+import h2o.jodd.typeconverter.impl.IntegerArrayConverter;
+import h2o.jodd.typeconverter.impl.IntegerConverter;
+import h2o.jodd.typeconverter.impl.LocalDateConverter;
+import h2o.jodd.typeconverter.impl.LocalDateTimeConverter;
+import h2o.jodd.typeconverter.impl.LocalTimeConverter;
+import h2o.jodd.typeconverter.impl.LocaleConverter;
+import h2o.jodd.typeconverter.impl.LongArrayConverter;
+import h2o.jodd.typeconverter.impl.LongConverter;
+import h2o.jodd.typeconverter.impl.ShortArrayConverter;
+import h2o.jodd.typeconverter.impl.ShortConverter;
+import h2o.jodd.typeconverter.impl.SqlDateConverter;
+import h2o.jodd.typeconverter.impl.SqlTimeConverter;
+import h2o.jodd.typeconverter.impl.SqlTimestampConverter;
+import h2o.jodd.typeconverter.impl.StringArrayConverter;
+import h2o.jodd.typeconverter.impl.StringConverter;
+import h2o.jodd.typeconverter.impl.TimeZoneConverter;
+import h2o.jodd.typeconverter.impl.URIConverter;
+import h2o.jodd.typeconverter.impl.URLConverter;
+import h2o.jodd.typeconverter.impl.UUIDConverter;
+import h2o.jodd.util.ClassUtil;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Provides dynamic object conversion to a type.
- * Contains a map of registered converters. User may add new converter.
- * Static version of {@link TypeConverterManagerBean}.
+ * Contains a map of registered converters. User may add new converters.
  */
 public class TypeConverterManager {
 
-	private static final TypeConverterManagerBean TYPE_CONVERTER_MANAGER_BEAN = new TypeConverterManagerBean();
+	private static final TypeConverterManager TYPE_CONVERTER_MANAGER = new TypeConverterManager();
 
 	/**
-	 * Returns default {@link TypeConverterManager}.
+	 * Returns default implementation.
 	 */
-	public static TypeConverterManagerBean getDefaultTypeConverterManager() {
-		return TYPE_CONVERTER_MANAGER_BEAN;
+	public static TypeConverterManager get() {
+		return TYPE_CONVERTER_MANAGER;
+	}
+
+	private final TypeCache<TypeConverter> converters = TypeCache.createDefault();
+
+	// ---------------------------------------------------------------- methods
+
+	public TypeConverterManager() {
+		registerDefaults();
 	}
 
 	/**
 	 * Registers default set of converters.
 	 */
-	public static void registerDefaults() {
-		TYPE_CONVERTER_MANAGER_BEAN.registerDefaults();
+	public void registerDefaults() {
+		register(String.class, new StringConverter());
+		register(String[].class, new StringArrayConverter(this));
+
+		final IntegerConverter integerConverter = new IntegerConverter();
+		register(Integer.class, integerConverter);
+		register(int.class, integerConverter);
+
+		final ShortConverter shortConverter = new ShortConverter();
+		register(Short.class, shortConverter);
+		register(short.class, shortConverter);
+
+		final LongConverter longConverter = new LongConverter();
+		register(Long.class, longConverter);
+		register(long.class, longConverter);
+
+		final ByteConverter byteConverter = new ByteConverter();
+		register(Byte.class, byteConverter);
+		register(byte.class, byteConverter);
+
+		final FloatConverter floatConverter = new FloatConverter();
+		register(Float.class, floatConverter);
+		register(float.class, floatConverter);
+
+		final DoubleConverter doubleConverter = new DoubleConverter();
+		register(Double.class, doubleConverter);
+		register(double.class, doubleConverter);
+
+		final BooleanConverter booleanConverter = new BooleanConverter();
+		register(Boolean.class, booleanConverter);
+		register(boolean.class, booleanConverter);
+
+		final CharacterConverter characterConverter = new CharacterConverter();
+		register(Character.class, characterConverter);
+		register(char.class, characterConverter);
+
+		register(byte[].class, new ByteArrayConverter(this));
+		register(short[].class, new ShortArrayConverter(this));
+		register(int[].class, new IntegerArrayConverter(this));
+		register(long[].class, new LongArrayConverter(this));
+		register(float[].class, new FloatArrayConverter(this));
+		register(double[].class, new DoubleArrayConverter(this));
+		register(boolean[].class, new BooleanArrayConverter(this));
+		register(char[].class, new CharacterArrayConverter(this));
+
+		// we don't really need these, but converters will be cached and not created every time
+		register(Integer[].class, new ArrayConverter<Integer>(this, Integer.class) {
+			@Override
+			protected Integer[] createArray(final int length) {
+				return new Integer[length];
+			}
+		});
+		register(Long[].class, new ArrayConverter<Long>(this, Long.class) {
+			@Override
+			protected Long[] createArray(final int length) {
+				return new Long[length];
+			}
+		});
+		register(Byte[].class, new ArrayConverter<Byte>(this, Byte.class) {
+			@Override
+			protected Byte[] createArray(final int length) {
+				return new Byte[length];
+			}
+		});
+		register(Short[].class, new ArrayConverter<Short>(this, Short.class) {
+			@Override
+			protected Short[] createArray(final int length) {
+				return new Short[length];
+			}
+		});
+		register(Float[].class, new ArrayConverter<Float>(this, Float.class) {
+			@Override
+			protected Float[] createArray(final int length) {
+				return new Float[length];
+			}
+		});
+		register(Double[].class, new ArrayConverter<Double>(this, Double.class) {
+			@Override
+			protected Double[] createArray(final int length) {
+				return new Double[length];
+			}
+		});
+		register(Boolean[].class, new ArrayConverter<Boolean>(this, Boolean.class) {
+			@Override
+			protected Boolean[] createArray(final int length) {
+				return new Boolean[length];
+			}
+		});
+		register(Character[].class, new ArrayConverter<Character>(this, Character.class) {
+			@Override
+			protected Character[] createArray(final int length) {
+				return new Character[length];
+			}
+		});
+
+		register(BigDecimal.class, new BigDecimalConverter());
+		register(BigInteger.class, new BigIntegerConverter());
+		register(BigDecimal[].class, new ArrayConverter<>(this, BigDecimal.class));
+		register(BigInteger[].class, new ArrayConverter<>(this, BigInteger.class));
+
+		register(java.util.Date.class, new DateConverter());
+		register(java.sql.Date.class, new SqlDateConverter());
+		register(Time.class, new SqlTimeConverter());
+		register(Timestamp.class, new SqlTimestampConverter());
+		register(Calendar.class, new CalendarConverter());
+//		register(GregorianCalendar.class, new CalendarConverter());
+		register(LocalDateTime.class, new LocalDateTimeConverter());
+		register(LocalDate.class, new LocalDateConverter());
+		register(LocalTime.class, new LocalTimeConverter());
+
+		register(File.class, new FileConverter());
+
+		register(Class.class, new ClassConverter());
+		register(Class[].class, new ClassArrayConverter(this));
+
+		register(URI.class, new URIConverter());
+		register(URL.class, new URLConverter());
+
+		register(Locale.class, new LocaleConverter());
+		register(TimeZone.class, new TimeZoneConverter());
+
+		register(UUID.class, new UUIDConverter());
 	}
 
 	/**
 	 * Registers a converter for specified type.
 	 * User must register converter for all super-classes as well.
 	 *
-	 * @param type class that converter is for
-	 * @param typeConverter converter for provided class
+	 * @param type		class that converter is for
+	 * @param typeConverter	converter for provided class
 	 */
-	public static void register(Class type, TypeConverter typeConverter) {
-		TYPE_CONVERTER_MANAGER_BEAN.register(type, typeConverter);
+	public <T> void register(final Class<T> type, final TypeConverter<T> typeConverter) {
+		converters.put(type, typeConverter);
 	}
 
-	public static void unregister(Class type) {
-		TYPE_CONVERTER_MANAGER_BEAN.unregister(type);
+	/**
+	 * Un-registers converter for given type.
+	 */
+	public void unregister(final Class type) {
+		converters.remove(type);
 	}
+
+	// ---------------------------------------------------------------- lookup
 
 	/**
 	 * Retrieves converter for provided type. Only registered types are matched,
@@ -71,23 +258,100 @@ public class TypeConverterManager {
 	 *
 	 * @return founded converter or <code>null</code>
 	 */
-	public static TypeConverter lookup(Class type) {
-		return TYPE_CONVERTER_MANAGER_BEAN.lookup(type);
+	public <T> TypeConverter<T> lookup(final Class<T> type) {
+		return converters.get(type);
+	}
+
+	// ---------------------------------------------------------------- converter
+
+	/**
+	 * Converts an object to destination type. If type is registered, it's
+	 * {@link TypeConverter} will be used. If not, it scans of destination is
+	 * an array or enum, as those two cases are handled in a special way.
+	 * <p>
+	 * If destination type is one of common types, consider using {@link Converter}
+	 * instead for somewhat faster approach (no lookup).
+	 */
+	@SuppressWarnings({"unchecked"})
+	public <T> T convertType(final Object value, final Class<T> destinationType) {
+		if (destinationType == Object.class) {
+			// no conversion :)
+			return (T) value;
+		}
+
+		final TypeConverter converter = lookup(destinationType);
+
+		if (converter != null) {
+			return (T) converter.convert(value);
+		}
+
+		// no converter
+
+		if (value == null) {
+			return null;
+		}
+
+		// check same instances
+		if (ClassUtil.isInstanceOf(value, destinationType)) {
+			return (T) value;
+		}
+
+		// handle destination arrays
+		if (destinationType.isArray()) {
+			final ArrayConverter<T> arrayConverter = new ArrayConverter(this, destinationType.getComponentType());
+
+			return (T) arrayConverter.convert(value);
+		}
+
+		// handle enums
+		if (destinationType.isEnum()) {
+			final Object[] enums = destinationType.getEnumConstants();
+			final String valStr = value.toString();
+			for (final Object e : enums) {
+				if (e.toString().equals(valStr)) {
+					return (T) e;
+				}
+			}
+		}
+
+		// collection
+		if (ClassUtil.isTypeOf(destinationType, Collection.class)) {
+			// component type is unknown because of Java's type-erasure
+			final CollectionConverter<T> collectionConverter =
+					new CollectionConverter(this, destinationType, Object.class);
+
+			return (T) collectionConverter.convert(value);
+		}
+
+		// fail
+		throw new TypeConversionException("Conversion failed of input type: " + value.getClass() + " into: " + destinationType.getName());
 	}
 
 	/**
-	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
-	 * If destination type is one of common types, consider using {@link Convert} instead.
+	 * Special case of {@link #convertType(Object, Class)} when target is collection and
+	 * when component type is known.
 	 */
-	public static <T> T convertType(Object value, Class<T> destinationType) {
-		return TYPE_CONVERTER_MANAGER_BEAN.convertType(value, destinationType);
-	}
+	@SuppressWarnings("unchecked")
+	public <C extends Collection<T>, T> C convertToCollection(final Object value, final Class<? extends Collection> destinationType, final Class<T> componentType) {
+		if (value == null) {
+			return null;
+		}
 
-	/**
-	 * Special conversion to collections, when component type is known.
-	 */
-	public static <T> T convertToCollection(Object value, Class<? extends Collection> destinationType, Class<?> componentType) {
-		return (T) TYPE_CONVERTER_MANAGER_BEAN.convertToCollection(value, destinationType, componentType);
+		// check same instances
+		if (ClassUtil.isInstanceOf(value, destinationType)) {
+			return (C) value;
+		}
+
+		final CollectionConverter collectionConverter;
+
+		if (componentType == null) {
+			collectionConverter = new CollectionConverter(destinationType, Object.class);
+		}
+		else {
+			collectionConverter = new CollectionConverter(destinationType, componentType);
+		}
+
+		return (C) collectionConverter.convert(value);
 	}
 
 }

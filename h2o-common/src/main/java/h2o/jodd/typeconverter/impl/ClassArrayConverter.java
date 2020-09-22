@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.jodd.typeconverter.TypeConverterManagerBean;
+import h2o.jodd.typeconverter.TypeConverterManager;
 import h2o.jodd.util.ArraysUtil;
 import h2o.jodd.util.StringPool;
 import h2o.jodd.util.StringUtil;
@@ -50,25 +50,25 @@ import h2o.jodd.util.StringUtil;
  */
 public class ClassArrayConverter extends ArrayConverter<Class> {
 
-	public ClassArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
-		super(typeConverterManagerBean, Class.class);
+	public ClassArrayConverter(final TypeConverterManager typeConverterManager) {
+		super(typeConverterManager, Class.class);
 	}
 
 	@Override
-	protected Class[] createArray(int length) {
+	protected Class[] createArray(final int length) {
 		return new Class[length];
 	}
 
 	@Override
-	protected String[] convertStringToArray(String value) {
-		String[] strings = StringUtil.splitc(value, NUMBER_DELIMITERS);
+	protected String[] convertStringToArray(final String value) {
+		final String[] strings = StringUtil.splitc(value, NUMBER_DELIMITERS);
 
 		int count = 0;
 
 		for (int i = 0; i < strings.length; i++) {
 			strings[count] = strings[i].trim();
 
-			if (strings[count].length() == 0) {
+			if (strings[count].isEmpty()) {
 				continue;
 			}
 

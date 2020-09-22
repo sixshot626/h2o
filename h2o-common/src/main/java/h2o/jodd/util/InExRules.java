@@ -1,310 +1,59 @@
-// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice,
-// this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
-
 package h2o.jodd.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
- * One-class rule engine for includes/excludes logic. It can be used when
- * set of objects has to filtered using includes and excludes rules.
- * For example, when filtering files by file name etc.
- * <p>
- * Rule engine works in one of two modes:
- * <ul>
- *		<li><i>blacklist</i> - when any input is allowed by default and when you specify
- *			explicit excludes.
- *		</li>
- *		<li><i>whitelist</i> - when any input is disabled by default and when you specify
- *			explicit includes.
- *		</li>
- * </ul>
- * <p>
- * The logic of this rule engine depends on the current mode. In both cases,
- * always the inverse rules are considered first. For example, for <i>blacklist</i>
- * mode, engine first examine excludes, and then includes. This way you can
- * set any filter combination.
- * <p>
- * All Jodd classes that filters something uses this class to unify the
- * behavior across the Jodd library.
+ * Simple ruling engine for includes and excludes rules.
  */
-public class InExRules<T, R> implements InExRuleMatcher<T, R> {
+public class InExRules<V, P> {
 
-	protected List<Rule<R>> rules;
-	protected final InExRuleMatcher<T, R> inExRuleMatcher;
-	protected int includesCount;
-	protected int excludesCount;
-	protected boolean blacklist = true;
-
-	/**
-	 * Creates default instance.
-	 */
-	public InExRules() {
-		this.inExRuleMatcher = this;
+	public static InExRules<String, String> blacklist() {
+		return new InExRules<>(InExType.BLACKLIST, WILDCARD_STRING_MATCHER);
+	}
+	public static InExRules<String, String> whitelist() {
+		return new InExRules<>(InExType.WHITELIST, WILDCARD_STRING_MATCHER);
 	}
 
-	/**
-	 * Creates instance that uses provided matcher.
-	 */
-	public InExRules(InExRuleMatcher<T, R> inExRuleMatcher) {
-		this.inExRuleMatcher = inExRuleMatcher;
+	public enum InExType {
+		WHITELIST,
+		BLACKLIST
 	}
 
-	/**
-	 * Returns total number of all rules.
-	 */
-	public int totalRules() {
-		if (rules == null) {
-			return 0;
-		}
-		return rules.size();
-	}
-
-	/**
-	 * Returns total number of include rules.
-	 */
-	public int totalIncludeRules() {
-		return includesCount;
-	}
-
-	/**
-	 * Returns total number of exclude rules.
-	 */
-	public int totalExcludeRules() {
-		return excludesCount;
-	}
-
-	/**
-	 * Returns <code>true</code> if rule engine has at least one rule set.
-	 */
-	public boolean hasRules() {
-		if (rules == null) {
-			return false;
-		}
-		return !rules.isEmpty();
-	}
-
-	/**
-	 * Rule definition.
-	 */
-	public static class Rule<R> {
-		public final R value;
-		public final boolean include;
-
-		public Rule(R value, boolean include) {
-			this.value = value;
-			this.include = include;
-		}
-
+	public static final Function<String, Predicate<String>> WILDCARD_STRING_MATCHER = pattern -> new Predicate<String>() {
+		final String p = pattern;
 		@Override
-		public String toString() {
-			return (include ? "+" : "-") + value.toString();
+		public boolean test(final String value) {
+			return Wildcard.match(value, p);
 		}
+	};
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-
-			Rule rule = (Rule) o;
-
-			if (include != rule.include) {
-				return false;
-			}
-			if (!value.equals(rule.value)) {
-				return false;
-			}
-
-			return true;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = value.hashCode();
-			result = 31 * result + (include ? 1 : 0);
-			return result;
-		}
+	public InExRules(final InExType inExType, final Function<P, Predicate<V>> factory) {
+		this.inExType = inExType;
+		this.factory = factory;
 	}
 
-	/**
-	 * Returns rule's value on given index.
-	 */
-	public R getRule(int index) {
-		return rules.get(index).value;
+	private final InExType inExType;
+	private final Function<P, Predicate<V>> factory;
+
+	private final List<Predicate<V>> includePatterns = new ArrayList<>();
+	private final List<Predicate<V>> excludePatterns = new ArrayList<>();
+
+	public void include(final P pattern) {
+		final Predicate<V> matcher = factory.apply(pattern);
+		this.includePatterns.add(matcher);
+	}
+	public void exclude(final P pattern) {
+		final Predicate<V> matcher = factory.apply(pattern);
+		this.excludePatterns.add(matcher);
 	}
 
-	/**
-	 * Resets all the rules in this rule engine.
-	 */
-	public void reset() {
-		if (rules != null) {
-			rules.clear();
-		}
-		includesCount = excludesCount = 0;
-		blacklist = true;
-	}
+	public boolean match(final V value) {
+		boolean flag = inExType == InExType.BLACKLIST;
 
-	/**
-	 * Enables <i>blacklist</i> mode - everything is <b>included</b> by default,
-	 * and user sets explicit excludes.
-	 */
-	public void blacklist() {
-		blacklist = true;
-	}
-
-	/**
-	 * Returns <code>true</code> if blacklist mode is set.
-	 */
-	public boolean isBlacklist() {
-		return blacklist;
-	}
-
-	/**
-	 * Enables <i>whitelist</i> mode - everything is <b>excluded</b> by default,
-	 * and user set explicit includes.
-	 */
-	public void whitelist() {
-		blacklist = false;
-	}
-
-	/**
-	 * Returns <code>true</code> if whitelist mode is set.
-	 */
-	public boolean isWhitelist() {
-		return !blacklist;
-	}
-
-	/**
-	 * Sets blacklist or whitelist mode depending on rules. Smart mode
-	 * determines the following:
-	 * <ul>
-	 *     <li>If there are only include rules, then the {@link #whitelist() whitelist} mode is set.</li>
-	 *     <li>If there are only excluded rules, then the {@link #blacklist() blacklist} mode is set.</li>
-	 *     <li>In any other case (both type of rules exist or no rules are set), then mode is not changed.</li>
-	 * </ul>
-	 * Should be called <b>after</b> all the rules are set, before matching starts.
-	 */
-	public void smartMode() {
-		if (excludesCount == 0 && includesCount > 0) {
-			whitelist();
-		}
-		else if (excludesCount > 0 && includesCount == 0) {
-			blacklist();
-		}
-	}
-
-	/**
-	 * Adds include rule.
-	 */
-	public void include(R rule) {
-		addRule(rule, true);
-	}
-
-	/**
-	 * Adds exclude rule.
-	 */
-	public void exclude(R rule) {
-		addRule(rule, false);
-	}
-
-	/**
-	 * Adds a rule. Duplicates are not allowed and will be ignored.
-	 */
-	protected void addRule(R rule, boolean include) {
-		if (rules == null) {
-			rules = new ArrayList<Rule<R>>();
-		}
-
-		if (include) {
-			includesCount++;
-		} else {
-			excludesCount++;
-		}
-
-		Rule<R> newRule = new Rule<R>(rule, include);
-
-		if (rules.contains(newRule)) {
-			return;
-		}
-
-		rules.add(newRule);
-	}
-
-	/**
-	 * Matches value against the set of rules using current white/black list mode.
-	 */
-	public boolean match(T value) {
-		return match(value, blacklist);
-	}
-	/**
-	 * Matches value against the set of rules using provided white/black list mode.
-	 */
-	public boolean match(T value, boolean blacklist) {
-		if (rules == null) {
-			return blacklist;
-		}
-
-		boolean include = blacklist;
-
-		if (include) {
-			include = processExcludes(value, true);
-			include = processIncludes(value, include);
-		}
-		else {
-			include = processIncludes(value, false);
-			include = processExcludes(value, include);
-		}
-
-		return include;
-	}
-
-	/**
-	 * Applies rules on given flag using current black/white list mode.
-	 * @see #apply(Object, boolean, boolean)
-	 */
-	public boolean apply(T value, boolean flag) {
-		return apply(value, blacklist, flag);
-	}
-
-	/**
-	 * Applies rules on given flag. Flag is only changed if at least one rule
-	 * matched. Otherwise, the same value is returned. This way you can
-	 * chain several rules and have the rule engine change the flag
-	 * only when a rule is matched.
-	 */
-	public boolean apply(T value, final boolean blacklist, boolean flag) {
-		if (rules == null) {
-			return flag;
-		}
-
-		if (blacklist) {
+		if (inExType == InExType.BLACKLIST) {
 			flag = processExcludes(value, flag);
 			flag = processIncludes(value, flag);
 		}
@@ -312,58 +61,51 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 			flag = processIncludes(value, flag);
 			flag = processExcludes(value, flag);
 		}
-
 		return flag;
 	}
 
-	/**
-	 * Process includes rules.
-	 */
-	protected boolean processIncludes(T value, boolean include) {
-		if (includesCount > 0) {
-			if (!include) {
-				for (Rule<R> rule : rules) {
-					if (!rule.include) {
-						continue;
-					}
+	public boolean apply(final V value, boolean flag) {
+		if (inExType == InExType.BLACKLIST) {
+			flag = processExcludes(value, flag);
+			flag = processIncludes(value, flag);
+		}
+		else {
+			flag = processIncludes(value, flag);
+			flag = processExcludes(value, flag);
+		}
+		return flag;
+	}
 
-					if (inExRuleMatcher.accept(value, rule.value, true)) {
-						include = true;
-						break;
-					}
-				}
+	protected boolean processIncludes(final V value, boolean include) {
+		if (includePatterns.isEmpty()) {
+			return include;
+		}
+		if (include) {
+			return include;
+		}
+		for (final Predicate<V> includePredicate : includePatterns) {
+			if (includePredicate.test(value)) {
+				include = true;
+				break;
 			}
 		}
 		return include;
 	}
 
-	/**
-	 * Process excludes rules.
-	 */
-	protected boolean processExcludes(T value, boolean include) {
-		if (excludesCount > 0) {
-			if (include) {
-				for (Rule<R> rule : rules) {
-					if (rule.include) {
-						continue;
-					}
-
-					if (inExRuleMatcher.accept(value, rule.value, false)) {
-						include = false;
-						break;
-					}
-				}
+	protected boolean processExcludes(final V value, boolean include) {
+		if (excludePatterns.isEmpty()) {
+			return include;
+		}
+		if (!include) {
+			return include;
+		}
+		for (final Predicate<V> excludePredicate : excludePatterns) {
+			if (excludePredicate.test(value)) {
+				include = false;
+				break;
 			}
 		}
 		return include;
-	}
-
-	/**
-	 * Matches value against single rule. By default performs <code>equals</code> on value
-	 * against the rule.
-	 */
-	public boolean accept(T value, R rule, boolean include) {
-		return value.equals(rule);
 	}
 
 }

@@ -25,31 +25,36 @@
 
 package h2o.jodd.bean;
 
-import h2o.jodd.introspector.*;
-import h2o.jodd.util.InExRuleMatcher;
-import h2o.jodd.util.InExRules;
-import h2o.jodd.util.StringPool;
+import h2o.jodd.introspector.ClassDescriptor;
+import h2o.jodd.introspector.ClassIntrospector;
+import h2o.jodd.introspector.FieldDescriptor;
+import h2o.jodd.introspector.MethodDescriptor;
+import h2o.jodd.introspector.PropertyDescriptor;
+import h2o.jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
+
+import static h2o.jodd.util.StringPool.LEFT_SQ_BRACKET;
+import static h2o.jodd.util.StringPool.RIGHT_SQ_BRACKET;
 
 /**
  * Visitor for bean properties. It extracts properties names
  * from the source bean and then visits one by one.
- *
- * @see BeanVisitorImplBase
  */
-public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
+public class BeanVisitor {
+
+	public BeanVisitor(final Object source) {
+		this.source = source;
+		isSourceMap = (source instanceof Map);
+	}
 
 	/**
 	 * Source bean.
 	 */
-	protected Object source;
-	/**
-	 * Include/exclude rules.
-	 */
-	protected InExRules<String, String> rules = new InExRules<String, String>(this);
+	protected final Object source;
 	/**
 	 * Flag for enabling declared properties, or just public ones.
 	 */
@@ -59,39 +64,74 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 */
 	protected boolean ignoreNullValues;
 	/**
+	 * Defines if empty string should be ignored.
+	 */
+	protected boolean ignoreEmptyString;
+	/**
 	 * Defines if fields should be included.
 	 */
 	protected boolean includeFields;
-	/**
-	 * Initial matching mode.
-	 */
-	protected boolean blacklist = true;
+
 	/**
 	 * Indicates the the source is a Map.
 	 */
-	protected boolean isSourceMap = false;
+	protected final boolean isSourceMap;
+
+	/**
+	 * Defines if <code>null</code> values should be ignored.
+	 */
+	public BeanVisitor ignoreNulls(final boolean ignoreNulls) {
+		this.ignoreNullValues = ignoreNulls;
+
+		return this;
+	}
+
+	/**
+	 * Defines if <code>empty string</code> should be ignored.
+	 */
+	public BeanVisitor ignoreEmptyString(final boolean ignoreEmptyString) {
+		this.ignoreEmptyString = ignoreEmptyString;
+		return this;
+	}
+
+	/**
+	 * Defines if all properties should be copied (when set to <code>true</code>)
+	 * or only public (when set to <code>false</code>, default).
+	 */
+	public BeanVisitor declared(final boolean declared) {
+		this.declared = declared;
+		return this;
+	}
+
+	/**
+	 * Defines if fields without getters should be copied too.
+	 */
+	public BeanVisitor includeFields(final boolean includeFields) {
+		this.includeFields = includeFields;
+		return this;
+	}
 
 	// ---------------------------------------------------------------- util
 
 	/**
 	 * Returns all bean property names.
 	 */
-	protected String[] getAllBeanPropertyNames(Class type, boolean declared) {
-		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
+	protected String[] getAllBeanPropertyNames(final Class type, final boolean declared) {
+		final ClassDescriptor classDescriptor = ClassIntrospector.get().lookup(type);
 
-		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
+		final PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
-		ArrayList<String> names = new ArrayList<String>(propertyDescriptors.length);
+		final ArrayList<String> names = new ArrayList<>(propertyDescriptors.length);
 
-		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
+		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			final MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
 			if (getter != null) {
 				if (getter.matchDeclared(declared)) {
 					names.add(propertyDescriptor.getName());
 				}
 			}
 			else if (includeFields) {
-				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
+				final FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
 				if (field != null) {
 					if (field.matchDeclared(declared)) {
 						names.add(field.getName());
@@ -100,22 +140,22 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 			}
 		}
 
-		return names.toArray(new String[names.size()]);
+		return names.toArray(new String[0]);
 	}
 
 	/**
 	 * Returns an array of bean properties. If bean is a <code>Map</code>,
 	 * all its keys will be returned.
 	 */
-	protected String[] resolveProperties(Object bean, boolean declared) {
-		String[] properties;
+	protected String[] resolveProperties(final Object bean, final boolean declared) {
+		final String[] properties;
 
 		if (bean instanceof Map) {
-			Set keys = ((Map) bean).keySet();
+			final Set keys = ((Map) bean).keySet();
 
 			properties = new String[keys.size()];
 			int ndx = 0;
-			for (Object key : keys) {
+			for (final Object key : keys) {
 				properties[ndx] = key.toString();
 				ndx++;
 			}
@@ -129,24 +169,20 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	/**
 	 * Starts visiting properties.
 	 */
-	public void visit() {
-		String[] properties = resolveProperties(source, declared);
+	public void visit(final BiConsumer<String, Object> propertyConsumer) {
+		final String[] properties = resolveProperties(source, declared);
 
-		for (String name : properties) {
+		for (final String name : properties) {
 			if (name == null) {
 				continue;
 			}
 
-			if (!rules.match(name, blacklist)) {
-				continue;
-			}
-
-			Object value;
+			final Object value;
 
 			String propertyName = name;
 
 			if (isSourceMap) {
-				propertyName = StringPool.LEFT_SQ_BRACKET + name + StringPool.RIGHT_SQ_BRACKET;
+				propertyName = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
 			}
 
 			if (declared) {
@@ -159,20 +195,11 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 				continue;
 			}
 
-			visitProperty(name, value);
+			if (ignoreEmptyString && value instanceof String && StringUtil.isEmpty((String) value)) {
+				continue;
+			}
+
+			propertyConsumer.accept(name, value);
 		}
-	}
-
-	/**
-	 * Invoked for each visited property. Returns <code>true</code> if
-	 * visiting should continue, otherwise <code>false</code> to stop.
-	 */
-	protected abstract boolean visitProperty(String name, Object value);
-
-	/**
-	 * Compares property name to the rules.
-	 */
-	public boolean accept(String propertyName, String rule, boolean include) {
-		return propertyName.equals(rule);
 	}
 }
