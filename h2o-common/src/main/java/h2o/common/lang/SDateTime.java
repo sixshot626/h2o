@@ -1,17 +1,20 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import h2o.common.util.lang.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
     private static final long serialVersionUID = 3242879174207238197L;
 
-    protected static final String DATE_FMT = "yyyy-MM-dd HH:mm:ss";
+    protected static final String DATE_FMT = "yyyy-MM-ddTHH:mm:ss";
     
     /**
      * 日期时间 yyyy-MM-dd HH:mm:ss
@@ -41,12 +44,12 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
     public SDateTime( int year , int month , int day , int hour, int minute, int second ) {
 
-        this( StringUtils.leftPad( Integer.toString(year) , 4 , '0') + "-" +
-                StringUtils.leftPad( Integer.toString(month) , 2 , '0') + "-" +
-                StringUtils.leftPad( Integer.toString(day) , 2 , '0')  + " " +
-                StringUtils.leftPad( Integer.toString(hour) , 2 , '0') + ":" +
-                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') + ":" +
-                StringUtils.leftPad( Integer.toString(second) , 2 , '0')  );
+        this( StringUtil.build( StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(month) , 2 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(day) , 2 , '0')  , "T" ,
+                StringUtils.leftPad( Integer.toString(hour) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(second) , 2 , '0') ) );
 
     }
 
@@ -119,6 +122,22 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
     public String fmt( String fmt , String def ) {
         return this.isPresent() ? this.fmt( fmt ) : def;
     }
+
+
+
+    public Date toDate() {
+        return DateUtil.toDate( this.get() , DATE_FMT );
+    }
+
+    public LocalDateTime toLocalDateTime() {
+
+        SDate date = this.getDate();
+        STime time = this.getTime();
+
+        return LocalDateTime.of( date.getYear() , date.getMonth() , date.getDay() ,
+                time.getHour() , time.getMinute() , time.getSecond() );
+    }
+
 
 
 

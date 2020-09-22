@@ -1,10 +1,12 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
+import h2o.jodd.time.TimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class SDate implements Comparable<SDate>, java.io.Serializable {
@@ -100,6 +102,14 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         return this.isPresent() ? this.fmt( fmt ) : def;
     }
 
+
+    public Date toDate() {
+        return DateUtil.toDate( this.get() , DATE_FMT );
+    }
+
+    public LocalDate toLocalDate() {
+        return LocalDate.of( this.getYear() , this.getMonth() , this.getDay() );
+    }
 
     public int getYear() {
         return Integer.parseInt(StringUtils.substringBefore( this.get() , "-" ) );

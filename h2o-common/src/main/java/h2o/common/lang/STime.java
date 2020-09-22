@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class STime implements Comparable<STime>, java.io.Serializable {
@@ -88,6 +90,10 @@ public class STime implements Comparable<STime>, java.io.Serializable {
         return this.isPresent() ? this.fmt( fmt ) : def;
     }
 
+
+    public LocalTime toLocalTime() {
+        return LocalTime.of( this.getHour() , this.getMinute() , this.getSecond() );
+    }
 
 
     public int getHour() {
