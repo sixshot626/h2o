@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public final class DaoBasicUtil<E> {
 
-    private static boolean CACHE = Mode.isUserMode("DONT_CACHE_ENTITYPARSER") ? false : true;
+    private static final boolean CACHE = !Mode.isUserMode("DONT_CACHE_ENTITYPARSER");
 
     private static final InstanceTable<Class<?>,EntityParser> ENTITYPARSER_TABLE =
             new InstanceTable<Class<?>, EntityParser>( new AbstractInstanceFactory<EntityParser>() {
