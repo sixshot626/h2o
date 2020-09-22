@@ -3,7 +3,7 @@
 path="`pwd`"
 repositoryId=h2o-mvn-repo
 url="file://${path}/mvn-repo"
-ver=5.1.0
+ver=6.0.0
 
 
 mvn deploy:deploy-file -DgroupId=h2o -DartifactId=butterfly-container -Dversion=${ver} -Dpackaging=jar -Dfile=../butterfly-container/target/butterfly-container-${ver}.jar -Durl=$url -DrepositoryId=${repositoryId}
