@@ -38,13 +38,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Methods {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final Map<String, MethodDescriptor[]> methodsMap = new ConcurrentHashMap<String, MethodDescriptor[]>();
+	protected final Map<String, MethodDescriptor[]> methodsMap;
 
 	// cache
 	private MethodDescriptor[] allMethods;
 
 	public Methods(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
+		this.methodsMap = new ConcurrentHashMap<String, MethodDescriptor[]>();
 		this.methodsMap.putAll(inspectMethods());
 	}
 

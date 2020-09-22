@@ -38,6 +38,7 @@ import java.net.URL;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -46,7 +47,7 @@ import java.util.*;
  */
 public class TypeConverterManagerBean {
 
-	private final HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(70);
+	private final Map<Class, TypeConverter> converters = new ConcurrentHashMap<Class, TypeConverter>(70);
 
 	// ---------------------------------------------------------------- converter
 

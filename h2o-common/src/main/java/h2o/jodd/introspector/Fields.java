@@ -31,6 +31,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Collection of {@link FieldDescriptor field descriptors}.
@@ -38,7 +40,7 @@ import java.util.HashMap;
 public class Fields {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final HashMap<String, FieldDescriptor> fieldsMap;
+	protected final Map<String, FieldDescriptor> fieldsMap;
 
 	// cache
 	private FieldDescriptor[] allFields;
@@ -48,7 +50,8 @@ public class Fields {
 	 */
 	public Fields(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
-		this.fieldsMap = inspectFields();
+		this.fieldsMap = new ConcurrentHashMap<String, FieldDescriptor>();
+		this.fieldsMap.putAll( inspectFields() );
 	}
 
 	/**

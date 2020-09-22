@@ -45,13 +45,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Properties {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final Map<String, PropertyDescriptor> propertyDescriptors = new ConcurrentHashMap<String, PropertyDescriptor>();
+	protected final Map<String, PropertyDescriptor> propertyDescriptors;
 
 	// cache
 	private PropertyDescriptor[] allProperties;
 
 	public Properties(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
+		this.propertyDescriptors = new ConcurrentHashMap<String, PropertyDescriptor>();
 		this.propertyDescriptors.putAll(inspectProperties());
 	}
 

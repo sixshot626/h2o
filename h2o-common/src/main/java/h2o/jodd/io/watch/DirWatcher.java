@@ -33,6 +33,7 @@ import h2o.jodd.util.Wildcard;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DirWatcher {
 
@@ -46,7 +47,7 @@ public class DirWatcher {
 	}
 
 	protected final File dir;
-	protected HashMap<File, MutableLong> map = new HashMap<File, MutableLong>();
+	protected Map<File, MutableLong> map = new ConcurrentHashMap<File, MutableLong>();
 	protected int filesCount;
 	protected List<DirWatcherListener> listeners = new ArrayList<DirWatcherListener>();
 	protected String[] patterns;
