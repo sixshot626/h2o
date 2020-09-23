@@ -61,7 +61,11 @@ public class LongConverter implements TypeConverter<Long> {
 			return ((Boolean) value).booleanValue() ? Long.valueOf(1L) : Long.valueOf(0L);
 		}
 		if (value instanceof LTimestamp) {
-			return ((LTimestamp)value).getValue();
+			if (((LTimestamp) value).isPresent() ) {
+				return ((LTimestamp) value).getValue();
+			} else {
+				return null;
+			}
 		}
 
 		try {

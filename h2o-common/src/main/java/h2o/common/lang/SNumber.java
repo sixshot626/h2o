@@ -53,7 +53,7 @@ public class SNumber extends Number implements Nullable, Comparable<SNumber> , j
        if ( direct ) {
            this.value = num;
        } else {
-           this.value = new BigDecimal(num).toString();
+           this.value = num == null ? null : new BigDecimal(num).toString();
        }
     }
 

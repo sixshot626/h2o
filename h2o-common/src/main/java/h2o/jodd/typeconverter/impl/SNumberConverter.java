@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.LTimestamp;
 import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
@@ -47,6 +48,9 @@ public class SNumberConverter implements TypeConverter<SNumber> {
 		}
 		if (value instanceof SNumber) {
 			return (SNumber) value;
+		}
+		if (value instanceof LTimestamp) {
+			return new SNumber(((LTimestamp)value).getValue());
 		}
 		if ( value instanceof Number ) {
 			return new SNumber((Number) value);

@@ -25,10 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.LTimestamp;
-import h2o.common.lang.SDate;
-import h2o.common.lang.SDateTime;
-import h2o.common.lang.SNumber;
+import h2o.common.lang.*;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
@@ -92,7 +89,7 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 		if (value instanceof LocalDate) {
 			return new SDateTime(TimeUtil.toDate((LocalDate)value));
 		}
-		if (value instanceof LocalTime) {
+		if (value instanceof LocalTime || value instanceof STime ) {
 			throw new TypeConversionException("Can't convert to date just from time: " + value);
 		}
 		if (value instanceof SNumber) {

@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -28,16 +29,12 @@ public class STime implements Nullable, Comparable<STime>, java.io.Serializable 
         this( time,false );
     }
 
-    public STime( String time ,  boolean direct ) {
+    public STime( String timeStr ,  boolean direct ) {
         if ( direct ) {
-            this.time = time;
+            this.time = timeStr;
         } else {
-            this.time = time == null ? null : DateUtil.toString( toDate( time , DATE_FMT ) , DATE_FMT );
+            this.time = timeStr == null ? null : DateUtil.toString( toDate( timeStr , DATE_FMT ) , DATE_FMT );
         }
-    }
-
-    public static STime from(String time , String fmt ) {
-        return new STime( toDate( time , fmt ) );
     }
 
     public STime( int hour, int minute, int second ) {
@@ -46,18 +43,29 @@ public class STime implements Nullable, Comparable<STime>, java.io.Serializable 
                 StringUtils.leftPad( Integer.toString(second) , 2 , '0') ) );
     }
 
-    public STime( LocalTime time ) {
-        this( time.getHour() , time.getMinute() , time.getSecond() );
+    public STime( LocalTime localTime ) {
+        this.time = localTime == null ? null : StringUtil.build(
+                StringUtils.leftPad( Integer.toString(localTime.getHour()) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(localTime.getMinute()) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(localTime.getSecond()) , 2 , '0') );
     }
 
+    public STime( Instant instant ) {
+        this.time = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+    }
+
+    public STime( Date d ) {
+        this.time = d == null ? null : DateUtil.toString( d , DATE_FMT );
+    }
 
     protected static Date toDate( String date , String fmt ) {
         return SDate.toDate( date, fmt );
     }
 
-    public STime( Date date ) {
-        this.time = date == null ? null : DateUtil.toString( date , DATE_FMT );
+    public static STime from(String time , String fmt ) {
+        return new STime( toDate( time , fmt ) );
     }
+
 
     @Override
     public boolean isPresent() {

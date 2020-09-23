@@ -34,13 +34,14 @@ public class LTimestamp implements Nullable, Comparable<LTimestamp>, java.io.Ser
     }
 
     public LTimestamp( Instant instant ) {
-        this.timestamp = instant.toEpochMilli();
+        this.timestamp = instant == null ? null : instant.toEpochMilli();
     }
 
     public LTimestamp( Date date ) {
         this.timestamp = date == null ? null : date.getTime();
     }
 
+    @Override
     public boolean isPresent() {
         return timestamp != null;
     }
@@ -68,9 +69,9 @@ public class LTimestamp implements Nullable, Comparable<LTimestamp>, java.io.Ser
 
         if ( DATE_FMT.equals( fmt ) ) {
             return this.get();
+        } else {
+            return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
         }
-
-        return DateUtil.str2Str( this.get() , DATE_FMT , fmt );
 
     }
 

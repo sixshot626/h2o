@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -28,22 +29,18 @@ public class SDateTime implements Nullable, Comparable<SDateTime>, java.io.Seria
         this( dateTime , false );
     }
 
-    public SDateTime( String dateTime , boolean direct ) {
+    public SDateTime( String dateStr , boolean direct ) {
         if ( direct ) {
-            this.dateTime = dateTime;
+            this.dateTime = dateStr;
         } else {
-            this.dateTime = dateTime == null ? null : DateUtil.toString( toDate(dateTime, DATE_FMT ) , DATE_FMT );
+            this.dateTime = dateStr == null ? null : DateUtil.toString( toDate(dateStr, DATE_FMT ) , DATE_FMT );
         }
-    }
-
-    public static SDateTime from( String dateTime, String fmt ) {
-        return new SDateTime( toDate(dateTime, fmt ) );
     }
 
 
     public SDateTime( int year , int month , int day , int hour, int minute, int second ) {
-
-        this( StringUtil.build( StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
+        this( StringUtil.build(
+                StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
                 StringUtils.leftPad( Integer.toString(month) , 2 , '0') , "-" ,
                 StringUtils.leftPad( Integer.toString(day) , 2 , '0')  , "T" ,
                 StringUtils.leftPad( Integer.toString(hour) , 2 , '0') , ":" ,
@@ -52,21 +49,34 @@ public class SDateTime implements Nullable, Comparable<SDateTime>, java.io.Seria
 
     }
 
-    public SDateTime( LocalDateTime dateTime ) {
-
-        this( dateTime.getYear() , dateTime.getMonthValue() , dateTime.getDayOfMonth() ,
-                dateTime.getHour(), dateTime.getMinute() , dateTime.getSecond());
-
+    public SDateTime( LocalDateTime localDateTime ) {
+        this.dateTime = localDateTime == null ? null : StringUtil.build(
+                StringUtils.leftPad( Integer.toString(localDateTime.getYear()) , 4 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(localDateTime.getMonthValue()) , 2 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(localDateTime.getDayOfMonth()) , 2 , '0')  , "T" ,
+                StringUtils.leftPad( Integer.toString(localDateTime.getHour()) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(localDateTime.getMinute()) , 2 , '0') , ":" ,
+                StringUtils.leftPad( Integer.toString(localDateTime.getSecond()) , 2 , '0') );
     }
+
+    public SDateTime( Instant instant ) {
+        this.dateTime = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+    }
+
+    public SDateTime(Date d) {
+        this.dateTime = d == null ? null : DateUtil.toString( d , DATE_FMT );
+    }
+
 
 
     protected static Date toDate( String date , String fmt ) {
-       return SDate.toDate( date, fmt );
+        return SDate.toDate( date, fmt );
     }
 
 
-    public SDateTime(Date dateTime) {
-        this.dateTime = dateTime == null ? null : DateUtil.toString( dateTime , DATE_FMT );
+
+    public static SDateTime from( String dateTime, String fmt ) {
+        return new SDateTime( toDate(dateTime, fmt ) );
     }
 
 

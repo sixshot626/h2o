@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -29,17 +30,40 @@ public class SDate implements Nullable, Comparable<SDate>, java.io.Serializable 
         this( date , false );
     }
 
-    public SDate( String date , boolean direct ) {
+    public SDate( String dateStr , boolean direct ) {
         if ( direct ) {
-            this.date = date;
+            this.date = dateStr;
         } else {
-            this.date = date == null ? null : DateUtil.toString( toDate( date , DATE_FMT ) , DATE_FMT );
+            this.date = dateStr == null ? null : DateUtil.toString( toDate( dateStr , DATE_FMT ) , DATE_FMT );
         }
     }
 
-    public static SDate from( String date , String fmt ) {
-        return new SDate( toDate( date , fmt ) );
+
+    public SDate( int year , int month , int day ) {
+        this( StringUtil.build(
+                StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(month) , 2 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(day) , 2 , '0') ) );
     }
+
+
+    public SDate( LocalDate localDate ) {
+        this.date = localDate == null ? null : StringUtil.build(
+                StringUtils.leftPad( Integer.toString(localDate.getYear()) , 4 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(localDate.getMonthValue()) , 2 , '0') , "-" ,
+                StringUtils.leftPad( Integer.toString(localDate.getDayOfMonth()) , 2 , '0') );
+    }
+
+    public SDate( Instant instant ) {
+        this.date = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+    }
+
+    public SDate( Date d ) {
+        this.date = d == null ? null : DateUtil.toString( d , DATE_FMT );
+    }
+
+
+
 
     protected static Date toDate( String date , String fmt ) {
         if ( date == null ) {
@@ -54,21 +78,12 @@ public class SDate implements Nullable, Comparable<SDate>, java.io.Serializable 
 
 
 
-    public SDate( int year , int month , int day ) {
-        this( StringUtil.build( StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
-                StringUtils.leftPad( Integer.toString(month) , 2 , '0') , "-" ,
-                StringUtils.leftPad( Integer.toString(day) , 2 , '0') ) );
+    public static SDate from( String date , String fmt ) {
+        return new SDate( toDate( date , fmt ) );
     }
 
 
-    public SDate( LocalDate date ) {
-        this( date.getYear() , date.getMonthValue() , date.getDayOfMonth() );
-    }
 
-
-    public SDate( Date date ) {
-        this.date = date == null ? null : DateUtil.toString( date , DATE_FMT );
-    }
 
     @Override
     public boolean isPresent() {
