@@ -2,7 +2,6 @@ package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.lang.StringUtil;
-import h2o.jodd.time.TimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -10,7 +9,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class SDate implements Comparable<SDate>, java.io.Serializable {
+public class SDate implements Nullable, Comparable<SDate>, java.io.Serializable {
 
     private static final long serialVersionUID = 9012516608507340072L;
 
@@ -49,7 +48,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         try {
             return DateUtil.toDate(date, fmt);
         } catch ( Exception e ) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -71,6 +70,7 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
         this.date = date == null ? null : DateUtil.toString( date , DATE_FMT );
     }
 
+    @Override
     public boolean isPresent() {
         return date != null;
     }
@@ -83,9 +83,9 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
         if ( this.isPresent() ) {
             return date;
+        } else {
+            throw new IllegalStateException();
         }
-
-        throw new IllegalStateException();
 
     }
 
@@ -97,9 +97,9 @@ public class SDate implements Comparable<SDate>, java.io.Serializable {
 
         if ( DATE_FMT.equals( fmt ) ) {
             return this.get();
+        } else {
+            return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
         }
-
-        return DateUtil.str2Str( this.get() , DATE_FMT , fmt );
 
     }
 

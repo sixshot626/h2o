@@ -25,12 +25,17 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.LTimestamp;
+import h2o.common.lang.SDate;
+import h2o.common.lang.SDateTime;
+import h2o.common.lang.SNumber;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -78,6 +83,38 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 		}
 		if (value instanceof LocalDate) {
 			return new Timestamp(TimeUtil.toMilliseconds((LocalDate) value));
+		}
+
+		if ( value instanceof SDate) {
+			if ( ((SDate) value).isPresent() ) {
+				return new Timestamp(((SDate) value).toDate().getTime());
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SDateTime) {
+			if ( ((SDateTime) value).isPresent() ) {
+				return new Timestamp( ((SDateTime) value).toDate().getTime() );
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof LTimestamp) {
+			if ( ((LTimestamp) value).isPresent() ) {
+				return new Timestamp( ((LTimestamp) value).getValue() );
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SNumber) {
+			if ( ((SNumber) value).isPresent() ) {
+				return new Timestamp(((Number) value).longValue());
+			} else {
+				return null;
+			}
 		}
 
 		if (value instanceof Number) {

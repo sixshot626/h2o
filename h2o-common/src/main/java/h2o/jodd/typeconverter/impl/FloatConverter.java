@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -49,12 +50,21 @@ public class FloatConverter implements TypeConverter<Float> {
 		if (value.getClass() == Float.class) {
 			return (Float) value;
 		}
+		if ( value instanceof SNumber) {
+			if ( ((SNumber)value).isPresent()  ) {
+				return Float.valueOf(((SNumber) value).toBigDecimal().floatValue());
+			}else {
+				return null;
+			}
+		}
 		if (value instanceof Number) {
 			return Float.valueOf(((Number)value).floatValue());
 		}
 		if (value instanceof Boolean) {
 			return ((Boolean) value).booleanValue() ? Float.valueOf(1) : Float.valueOf(0);
 		}
+
+
 
 		try {
 			String stringValue = value.toString().trim();

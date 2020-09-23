@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -50,6 +51,11 @@ public class ShortConverter implements TypeConverter<Short> {
 		if (value.getClass() == Short.class) {
 			return (Short) value;
 		}
+
+		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
+			return null;
+		}
+
 		if (value instanceof Number) {
 			return Short.valueOf(((Number)value).shortValue());
 		}

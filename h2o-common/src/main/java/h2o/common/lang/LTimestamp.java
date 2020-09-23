@@ -4,9 +4,12 @@ import h2o.common.util.date.DateUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
-public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable {
+public class LTimestamp implements Nullable, Comparable<LTimestamp>, java.io.Serializable {
 
     private static final long serialVersionUID = -6995945806906201103L;
 
@@ -38,9 +41,9 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
 
         if ( this.isPresent() ) {
             return DateUtil.toString( new Date(this.timestamp) , DATE_FMT );
+        } else {
+            throw new IllegalStateException();
         }
-
-        throw new IllegalStateException();
 
     }
 
@@ -68,26 +71,40 @@ public class LTimestamp implements Comparable<LTimestamp>, java.io.Serializable 
 
         if ( this.isPresent() ) {
             return new Date(this.timestamp);
+        } else {
+            throw new IllegalStateException();
         }
+    }
 
-        throw new IllegalStateException();
+    public Instant toInstant() {
+
+        if ( this.isPresent() ) {
+            return Instant.ofEpochMilli(this.timestamp);
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public LocalDateTime toLocalDateTime() {
+         return LocalDateTime.ofInstant( toInstant(), ZoneId.systemDefault());
     }
 
     public SDateTime toSDateTime() {
 
         if ( this.isPresent() ) {
             return new SDateTime( new Date( this.timestamp ) );
+        } else {
+            return new SDateTime();
         }
-
-        return new SDateTime();
 
     }
 
     public SNumber toSNumber() {
         if ( this.isPresent() ) {
             return new SNumber( this.timestamp );
+        } else {
+            return new SNumber();
         }
-        return new SNumber();
     }
 
 

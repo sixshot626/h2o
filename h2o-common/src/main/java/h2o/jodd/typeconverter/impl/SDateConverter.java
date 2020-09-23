@@ -28,6 +28,7 @@ package h2o.jodd.typeconverter.impl;
 import h2o.common.lang.LTimestamp;
 import h2o.common.lang.SDate;
 import h2o.common.lang.SDateTime;
+import h2o.common.lang.SNumber;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
@@ -70,7 +71,7 @@ public class SDateConverter implements TypeConverter<SDate> {
 			return ((SDateTime) value).getDate();
 		}
 		if (value instanceof LTimestamp) {
-			return ((LTimestamp) value).getDateTime().getDate();
+			return ((LTimestamp) value).toSDateTime().getDate();
 		}
 		if (value instanceof Date) {
 			return new SDate((Date) value);
@@ -82,13 +83,20 @@ public class SDateConverter implements TypeConverter<SDate> {
 			return new SDate(new Date(((JulianDate) value).toMilliseconds()));
 		}
 		if (value instanceof LocalDateTime) {
-			return new SDate(TimeUtil.toDate((LocalDateTime)value));
+			return new SDate(((LocalDateTime)value).toLocalDate());
 		}
 		if (value instanceof LocalDate) {
-			return new SDate(TimeUtil.toDate((LocalDate)value));
+			return new SDate((LocalDate)value);
 		}
 		if (value instanceof LocalTime) {
 			throw new TypeConversionException("Can't convert to date just from time: " + value);
+		}
+		if (value instanceof SNumber) {
+			if (((SNumber) value).isPresent() ) {
+				return new SDate(new Date(((SNumber) value).longValue()));
+			} else {
+				return new SDate();
+			}
 		}
 		if (value instanceof Number) {
 			return new SDate(new Date(((Number) value).longValue()));
@@ -109,8 +117,7 @@ public class SDateConverter implements TypeConverter<SDate> {
 		}
 
 		try {
-			long milliseconds = Long.parseLong(stringValue);
-			return new SDate(new Date(milliseconds));
+			return SDate.from(stringValue , "yyyyMMdd");
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

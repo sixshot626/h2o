@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.*;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -56,6 +57,45 @@ public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
 		if (value instanceof Date) {
 			return TimeUtil.fromDate((Date) value);
 		}
+
+		if (value instanceof SDate) {
+			if (((SDate) value).isPresent() ) {
+				return ((SDate) value).toLocalDate().atTime(0,0,0);
+			} else {
+				return null;
+			}
+		}
+
+		if (value instanceof SDateTime) {
+			if (((SDateTime) value).isPresent() ) {
+				return ((SDateTime) value).toLocalDateTime();
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof STime) {
+			throw new TypeConversionException("Can't convert to date just from time: " + value);
+		}
+
+		if (value instanceof LTimestamp) {
+			if (((LTimestamp) value).isPresent() ) {
+				return ((LTimestamp) value).toLocalDateTime();
+			} else {
+				return null;
+			}
+		}
+
+		if (value instanceof SNumber) {
+			if (((SNumber) value).isPresent() ) {
+				return TimeUtil.fromMilliseconds(((Number)value).longValue());
+			} else {
+				return null;
+			}
+		}
+
+
+
 		if (value instanceof Number) {
 			return TimeUtil.fromMilliseconds(((Number)value).longValue());
 		}

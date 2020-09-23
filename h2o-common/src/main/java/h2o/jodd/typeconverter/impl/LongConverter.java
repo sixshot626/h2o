@@ -51,13 +51,8 @@ public class LongConverter implements TypeConverter<Long> {
 		if (value.getClass() == Long.class) {
 			return (Long) value;
 		}
-		if ( value instanceof SNumber ) {
-			SNumber number = (SNumber) value;
-			if ( number.isPresent() ) {
-				return Long.valueOf(number.longValue());
-			} else {
-				return null;
-			}
+		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
+			return null;
 		}
 		if (value instanceof Number) {
 			return Long.valueOf(((Number)value).longValue());

@@ -25,6 +25,8 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.Nullable;
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 
@@ -46,9 +48,11 @@ public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 		if (value == null) {
 			return null;
 		}
-		
 		if (value instanceof BigDecimal) {
 			return (BigDecimal) value;
+		}
+		if ( value instanceof SNumber ) {
+			return ((SNumber)value).toBigDecimal();
 		}
 		try {
 			return new BigDecimal(value.toString().trim());

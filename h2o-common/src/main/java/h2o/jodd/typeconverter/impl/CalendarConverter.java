@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.*;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.time.JulianDate;
@@ -57,7 +58,6 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 		if (value == null) {
 			return null;
 		}
-
 		if (value instanceof Calendar) {
 			return (Calendar) value;
 		}
@@ -74,6 +74,46 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 		}
 		if (value instanceof LocalDate) {
 			return TimeUtil.toCalendar((LocalDate)value);
+		}
+
+		if ( value instanceof SDate ) {
+			if ( ((SDate) value).isPresent() ) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(((SDate) value).toDate());
+				return calendar;
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SDateTime) {
+			if ( ((SDateTime) value).isPresent() ) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(((SDateTime) value).toDate());
+				return calendar;
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof LTimestamp) {
+			if ( ((LTimestamp) value).isPresent() ) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(((LTimestamp) value).getValue());
+				return calendar;
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SNumber) {
+			if ( ((SNumber) value).isPresent() ) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(((Number) value).longValue());
+				return calendar;
+			} else {
+				return null;
+			}
 		}
 
 		if (value instanceof Number) {

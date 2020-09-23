@@ -6,15 +6,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
+public class SDateTime implements Nullable, Comparable<SDateTime>, java.io.Serializable {
 
     private static final long serialVersionUID = 3242879174207238197L;
 
-    protected static final String DATE_FMT = "yyyy-MM-ddTHH:mm:ss";
+    protected static final String DATE_FMT = "yyyy-MM-dd'T'HH:mm:ss";
     
     /**
      * 日期时间 yyyy-MM-dd HH:mm:ss
@@ -70,6 +69,8 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
         this.dateTime = dateTime == null ? null : DateUtil.toString( dateTime , DATE_FMT );
     }
 
+
+    @Override
     public boolean isPresent() {
         return dateTime != null;
     }
@@ -84,9 +85,9 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
         if ( this.isPresent() ) {
             return dateTime;
+        } else {
+            throw new IllegalStateException();
         }
-
-        throw new IllegalStateException();
 
     }
 
@@ -94,9 +95,9 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
         if ( this.isPresent() ) {
             return SDate.from( this.dateTime , DATE_FMT );
+        } else {
+            return new SDate();
         }
-
-        return new SDate();
 
     }
 
@@ -105,9 +106,9 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
         if ( this.isPresent() ) {
             return STime.from( this.dateTime , DATE_FMT );
+        } else {
+            return new STime();
         }
-
-        return new STime();
 
     }
 
@@ -120,9 +121,9 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
         if ( DATE_FMT.equals( fmt ) ) {
             return this.get();
+        } else {
+            return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
         }
-
-        return DateUtil.str2Str( this.get() , DATE_FMT , fmt );
 
     }
 
@@ -138,13 +139,18 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
 
     public LocalDateTime toLocalDateTime() {
 
-        SDate date = this.getDate();
-        STime time = this.getTime();
+        if ( this.isPresent() ) {
 
-        return LocalDateTime.of( date.getYear() , date.getMonth() , date.getDay() ,
-                time.getHour() , time.getMinute() , time.getSecond() );
+            SDate date = this.getDate();
+            STime time = this.getTime();
+
+            return LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(),
+                    time.getHour(), time.getMinute(), time.getSecond());
+
+        } else {
+            throw new IllegalStateException();
+        }
     }
-
 
 
 
@@ -183,4 +189,6 @@ public class SDateTime implements Comparable<SDateTime>, java.io.Serializable {
     public String toString() {
         return this.orElse("<null>");
     }
+
+
 }

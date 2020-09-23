@@ -3,7 +3,7 @@ package h2o.common.lang;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class Var<T> {
+public class Var<T> implements Nullable {
 
 	private T v;
 
@@ -17,6 +17,7 @@ public class Var<T> {
         this.setted = true;
     }
 
+    @Override
     public boolean isPresent() {
         return v != null;
     }

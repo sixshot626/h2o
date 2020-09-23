@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -49,13 +50,15 @@ public class DoubleConverter implements TypeConverter<Double> {
 		if (value.getClass() == Double.class) {
 			return (Double) value;
 		}
+		if ( value instanceof SNumber ) {
+			return ((SNumber)value).toDouble();
+		}
 		if (value instanceof Number) {
 			return Double.valueOf(((Number)value).doubleValue());
 		}
 		if (value instanceof Boolean) {
 			return ((Boolean) value).booleanValue() ? Double.valueOf(1) : Double.valueOf(0);
 		}
-
 		try {
 			String stringValue = value.toString().trim();
 			if (StringUtil.startsWithChar(stringValue, '+')) {

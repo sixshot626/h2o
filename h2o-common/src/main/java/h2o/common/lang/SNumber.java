@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class SNumber extends Number implements Comparable<SNumber> , java.io.Serializable {
+public class SNumber extends Number implements Nullable, Comparable<SNumber> , java.io.Serializable {
 
     private static final long serialVersionUID = -263082729693656131L;
 
@@ -40,7 +40,7 @@ public class SNumber extends Number implements Comparable<SNumber> , java.io.Ser
         } else if ( number instanceof SNumber ) {
             this.value = ((SNumber)number).value;
         } else {
-            this.value = BigDecimal.valueOf(number.doubleValue()).toString();
+            this.value = new BigDecimal(number.toString().trim()).toString();
         }
 
     }
@@ -57,6 +57,7 @@ public class SNumber extends Number implements Comparable<SNumber> , java.io.Ser
        }
     }
 
+    @Override
     public boolean isPresent() {
         return value != null;
     }
@@ -81,7 +82,7 @@ public class SNumber extends Number implements Comparable<SNumber> , java.io.Ser
 
 
     public String fmt( String fmt ) {
-       return new DecimalFormat(fmt).format( this.bigDecimalValue() );
+       return new DecimalFormat(fmt).format( this.toBigDecimalExact() );
     }
 
 
@@ -91,34 +92,158 @@ public class SNumber extends Number implements Comparable<SNumber> , java.io.Ser
 
 
 
-    public BigDecimal bigDecimalValue() {
-        return new BigDecimal( this.get() );
+    public BigDecimal toBigDecimal() {
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value );
+        } else {
+            return null;
+        }
     }
 
-    public BigInteger bigIntegerValue() {
-        return new BigDecimal( this.get() ).toBigInteger();
+    public BigDecimal toBigDecimalExact() {
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value );
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+
+    public BigInteger toBigInteger() {
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value ).toBigInteger();
+        } else {
+            return null;
+        }
+    }
+
+    public BigInteger toBigIntegerExact() {
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value ).toBigIntegerExact();
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+
+    public Integer toInteger() {
+        if ( this.isPresent() ) {
+            return Integer.valueOf(new BigDecimal( this.value ).intValue());
+        } else {
+            return null;
+        }
+    }
+
+    public Integer toIntegerExact() {
+        if ( this.isPresent() ) {
+            return Integer.valueOf(new BigDecimal( this.value ).intValueExact());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public Long toLong() {
+        if ( this.isPresent() ) {
+            return Long.valueOf(new BigDecimal( this.value ).longValue());
+        } else {
+            return null;
+        }
+    }
+
+    public Long toLongExact() {
+        if ( this.isPresent() ) {
+            return Long.valueOf(new BigDecimal( this.value ).longValueExact());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public Float toFloat() {
+        if ( this.isPresent() ) {
+            return Float.valueOf(new BigDecimal( this.value ).floatValue());
+        } else {
+            return null;
+        }
+    }
+
+    public Float toFloatExact() {
+        if ( this.isPresent() ) {
+            return Float.valueOf(new BigDecimal( this.value ).floatValue());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+
+
+    public Double toDouble() {
+        if ( this.isPresent() ) {
+            return Double.valueOf(new BigDecimal( this.value ).doubleValue());
+        } else {
+            return null;
+        }
+    }
+
+    public Double toDoubleExact() {
+        if ( this.isPresent() ) {
+            return Double.valueOf(new BigDecimal( this.value ).doubleValue());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public Boolean toBoolean() {
+        if ( this.isPresent() ) {
+            return !(new BigDecimal( this.value ).toBigInteger().compareTo( BigInteger.ZERO ) == 0 );
+        } else {
+            return null;
+        }
+    }
+
+    public Boolean toBooleanExact() {
+        if ( this.isPresent() ) {
+            return !(new BigDecimal( this.value ).intValueExact() == 0);
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
 
 
     @Override
     public int intValue() {
-        return this.bigDecimalValue().intValue();
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value ).intValue();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     @Override
     public long longValue() {
-        return this.bigDecimalValue().longValue();
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value ).longValue();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     @Override
     public float floatValue() {
-        return this.bigDecimalValue().floatValue();
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value ).floatValue();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     @Override
     public double doubleValue() {
-        return this.bigDecimalValue().doubleValue();
+        if ( this.isPresent() ) {
+            return new BigDecimal( this.value ).doubleValue();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
 
@@ -210,7 +335,7 @@ public class SNumber extends Number implements Comparable<SNumber> , java.io.Ser
     @Override
     public int compareTo(SNumber o) {
         if ( this.isPresent() && o.isPresent() ) {
-            return this.bigDecimalValue().compareTo( o.bigDecimalValue() );
+            return this.toBigDecimal().compareTo( o.toBigDecimal() );
         } else if ( ( ! this.isPresent() )&&  ( ! o.isPresent())  ) {
             return 0;
         } else {
@@ -259,6 +384,5 @@ public class SNumber extends Number implements Comparable<SNumber> , java.io.Ser
     public String toString() {
         return this.orElse("<null>");
     }
-
 
 }

@@ -6,11 +6,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
-public class STime implements Comparable<STime>, java.io.Serializable {
+public class STime implements Nullable, Comparable<STime>, java.io.Serializable {
 
     private static final long serialVersionUID = -3750549384074422469L;
 
@@ -60,6 +59,7 @@ public class STime implements Comparable<STime>, java.io.Serializable {
         this.time = date == null ? null : DateUtil.toString( date , DATE_FMT );
     }
 
+    @Override
     public boolean isPresent() {
         return time != null;
     }
@@ -72,9 +72,9 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
         if ( this.isPresent() ) {
             return time;
+        } else {
+            throw new IllegalStateException();
         }
-
-        throw new IllegalStateException();
 
     }
 
@@ -86,9 +86,9 @@ public class STime implements Comparable<STime>, java.io.Serializable {
 
         if ( DATE_FMT.equals( fmt ) ) {
             return this.get();
+        } else {
+            return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
         }
-
-        return DateUtil.str2Str( this.get() , DATE_FMT , fmt );
 
     }
 

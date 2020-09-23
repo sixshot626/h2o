@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -48,6 +49,9 @@ public class ByteConverter implements TypeConverter<Byte> {
 		}
 		if (value.getClass() == Byte.class) {
 			return (Byte) value;
+		}
+		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
+			return null;
 		}
 		if (value instanceof Number) {
 			return Byte.valueOf(((Number)value).byteValue());

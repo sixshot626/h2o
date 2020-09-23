@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -49,13 +50,15 @@ public class IntegerConverter implements TypeConverter<Integer> {
 		if (value.getClass() == Integer.class) {
 			return (Integer) value;
 		}
+		if ( value instanceof SNumber) {
+			return ((SNumber)value).toInteger();
+		}
 		if (value instanceof Number) {
 			return Integer.valueOf(((Number)value).intValue());
 		}
 		if (value instanceof Boolean) {
 			return ((Boolean) value).booleanValue() ? Integer.valueOf(1) : Integer.valueOf(0);
 		}
-
 		try {
 			String stringValue = value.toString().trim();
 			if (StringUtil.startsWithChar(stringValue, '+')) {

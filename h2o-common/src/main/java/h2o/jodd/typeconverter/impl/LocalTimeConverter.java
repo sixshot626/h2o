@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.*;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
@@ -62,6 +63,45 @@ public class LocalTimeConverter implements TypeConverter<LocalTime> {
 		if (value instanceof LocalDate) {
 			throw new TypeConversionException("Can't convert to time just from date: " + value);
 		}
+
+
+		if (value instanceof SDate) {
+			throw new TypeConversionException("Can't convert to time just from date: " + value);
+		}
+
+		if (value instanceof SDateTime) {
+			if (((SDateTime) value).isPresent() ) {
+				return ((SDateTime) value).getTime().toLocalTime();
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof STime) {
+			if (((STime) value).isPresent() ) {
+				return ((STime) value).toLocalTime();
+			} else {
+				return null;
+			}
+		}
+
+		if (value instanceof LTimestamp) {
+			if (((LTimestamp) value).isPresent() ) {
+				return ((LTimestamp) value).toSDateTime().toLocalDateTime().toLocalTime();
+			} else {
+				return null;
+			}
+		}
+
+		if (value instanceof SNumber) {
+			if (((SNumber) value).isPresent() ) {
+				return TimeUtil.fromMilliseconds(((Number)value).longValue()).toLocalTime();
+			} else {
+				return null;
+			}
+		}
+
+
 
 		String stringValue = value.toString().trim();
 

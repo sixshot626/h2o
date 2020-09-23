@@ -25,6 +25,10 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.LTimestamp;
+import h2o.common.lang.SDate;
+import h2o.common.lang.SDateTime;
+import h2o.common.lang.SNumber;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
@@ -79,6 +83,41 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 		if (value instanceof LocalDate) {
 			return new Time(TimeUtil.toMilliseconds((LocalDate) value));
 		}
+
+		if ( value instanceof SDate) {
+			if ( ((SDate) value).isPresent() ) {
+				return new Time(((SDate) value).toDate().getTime());
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SDateTime) {
+			if ( ((SDateTime) value).isPresent() ) {
+				return new Time( ((SDateTime) value).toDate().getTime() );
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof LTimestamp) {
+			if ( ((LTimestamp) value).isPresent() ) {
+				return new Time( ((LTimestamp) value).getValue() );
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SNumber) {
+			if ( ((SNumber) value).isPresent() ) {
+				return new Time(((Number) value).longValue());
+			} else {
+				return null;
+			}
+		}
+
+
+
 		if (value instanceof Number) {
 			return new Time(((Number) value).longValue());
 		}

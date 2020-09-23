@@ -105,8 +105,7 @@ public class STimeConverter implements TypeConverter<STime> {
 		}
 
 		try {
-			long milliseconds = Long.parseLong(stringValue);
-			return new STime(new Date(milliseconds));
+			return STime.from( stringValue , "HHmmss" );
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

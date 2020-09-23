@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 
@@ -45,9 +46,11 @@ public class BigIntegerConverter implements TypeConverter<BigInteger> {
 		if (value == null) {
 			return null;
 		}
-
 		if (value instanceof BigInteger) {
 			return (BigInteger) value;
+		}
+		if ( value instanceof SNumber) {
+			return ((SNumber)value).toBigInteger();
 		}
 		if (value instanceof Number) {
 			return new BigInteger(String.valueOf(((Number)value).longValue()));

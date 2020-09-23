@@ -25,6 +25,10 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.LTimestamp;
+import h2o.common.lang.SDate;
+import h2o.common.lang.SDateTime;
+import h2o.common.lang.SNumber;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
@@ -73,6 +77,40 @@ public class DateConverter implements TypeConverter<Date> {
 		if (value instanceof LocalDate) {
 			return TimeUtil.toDate((LocalDate)value);
 		}
+
+		if ( value instanceof SDate) {
+			if ( ((SDate) value).isPresent() ) {
+				return ((SDate) value).toDate();
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SDateTime) {
+			if ( ((SDateTime) value).isPresent() ) {
+				return ((SDateTime) value).toDate();
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof LTimestamp) {
+			if ( ((LTimestamp) value).isPresent() ) {
+				return new Date(((LTimestamp) value).getValue());
+			} else {
+				return null;
+			}
+		}
+
+		if ( value instanceof SNumber) {
+			if ( ((SNumber) value).isPresent() ) {
+				return new Date(((Number) value).longValue());
+			} else {
+				return null;
+			}
+		}
+
+
 		if (value instanceof Number) {
 			return new Date(((Number) value).longValue());
 		}
