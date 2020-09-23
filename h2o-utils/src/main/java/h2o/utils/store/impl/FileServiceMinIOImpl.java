@@ -6,6 +6,7 @@ import h2o.common.Tools;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.collections.builder.MapBuilder;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.LTimestamp;
 import h2o.common.result.TransResponse;
 import h2o.common.result.TransReturn;
 import h2o.common.result.TransStatus;
@@ -140,7 +141,7 @@ public class FileServiceMinIOImpl implements FileService {
             stat = mc.statObject(bucket, fileId);
 
             FileMeta meta = new FileMeta(stat.bucketName(), stat.name(),
-                    stat.length(), stat.contentType(),
+                    stat.length(), stat.contentType(), new LTimestamp( stat.createdTime().toInstant() ) ,
                     parseExtInfo(stat.httpHeaders()));
 
             return new TransReturn<TriState, FileMeta>().setResult(meta).setStatus(TriState.Success).setSuccess(true);
@@ -172,6 +173,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             ObjectStat stat = mc.statObject(bucket, fileId);
 
+            fileObject.setCreateTime( new LTimestamp(stat.createdTime().toInstant()) );
             fileObject.setContentType( stat.contentType() );
             fileObject.setExtInfo( parseExtInfo( stat.httpHeaders() ) );
 

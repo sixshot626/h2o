@@ -1,5 +1,7 @@
 package h2o.utils.store;
 
+import h2o.common.lang.LTimestamp;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,8 @@ public class FileObject implements java.io.Serializable {
     private final long partSize;
 
     private String contentType;
+
+    private LTimestamp createTime;
 
     private Map<String, String> extInfo;
 
@@ -68,6 +72,14 @@ public class FileObject implements java.io.Serializable {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public LTimestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LTimestamp createTime) {
+        this.createTime = createTime;
     }
 
     public Map<String, String> getExtInfo() {
