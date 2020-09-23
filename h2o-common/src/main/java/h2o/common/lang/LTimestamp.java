@@ -21,8 +21,20 @@ public class LTimestamp implements Nullable, Comparable<LTimestamp>, java.io.Ser
         this.timestamp = null;
     }
 
+    public LTimestamp( long timestamp ) {
+        this.timestamp = Long.valueOf(timestamp);
+    }
+
     public LTimestamp( Long timestamp ) {
         this.timestamp = timestamp;
+    }
+
+    public LTimestamp( SNumber timestamp ) {
+        this.timestamp = timestamp.toLong();
+    }
+
+    public LTimestamp( Instant instant ) {
+        this.timestamp = instant.toEpochMilli();
     }
 
     public LTimestamp( Date date ) {

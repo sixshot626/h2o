@@ -33,11 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static h2o.jodd.util.CharUtil.isAlpha;
-import static h2o.jodd.util.CharUtil.isDigit;
-import static h2o.jodd.util.CharUtil.isPchar;
-import static h2o.jodd.util.CharUtil.isSubDelimiter;
-import static h2o.jodd.util.CharUtil.isUnreserved;
+import static h2o.jodd.util.CharUtil.*;
 
 /**
  * Encodes URLs correctly, significantly faster and more convenient.

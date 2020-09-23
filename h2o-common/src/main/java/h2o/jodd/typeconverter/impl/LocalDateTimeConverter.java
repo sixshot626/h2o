@@ -26,10 +26,10 @@
 package h2o.jodd.typeconverter.impl;
 
 import h2o.common.lang.*;
+import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
-import h2o.jodd.time.TimeUtil;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;

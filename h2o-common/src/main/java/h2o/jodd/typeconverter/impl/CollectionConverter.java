@@ -31,11 +31,7 @@ import h2o.jodd.typeconverter.TypeConverterManager;
 import h2o.jodd.util.CsvUtil;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Collection converter.

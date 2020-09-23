@@ -25,8 +25,8 @@
 
 package h2o.jodd.introspector;
 
-import h2o.jodd.util.TypeCache;
 import h2o.jodd.util.ClassUtil;
+import h2o.jodd.util.TypeCache;
 
 /**
  * Simple cache of {@link MapperFunction} instances.

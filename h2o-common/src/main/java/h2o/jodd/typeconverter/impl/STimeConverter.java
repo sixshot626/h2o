@@ -26,7 +26,6 @@
 package h2o.jodd.typeconverter.impl;
 
 import h2o.common.lang.LTimestamp;
-import h2o.common.lang.SDate;
 import h2o.common.lang.SDateTime;
 import h2o.common.lang.STime;
 import h2o.jodd.time.JulianDate;

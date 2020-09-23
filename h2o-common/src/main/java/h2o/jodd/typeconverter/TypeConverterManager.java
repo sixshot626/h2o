@@ -25,46 +25,10 @@
 
 package h2o.jodd.typeconverter;
 
-import h2o.jodd.util.TypeCache;
-import h2o.jodd.typeconverter.impl.ArrayConverter;
-import h2o.jodd.typeconverter.impl.BigDecimalConverter;
-import h2o.jodd.typeconverter.impl.BigIntegerConverter;
-import h2o.jodd.typeconverter.impl.BooleanArrayConverter;
-import h2o.jodd.typeconverter.impl.BooleanConverter;
-import h2o.jodd.typeconverter.impl.ByteArrayConverter;
-import h2o.jodd.typeconverter.impl.ByteConverter;
-import h2o.jodd.typeconverter.impl.CalendarConverter;
-import h2o.jodd.typeconverter.impl.CharacterArrayConverter;
-import h2o.jodd.typeconverter.impl.CharacterConverter;
-import h2o.jodd.typeconverter.impl.ClassArrayConverter;
-import h2o.jodd.typeconverter.impl.ClassConverter;
-import h2o.jodd.typeconverter.impl.CollectionConverter;
-import h2o.jodd.typeconverter.impl.DateConverter;
-import h2o.jodd.typeconverter.impl.DoubleArrayConverter;
-import h2o.jodd.typeconverter.impl.DoubleConverter;
-import h2o.jodd.typeconverter.impl.FileConverter;
-import h2o.jodd.typeconverter.impl.FloatArrayConverter;
-import h2o.jodd.typeconverter.impl.FloatConverter;
-import h2o.jodd.typeconverter.impl.IntegerArrayConverter;
-import h2o.jodd.typeconverter.impl.IntegerConverter;
-import h2o.jodd.typeconverter.impl.LocalDateConverter;
-import h2o.jodd.typeconverter.impl.LocalDateTimeConverter;
-import h2o.jodd.typeconverter.impl.LocalTimeConverter;
-import h2o.jodd.typeconverter.impl.LocaleConverter;
-import h2o.jodd.typeconverter.impl.LongArrayConverter;
-import h2o.jodd.typeconverter.impl.LongConverter;
-import h2o.jodd.typeconverter.impl.ShortArrayConverter;
-import h2o.jodd.typeconverter.impl.ShortConverter;
-import h2o.jodd.typeconverter.impl.SqlDateConverter;
-import h2o.jodd.typeconverter.impl.SqlTimeConverter;
-import h2o.jodd.typeconverter.impl.SqlTimestampConverter;
-import h2o.jodd.typeconverter.impl.StringArrayConverter;
-import h2o.jodd.typeconverter.impl.StringConverter;
-import h2o.jodd.typeconverter.impl.TimeZoneConverter;
-import h2o.jodd.typeconverter.impl.URIConverter;
-import h2o.jodd.typeconverter.impl.URLConverter;
-import h2o.jodd.typeconverter.impl.UUIDConverter;
+import h2o.common.lang.*;
+import h2o.jodd.typeconverter.impl.*;
 import h2o.jodd.util.ClassUtil;
+import h2o.jodd.util.TypeCache;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -76,11 +40,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -207,6 +167,14 @@ public class TypeConverterManager {
 		register(BigInteger.class, new BigIntegerConverter());
 		register(BigDecimal[].class, new ArrayConverter<>(this, BigDecimal.class));
 		register(BigInteger[].class, new ArrayConverter<>(this, BigInteger.class));
+
+		register(SNumber.class, new SNumberConverter());
+
+		register(SDate.class, new SDateConverter());
+		register(STime.class, new STimeConverter());
+		register(SDateTime.class, new SDateTimeConverter());
+		register(LTimestamp.class, new LTimestampConverter());
+
 
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());

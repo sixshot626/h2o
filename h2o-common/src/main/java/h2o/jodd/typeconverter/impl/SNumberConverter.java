@@ -23,17 +23,39 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package h2o.jodd.introspector;
+package h2o.jodd.typeconverter.impl;
 
-import java.lang.annotation.*;
+import h2o.common.lang.SNumber;
+import h2o.jodd.typeconverter.TypeConversionException;
+import h2o.jodd.typeconverter.TypeConverter;
 
 /**
- * Value or type mapper.
- * @see MapperFunction
+ * Converts given object to <code>BigDecimal</code>.
+ * Conversion rules:
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li>object is converted to string, trimmed, and then converted if possible</li>
+ * </ul>
  */
-@Documented
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-public @interface Mapper {
-	Class<? extends MapperFunction> value();
+public class SNumberConverter implements TypeConverter<SNumber> {
+
+	@Override
+	public SNumber convert(final Object value) {
+		if (value == null) {
+			return new SNumber();
+		}
+		if (value instanceof SNumber) {
+			return (SNumber) value;
+		}
+		if ( value instanceof Number ) {
+			return new SNumber((Number) value);
+		}
+		try {
+			return new SNumber(value.toString().trim());
+		} catch (NumberFormatException nfex) {
+			throw new TypeConversionException(value, nfex);
+		}
+	}
+
 }

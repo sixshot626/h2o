@@ -32,11 +32,7 @@ import h2o.jodd.util.Wildcard;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Map file extensions to MIME types. Based on the most recent Apache mime.types file.

@@ -25,11 +25,14 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.*;
-import h2o.jodd.typeconverter.TypeConversionException;
-import h2o.jodd.typeconverter.TypeConverter;
+import h2o.common.lang.LTimestamp;
+import h2o.common.lang.SDate;
+import h2o.common.lang.SDateTime;
+import h2o.common.lang.SNumber;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
+import h2o.jodd.typeconverter.TypeConversionException;
+import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
 
 import java.time.LocalDate;

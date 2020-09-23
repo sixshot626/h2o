@@ -25,8 +25,8 @@
 
 package h2o.jodd.io;
 
-import h2o.jodd.util.SystemUtil;
 import h2o.jodd.util.StringPool;
+import h2o.jodd.util.SystemUtil;
 
 import java.io.File;
 

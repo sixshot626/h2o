@@ -27,12 +27,7 @@ package h2o.jodd.io;
 
 import h2o.jodd.util.StringPool;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 /**
  * Consumes a stream.

@@ -25,36 +25,69 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.LTimestamp;
 import h2o.common.lang.SNumber;
+import h2o.jodd.time.JulianDate;
+import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
+import h2o.jodd.util.StringUtil;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Converts given object to <code>BigDecimal</code>.
+ * Converts given object to a <code>Long</code>.
  * Conversion rules:
  * <ul>
  * <li><code>null</code> value is returned as <code>null</code></li>
  * <li>object of destination type is simply casted</li>
- * <li>object is converted to string, trimmed, and then converted if possible</li>
+ * <li>object is converted to string, trimmed, and then converted if possible.</li>
  * </ul>
+ * Number string may start with plus and minus sign.
  */
-public class BigDecimalConverter implements TypeConverter<BigDecimal> {
+public class LTimestampConverter implements TypeConverter<LTimestamp> {
 
-	@Override
-	public BigDecimal convert(final Object value) {
+	public LTimestamp convert(final Object value) {
+
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof BigDecimal) {
-			return (BigDecimal) value;
+
+		if (value instanceof LTimestamp) {
+			return (LTimestamp)value;
 		}
-		if ( value instanceof SNumber ) {
-			return ((SNumber)value).toBigDecimal();
+
+		if (value instanceof Date) {
+			return new LTimestamp(((Date)value).getTime());
 		}
+		if (value instanceof Calendar) {
+			return new LTimestamp(((Calendar)value).getTimeInMillis());
+		}
+		if (value instanceof JulianDate) {
+			return new LTimestamp(((JulianDate) value).toMilliseconds());
+		}
+		if (value instanceof LocalDateTime) {
+			return new LTimestamp(TimeUtil.toMilliseconds((LocalDateTime)value));
+		}
+
+		if (value.getClass() == Long.class) {
+			return new LTimestamp((Long) value);
+		}
+		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
+			return null;
+		}
+		if (value instanceof Number) {
+			return new LTimestamp(Long.valueOf(((Number)value).longValue()));
+		}
+
 		try {
-			return new BigDecimal(value.toString().trim());
+			String stringValue = value.toString().trim();
+			if (StringUtil.startsWithChar(stringValue, '+')) {
+				stringValue = stringValue.substring(1);
+			}
+			return new LTimestamp( Long.valueOf(stringValue) );
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
