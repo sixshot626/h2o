@@ -25,6 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.Nullable;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.ArraysUtil;
@@ -50,6 +51,9 @@ public class StringConverter implements TypeConverter<String> {
 	@Override
 	public String convert(final Object value) {
 		if (value == null) {
+			return null;
+		}
+		if ( value instanceof Nullable && !((Nullable) value).isPresent() ) {
 			return null;
 		}
 		
