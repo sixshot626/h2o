@@ -25,8 +25,6 @@ import java.util.Map;
 
 public abstract class AbstractDao implements Dao {
 
-    private static final Logger log = LoggerFactory.getLogger( AbstractDao.class.getName() );
-
 
 	private volatile ArgProcessor argProcessor;
 
