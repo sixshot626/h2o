@@ -27,7 +27,7 @@ public final class DbUtil {
 	}
 
 
-	public static final SqlBuilder sqlBuilder 			= DBFACTORY.getSqlBuilder();
+	public static final SqlBuilder 		sqlBuilder 			= DBFACTORY.getSqlBuilder();
 	public static final TemplateUtil 	sqlTemplateUtil 	= DBFACTORY.getSqlTemplateUtil();
 
 
