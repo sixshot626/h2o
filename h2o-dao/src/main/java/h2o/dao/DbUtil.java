@@ -3,7 +3,6 @@ package h2o.dao;
 
 import h2o.common.collections.builder.MapBuilder;
 import h2o.common.dao.SqlTable;
-import h2o.common.ioc.Factory;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.dao.exception.DaoException;
 import org.slf4j.Logger;
@@ -16,33 +15,24 @@ public final class DbUtil {
 
     private static final Logger log = LoggerFactory.getLogger( DbUtil.class.getName() );
 
-    public static final String DBUTIL_BEANID           = "dbUtil";
-    public static final String DB_BEANID               = "db";
-    public static final String DAO_BEANID              = "dao";
-
-    public static final String SQLTABLE_BEANID         = "sqlTable";
-    public static final String SQLBUILDER_BEANID       = "sqlBuilder";
-    public static final String SQLTEMPLATEUTIL_BEANID  = "sqlTemplateUtil";
-
     public static final String DEFAULT_DATASOURCE_NAME = "default";
 
-    public static final Factory dbConfig = DbConfigProvider.getDbConfig();
+    public static final DBFactory DBFACTORY = DBFactoryProvider.getDbFactory();
 
 	public static final SqlTable sqlTable = newSqlTable();
 
 	public static SqlTable newSqlTable() {
-		return dbConfig.get(SQLTABLE_BEANID);
+		return DBFACTORY.getSqlTable();
 	}
 
 
-	public static final SqlBuilder 		sqlBuilder 			= dbConfig.get(SQLBUILDER_BEANID);
-	public static final TemplateUtil 	sqlTemplateUtil 	= dbConfig.get(SQLTEMPLATEUTIL_BEANID);
+	public static final SqlBuilder 		sqlBuilder 			= DBFACTORY.getSqlBuilder();
+	public static final TemplateUtil 	sqlTemplateUtil 	= DBFACTORY.getSqlTemplateUtil();
 
 
 	private static class S {
-		public static final DbUtil dbUtil = dbConfig.get(DBUTIL_BEANID);
+		public static final DbUtil dbUtil = DBFACTORY.getDbUtil();
 	}
-
 
 
 	private final Map<String,DataSource> dsMap = MapBuilder.newConcurrentHashMap();
@@ -81,9 +71,8 @@ public final class DbUtil {
 	}
 
 	public static Db getDb( String dsName ){
-		return dbConfig.get(DB_BEANID , dsName , getDataSource(dsName));
+		return DBFACTORY.getDb( dsName );
 	}
-
 
 
 

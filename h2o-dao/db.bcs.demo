@@ -8,17 +8,17 @@ argProcessor    = 1 h2o.dao.impl.orm.DefaultArgProcessor();
 ormProcessor    = 1 h2o.dao.impl.orm.DefaultOrmProcessor();
 pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
 
-
+/*
 dao = * h2o.dao.impl.DaoImpl( $1 , $2 ).setArgProcessor( argProcessor )
 									   .setOrmProcessor( ormProcessor )
-									   .setPagingProcessor( pagingProcessor );
+									   .setPagingProcessor( pagingProcessor ); */
 
 
 scopeManager        = 1 h2o.dao.impl.transaction.ScopeManagerImpl();
 transactionManager  = 1 h2o.dao.impl.transaction.TransactionManagerImpl();
 
 
-db 	= * h2o.dao.impl.DbImpl( $0 , $1 ).setScopeManager( scopeManager )
+db 	= * h2o.dao.impl.DbImpl( $0 , h2o.dao.DbUtil.getDataSource($0) ).setScopeManager( scopeManager )
                                       .setTransactionManager( transactionManager );
 
 

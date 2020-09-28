@@ -36,7 +36,14 @@ public class DbImpl extends AbstractDb implements Db {
 	}
 	
 	protected Dao createDao( ButterflyDb bdb , boolean autoClose ) {
-		return DbUtil.dbConfig.get( DbUtil.DAO_BEANID, dataSourceName, bdb, autoClose);
+
+		DaoImpl daoImpl = new DaoImpl( bdb , autoClose );
+
+		daoImpl.setArgProcessor( DbUtil.DBFACTORY.getArgProcessor() );
+		daoImpl.setOrmProcessor( DbUtil.DBFACTORY.getOrmProcessor() );
+		daoImpl.setPagingProcessor( DbUtil.DBFACTORY.getPagingProcessor() );
+
+		return daoImpl;
 	}
 
 }
