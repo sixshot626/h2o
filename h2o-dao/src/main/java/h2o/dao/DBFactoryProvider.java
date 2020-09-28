@@ -1,7 +1,6 @@
 package h2o.dao;
 
 import h2o.common.Mode;
-import h2o.common.Tools;
 import h2o.common.ioc.ButterflyFactory;
 import h2o.dao.impl.DBFactoryImpl;
 import org.slf4j.Logger;

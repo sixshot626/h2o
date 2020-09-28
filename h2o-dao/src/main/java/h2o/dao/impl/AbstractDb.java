@@ -1,7 +1,9 @@
 package h2o.dao.impl;
 
 import h2o.common.exception.ExceptionUtil;
-import h2o.dao.*;
+import h2o.dao.Dao;
+import h2o.dao.DaoCallback;
+import h2o.dao.Db;
 import h2o.dao.transaction.ScopeManager;
 import h2o.dao.transaction.TransactionManager;
 import org.slf4j.Logger;

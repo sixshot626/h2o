@@ -12,8 +12,8 @@ import h2o.common.dao.butterflydb.impl.PreparedStatementManagerBatch;
 import h2o.common.exception.ExceptionUtil;
 import h2o.dao.Dao;
 import h2o.dao.ResultSetCallback;
-import h2o.dao.sql.SqlSource;
 import h2o.dao.exception.DaoException;
+import h2o.dao.sql.SqlSource;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
