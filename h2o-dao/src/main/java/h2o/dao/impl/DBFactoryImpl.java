@@ -7,6 +7,9 @@ import h2o.dao.*;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.sql.SqlBuilder;
+import h2o.dao.transaction.ScopeManager;
+import h2o.dao.transaction.TransactionManager;
 
 public class DBFactoryImpl implements DBFactory {
 

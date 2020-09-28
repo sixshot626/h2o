@@ -6,6 +6,7 @@ import h2o.dao.exception.DaoException;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.sql.SqlSource;
 
 import javax.sql.DataSource;
 import java.io.Closeable;

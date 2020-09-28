@@ -1,4 +1,4 @@
-package h2o.dao;
+package h2o.dao.sql;
 
 import h2o.common.collections.builder.MapBuilder;
 import h2o.dao.colinfo.ColInfo;
@@ -28,7 +28,7 @@ public class SqlBuilder {
 	}
 	
 
-	public SqlSource buildInsertSql( Object bean  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
+	public SqlSource buildInsertSql(Object bean  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
 		return this.buildInsertSql(false, false, bean, attrNames , skipAttrNames );
 	}
 

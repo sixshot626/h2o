@@ -1,6 +1,6 @@
 package h2o.dao.impl.sql;
 
-import h2o.dao.SqlSource;
+import h2o.dao.sql.SqlSource;
 
 import java.util.Map;
 

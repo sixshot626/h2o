@@ -1,7 +1,7 @@
 package h2o.dao.impl.sql;
 
 import h2o.dao.DbUtil;
-import h2o.dao.SqlSource;
+import h2o.dao.sql.SqlSource;
 
 public class PathCfgSql extends TSql implements SqlSource {	
 	

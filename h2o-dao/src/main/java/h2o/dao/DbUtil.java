@@ -5,6 +5,7 @@ import h2o.common.collections.builder.MapBuilder;
 import h2o.common.dao.SqlTable;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.dao.exception.DaoException;
+import h2o.dao.sql.SqlBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public final class DbUtil {
 	}
 
 
-	public static final SqlBuilder 		sqlBuilder 			= DBFACTORY.getSqlBuilder();
+	public static final SqlBuilder sqlBuilder 			= DBFACTORY.getSqlBuilder();
 	public static final TemplateUtil 	sqlTemplateUtil 	= DBFACTORY.getSqlTemplateUtil();
 
 

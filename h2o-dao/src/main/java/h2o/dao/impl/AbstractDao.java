@@ -7,14 +7,12 @@ import h2o.common.data.domain.PageInfo;
 import h2o.common.data.domain.PageRequest;
 import h2o.dao.Dao;
 import h2o.dao.ResultSetCallback;
-import h2o.dao.SqlSource;
+import h2o.dao.sql.SqlSource;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;

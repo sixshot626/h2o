@@ -1,4 +1,6 @@
-package h2o.dao;
+package h2o.dao.transaction;
+
+import h2o.dao.Dao;
 
 public interface TransactionManager {
 	

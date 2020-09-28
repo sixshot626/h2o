@@ -1,4 +1,4 @@
-package h2o.dao;
+package h2o.dao.sql;
 
 import java.util.Map;
 

@@ -5,6 +5,9 @@ import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.sql.SqlBuilder;
+import h2o.dao.transaction.ScopeManager;
+import h2o.dao.transaction.TransactionManager;
 
 public interface DBFactory {
 

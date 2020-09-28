@@ -3,7 +3,7 @@ package h2o.dao.impl.transaction;
 
 import com.jenkov.db.scope.ScopingDataSource;
 import h2o.dao.Dao;
-import h2o.dao.TransactionManager;
+import h2o.dao.transaction.TransactionManager;
 
 import javax.sql.DataSource;
 
