@@ -18,15 +18,12 @@ public interface DBFactory {
     ScopeManager getScopeManager();
     TransactionManager getTransactionManager();
 
-
     ArgProcessor getArgProcessor();
     OrmProcessor getOrmProcessor();
     PagingProcessor getPagingProcessor();
 
-
-
+    Db      getDb( String dateSourceName );
 
     DbUtil  getDbUtil();
-    Db      getDb( String dateSourceName );
 
 }
