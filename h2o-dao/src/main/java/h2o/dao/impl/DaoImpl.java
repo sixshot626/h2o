@@ -3,6 +3,7 @@ package h2o.dao.impl;
 import com.jenkov.db.itf.IDaos;
 import com.jenkov.db.itf.IResultSetProcessor;
 import com.jenkov.db.itf.PersistenceException;
+import h2o.common.Mode;
 import h2o.common.collections.CollectionUtil;
 import h2o.common.collections.builder.ListBuilder;
 import h2o.common.collections.tuple.Tuple2;
@@ -14,6 +15,8 @@ import h2o.dao.Dao;
 import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.sql.SqlSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -26,6 +29,10 @@ import static h2o.common.dao.util.SqlParameterUtil.toPreparedSqlAndPara;
 
 
 public class DaoImpl extends AbstractDao implements Dao {
+
+	private static final Logger log = LoggerFactory.getLogger( Dao.class.getName() );
+
+	private static boolean SHOWSQL = !Mode.isUserMode("DONT_SHOW_SQL");
 
 	private final boolean autoClose;
 
@@ -64,6 +71,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 			Map<String, Object> paramMap = this.argProc(args);
 			String sql = sqlSource.getSql( paramMap );
 
+			if ( SHOWSQL ) {
+				log.info("getField({})#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", fieldName, sql, paramMap );
+			}
+
 			 if(fieldName == null) {
 				 return getBDao().readObject(sql, paramMap);
 			 } else {
@@ -83,6 +94,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 			Map<String, Object> paramMap = this.argProc(args);
 			String sql = sqlSource.getSql( paramMap );
+
+			if ( SHOWSQL ) {
+				log.info("loadFields({})#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", fieldName, sql, paramMap );
+			}
 
 			return getBDao().read(sql, new IResultSetProcessor() {
 				
@@ -119,6 +134,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 			Map<String, Object> paramMap = this.argProc(args);
 			String sql = sqlSource.getSql( paramMap );
 
+			if ( SHOWSQL ) {
+				log.info("get#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+			}
+
 			return getBDao().readMap(sql, paramMap);
 
 		} catch (Exception e) {
@@ -131,6 +150,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 		try {
 			Map<String, Object> paramMap = this.argProc(args);
 			String sql = sqlSource.getSql( paramMap );
+
+			if ( SHOWSQL ) {
+				log.info("load#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+			}
 
 			return getBDao().readMapList(sql, paramMap);
 
@@ -150,6 +173,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 		try {
 			Map<String, Object> paramMap = this.argProc(args);
 			String sql = sqlSource.getSql( paramMap );
+
+			if ( SHOWSQL ) {
+				log.info("load(ResultSetCallback)#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+			}
 
 			return (T) getBDao().read(sql, new IResultSetProcessor() {
 
@@ -214,6 +241,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 			Map<String, Object> paramMap = this.argProc(args);
 			String sql = sqlSource.getSql( paramMap );
 
+			if ( SHOWSQL ) {
+				log.info("update#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+			}
+
 			return getBDao().update(sql, paramMap);
 
 		} catch (Exception e) {
@@ -250,6 +281,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 				nArgs.add( sqlAndPara.e1 );
 				nSql = sqlAndPara.e0;
 				
+			}
+
+			if ( SHOWSQL ) {
+				log.info("batchUpdate#\r\n          SQL:{{}};\r\n", nSql );
 			}
 
 			PreparedStatementManagerBatch preparedStatementManagerBatch = new PreparedStatementManagerBatch(nArgs);

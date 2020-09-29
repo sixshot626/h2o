@@ -21,9 +21,8 @@ public class PreparedStatementManagerBatch implements IPreparedStatementManager 
 
     private static final Logger log = LoggerFactory.getLogger( PreparedStatementManagerBatch.class.getName() );
 
-    private static boolean SHOWSQL = Mode.isUserMode("DONT_SHOW_SQL") ? false : true;
-	
-	
+	private static boolean SHOWSQL = Mode.isUserMode("SHOW_BUTTERFLY_SQL");
+
 	private final Collection<?> batch_parameters;
 	
 	private int[] updateRows;

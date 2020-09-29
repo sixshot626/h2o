@@ -23,7 +23,7 @@ public class ButterflyDao {
 
     private static final Logger log = LoggerFactory.getLogger( ButterflyDao.class.getName() );
 
-    private static boolean SHOWSQL = Mode.isUserMode("DONT_SHOW_SQL") ? false : true;
+    private static boolean SHOWSQL = Mode.isUserMode("SHOW_BUTTERFLY_SQL");
 
     private final IDaos daos;
 	private final IJdbcDao jdbcDao;
