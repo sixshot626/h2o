@@ -13,23 +13,25 @@ import h2o.dao.sql.SqlBuilder;
 import h2o.dao.transaction.ScopeManager;
 import h2o.dao.transaction.TransactionManager;
 
+import java.util.Optional;
+
 public class DBFactoryImpl implements DBFactory {
 
-    protected static final String DBUTIL_BEANID                 = "dbUtil";
-    protected static final String DB_BEANID                     = "db";
+    protected static final String DBUTIL_BEANID = "dbUtil";
+    protected static final String DB_BEANID = "db";
 
-    protected static final String SQLTABLE_BEANID               = "sqlTable";
-    protected static final String SQLBUILDER_BEANID             = "sqlBuilder";
-    protected static final String SQLTEMPLATEUTIL_BEANID        = "sqlTemplateUtil";
-
-
-    protected static final String ARGPROCESSOR_BEANID           = "argProcessor";
-    protected static final String ORMPROCESSOR_BEANID           = "ormProcessor";
-    protected static final String PAGINGPROCESSOR_BEANID        = "pagingProcessor";
+    protected static final String SQLTABLE_BEANID = "sqlTable";
+    protected static final String SQLBUILDER_BEANID = "sqlBuilder";
+    protected static final String SQLTEMPLATEUTIL_BEANID = "sqlTemplateUtil";
 
 
-    protected static final String SCOPEMANAGER_BEANID           = "scopeManager";
-    protected static final String TRANSACTIONMANAGER_BEANID     = "transactionManager";
+    protected static final String ARGPROCESSOR_BEANID = "argProcessor";
+    protected static final String ORMPROCESSOR_BEANID = "ormProcessor";
+    protected static final String PAGINGPROCESSOR_BEANID = "pagingProcessor";
+
+
+    protected static final String SCOPEMANAGER_BEANID = "scopeManager";
+    protected static final String TRANSACTIONMANAGER_BEANID = "transactionManager";
 
     protected final Factory factory;
 
@@ -53,16 +55,6 @@ public class DBFactoryImpl implements DBFactory {
     }
 
     @Override
-    public ScopeManager getScopeManager() {
-        return factory.get(SCOPEMANAGER_BEANID);
-    }
-
-    @Override
-    public TransactionManager getTransactionManager() {
-        return factory.get(TRANSACTIONMANAGER_BEANID);
-    }
-
-    @Override
     public ArgProcessor getArgProcessor() {
         return factory.get(ARGPROCESSOR_BEANID);
     }
@@ -73,17 +65,27 @@ public class DBFactoryImpl implements DBFactory {
     }
 
     @Override
-    public PagingProcessor getPagingProcessor() {
-        return factory.get(PAGINGPROCESSOR_BEANID);
+    public Optional<PagingProcessor> getPagingProcessor() {
+        return Optional.ofNullable(factory.silentlyGet(PAGINGPROCESSOR_BEANID));
+    }
+
+    @Override
+    public Optional<ScopeManager> getScopeManager() {
+        return Optional.ofNullable(factory.silentlyGet(SCOPEMANAGER_BEANID));
+    }
+
+    @Override
+    public Optional<TransactionManager> getTransactionManager() {
+        return Optional.ofNullable(factory.silentlyGet(TRANSACTIONMANAGER_BEANID));
+    }
+
+    @Override
+    public Db getDb(String dateSourceName) {
+        return factory.get(DB_BEANID, dateSourceName);
     }
 
     @Override
     public DbUtil getDbUtil() {
         return factory.get(DBUTIL_BEANID);
-    }
-
-    @Override
-    public Db getDb(String dateSourceName) {
-        return factory.get(DB_BEANID , dateSourceName );
     }
 }

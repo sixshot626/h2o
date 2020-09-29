@@ -9,21 +9,28 @@ import h2o.dao.sql.SqlBuilder;
 import h2o.dao.transaction.ScopeManager;
 import h2o.dao.transaction.TransactionManager;
 
+import java.util.Optional;
+
 public interface DBFactory {
 
     SqlTable getSqlTable();
+
     TemplateUtil getSqlTemplateUtil();
+
     SqlBuilder getSqlBuilder();
 
-    ScopeManager getScopeManager();
-    TransactionManager getTransactionManager();
-
     ArgProcessor getArgProcessor();
+
     OrmProcessor getOrmProcessor();
-    PagingProcessor getPagingProcessor();
 
-    Db      getDb( String dateSourceName );
+    Optional<PagingProcessor> getPagingProcessor();
 
-    DbUtil  getDbUtil();
+    Optional<ScopeManager> getScopeManager();
+
+    Optional<TransactionManager> getTransactionManager();
+
+    Db getDb(String dateSourceName);
+
+    DbUtil getDbUtil();
 
 }
