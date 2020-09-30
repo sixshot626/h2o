@@ -50,7 +50,7 @@ public class FileServiceMinIOImpl implements FileService {
     @Override
     public String createFileId() {
         Date date = new Date();
-        return DateUtil.toString( new Date() , "yyyyMMdd" ) + "/FS" +  DateUtil.toString( new Date() , "HHmmss" )  + idGenerator.makeId();
+        return DateUtil.toString( date , "yyyyMMdd" ) + "/FS" +  DateUtil.toString( date , "HHmmss" )  + idGenerator.makeId();
     }
 
     @Override
