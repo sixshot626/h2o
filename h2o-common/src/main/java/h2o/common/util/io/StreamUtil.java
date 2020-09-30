@@ -37,10 +37,9 @@ public class StreamUtil {
 
     public static URL getURL( String path ) {
 
-        log.debug("path -- {}", path);
         URL url = ConfigurationUtils.locate(path);
 
-        log.debug("url -- {}", url);
+        log.info("Find [{}] ===> {}", path , url );
 
         return url;
 
