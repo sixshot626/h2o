@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class SNumber extends Number implements Nullable, Comparable<SNumber> , java.io.Serializable {
+public class SNumber extends Number implements NullableValue, Comparable<SNumber> , java.io.Serializable {
 
     private static final long serialVersionUID = -263082729693656131L;
 

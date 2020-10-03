@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class SDate implements Nullable, Comparable<SDate>, java.io.Serializable {
+public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializable {
 
     private static final long serialVersionUID = 9012516608507340072L;
 

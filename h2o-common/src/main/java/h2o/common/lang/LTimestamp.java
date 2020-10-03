@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class LTimestamp implements Nullable, Comparable<LTimestamp>, java.io.Serializable {
+public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.io.Serializable {
 
     private static final long serialVersionUID = -6995945806906201103L;
 

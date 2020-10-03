@@ -1,6 +1,6 @@
 package h2o.common.lang;
 
-public interface Nullable {
+public interface NullableValue {
 
     boolean isPresent();
 
