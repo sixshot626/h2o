@@ -29,14 +29,12 @@ import java.sql.SQLException;
 public class Daos implements IDaos {
 
     private final Connection                connection;
-    private final IPersistenceConfiguration configuration;
     private final IJdbcDao                  jdbcDao;
     private final IMapDao                   mapDao;
 
 
-    public Daos(Connection connection, IPersistenceConfiguration configuration) {
+    public Daos(Connection connection) {
         this.connection = connection;
-        this.configuration = configuration;
         this.jdbcDao = new JdbcDao(this);
         this.mapDao = new MapDao(this);
     }
@@ -44,12 +42,6 @@ public class Daos implements IDaos {
     public Connection getConnection() {
         return connection;
     }
-
-    public IPersistenceConfiguration getConfiguration() {
-        return configuration;
-    }
-
-
 
     public IJdbcDao getJdbcDao() {
         return jdbcDao;

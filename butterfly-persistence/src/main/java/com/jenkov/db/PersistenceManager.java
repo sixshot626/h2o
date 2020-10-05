@@ -19,9 +19,7 @@
 package com.jenkov.db;
 
 import com.jenkov.db.impl.Daos;
-import com.jenkov.db.impl.PersistenceConfiguration;
 import com.jenkov.db.itf.IDaos;
-import com.jenkov.db.itf.IPersistenceConfiguration;
 import com.jenkov.db.itf.PersistenceException;
 import com.jenkov.db.scope.ScopingDataSource;
 
@@ -57,25 +55,16 @@ import java.sql.SQLException;
  *
  * @author Jakob Jenkov - Copyright 2005 Jenkov Development
  */
-public final class PersistenceManager {
+public class PersistenceManager {
 
-    private final IPersistenceConfiguration configuration;
+    private final DataSource dataSource;
 
-    /**
-     * Creates a PersistenceManager instance and stores the given DataSource in the default persistence configuration.
-     * @param dataSource
-     */
+
     public PersistenceManager(DataSource dataSource){
-        this.configuration = new PersistenceConfiguration( dataSource );
+        this.dataSource = dataSource;
     }
 
-//    /**
-//     * Returns the persistence configuration of this PersistenceManager.
-//     * @return default persistence configuration of this PersistenceManager.
-//     */
-//    public IPersistenceConfiguration getConfiguration(){
-//        return this.configuration;
-//    }
+
 
     public ScopingDataSource getScopingDataSource(){
         if(!(getDataSource() instanceof ScopingDataSource))
@@ -85,13 +74,16 @@ public final class PersistenceManager {
     }
 
     /**
-     * Returns the <code>DataSource</code> used by this <code>PersistenceManager</code> .
      * @return the <code>DataSource</code> used by this <code>PersistenceManager</code> .
      */
     public DataSource getDataSource(){
-        return this.configuration.getDataSource();
+        return this.dataSource;
     }
 
+
+    protected Connection getConnection() throws SQLException {
+        return this.getDataSource().getConnection();
+    }
 
 
     /** Creates an IDaos instance containing a connection obtained from the DataSource set on
@@ -102,7 +94,7 @@ public final class PersistenceManager {
      */
     public IDaos createDaos() throws PersistenceException {
         try {
-            return createDaos(configuration.getDataSource().getConnection());
+            return createDaos(this.getConnection());
         } catch (SQLException e) {
             throw new PersistenceException("Error creating IDaos instance", e);
         }
@@ -113,7 +105,7 @@ public final class PersistenceManager {
      * @return An IDaos instance containing the connection passed as parameter.
      */
     public IDaos createDaos(Connection connection){
-        return new Daos(connection, configuration);
+        return new Daos(connection);
     }
 
 
