@@ -32,16 +32,6 @@ public interface IDaos {
      */
     public Connection                getConnection();
 
-    /**
-     * Returns the persistence configuration used by the PersistenceManager where this IDaos came from.
-     * Some of the DAO's returned by this IDaos instance also use this persistence configuration.
-     * Most of the time you will not need to access the persistence configuration.
-     *
-     * @return The persistence configuration used by the PersistenceManager where this IDaos came from.
-     */
-    public IPersistenceConfiguration getConfiguration();
-
-
 
     /**
      * Returns an IJdbcDao instance. If this method is called more than once, the same IJdbcDao

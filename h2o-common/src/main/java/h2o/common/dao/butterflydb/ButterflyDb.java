@@ -31,7 +31,11 @@ public class ButterflyDb {
 
 	public final PersistenceManager persistenceManager;
 
-	public ButterflyDb(DataSource dataSource) {		
+	public ButterflyDb(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
+
+	public ButterflyDb(DataSource dataSource) {
 		this.persistenceManager = new PersistenceManager(dataSource);
 	}
 
