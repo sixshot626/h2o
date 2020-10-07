@@ -151,4 +151,20 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
         this.result = result;
         return this;
     }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TransReturn{");
+        sb.append("finalState=").append(finalState);
+        sb.append(", success=").append(success);
+        sb.append(", code='").append(code).append('\'');
+        sb.append(", msg='").append(msg).append('\'');
+        sb.append(", status=").append(status);
+        sb.append(", presentResult=").append(presentResult);
+        sb.append(", result=").append(result);
+        sb.append(", e=").append(e);
+        sb.append('}');
+        return sb.toString();
+    }
 }
