@@ -11,7 +11,11 @@ import h2o.common.lang.Var;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
 import h2o.flow.pvm.elements.SignalNode;
-import h2o.flow.pvm.runtime.*;
+import h2o.flow.pvm.exception.FlowException;
+import h2o.flow.pvm.exception.NoLineExcepion;
+import h2o.flow.pvm.runtime.FlowTransactionManager;
+import h2o.flow.pvm.runtime.NodeRunScopeObject;
+import h2o.flow.pvm.runtime.ProcessRunListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +57,7 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireEnterNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node , boolean signal , Object[] args ) {
+	private void fireEnterNodeEvent(NodeRunScopeObject nodeRunScoeObject , RunContext runContext , Node node , boolean signal , Object[] args ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.enterNode( nodeRunScoeObject , runContext , node , signal , args );
@@ -61,7 +65,7 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireLeaveNodeEvent( NodeRunScoeObject nodeRunScoeObject , RunContext runContext , Node node , ExecResult execResult ) {
+	private void fireLeaveNodeEvent(NodeRunScopeObject nodeRunScoeObject , RunContext runContext , Node node , ExecResult execResult ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.leaveNode( nodeRunScoeObject ,  runContext , node , execResult );
@@ -126,9 +130,6 @@ public final class ProcessVirtualMachine {
 
 		Object transactionObj = tx == null ? null : tx.beginTransaction(runContext);
 
-		runContext.setTransactionStatus( transactionObj );
-
-		
 		try {
 			
 			fireStartEvent( runContext , node , isSignal , args );
@@ -185,7 +186,7 @@ public final class ProcessVirtualMachine {
 
 		public ExecResult runNode( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException {
 
-			NodeRunScoeObject nodeRunScoeObject = new NodeRunScoeObject();
+			NodeRunScopeObject nodeRunScoeObject = new NodeRunScopeObject();
 
 			fireEnterNodeEvent( nodeRunScoeObject , runContext, node , isSignal , args );
 

@@ -3,6 +3,8 @@
  */
 package h2o.flow.pvm.runtime;
 
+import h2o.flow.pvm.RunContext;
+
 public interface FlowTransactionManager {
 
 	Object beginTransaction( RunContext runContext );

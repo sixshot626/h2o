@@ -1,6 +1,4 @@
-package h2o.flow.pvm.runtime;
-
-import h2o.flow.pvm.FlowException;
+package h2o.flow.pvm.exception;
 
 public class NoLineExcepion extends FlowException {
 

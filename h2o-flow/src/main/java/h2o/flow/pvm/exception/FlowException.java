@@ -1,7 +1,7 @@
 /**
  * @author 张建伟
  */
-package h2o.flow.pvm;
+package h2o.flow.pvm.exception;
 
 public abstract class FlowException extends Exception {
 

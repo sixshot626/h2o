@@ -1,4 +1,4 @@
-package h2o.flow.pvm.runtime;
+package h2o.flow.pvm;
 
 import h2o.common.collections.builder.ListBuilder;
 import h2o.flow.pvm.elements.Line;

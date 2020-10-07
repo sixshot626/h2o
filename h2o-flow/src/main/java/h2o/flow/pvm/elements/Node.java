@@ -3,9 +3,9 @@
  */
 package h2o.flow.pvm.elements;
 
-import h2o.flow.pvm.FlowException;
-import h2o.flow.pvm.runtime.ExecResult;
-import h2o.flow.pvm.runtime.RunContext;
+import h2o.flow.pvm.ExecResult;
+import h2o.flow.pvm.RunContext;
+import h2o.flow.pvm.exception.FlowException;
 
 public interface Node extends FlowElement {
 
