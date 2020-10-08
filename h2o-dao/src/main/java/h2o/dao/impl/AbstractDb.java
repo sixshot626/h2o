@@ -51,11 +51,11 @@ public abstract class AbstractDb implements Db {
 
 		try {
 			
-			return daoCallback.doCallBack(dao);
+			return daoCallback.doCallback( dao , scope );
 			
 		} catch (Exception e) {
 
-			log.debug("doCallBack",e);
+			log.debug("doCallback",e);
 			throw ExceptionUtil.toRuntimeException(e);
 
 		} finally {
@@ -88,7 +88,7 @@ public abstract class AbstractDb implements Db {
 
 		try {
 			
-			T t = daoCallback.doCallBack(dao);
+			T t = daoCallback.doCallback(dao , txObj);
 
 			if ( txManager != null ) {
 				txManager.commit(txObj);
@@ -98,7 +98,7 @@ public abstract class AbstractDb implements Db {
 			
 		} catch (Exception e) {
 
-			log.debug("doCallBack",e);
+			log.debug("doCallback",e);
 
 			if ( txManager != null ) {
 				txManager.rollBack(txObj, e);

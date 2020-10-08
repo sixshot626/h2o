@@ -150,7 +150,7 @@ public class KeyGen {
         DbUtil.getDb("common" ).tx( new DaoCallback<Void>() {
 
             @Override
-            public Void doCallBack(Dao dao) throws Exception {
+            public Void doCallback(Dao dao) throws Exception {
 
                 Map<String,Object> m =  dao.get( SELSEQ, "seqobj", key );
 

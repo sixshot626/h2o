@@ -24,23 +24,26 @@ import java.util.Map;
 public abstract class AbstractDao implements Dao {
 
 
-	private volatile ArgProcessor argProcessor;
+	private ArgProcessor argProcessor;
 
-	private volatile OrmProcessor ormProcessor;
+	private OrmProcessor ormProcessor;
 
-	private volatile PagingProcessor pagingProcessor;
+	private PagingProcessor pagingProcessor;
 	
 
 
+	@Override
 	public void setArgProcessor(ArgProcessor argProcessor) {
 		this.argProcessor = argProcessor;
 	}
 
+	@Override
 	public void setOrmProcessor(OrmProcessor ormProcessor) {
 		this.ormProcessor = ormProcessor;
 	}
 
-    public void setPagingProcessor(PagingProcessor pagingProcessor) {
+    @Override
+	public void setPagingProcessor(PagingProcessor pagingProcessor) {
         this.pagingProcessor = pagingProcessor;
     }
 
@@ -203,12 +206,6 @@ public abstract class AbstractDao implements Dao {
 		return this.batchUpdate( new TSql(sql), args );
 	}
 
-
-
-	@Override
-	public Connection getConnection() throws SQLException {
-		return this.getDataSource().getConnection();
-	}
 
 
 }

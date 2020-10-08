@@ -96,9 +96,6 @@ public interface Dao extends Closeable {
 
 	DataSource getDataSource();
 
-    Connection getConnection() throws SQLException;
-
-
 
 	void close() throws DaoException;
 	

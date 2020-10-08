@@ -49,7 +49,7 @@ public class KeyVersion {
         return DbUtil.getDb("common").tx( new DaoCallback<Boolean>() {
 
             @Override
-            public Boolean doCallBack(Dao dao) throws Exception {
+            public Boolean doCallback(Dao dao) throws Exception {
 
                 if ( dao.update( UPDSEQ , "seqobj", key ) == 0 ) {
 
