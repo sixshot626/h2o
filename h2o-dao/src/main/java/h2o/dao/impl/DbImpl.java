@@ -16,6 +16,11 @@ public class DbImpl extends AbstractDb implements Db {
 
 	private final DataSource dataSource;
 
+	public DbImpl(String dataSourceName) {
+		this.dataSourceName = dataSourceName;
+		this.dataSource = DbUtil.getDataSource(dataSourceName);
+	}
+
 	public DbImpl(String dataSourceName, DataSource dataSource) {
 		this.dataSourceName = dataSourceName;
 		this.dataSource = dataSource;
