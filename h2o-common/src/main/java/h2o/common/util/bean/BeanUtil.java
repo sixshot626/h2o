@@ -1,15 +1,15 @@
 package h2o.common.util.bean;
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.IgnoreCaseMap;
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.builder.MapBuilder;
-import h2o.common.collections.tuple.Entry;
+import h2o.common.collection.IgnoreCaseMap;
+import h2o.common.lang.tuple.Entry;
 import h2o.common.thirdparty.spring.util.Assert;
 import h2o.common.util.bean.support.DefaultBeanPropertyInfoImpl;
 import h2o.common.util.bean.support.JoddBeanDescriptorImpl;
 import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
 import h2o.common.util.bean.support.MapVOImpl;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
+import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.lang.InstanceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

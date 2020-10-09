@@ -1,8 +1,8 @@
 package h2o.common.dao;
 
-import h2o.common.collections.CollectionUtil;
 import h2o.common.dao.util.StringSingleQuoteEscape;
 import h2o.common.util.bean.PreOperate;
+import h2o.common.util.collection.CollectionUtil;
 import org.apache.commons.lang.StringUtils;
 
 public class SqlFormatUtil {

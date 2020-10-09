@@ -1,7 +1,7 @@
-package h2o.common.collections;
+package h2o.common.collection;
 
-import h2o.common.collections.builder.MapBuilder;
 import h2o.common.util.bean.support.CasePreOperateImpl;
+import h2o.common.util.collection.MapBuilder;
 
 import java.util.Collection;
 import java.util.Map;

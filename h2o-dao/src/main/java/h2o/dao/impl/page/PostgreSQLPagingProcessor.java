@@ -1,10 +1,10 @@
 package h2o.dao.impl.page;
 
-import h2o.common.collections.builder.MapBuilder;
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
+import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.page.PagingProcessor;
 

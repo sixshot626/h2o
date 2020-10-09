@@ -3,11 +3,11 @@ package h2o.common.dao.butterflydb;
 
 import com.jenkov.db.itf.*;
 import h2o.common.Mode;
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.IgnoreCaseMap;
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
+import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.dao.rowproc.RowDataProcessor;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

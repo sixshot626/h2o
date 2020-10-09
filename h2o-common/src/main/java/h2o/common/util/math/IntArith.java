@@ -1,4 +1,4 @@
-package h2o.common.math;
+package h2o.common.util.math;
 
 import h2o.common.thirdparty.spring.util.NumberUtils;
 

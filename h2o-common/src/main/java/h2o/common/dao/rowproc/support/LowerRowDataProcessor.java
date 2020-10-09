@@ -1,6 +1,6 @@
 package h2o.common.dao.rowproc.support;
 
-import h2o.common.collections.IgnoreCaseMap;
+import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.dao.rowproc.RowDataProcessor;
 
 import java.util.Map;

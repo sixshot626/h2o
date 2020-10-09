@@ -1,7 +1,7 @@
 package h2o.dao.colinfo;
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.builder.ListBuilder;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
 import h2o.dao.annotation.*;
 import h2o.dao.exception.DaoException;
 import org.apache.commons.lang.StringUtils;

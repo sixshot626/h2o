@@ -1,11 +1,11 @@
 package h2o.event.impl;
 
 
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
 import h2o.common.concurrent.pac.Consumer;
 import h2o.common.concurrent.pac.ConsumersController;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
 import h2o.event.Event;
 import h2o.event.EventContext;
 import h2o.event.EventProcessor;

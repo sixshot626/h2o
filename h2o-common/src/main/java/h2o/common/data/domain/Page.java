@@ -1,7 +1,5 @@
 package h2o.common.data.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import java.util.List;
 
 public class Page<T> implements java.io.Serializable {
@@ -38,7 +36,10 @@ public class Page<T> implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		final StringBuilder sb = new StringBuilder("Page{");
+		sb.append("pageInfo=").append(pageInfo);
+		sb.append(", records=").append(records == null ? 0 : records.size());
+		sb.append('}');
+		return sb.toString();
 	}
-
 }

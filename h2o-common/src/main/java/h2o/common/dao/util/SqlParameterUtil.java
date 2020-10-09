@@ -1,14 +1,14 @@
 package h2o.common.dao.util;
 
 import h2o.common.Tools;
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.builder.MapBuilder;
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
 import h2o.common.dao.util.namedparam.NamedParameterUtils;
 import h2o.common.dao.util.namedparam.SqlParameterInfo;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.bean.BeanUtil;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
+import h2o.common.util.collection.MapBuilder;
 
 import java.util.Collection;
 import java.util.Iterator;

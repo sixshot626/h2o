@@ -1,7 +1,7 @@
 package h2o.common.util.bean.support;
 
-import h2o.common.collections.builder.ListBuilder;
 import h2o.common.util.bean.BeanDescriptor;
+import h2o.common.util.collection.ListBuilder;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

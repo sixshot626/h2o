@@ -1,6 +1,6 @@
 package h2o.common.util.security;
 
-import h2o.common.collections.ConcurrentBiMap;
+import h2o.common.collection.ConcurrentBiMap;
 import h2o.common.exception.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

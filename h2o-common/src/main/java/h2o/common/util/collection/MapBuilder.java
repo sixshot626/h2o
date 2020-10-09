@@ -1,6 +1,4 @@
-package h2o.common.collections.builder;
-
-import h2o.common.collections.CollectionUtil;
+package h2o.common.util.collection;
 
 import java.util.Collection;
 import java.util.HashMap;

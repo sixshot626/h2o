@@ -1,8 +1,8 @@
 package h2o.common.util.valid;
 
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
+import h2o.common.util.collection.ListBuilder;
 
 import java.util.HashSet;
 import java.util.List;

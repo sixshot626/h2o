@@ -1,8 +1,8 @@
 package h2o.common.dao;
 
-import h2o.common.collections.builder.MapBuilder;
 import h2o.common.concurrent.LockMap;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
+import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.io.StreamUtil;
 import h2o.common.util.lang.RuntimeUtil;
 import org.apache.commons.lang.StringUtils;

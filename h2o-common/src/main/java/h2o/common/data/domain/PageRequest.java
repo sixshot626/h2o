@@ -1,8 +1,7 @@
 package h2o.common.data.domain;
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.builder.ListBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
 
 import java.util.List;
 
@@ -60,6 +59,11 @@ public class PageRequest implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        final StringBuilder sb = new StringBuilder("PageRequest{");
+        sb.append("pageNo=").append(pageNo);
+        sb.append(", pageRecordSize=").append(pageRecordSize);
+        sb.append(", sorts=").append(sorts);
+        sb.append('}');
+        return sb.toString();
     }
 }

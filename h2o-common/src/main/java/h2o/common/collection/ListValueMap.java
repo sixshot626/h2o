@@ -1,8 +1,8 @@
-package h2o.common.collections;
+package h2o.common.collection;
 
 
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.builder.MapBuilder;
+import h2o.common.util.collection.ListBuilder;
+import h2o.common.util.collection.MapBuilder;
 
 import java.util.Collection;
 import java.util.List;

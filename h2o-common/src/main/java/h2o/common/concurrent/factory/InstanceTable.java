@@ -1,6 +1,6 @@
 package h2o.common.concurrent.factory;
 
-import h2o.common.collections.builder.MapBuilder;
+import h2o.common.util.collection.MapBuilder;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,10 +1,10 @@
 package h2o.utils.key;
 
 
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
 import h2o.common.concurrent.LockMap;
-import h2o.common.math.IntArith;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
+import h2o.common.util.math.IntArith;
 import h2o.dao.Dao;
 import h2o.dao.DaoCallback;
 import h2o.dao.DbUtil;

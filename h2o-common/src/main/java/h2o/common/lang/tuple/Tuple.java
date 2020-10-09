@@ -1,4 +1,4 @@
-package h2o.common.collections.tuple;
+package h2o.common.lang.tuple;
 
 public interface Tuple extends java.io.Serializable {
 	

@@ -1,7 +1,5 @@
 package h2o.common.data.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class SortInfo implements java.io.Serializable {
 
     private static final long serialVersionUID = 4094699421665186848L;
@@ -43,7 +41,10 @@ public class SortInfo implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        final StringBuilder sb = new StringBuilder("SortInfo{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", direction=").append(direction);
+        sb.append('}');
+        return sb.toString();
     }
-
 }

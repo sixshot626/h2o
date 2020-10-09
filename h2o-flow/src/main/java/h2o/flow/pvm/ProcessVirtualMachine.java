@@ -4,10 +4,10 @@
 package h2o.flow.pvm;
 
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.builder.ListBuilder;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.Var;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
 import h2o.flow.pvm.elements.Line;
 import h2o.flow.pvm.elements.Node;
 import h2o.flow.pvm.elements.SignalNode;

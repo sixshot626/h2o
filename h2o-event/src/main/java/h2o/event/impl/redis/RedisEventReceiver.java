@@ -1,7 +1,7 @@
 package h2o.event.impl.redis;
 
-import h2o.common.collections.builder.ListBuilder;
 import h2o.common.thirdparty.redis.JedisCallBack;
+import h2o.common.util.collection.ListBuilder;
 import h2o.event.Event;
 import h2o.event.EventReceiver;
 import h2o.event.impl.AbstractDispatcherEventReceiver;

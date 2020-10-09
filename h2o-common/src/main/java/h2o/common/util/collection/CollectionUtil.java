@@ -1,6 +1,5 @@
-package h2o.common.collections;
+package h2o.common.util.collection;
 
-import h2o.common.collections.builder.ListBuilder;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;

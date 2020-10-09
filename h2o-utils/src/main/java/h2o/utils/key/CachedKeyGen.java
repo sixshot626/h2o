@@ -1,8 +1,8 @@
 package h2o.utils.key;
 
-import h2o.common.collections.tuple.Tuple2;
 import h2o.common.concurrent.Locks;
-import h2o.common.math.IntArith;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.util.math.IntArith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

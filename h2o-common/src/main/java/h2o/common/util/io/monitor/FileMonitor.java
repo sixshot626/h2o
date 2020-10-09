@@ -3,7 +3,7 @@ package h2o.common.util.io.monitor;
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 import h2o.common.Tools;
-import h2o.common.collections.builder.ListBuilder;
+import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.io.StreamUtil;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;

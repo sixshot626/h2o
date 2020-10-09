@@ -1,4 +1,4 @@
-package h2o.common.collections.builder;
+package h2o.common.util.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;

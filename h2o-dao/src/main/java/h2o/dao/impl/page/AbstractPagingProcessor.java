@@ -1,9 +1,9 @@
 package h2o.dao.impl.page;
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
 import h2o.common.data.domain.SortInfo;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
+import h2o.common.util.collection.CollectionUtil;
 import h2o.dao.page.PagingProcessor;
 import org.apache.commons.lang.StringUtils;
 

@@ -1,9 +1,9 @@
 package h2o.dao;
 
 
-import h2o.common.collections.builder.MapBuilder;
 import h2o.common.dao.SqlTable;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
+import h2o.common.util.collection.MapBuilder;
 import h2o.dao.exception.DaoException;
 import h2o.dao.sql.SqlBuilder;
 import org.slf4j.Logger;

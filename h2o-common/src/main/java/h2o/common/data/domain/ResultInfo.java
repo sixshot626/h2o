@@ -1,7 +1,5 @@
 package h2o.common.data.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import java.util.List;
 
 public class ResultInfo implements java.io.Serializable {
@@ -60,9 +58,13 @@ public class ResultInfo implements java.io.Serializable {
         this.sorts = sorts;
     }
 
-    @Override
+	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		final StringBuilder sb = new StringBuilder("ResultInfo{");
+		sb.append("firstResult=").append(firstResult);
+		sb.append(", maxResult=").append(maxResult);
+		sb.append(", sorts=").append(sorts);
+		sb.append('}');
+		return sb.toString();
 	}
-
 }

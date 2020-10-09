@@ -1,7 +1,7 @@
 package h2o.common;
 
-import h2o.common.collections.CollectionUtil;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.util.collection.CollectionUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

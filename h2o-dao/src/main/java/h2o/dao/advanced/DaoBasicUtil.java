@@ -1,15 +1,15 @@
 package h2o.dao.advanced;
 
 import h2o.common.Mode;
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.builder.MapBuilder;
 import h2o.common.concurrent.factory.AbstractInstanceFactory;
 import h2o.common.concurrent.factory.InstanceTable;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.thirdparty.spring.util.Assert;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
+import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;

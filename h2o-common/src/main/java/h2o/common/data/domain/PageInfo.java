@@ -1,7 +1,5 @@
 package h2o.common.data.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import java.io.Serializable;
 
 public class PageInfo implements Pageable, Serializable {
@@ -91,7 +89,12 @@ public class PageInfo implements Pageable, Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		final StringBuilder sb = new StringBuilder("PageInfo{");
+		sb.append("totalRecord=").append(totalRecord);
+		sb.append(", totalPage=").append(totalPage);
+		sb.append(", pageNo=").append(pageNo);
+		sb.append(", pageRecordSize=").append(pageRecordSize);
+		sb.append('}');
+		return sb.toString();
 	}
-
 }

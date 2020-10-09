@@ -4,7 +4,7 @@ import com.jenkov.db.itf.IPreparedStatementManager;
 import com.jenkov.db.itf.PersistenceException;
 import com.jenkov.db.jdbc.JdbcUtil;
 import h2o.common.Mode;
-import h2o.common.collections.tuple.Tuple2;
+import h2o.common.lang.tuple.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

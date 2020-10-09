@@ -1,10 +1,10 @@
 package h2o.dao.impl;
 
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageInfo;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
 import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
@@ -14,8 +14,6 @@ import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
 import h2o.dao.sql.SqlSource;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

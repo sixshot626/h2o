@@ -18,7 +18,10 @@
 
 package com.jenkov.db.impl;
 
-import com.jenkov.db.itf.*;
+import com.jenkov.db.itf.IDaos;
+import com.jenkov.db.itf.IJdbcDao;
+import com.jenkov.db.itf.IMapDao;
+import com.jenkov.db.itf.PersistenceException;
 
 import java.sql.Connection;
 import java.sql.SQLException;

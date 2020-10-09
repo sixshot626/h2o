@@ -1,6 +1,6 @@
 package h2o.event.impl;
 
-import h2o.common.collections.builder.MapBuilder;
+import h2o.common.util.collection.MapBuilder;
 import h2o.event.Event;
 import h2o.event.EventEncoder;
 import org.apache.commons.lang.StringUtils;

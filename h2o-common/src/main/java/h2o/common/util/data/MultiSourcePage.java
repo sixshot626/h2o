@@ -1,9 +1,11 @@
-package h2o.common.data.domain;
+package h2o.common.util.data;
 
-import h2o.common.collections.CollectionUtil;
-import h2o.common.collections.builder.ListBuilder;
-import h2o.common.collections.tuple.Tuple2;
-import h2o.common.collections.tuple.TupleUtil;
+import h2o.common.data.domain.PageInfo;
+import h2o.common.data.domain.ResultInfo;
+import h2o.common.lang.tuple.Tuple2;
+import h2o.common.lang.tuple.TupleUtil;
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
 
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class MultiSourcePage {
 	}
 	
 	
-	public Tuple2<PageInfo,ResultInfo[]> calc( int start , int pageRecordSize  ) {
+	public Tuple2<PageInfo, ResultInfo[]> calc(int start , int pageRecordSize  ) {
 		
 		PageInfo pageInfo = new PageInfo( ( start + pageRecordSize - 1 ) / pageRecordSize  , pageRecordSize , totalRecord );
 		

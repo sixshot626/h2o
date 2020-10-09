@@ -1,8 +1,8 @@
 package h2o.dao.impl.orm;
 
 import h2o.common.Tools;
-import h2o.common.collections.builder.MapBuilder;
 import h2o.common.util.bean.BeanUtil;
+import h2o.common.util.collection.MapBuilder;
 import h2o.dao.colinfo.ColInfo;
 import h2o.dao.colinfo.ColInfoUtil;
 

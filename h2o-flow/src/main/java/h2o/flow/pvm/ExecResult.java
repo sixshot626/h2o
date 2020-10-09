@@ -1,6 +1,6 @@
 package h2o.flow.pvm;
 
-import h2o.common.collections.builder.ListBuilder;
+import h2o.common.util.collection.ListBuilder;
 import h2o.flow.pvm.elements.Line;
 
 import java.util.Collection;
