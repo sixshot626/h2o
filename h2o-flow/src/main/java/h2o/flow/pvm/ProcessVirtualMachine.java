@@ -147,27 +147,30 @@ public final class ProcessVirtualMachine {
 			return engine.result;
 			
 		} catch( Throwable e ) {	
-			
-			fireExceptionEvent( runContext , e );
-			fireEndEvent( runContext , new ExecResult( RunStatus.EXCEPTION ) );
-			
-			if( tx != null ) try {
-				tx.rollBack( transactionObj );
-			} catch( Exception e1 ) {
-				e1.printStackTrace();
+
+			try {
+
+				fireExceptionEvent(runContext, e);
+				fireEndEvent(runContext, new ExecResult(RunStatus.EXCEPTION));
+
+				log.error("", e);
+
+			} catch ( Exception el ) {
+				log.error("", el);
+			} finally {
+				if( tx != null ) try {
+					tx.rollBack( transactionObj );
+				} catch( Exception er ) {
+					log.error("", er);
+				}
 			}
-			
-			
-			e.printStackTrace();
-			
-			log.error("", e);
-			
+
 			if( e instanceof FlowException  ) {
 				throw (FlowException) e;
 			} else {
 				throw ExceptionUtil.toRuntimeException( e );
 			}
-			
+
 			
 		}
 		
