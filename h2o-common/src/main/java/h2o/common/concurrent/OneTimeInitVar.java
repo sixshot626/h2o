@@ -8,10 +8,11 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 	
 	private final OneTimeInitVar<?> flag;
 	
-	private volatile String errMsg;
+	private final String errMsg;
 	
 	public OneTimeInitVar() {
 		this.flag = null;
+		this.errMsg = "Multiple assignments";
 	}
 	
 	public OneTimeInitVar( String errMsg ) {
@@ -42,7 +43,8 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 	
 	public boolean isSetted() {
 		if( flag == null ) {
-			return this.var != null;
+			T _var = this.var;
+			return _var != null;
 		} else {
 			return flag.isSetted();
 		}
@@ -60,17 +62,22 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 				throw new RuntimeException(errMsg);				
 			}
 		}
-		this.var = var;
+		synchronized (this) {
+			if( isSetted() ) {
+				if( isSilently || errMsg == null ) {
+					return false;
+				} else {
+					throw new RuntimeException(errMsg);
+				}
+			}
+			this.var = var;
+		}
 		return true;
 	}
 	
 
 	public String getErrMsg() {
 		return errMsg;
-	}
-
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,7 +87,7 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return var == null ? "null" : var.toString();
+		return var == null ? "<null>" : var.toString();
 	}
 	
 

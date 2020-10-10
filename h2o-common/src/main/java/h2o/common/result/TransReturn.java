@@ -1,14 +1,15 @@
 package h2o.common.result;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, TransResult<R>, Response, ErrorInfo , Serializable {
 
     private static final long serialVersionUID = 2603355001138198223L;
 
-    private boolean finalState;
+    private Boolean finalState;
 
-    private boolean success;
+    private Boolean success;
 
     private String code;
 
@@ -26,8 +27,8 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
 
     public TransReturn( Response response ) {
 
-        this.finalState         = response.isFinalState();
-        this.success            = response.isSuccess();
+        this.finalState         = response.isFinalState().orElse(null);
+        this.success            = response.isSuccess().orElse(null);
         this.code               = response.getCode();
         this.msg                = response.getMsg();
         this.e                  = response.getE();
@@ -62,22 +63,22 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
 
 
     @Override
-    public boolean isFinalState() {
-        return finalState;
+    public Optional<Boolean> isFinalState() {
+        return Optional.ofNullable(finalState);
     }
 
     public TransReturn<S,R> setFinalState(boolean finalState) {
-        this.finalState = finalState;
+        this.finalState = Boolean.valueOf(finalState);
         return this;
     }
 
     @Override
-    public boolean isSuccess() {
-        return success;
+    public Optional<Boolean> isSuccess() {
+        return Optional.ofNullable(success);
     }
 
     public TransReturn<S,R> setSuccess(boolean success) {
-        this.success = success;
+        this.success = Boolean.valueOf(success);
         return this;
     }
 
@@ -147,8 +148,8 @@ public class TransReturn<S,R> implements TransResponse<S,R>, TransStatus<S>, Tra
     }
 
     public TransReturn<S,R> setResult(Object result) {
-        this.presentResult = true;
         this.result = result;
+        this.presentResult = true;
         return this;
     }
 

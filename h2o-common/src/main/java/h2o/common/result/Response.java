@@ -1,10 +1,12 @@
 package h2o.common.result;
 
+import java.util.Optional;
+
 public interface Response extends ErrorInfo {
 
-    boolean isFinalState();
+    Optional<Boolean> isFinalState();
 
-    boolean isSuccess();
+    Optional<Boolean> isSuccess();
 
     boolean isException();
 
