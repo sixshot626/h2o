@@ -12,7 +12,7 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 	
 	public OneTimeInitVar() {
 		this.flag = null;
-		this.errMsg = "Multiple assignments";
+		this.errMsg = null;
 	}
 	
 	public OneTimeInitVar( String errMsg ) {
