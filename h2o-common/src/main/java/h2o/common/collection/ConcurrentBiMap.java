@@ -11,7 +11,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class ConcurrentBiMap<K, V> {
+public class ConcurrentBiMap<K, V> implements java.io.Serializable {
+
+	private static final long serialVersionUID = 7809121914100642131L;
 
 	private final ConcurrentHashMap<K, V> m1 = new ConcurrentHashMap<K, V>();
 	private final ConcurrentHashMap<V, K> m2 = new ConcurrentHashMap<V, K>();

@@ -5,9 +5,9 @@ import h2o.common.Tools;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.LTimestamp;
-import h2o.common.result.TransResponse;
+import h2o.common.result.Response;
+import h2o.common.result.TransResult;
 import h2o.common.result.TransReturn;
-import h2o.common.result.TransStatus;
 import h2o.common.result.TriState;
 import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.date.DateUtil;
@@ -53,7 +53,7 @@ public class FileServiceMinIOImpl implements FileService {
     }
 
     @Override
-    public TransStatus<TriState> putFile(String bucket , String fileId , FileObject file  ) {
+    public Response putFile(String bucket , String fileId , FileObject file  ) {
 
         try {
 
@@ -62,7 +62,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             Tools.log.error(e);
-            return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+            return new TransReturn().ok(false).exception(e);
         }
 
         try {
@@ -79,18 +79,18 @@ public class FileServiceMinIOImpl implements FileService {
                     new ByteArrayInputStream( file.getFileContent() ), options );
 
 
-            return new TransReturn<TriState, Object>().setStatus( TriState.Success ).setSuccess(true);
+            return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
             Tools.log.error(e);
-            return new TransReturn<TriState, Object>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
+            return new TransReturn().exception(e);
         }
 
 
     }
 
     @Override
-    public TransStatus<TriState> putFile(String bucket, String fileId, FileSource source ) {
+    public Response putFile(String bucket, String fileId, FileSource source ) {
         try {
 
             if (!mc.bucketExists(bucket)) {
@@ -100,7 +100,7 @@ public class FileServiceMinIOImpl implements FileService {
         } catch ( Exception e ) {
 
                 Tools.log.error(e);
-                return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+                return new TransReturn().setStatus( TriState.Failure ).ok(false).exception(e);
 
         }
 
@@ -118,12 +118,12 @@ public class FileServiceMinIOImpl implements FileService {
                     source.getInputStream() , options  );
 
 
-            return new TransReturn<TriState, Object>().setStatus( TriState.Success ).setSuccess(true);
+            return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, Object>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
+            return new TransReturn().exception(e);
 
         } finally {
             StreamUtil.close( source );
@@ -133,7 +133,7 @@ public class FileServiceMinIOImpl implements FileService {
 
 
     @Override
-    public TransResponse<TriState, FileMeta> getFileMeta(String bucket, String fileId) {
+    public TransResult<FileMeta> getFileMeta(String bucket, String fileId) {
 
         ObjectStat stat;
         try {
@@ -143,24 +143,24 @@ public class FileServiceMinIOImpl implements FileService {
                     stat.length(), stat.contentType(), new LTimestamp( stat.createdTime().toInstant() ) ,
                     parseExtInfo(stat.httpHeaders()));
 
-            return new TransReturn<TriState, FileMeta>().setResult(meta).setStatus(TriState.Success).setSuccess(true);
+            return new TransReturn<Void, FileMeta>().setResult(meta).ok(true);
 
         } catch ( ErrorResponseException e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, FileMeta>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
+            return new TransReturn<Void, FileMeta>().exception(e);
 
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, FileMeta>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+            return new TransReturn<Void, FileMeta>().ok(false).exception(e);
 
         }
 
     }
 
     @Override
-    public TransResponse<TriState, FileObject> getFile(String bucket , String fileId ) {
+    public TransResult<FileObject> getFile(String bucket , String fileId ) {
 
         BufferedInputStream fileIn = null;
         try {
@@ -176,17 +176,17 @@ public class FileServiceMinIOImpl implements FileService {
             fileObject.setContentType( stat.contentType() );
             fileObject.setExtInfo( parseExtInfo( stat.httpHeaders() ) );
 
-            return new TransReturn<TriState, FileObject>().setResult( fileObject ).setStatus( TriState.Success ).setSuccess(true);
+            return new TransReturn<Void, FileObject>().setResult( fileObject ).ok(true);
 
         } catch ( ErrorResponseException e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, FileObject>().setStatus( TriState.Unknown ).setSuccess(false).setE(e);
+            return new TransReturn<Void, FileObject>().exception(e);
 
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<TriState, FileObject>().setStatus( TriState.Failure ).setSuccess(false).setE(e);
+            return new TransReturn<Void, FileObject>().ok(false).exception(e);
 
         } finally {
             StreamUtil.close( fileIn );
@@ -237,17 +237,17 @@ public class FileServiceMinIOImpl implements FileService {
 
 
     @Override
-    public TransStatus<TriState> delFile(String bucket, String fileId) {
+    public Response delFile(String bucket, String fileId) {
 
         try {
 
             mc.removeObject( bucket , fileId );
 
-            return new TransReturn<TriState, Object>().setStatus( TriState.Success ).setSuccess(true);
+            return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
             Tools.log.error(e);
-            return new TransReturn<TriState, Object>().setStatus( TriState.Failure ).setSuccess(false);
+            return new TransReturn().ok(false).exception(e);
         }
 
     }

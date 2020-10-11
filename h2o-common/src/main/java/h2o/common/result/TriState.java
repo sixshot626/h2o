@@ -5,10 +5,10 @@ public enum TriState {
     Success(0),Failure(9),Unknown(1);
 
 
-    public final int val;
+    public final int value;
 
-    TriState(int val) {
-        this.val = val;
+    TriState(int value) {
+        this.value = value;
     }
 
 }

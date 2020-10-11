@@ -3,9 +3,11 @@ package h2o.common.lang;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class Var<T> implements NullableValue {
+public class Var<T> implements NullableValue , java.io.Serializable {
 
-	private T v;
+    private static final long serialVersionUID = -1525947429459499316L;
+    
+    private T value;
 
 	private boolean setted;
 
@@ -13,21 +15,21 @@ public class Var<T> implements NullableValue {
     }
 
     public Var(T v) {
-        this.v = v;
+        this.value = v;
         this.setted = true;
     }
 
     @Override
     public boolean isPresent() {
-        return v != null;
+        return value != null;
     }
 
-    public T getV() {
-        return v;
+    public T getValue() {
+        return value;
     }
 
-    public void setV(T v) {
-        this.v = v;
+    public void setValue(T value) {
+        this.value = value;
         this.setted = true;
     }
 
@@ -36,21 +38,17 @@ public class Var<T> implements NullableValue {
     }
 
 
-    public T getValue() {
-        return v;
-    }
-
     public T get() {
 
         if ( this.isPresent() ) {
-            return v;
+            return value;
         }
 
         throw new IllegalStateException();
     }
 
     public T orElse( T other) {
-        return v == null ? other : v;
+        return value == null ? other : value;
     }
 
 
@@ -63,20 +61,20 @@ public class Var<T> implements NullableValue {
         Var<?> var = (Var<?>) o;
 
         return new EqualsBuilder()
-                .append(v, var.v)
+                .append(value, var.value)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(v)
+                .append(value)
                 .toHashCode();
     }
 
     @Override
 	public String toString() {
-		return v == null ? "<null>" : v.toString();
+		return value == null ? "<null>" : value.toString();
 	}
 	
 
