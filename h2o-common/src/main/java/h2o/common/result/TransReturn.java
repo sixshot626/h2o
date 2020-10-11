@@ -1,7 +1,5 @@
 package h2o.common.result;
 
-import h2o.common.Tools;
-
 import java.io.Serializable;
 
 public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, TransResult<R>, Response, ErrorInfo, Serializable {
@@ -31,21 +29,21 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
     public TransReturn( Response response ) {
 
-        this.finalState = response.finalState();
-        this.ok = response.ok();
-        this.code = response.getCode();
-        this.msg = response.getMsg();
-        this.hasException = response.hasException();
-        this.exception = response.getException();
+
+        this.ok                 = response.ok();
+        this.finalState         = response.finalState();
+        this.code               = response.getCode();
+        this.msg                = response.getMsg();
+        this.hasException       = response.hasException();
+        this.exception          = response.getException();
 
         if ( response instanceof TransStatus ) {
-            Object status = ((TransStatus) response).getStatus();
-            this.status = status;
+            this.status         = ((TransStatus) response).getStatus();
         }
 
         if ( response instanceof TransResult ) {
-            this.hasResult = ((TransResult)response).hasResult();
-            this.result = ((TransResult)response).getResult();
+            this.hasResult      = ((TransResult)response).hasResult();
+            this.result         = ((TransResult)response).getResult();
         }
 
     }
@@ -90,6 +88,16 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
         return this.hasResult;
     }
 
+
+    public TransReturn<S, R> ok(TriState ok) {
+        this.ok = ok;
+        return this;
+    }
+
+    public TransReturn<S, R> finalState(TriState finalState) {
+        this.finalState = finalState;
+        return this;
+    }
 
     public TransReturn<S, R> ok(boolean ok) {
         this.ok = ok ? TriState.Success : TriState.Failure;
@@ -204,7 +212,5 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(Tools.J.json.toJson(new TransReturn<Void, Object>()));
-    }
+
 }
