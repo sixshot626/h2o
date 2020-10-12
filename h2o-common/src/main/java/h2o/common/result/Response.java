@@ -1,10 +1,12 @@
 package h2o.common.result;
 
+import h2o.common.lang.EBoolean;
+
 public interface Response extends ErrorInfo {
 
-    TriState ok();
+    EBoolean ok();
 
-    TriState finalState();
+    EBoolean finalState();
 
     String getCode();
 

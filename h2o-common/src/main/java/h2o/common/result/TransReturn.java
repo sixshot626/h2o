@@ -1,14 +1,16 @@
 package h2o.common.result;
 
+import h2o.common.lang.EBoolean;
+
 import java.io.Serializable;
 
 public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, TransResult<R>, Response, ErrorInfo, Serializable {
 
     private static final long serialVersionUID = 2603355001138198223L;
 
-    private TriState ok = TriState.Unknown;
+    private EBoolean ok = EBoolean.Null;
 
-    private TriState finalState = TriState.Unknown;
+    private EBoolean finalState = EBoolean.Null;
 
     private String code;
 
@@ -69,13 +71,13 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
 
     @Override
-    public TriState ok() {
-        return ok;
+    public EBoolean ok() {
+        return null;
     }
 
     @Override
-    public TriState finalState() {
-        return this.finalState;
+    public EBoolean finalState() {
+        return null;
     }
 
     @Override
@@ -89,23 +91,33 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
     }
 
 
-    public TransReturn<S, R> ok(TriState ok) {
+    public TransReturn<S, R> ok(TriState state) {
+        this.ok = ( state == TriState.Unknown ? EBoolean.Null : EBoolean.valueOf( state == TriState.Success ) ) ;
+        return this;
+    }
+
+    public TransReturn<S, R> finalState(TriState state) {
+        this.finalState = ( state == TriState.Unknown ? EBoolean.Null : EBoolean.valueOf( state == TriState.Success ) ) ;;
+        return this;
+    }
+
+    public TransReturn<S, R> ok(EBoolean ok) {
         this.ok = ok;
         return this;
     }
 
-    public TransReturn<S, R> finalState(TriState finalState) {
+    public TransReturn<S, R> finalState(EBoolean finalState) {
         this.finalState = finalState;
         return this;
     }
 
-    public TransReturn<S, R> ok(boolean ok) {
-        this.ok = ok ? TriState.Success : TriState.Failure;
+    public TransReturn<S, R> ok(Boolean ok) {
+        this.ok = EBoolean.valueOf( ok );
         return this;
     }
 
-    public TransReturn<S, R> finalState(boolean finalState) {
-        this.finalState = finalState ? TriState.Success : TriState.Failure;
+    public TransReturn<S, R> finalState(Boolean finalState) {
+        this.finalState = EBoolean.valueOf( finalState );
         return this;
     }
 
@@ -144,11 +156,11 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
     // Getter
 
-    public TriState getOk() {
+    public EBoolean getOk() {
         return ok;
     }
 
-    public TriState getFinalState() {
+    public EBoolean getFinalState() {
         return finalState;
     }
 
@@ -191,10 +203,14 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
     }
 
     @Override
+    public boolean isPresent() {
+        return result != null;
+    }
+
+    @Override
     public R getResult() {
         return (R) result;
     }
-
 
     @Override
     public String toString() {
@@ -211,6 +227,4 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
         sb.append('}');
         return sb.toString();
     }
-
-
 }
