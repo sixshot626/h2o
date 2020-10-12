@@ -72,12 +72,12 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
     @Override
     public EBoolean ok() {
-        return null;
+        return this.ok;
     }
 
     @Override
     public EBoolean finalState() {
-        return null;
+        return this.finalState;
     }
 
     @Override
