@@ -45,7 +45,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
 
     }
 
-    public SNumber(String num) {
+    public SNumber( String num ) {
        this( num , false );
     }
 
@@ -56,6 +56,12 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
            this.value = num == null ? null : new BigDecimal(num).toString();
        }
     }
+
+    public SNumber( SNumber snumber ) {
+        this.value = snumber.value;
+    }
+
+
 
     @Override
     public boolean isPresent() {

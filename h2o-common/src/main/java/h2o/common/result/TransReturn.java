@@ -8,9 +8,9 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
     private static final long serialVersionUID = 2603355001138198223L;
 
-    private EBoolean ok = EBoolean.Null;
+    private EBoolean ok = EBoolean.NULL;
 
-    private EBoolean finalState = EBoolean.Null;
+    private EBoolean finalState = EBoolean.NULL;
 
     private String code;
 
@@ -92,12 +92,12 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
 
     public TransReturn<S, R> ok(TriState state) {
-        this.ok = ( state == TriState.Unknown ? EBoolean.Null : EBoolean.valueOf( state == TriState.Success ) ) ;
+        this.ok = ( state == TriState.UNKNOWN ? EBoolean.NULL : EBoolean.valueOf( state == TriState.SUCCESS) ) ;
         return this;
     }
 
     public TransReturn<S, R> finalState(TriState state) {
-        this.finalState = ( state == TriState.Unknown ? EBoolean.Null : EBoolean.valueOf( state == TriState.Success ) ) ;;
+        this.finalState = ( state == TriState.UNKNOWN ? EBoolean.NULL : EBoolean.valueOf( state == TriState.SUCCESS) ) ;;
         return this;
     }
 

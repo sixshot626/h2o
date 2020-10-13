@@ -100,7 +100,7 @@ public class FileServiceMinIOImpl implements FileService {
         } catch ( Exception e ) {
 
                 Tools.log.error(e);
-                return new TransReturn().setStatus( TriState.Failure ).ok(false).exception(e);
+                return new TransReturn().setStatus( TriState.FAILURE).ok(false).exception(e);
 
         }
 

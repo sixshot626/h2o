@@ -63,6 +63,9 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
     }
 
 
+    public SDate( SDate sdate ) {
+        this.date = sdate.date;
+    }
 
 
     protected static Date toDate( String date , String fmt ) {

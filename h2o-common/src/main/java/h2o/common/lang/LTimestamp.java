@@ -41,6 +41,10 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
         this.timestamp = date == null ? null : date.getTime();
     }
 
+    public LTimestamp( LTimestamp ltimestamp ) {
+        this.timestamp = ltimestamp.timestamp;
+    }
+
     @Override
     public boolean isPresent() {
         return timestamp != null;

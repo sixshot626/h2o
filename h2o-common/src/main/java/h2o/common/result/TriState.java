@@ -4,7 +4,7 @@ import h2o.common.lang.EBoolean;
 
 public enum TriState {
 
-    Success(0),Failure(9),Unknown(1);
+    SUCCESS(0), FAILURE(9), UNKNOWN(1);
 
 
     public final int value;
@@ -14,12 +14,12 @@ public enum TriState {
     }
 
     public static TriState valueOf( EBoolean ok ) {
-        if ( ok == EBoolean.True ) {
-            return Success;
-        } else if ( ok == EBoolean.False ) {
-            return Failure;
+        if ( ok == EBoolean.TRUE) {
+            return SUCCESS;
+        } else if ( ok == EBoolean.FALSE) {
+            return FAILURE;
         } else {
-            return Unknown;
+            return UNKNOWN;
         }
     }
 

@@ -58,6 +58,11 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
         this.time = d == null ? null : DateUtil.toString( d , DATE_FMT );
     }
 
+    public STime( STime stime ) {
+        this.time = stime.time;
+    }
+
+
     protected static Date toDate( String date , String fmt ) {
         return SDate.toDate( date, fmt );
     }

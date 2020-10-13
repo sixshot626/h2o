@@ -63,10 +63,13 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
         this.dateTime = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
     }
 
-    public SDateTime(Date d) {
+    public SDateTime( Date d ) {
         this.dateTime = d == null ? null : DateUtil.toString( d , DATE_FMT );
     }
 
+    public SDateTime( SDateTime sdatetime ) {
+        this.dateTime = sdatetime.dateTime;
+    }
 
 
     protected static Date toDate( String date , String fmt ) {
