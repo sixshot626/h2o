@@ -44,48 +44,53 @@ import static h2o.jodd.util.StringPool.*;
  * for <code>false</code>.</li>
  * </ul>
  */
-public class BooleanConverter implements TypeConverter<Boolean> {
+public class BBooleanConverter implements TypeConverter<BBoolean> {
 
-	public Boolean convert(final Object value) {
+	public BBoolean convert(final Object value) {
+
 		if (value == null) {
-			return null;
+			return BBoolean.NULL;
 		}
 
 		if (value.getClass() == Boolean.class) {
-			return (Boolean) value;
+			return new BBoolean( (Boolean) value );
 		}
 
 		if (value.getClass() == EBoolean.class) {
-			return ((EBoolean) value) == EBoolean.TRUE;
+			return new BBoolean( (EBoolean) value );
 		}
 
 		if ( value instanceof BBoolean) {
-			return ((BBoolean)value).getValue();
+			return (BBoolean)value;
 		}
 
 		if ( value instanceof SNumber ) {
-			return ((SNumber)value).toBoolean();
+			return new BBoolean( ((SNumber)value).toBoolean() );
 		}
 
 		String stringValue = value.toString();
 		if (stringValue.isEmpty()) {
-			return Boolean.FALSE;
+			return BBoolean.FALSE;
 		}
 
 		stringValue = stringValue.trim().toLowerCase();
+		if ( stringValue.equals("null") || stringValue.equals("<null>") ) {
+			return BBoolean.NULL;
+		}
+
 		if (stringValue.equals(YES) ||
 				stringValue.equals(Y) ||
 				stringValue.equals(TRUE) ||
 				stringValue.equals(ON) ||
 				stringValue.equals(ONE)) {
-			return Boolean.TRUE;
+			return BBoolean.TRUE;
 		}
 		if (stringValue.equals(NO) ||
 				stringValue.equals(N) ||
 				stringValue.equals(FALSE) ||
 				stringValue.equals(OFF) ||
 				stringValue.equals(ZERO)) {
-			return Boolean.FALSE;
+			return BBoolean.FALSE;
 		}
 
 		throw new TypeConversionException(value);

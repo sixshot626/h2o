@@ -52,7 +52,7 @@ public class LTimestampConverter implements TypeConverter<LTimestamp> {
 	public LTimestamp convert(final Object value) {
 
 		if (value == null) {
-			return null;
+			return new LTimestamp();
 		}
 
 		if (value instanceof LTimestamp) {
@@ -76,7 +76,7 @@ public class LTimestampConverter implements TypeConverter<LTimestamp> {
 			return new LTimestamp((Long) value);
 		}
 		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
-			return null;
+			return new LTimestamp();
 		}
 		if (value instanceof Number) {
 			return new LTimestamp(Long.valueOf(((Number)value).longValue()));

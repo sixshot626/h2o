@@ -25,6 +25,8 @@
 
 package h2o.jodd.typeconverter.impl;
 
+import h2o.common.lang.BBoolean;
+import h2o.common.lang.EBoolean;
 import h2o.common.lang.LTimestamp;
 import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
@@ -49,6 +51,30 @@ public class SNumberConverter implements TypeConverter<SNumber> {
 		if (value instanceof SNumber) {
 			return (SNumber) value;
 		}
+
+		if (value.getClass() == Boolean.class) {
+			return ((Boolean)value) ? SNumber.ONE : SNumber.ZERO;
+		}
+
+		if (value.getClass() == EBoolean.class) {
+			EBoolean bool = (EBoolean) value;
+			if ( bool == EBoolean.NULL ) {
+				return new SNumber();
+			} else {
+				return bool == EBoolean.TRUE ? SNumber.ONE : SNumber.ZERO;
+			}
+		}
+
+		if ( value instanceof BBoolean) {
+			BBoolean bool = (BBoolean) value;
+			if ( bool.isPresent() ) {
+				return bool.get() ? SNumber.ONE : SNumber.ZERO;
+			} else {
+				return new SNumber();
+			}
+		}
+
+
 		if (value instanceof LTimestamp) {
 			return new SNumber(((LTimestamp)value).getValue());
 		}
