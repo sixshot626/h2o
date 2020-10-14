@@ -137,7 +137,7 @@ public final class ProcessVirtualMachine {
 
 		FlowTransactionManager tx = this.transactionManager;
 
-		Object transactionObj = tx == null ? null : tx.beginTransaction(runContext);
+		Object transactionObj = ( tx == null ? null : tx.beginTransaction(runContext) );
 
 		try {
 			
