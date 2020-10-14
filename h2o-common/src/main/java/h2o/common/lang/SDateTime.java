@@ -19,7 +19,7 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
     /**
      * 日期时间 yyyy-MM-dd HH:mm:ss
      */
-    private final String dateTime;
+    protected final String dateTime;
 
     public SDateTime() {
         dateTime = null;
@@ -182,7 +182,7 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
 
         if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof SDateTime)) return false;
 
         SDateTime sDate = (SDateTime) o;
 

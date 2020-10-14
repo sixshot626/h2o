@@ -42,6 +42,4 @@ public enum EBoolean implements NullableValue {
     }
 
 
-
-
 }

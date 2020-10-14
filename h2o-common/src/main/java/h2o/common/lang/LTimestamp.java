@@ -15,7 +15,7 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
 
     protected static final String DATE_FMT = "yyyyMMddHHmmssSSS";
 
-    private final Long timestamp;
+    protected final Long timestamp;
 
     public LTimestamp() {
         this.timestamp = null;
@@ -141,7 +141,7 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
 
         if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof LTimestamp)) return false;
 
         LTimestamp that = (LTimestamp) o;
 

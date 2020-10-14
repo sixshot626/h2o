@@ -15,7 +15,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
     public static final SNumber ZERO = new SNumber("0",true);
     public static final SNumber ONE  = new SNumber("1",true);
     
-    private final String value;
+    protected final String value;
 
     public SNumber() {
         this.value = null;
@@ -343,7 +343,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
     public int compareTo(SNumber o) {
         if ( this.isPresent() && o.isPresent() ) {
             return this.toBigDecimal().compareTo( o.toBigDecimal() );
-        } else if ( ( ! this.isPresent() )&&  ( ! o.isPresent())  ) {
+        } else if ( ( ! this.isPresent() ) && ( ! o.isPresent())  ) {
             return 0;
         } else {
             return this.isPresent() ? 1 : -1;
@@ -370,7 +370,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof SNumber)) return false;
 
         SNumber sNumber = (SNumber) o;
 

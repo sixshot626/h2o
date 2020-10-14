@@ -19,7 +19,7 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
     /**
      * 时间 HH:mm:ss
      */
-    private final String time;
+    protected final String time;
 
     public STime() {
         time = null;
@@ -145,7 +145,7 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
 
         if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof STime)) return false;
 
         STime sDate = (STime) o;
 

@@ -1,5 +1,7 @@
 package h2o.common.lang;
 
+import java.util.Objects;
+
 public class BBoolean implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = 294141628234416830L;
@@ -10,7 +12,7 @@ public class BBoolean implements NullableValue , java.io.Serializable {
 
 
 
-    private final Boolean value;
+    protected final Boolean value;
 
     public BBoolean() {
         this.value = null;
@@ -80,6 +82,19 @@ public class BBoolean implements NullableValue , java.io.Serializable {
         return EBoolean.valueOf( this.value );
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof BBoolean)) return false;
+        BBoolean bBoolean = (BBoolean) o;
+        return Objects.equals(value, bBoolean.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 
     @Override
     public String toString() {

@@ -20,7 +20,7 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
     /**
      * 日期 yyyy-MM-dd
      */
-    private final String date;
+    protected final String date;
 
     public SDate() {
         date = null;
@@ -163,7 +163,7 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
 
         if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof SDate)) return false;
 
         SDate sDate = (SDate) o;
 
@@ -182,6 +182,13 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
     @Override
     public String toString() {
         return this.orElse("<null>");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new SDate().equals( new SDate() {
+
+        } ));
+
     }
 
 

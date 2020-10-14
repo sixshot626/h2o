@@ -7,9 +7,9 @@ public class Var<T> implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = -1525947429459499316L;
     
-    private T value;
+    protected T value;
 
-	private boolean setted;
+    protected boolean setted;
 
     public Var() {
     }
@@ -56,7 +56,7 @@ public class Var<T> implements NullableValue , java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof Var)) return false;
 
         Var<?> var = (Var<?>) o;
 
