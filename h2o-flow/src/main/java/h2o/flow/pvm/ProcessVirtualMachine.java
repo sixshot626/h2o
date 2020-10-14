@@ -14,7 +14,7 @@ import h2o.flow.pvm.elements.SignalNode;
 import h2o.flow.pvm.exception.FlowException;
 import h2o.flow.pvm.exception.NoLineExcepion;
 import h2o.flow.pvm.runtime.FlowTransactionManager;
-import h2o.flow.pvm.runtime.NodeRunScopeObject;
+import h2o.flow.pvm.runtime.RuntimeScopeObject;
 import h2o.flow.pvm.runtime.ProcessRunListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireEnterNodeEvent(NodeRunScopeObject nodeRunScoeObject , RunContext runContext , Node node , boolean signal , Object[] args ) {
+	private void fireEnterNodeEvent(RuntimeScopeObject nodeRunScoeObject , RunContext runContext , Node node , boolean signal , Object[] args ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.enterNode( nodeRunScoeObject , runContext , node , signal , args );
@@ -65,7 +65,7 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void fireLeaveNodeEvent(NodeRunScopeObject nodeRunScoeObject , RunContext runContext , Node node , ExecResult execResult ) {
+	private void fireLeaveNodeEvent(RuntimeScopeObject nodeRunScoeObject , RunContext runContext , Node node , ExecResult execResult ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
 				processRunListener.leaveNode( nodeRunScoeObject ,  runContext , node , execResult );
@@ -73,13 +73,22 @@ public final class ProcessVirtualMachine {
 		}
 	}
 	
-	private void firePassLineEvent(RunContext runContext , Line line ) {
+	private void fireEnterLineEvent( RuntimeScopeObject lineRunScoeObject , RunContext runContext , Line line , Object[] args ) {
 		if( ! processRunListeners.isEmpty() ) {
 			for( ProcessRunListener processRunListener : processRunListeners ) {
-				processRunListener.passLine(runContext, line);
+				processRunListener.enterLine( lineRunScoeObject , runContext , line , args );
 			}
 		}
 	}
+
+	private void fireLeaveLineEvent( RuntimeScopeObject lineRunScoeObject , RunContext runContext , Line line , Node target ) {
+		if( ! processRunListeners.isEmpty() ) {
+			for( ProcessRunListener processRunListener : processRunListeners ) {
+				processRunListener.leaveLine( lineRunScoeObject , runContext , line , target );
+			}
+		}
+	}
+
 	
 	private void fireEndEvent(RunContext runContext , ExecResult execResult ) {
 		if( ! processRunListeners.isEmpty() ) {
@@ -189,7 +198,7 @@ public final class ProcessVirtualMachine {
 
 		public ExecResult runNode( RunContext runContext , Node node , boolean isSignal , Object... args ) throws FlowException {
 
-			NodeRunScopeObject nodeRunScoeObject = new NodeRunScopeObject();
+			RuntimeScopeObject nodeRunScoeObject = new RuntimeScopeObject();
 
 			fireEnterNodeEvent( nodeRunScoeObject , runContext, node , isSignal , args );
 
@@ -212,9 +221,17 @@ public final class ProcessVirtualMachine {
 
 					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;
 
-					firePassLineEvent( nextRunContext , line );
 
-					Node nextNode = line.pass( nextRunContext );
+
+					RuntimeScopeObject lineRunScoeObject = new RuntimeScopeObject();
+
+					fireEnterLineEvent(lineRunScoeObject , nextRunContext , line , args );
+
+					Node nextNode = line.pass( nextRunContext , args );
+
+					fireLeaveLineEvent(lineRunScoeObject , nextRunContext , line , nextNode );
+
+
 					runNode( nextRunContext , nextNode , false , args );
 
 					if( this.runStatus == RunStatus.END ) {
