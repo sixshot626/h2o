@@ -20,8 +20,8 @@ public class PostgreSQLPagingProcessor extends AbstractPagingProcessor implement
 
         ResultInfo resultInfo = new ResultInfo( pageRequest );
 
-        Long pageRowStart = resultInfo.getFirstResult();
-        Long pageRowSize = resultInfo.getMaxResult();
+        Long pageRowStart = resultInfo.getStart();
+        Long pageRowSize = resultInfo.getSize();
 
         Map<String,Object> args = MapBuilder.so(2)
                 .put( P1 , pageRowStart )

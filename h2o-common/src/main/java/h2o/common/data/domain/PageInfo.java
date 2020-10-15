@@ -6,71 +6,72 @@ public class PageInfo implements Pageable, Serializable {
 
 	private static final long serialVersionUID = -9096938113245080992L;
 
-	private long totalRecord;
-	private long totalPage;
-
 	private long pageNo;
-	private long pageRecordSize;
+	private long pageSize;
+
+	private long totalPages;
+	private long totalElements;
+
 
 	public PageInfo() {}
 
-	public PageInfo(long pageNo, long pageRecordSize) {
+	public PageInfo( long pageNo, long pageSize ) {
 		this.pageNo = pageNo;
-		this.pageRecordSize = pageRecordSize;
+		this.pageSize = pageSize;
 	}
 
     public PageInfo( PageRequest pageRequest ) {
         this.pageNo = pageRequest.getPageNo();
-        this.pageRecordSize = pageRequest.getPageRecordSize();
+        this.pageSize = pageRequest.getPageSize();
     }
 
-    public PageInfo( PageRequest pageRequest , long totalRecord ){
+    public PageInfo( PageRequest pageRequest , long totalElements ){
         this( pageRequest );
 
-        this.totalRecord = totalRecord;
+        this.totalElements = totalElements;
         this.calcTotalPage();
     }
 
-    public PageInfo(long pageNo, long pageRecordSize, long totalRecord) {
-		this(pageNo, pageRecordSize);
+    public PageInfo(long pageNo, long pageSize, long totalElements ) {
+		this(pageNo, pageSize);
 
-		this.totalRecord = totalRecord;
+		this.totalElements = totalElements;
         this.calcTotalPage();
 	}
 
 
     public void calcTotalPage() {
-        this.totalPage = (this.totalRecord + this.pageRecordSize - 1) / this.pageRecordSize;
+        this.totalPages = (this.totalElements + this.pageSize - 1) / this.pageSize;
     }
 
 
     public long resetReasonablePageNo() {
-        if ( this.pageNo > totalPage) {
-            this.pageNo = totalPage;
+        if ( this.pageNo > totalPages) {
+            this.pageNo = totalPages;
         }
         this.pageNo = pageNo < 1 ? 1L : pageNo;
         return this.pageNo;
     }
 
-
-
-
-	public long getTotalRecord() {
-		return totalRecord;
+	@Override
+	public long getTotalElements() {
+		return totalElements;
 	}
 
-	public void setTotalRecord(long totalRecord) {
-		this.totalRecord = totalRecord;
+	public void setTotalElements(long totalElements) {
+		this.totalElements = totalElements;
 	}
 
-	public long getTotalPage() {
-		return totalPage;
+	@Override
+	public long getTotalPages() {
+		return totalPages;
 	}
 
-	public void setTotalPage(long totalPage) {
-		this.totalPage = totalPage;
+	public void setTotalPages(long totalPages) {
+		this.totalPages = totalPages;
 	}
 
+	@Override
 	public long getPageNo() {
 		return pageNo;
 	}
@@ -79,21 +80,22 @@ public class PageInfo implements Pageable, Serializable {
 		this.pageNo = pageNo;
 	}
 
-	public long getPageRecordSize() {
-		return pageRecordSize;
+	@Override
+	public long getPageSize() {
+		return pageSize;
 	}
 
-	public void setPageRecordSize(long pageRecordSize) {
-		this.pageRecordSize = pageRecordSize;
+	public void setPageSize(long pageSize) {
+		this.pageSize = pageSize;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("PageInfo{");
-		sb.append("totalRecord=").append(totalRecord);
-		sb.append(", totalPage=").append(totalPage);
-		sb.append(", pageNo=").append(pageNo);
-		sb.append(", pageRecordSize=").append(pageRecordSize);
+		sb.append("pageNo=").append(pageNo);
+		sb.append(", pageSize=").append(pageSize);
+		sb.append(", totalPages=").append(totalPages);
+		sb.append(", totalElements=").append(totalElements);
 		sb.append('}');
 		return sb.toString();
 	}

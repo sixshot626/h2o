@@ -20,8 +20,8 @@ public class OraclePagingProcessor extends AbstractPagingProcessor implements Pa
 
         ResultInfo resultInfo = new ResultInfo( pageRequest );
 
-        Long pageRowNum1 = resultInfo.getFirstResult() + 1;
-        Long pageRowNum2 = resultInfo.getFirstResult() + resultInfo.getMaxResult();
+        Long pageRowNum1 = resultInfo.getStart() + 1;
+        Long pageRowNum2 = resultInfo.getStart() + resultInfo.getSize();
 
         Map<String,Object> args = MapBuilder.so(2)
                 .put( P1 , pageRowNum1 )

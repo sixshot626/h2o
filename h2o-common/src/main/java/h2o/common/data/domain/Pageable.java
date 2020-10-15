@@ -4,10 +4,10 @@ public interface Pageable {
 
 	long getPageNo();
 
-	long getPageRecordSize();
+	long getPageSize();
 
-	long getTotalRecord();
+	long getTotalElements();
 
-	long getTotalPage();
+	long getTotalPages();
 
 }

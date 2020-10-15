@@ -11,25 +11,25 @@ public class PageRequest implements java.io.Serializable {
 
     private long pageNo;
 
-    private long pageRecordSize;
+    private long pageSize;
 
     private List<SortInfo> sorts;
 
 
-    public PageRequest(long pageNo, long pageRecordSize) {
+    public PageRequest(long pageNo, long pageSize) {
         this.pageNo = pageNo;
-        this.pageRecordSize = pageRecordSize;
+        this.pageSize = pageSize;
     }
 
-    public PageRequest(long pageNo, long pageRecordSize, SortInfo... sorts) {
+    public PageRequest(long pageNo, long pageSize, SortInfo... sorts) {
         this.pageNo = pageNo;
-        this.pageRecordSize = pageRecordSize;
+        this.pageSize = pageSize;
         this.sorts = CollectionUtil.argsIsBlank(sorts) ? null : ListBuilder.newList(sorts);
     }
 
-    public PageRequest(long pageNo, long pageRecordSize, List<SortInfo> sorts) {
+    public PageRequest(long pageNo, long pageSize, List<SortInfo> sorts) {
         this.pageNo = pageNo;
-        this.pageRecordSize = pageRecordSize;
+        this.pageSize = pageSize;
         this.sorts = sorts;
     }
 
@@ -41,12 +41,12 @@ public class PageRequest implements java.io.Serializable {
         this.pageNo = pageNo;
     }
 
-    public long getPageRecordSize() {
-        return pageRecordSize;
+    public long getPageSize() {
+        return pageSize;
     }
 
-    public void setPageRecordSize(long pageRecordSize) {
-        this.pageRecordSize = pageRecordSize;
+    public void setPageSize(long pageSize) {
+        this.pageSize = pageSize;
     }
 
     public List<SortInfo> getSorts() {
@@ -61,7 +61,7 @@ public class PageRequest implements java.io.Serializable {
     public String toString() {
         final StringBuilder sb = new StringBuilder("PageRequest{");
         sb.append("pageNo=").append(pageNo);
-        sb.append(", pageRecordSize=").append(pageRecordSize);
+        sb.append(", pageSize=").append(pageSize);
         sb.append(", sorts=").append(sorts);
         sb.append('}');
         return sb.toString();

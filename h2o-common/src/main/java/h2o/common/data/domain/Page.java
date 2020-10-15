@@ -8,13 +8,13 @@ public class Page<T> implements java.io.Serializable {
 
 	private Pageable pageInfo;
 
-	private List<T> records;
+	private List<T> content;
 
 	public Page() {}
 
-	public Page( Pageable pageInfo , List<T> records ) {
+	public Page( Pageable pageInfo , List<T> content) {
 	    this.pageInfo = pageInfo;
-	    this.records = records;
+	    this.content = content;
     }
 
 
@@ -26,19 +26,19 @@ public class Page<T> implements java.io.Serializable {
 		this.pageInfo = pageInfo;
 	}
 
-	public List<T> getRecords() {
-		return records;
+	public List<T> getContent() {
+		return content;
 	}
 
-	public void setRecords(List<T> records) {
-		this.records = records;
+	public void setContent(List<T> content) {
+		this.content = content;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Page{");
 		sb.append("pageInfo=").append(pageInfo);
-		sb.append(", records=").append(records == null ? 0 : records.size());
+		sb.append(", content=").append(content);
 		sb.append('}');
 		return sb.toString();
 	}

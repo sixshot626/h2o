@@ -116,7 +116,7 @@ public abstract class AbstractDao implements Dao {
 		Number count = this.getField(  t.e0 , t.e1 , args  );
 
 		PageInfo pageInfo = new PageInfo( pageRequest , count.longValue() );
-		if ( pageInfo.getTotalRecord() == 0L ) {
+		if ( pageInfo.getTotalElements() == 0L ) {
 			return new Page<Map<String, Object>>( pageInfo , ListBuilder.<Map<String, Object>>newEmptyList() );
 		}
 
@@ -133,7 +133,7 @@ public abstract class AbstractDao implements Dao {
 
 		Page<Map<String, Object>> pageMap = this.pagingLoad(sqlSource, pageRequest, args);
 
-		List<Map<String, Object>> rows = pageMap.getRecords();
+		List<Map<String, Object>> rows = pageMap.getContent();
 
 		List<T> objs = new ArrayList<T>(rows.size());
 

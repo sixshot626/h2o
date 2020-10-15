@@ -354,7 +354,7 @@ public final class DaoBasicUtil<E> {
                 " from " , this.entityParser.getTableName() ,  " where " , buildWhereStr( cis )   );
 
         return (Page<E>)dao.pagingLoad( entity.getClass() , sql.toString() ,
-                new PageRequest( pageRequest.getPageNo() , pageRequest.getPageRecordSize() ,
+                new PageRequest( pageRequest.getPageNo() , pageRequest.getPageSize() ,
                         convertSorts(pageRequest.getSorts()) )  , entity );
 
     }
@@ -372,7 +372,7 @@ public final class DaoBasicUtil<E> {
                 " from " , this.entityParser.getTableName() );
 
         return dao.pagingLoad( this.entityClazz , sql.toString() ,
-                new PageRequest( pageRequest.getPageNo() , pageRequest.getPageRecordSize() ,
+                new PageRequest( pageRequest.getPageNo() , pageRequest.getPageSize() ,
                         convertSorts(pageRequest.getSorts()) ) );
 
     }

@@ -6,48 +6,48 @@ public class ResultInfo implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1607703985782895368L;
 
-	private long firstResult;
-	private long maxResult;
+	private long start;
+	private long size;
 
     private List<SortInfo> sorts;
 
 	public ResultInfo() {}
 	
-	public ResultInfo(int maxResult) {
-		this.setMaxResult(maxResult);
-		this.setFirstResult(0);
+	public ResultInfo(int size) {
+		this.setSize(size);
+		this.setStart(0);
 	}
 
-	public ResultInfo(long firstResult, long maxResult) {
-		this.setMaxResult(maxResult);
-		this.setFirstResult(firstResult);
+	public ResultInfo(long start, long size) {
+		this.setSize(size);
+		this.setStart(start);
 	}
 
 	public ResultInfo(Pageable pageInfo) {
-		this.setMaxResult(pageInfo.getPageRecordSize());
-		this.setFirstResult((pageInfo.getPageNo() - 1) * pageInfo.getPageRecordSize());
+		this.setSize(pageInfo.getPageSize());
+		this.setStart((pageInfo.getPageNo() - 1) * pageInfo.getPageSize());
 	}
 
     public ResultInfo( PageRequest pageRequest ) {
-        this.setMaxResult(pageRequest.getPageRecordSize());
-        this.setFirstResult((pageRequest.getPageNo() - 1) * pageRequest.getPageRecordSize());
+        this.setSize(pageRequest.getPageSize());
+        this.setStart((pageRequest.getPageNo() - 1) * pageRequest.getPageSize());
         this.sorts = pageRequest.getSorts();
     }
 
-    public long getMaxResult() {
-		return maxResult;
+    public long getSize() {
+		return size;
 	}
 
-	public void setMaxResult(long maxResult) {
-		this.maxResult = maxResult;
+	public void setSize(long size) {
+		this.size = size;
 	}
 
-	public long getFirstResult() {
-		return firstResult;
+	public long getStart() {
+		return start;
 	}
 
-	public void setFirstResult(long firstResult) {
-		this.firstResult = firstResult;
+	public void setStart(long start) {
+		this.start = start;
 	}
 
     public List<SortInfo> getSorts() {
@@ -61,8 +61,8 @@ public class ResultInfo implements java.io.Serializable {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("ResultInfo{");
-		sb.append("firstResult=").append(firstResult);
-		sb.append(", maxResult=").append(maxResult);
+		sb.append("start=").append(start);
+		sb.append(", size=").append(size);
 		sb.append(", sorts=").append(sorts);
 		sb.append('}');
 		return sb.toString();
