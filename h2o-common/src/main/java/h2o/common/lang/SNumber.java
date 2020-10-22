@@ -84,7 +84,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
     }
 
     public String orElse(String other) {
-        return value == null ? other : value;
+        return this.isPresent() ? value : other;
     }
 
 

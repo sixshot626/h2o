@@ -169,6 +169,7 @@ public class TypeConverterManager {
 		register(BigInteger[].class, new ArrayConverter<>(this, BigInteger.class));
 
 		register(SNumber.class, new SNumberConverter());
+		register(SString.class, new SStringConverter());
 
 		register(SDate.class, new SDateConverter());
 		register(STime.class, new STimeConverter());
