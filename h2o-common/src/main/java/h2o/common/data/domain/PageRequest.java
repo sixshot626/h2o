@@ -15,6 +15,8 @@ public class PageRequest implements java.io.Serializable {
 
     private List<SortInfo> sorts;
 
+    public PageRequest() {
+    }
 
     public PageRequest(long pageNo, long pageSize) {
         this.pageNo = pageNo;
