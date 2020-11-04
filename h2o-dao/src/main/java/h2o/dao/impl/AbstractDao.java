@@ -141,7 +141,7 @@ public abstract class AbstractDao implements Dao {
 			objs.add(this.ormProc(row, clazz));
 		}
 
-		return new Page<T>( pageMap.getPageInfo() , objs );
+		return new Page<T>( pageMap , objs );
 
 	}
 

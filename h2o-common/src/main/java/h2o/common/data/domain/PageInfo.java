@@ -15,6 +15,13 @@ public class PageInfo implements Pageable, Serializable {
 
 	public PageInfo() {}
 
+	public PageInfo( Pageable pageable ) {
+		this.pageNo = pageable.getPageNo();
+		this.pageSize = pageable.getPageSize();
+		this.totalPages = pageable.getTotalPages();
+		this.totalElements = pageable.getTotalElements();
+	}
+
 	public PageInfo( long pageNo, long pageSize ) {
 		this.pageNo = pageNo;
 		this.pageSize = pageSize;
