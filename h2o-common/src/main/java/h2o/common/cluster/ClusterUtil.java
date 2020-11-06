@@ -5,6 +5,8 @@ import h2o.common.Tools;
 import h2o.common.lang.SDate;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.id.SnowGarlandIdGen;
+import h2o.common.util.lang.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 
@@ -27,9 +29,15 @@ public abstract class ClusterUtil {
 
         public synchronized String makeId() {
             Date cd = new Date();
-            return DateUtil.toString(cd , "yy") + idGen.nextKey( new SDate( DateUtil.toString(cd , "yyyy") + "-01-01" ) );
+            String yyyy = DateUtil.toString(cd , "yyyy");
+            return StringUtil.build(
+                        StringUtils.substring( yyyy , -2 )  ,
+                        idGen.nextKey( new SDate( StringUtil.build( yyyy , "-01-01" ) ,true )  )
+                    );
         }
 
     }
+
+
 
 }
