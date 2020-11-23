@@ -38,19 +38,20 @@ public class TransactionHelper {
         return this;
     }
 
-    public void execute( final WithoutReturnValueTransactionCallback action ) throws TransactionException {
-        transactionTemplate.execute( new TransactionCallback<Void>() {
-            @Override
-            public Void doInTransaction(TransactionStatus status) {
-                action.doInTransaction(status);
-                return null;
-            }
-        } );
-    }
 
 
     public <T> T executeAndReturn( TransactionCallback<T> action ) throws TransactionException {
         return transactionTemplate.execute(action);
+    }
+
+
+    public void execute( TransactionCallbackWithoutResult action ) throws TransactionException {
+        transactionTemplate.execute(new org.springframework.transaction.support.TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                action.doInTransaction( status );
+            }
+        });
     }
 
 
