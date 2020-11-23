@@ -46,10 +46,11 @@ public class TransactionHelper {
 
 
     public void execute( TransactionCallbackWithoutResult action ) throws TransactionException {
-        transactionTemplate.execute(new org.springframework.transaction.support.TransactionCallbackWithoutResult() {
+        transactionTemplate.execute(new TransactionCallback<Void>() {
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
+            public Void doInTransaction(TransactionStatus status) {
                 action.doInTransaction( status );
+                return null;
             }
         });
     }
