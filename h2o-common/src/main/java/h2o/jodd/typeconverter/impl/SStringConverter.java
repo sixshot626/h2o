@@ -26,6 +26,7 @@
 package h2o.jodd.typeconverter.impl;
 
 import h2o.common.lang.NullableValue;
+import h2o.common.lang.SDate;
 import h2o.common.lang.SString;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
@@ -53,6 +54,11 @@ public class SStringConverter implements TypeConverter<SString> {
 
 	@Override
 	public SString convert(final Object value) {
+
+		if (value == null) {
+			return new SString();
+		}
+
 		if ( value instanceof SString ) {
 			return (SString)value;
 		}
