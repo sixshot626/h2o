@@ -6,17 +6,25 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public class Var<T> implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = -1525947429459499316L;
-    
-    protected T value;
 
-    protected boolean setted;
+    private static final Var<?> EMPTY = new Var<>();
 
-    public Var() {
+    private T value;
+
+    private boolean setted;
+
+    private Var() {
     }
 
     public Var(T v) {
         this.value = v;
         this.setted = true;
+    }
+
+    public static<T> Var<T> empty() {
+        @SuppressWarnings("unchecked")
+        Var<T> t = (Var<T>) EMPTY;
+        return t;
     }
 
     @Override
