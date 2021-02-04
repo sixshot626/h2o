@@ -3,6 +3,7 @@ package h2o.dao.impl;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageInfo;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
@@ -72,11 +73,13 @@ public abstract class AbstractDao implements Dao {
 
 
 	@Override
-	public <T> T get(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
+	public <T> Val<T> get(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
 		try {
-			Map<String, Object> row = this.get(sqlSource, args);
 
-			return this.ormProc(row, clazz);
+			Val<Map<String, Object>> row = this.get(sqlSource, args);
+
+			return row.isPresent() ? new Val<>( this.ormProc(row.getValue() , clazz) ) : Val.empty();
+
 		} catch (Exception e) {
 			throw new DaoException(e);
 		}
@@ -113,9 +116,9 @@ public abstract class AbstractDao implements Dao {
 		String sql = sqlSource.getSql( paramMap );
 
 		Tuple2<String, String> t = _pagingProcessor.totalSql(sql);
-		Number count = this.getField(  t.e0 , t.e1 , args  );
+		Val<Number> count = this.getField(  t.e0 , t.e1 , args  );
 
-		PageInfo pageInfo = new PageInfo( pageRequest , count.longValue() );
+		PageInfo pageInfo = new PageInfo( pageRequest , count.get().longValue() );
 		if ( pageInfo.getTotalElements() == 0L ) {
 			return new Page<Map<String, Object>>( pageInfo , ListBuilder.<Map<String, Object>>newEmptyList() );
 		}
@@ -148,7 +151,7 @@ public abstract class AbstractDao implements Dao {
 
 
 	@Override
-	public <T> T getField(String sql, String fieldName, Object... args) throws DaoException {
+	public <T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException {
 		return this.getField( new TSql(sql) , fieldName, args );
 	}
 
@@ -158,7 +161,7 @@ public abstract class AbstractDao implements Dao {
 	}
 
 	@Override
-	public Map<String, Object> get(String sql, Object... args) throws DaoException {
+	public Val<Map<String, Object>> get(String sql, Object... args) throws DaoException {
 		return this.get( new TSql(sql) , args );
 	}
 
@@ -168,7 +171,7 @@ public abstract class AbstractDao implements Dao {
 	}
 
 	@Override
-	public <T> T get(Class<T> clazz, String sql, Object... args) throws DaoException {
+	public <T> Val<T> get(Class<T> clazz, String sql, Object... args) throws DaoException {
 		return this.get( clazz,  new TSql(sql), args );
 	}
 
@@ -178,7 +181,7 @@ public abstract class AbstractDao implements Dao {
 	}
 
 	@Override
-	public <T> T load(ResultSetCallback<T> rsCallback, String sql, Object... args) throws DaoException {
+	public <T> Val<T> load(ResultSetCallback<T> rsCallback, String sql, Object... args) throws DaoException {
 		return this.load( rsCallback, new TSql(sql), args );
 	}
 

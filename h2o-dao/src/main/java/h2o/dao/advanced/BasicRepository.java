@@ -3,6 +3,7 @@ package h2o.dao.advanced;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.SortInfo;
+import h2o.common.lang.Val;
 import h2o.common.util.lang.GenericsUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
@@ -117,51 +118,51 @@ public abstract class BasicRepository<E> {
 
 
 
-    public E get(E entity) {
+    public Val<E> get(E entity) {
         return createDaoBasicUtil().get(entity);
     }
 
-    public E getAndLock(E entity) {
+    public Val<E> getAndLock(E entity) {
         return createDaoBasicUtil().getAndLock(entity);
     }
 
-    public E getByUnique(E entity, String uniqueName) {
+    public Val<E> getByUnique(E entity, String uniqueName) {
         return createDaoBasicUtil().getByUnique(entity, uniqueName);
     }
 
-    public E getAndLockByUnique(E entity, String uniqueName) {
+    public Val<E> getAndLockByUnique(E entity, String uniqueName) {
         return createDaoBasicUtil().getAndLockByUnique(entity, uniqueName);
     }
 
-    public E getByAttr(E entity, String... attrNames) {
+    public Val<E> getByAttr(E entity, String... attrNames) {
         return createDaoBasicUtil().getByAttr(entity, attrNames);
     }
 
-    public E getAndLockByAttr(E entity, String... attrNames) {
+    public Val<E> getAndLockByAttr(E entity, String... attrNames) {
         return createDaoBasicUtil().getAndLockByAttr(entity, attrNames);
     }
 
-    public E selectOne(String[] fields, E entity) {
+    public Val<E> selectOne(String[] fields, E entity) {
         return createDaoBasicUtil().selectOne(fields, entity);
     }
 
-    public E selectOneAndLock(String[] fields, E entity) {
+    public Val<E> selectOneAndLock(String[] fields, E entity) {
         return createDaoBasicUtil().selectOneAndLock(fields, entity);
     }
 
-    public E selectOneByUnique(String[] fields, E entity, String uniqueName) {
+    public Val<E> selectOneByUnique(String[] fields, E entity, String uniqueName) {
         return createDaoBasicUtil().selectOneByUnique(fields, entity, uniqueName);
     }
 
-    public E selectOneAndLockByUnique(String[] fields, E entity, String uniqueName) {
+    public Val<E> selectOneAndLockByUnique(String[] fields, E entity, String uniqueName) {
         return createDaoBasicUtil().selectOneAndLockByUnique(fields, entity, uniqueName);
     }
 
-    public E selectOneByAttr(String[] fields, E entity, String... attrNames) {
+    public Val<E> selectOneByAttr(String[] fields, E entity, String... attrNames) {
         return createDaoBasicUtil().selectOneByAttr(fields, entity, attrNames);
     }
 
-    public E selectOneAndLockByAttr(String[] fields, E entity, String... attrNames) {
+    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, String... attrNames) {
         return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrNames);
     }
 

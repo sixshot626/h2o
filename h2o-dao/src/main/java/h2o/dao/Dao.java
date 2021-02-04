@@ -2,6 +2,7 @@ package h2o.dao;
 
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.lang.Val;
 import h2o.dao.exception.DaoException;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
@@ -26,21 +27,21 @@ public interface Dao extends Closeable {
 
 
 
-	<T> T getField(String sql, String fieldName, Object... args) throws DaoException;
+	<T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException;
 
-	<T> T getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
+	<T> Val<T> getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
 
 
 
 	<T> List<T> loadFields(String sql, String fieldName, Object... args) throws DaoException;
-	
+
 	<T> List<T> loadFields(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
 
 
 
-	Map<String,Object> get(String sql, Object... args)  throws DaoException;
-	
-	Map<String,Object> get(SqlSource sqlSource, Object... args)  throws DaoException;
+	Val<Map<String,Object>> get(String sql, Object... args)  throws DaoException;
+
+	Val<Map<String,Object>> get(SqlSource sqlSource, Object... args)  throws DaoException;
 
 
 
@@ -50,9 +51,9 @@ public interface Dao extends Closeable {
 
 
 
-	<T> T get(Class<T> clazz, String sql, Object... args)  throws DaoException;
-	
-	<T> T get(Class<T> clazz, SqlSource sqlSource, Object... args)  throws DaoException;
+	<T> Val<T> get(Class<T> clazz, String sql, Object... args)  throws DaoException;
+
+	<T> Val<T> get(Class<T> clazz, SqlSource sqlSource, Object... args)  throws DaoException;
 
 
 
@@ -62,9 +63,9 @@ public interface Dao extends Closeable {
 
 
 
-	<T> T load(ResultSetCallback<T> rsCallback, String sql, Object... args)   throws DaoException;
-	
-	<T> T load(ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args)   throws DaoException;
+	<T> Val<T> load(ResultSetCallback<T> rsCallback, String sql, Object... args)   throws DaoException;
+
+	<T> Val<T> load(ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args)   throws DaoException;
 
 
 

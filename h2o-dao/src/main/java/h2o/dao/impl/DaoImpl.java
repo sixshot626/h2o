@@ -8,6 +8,7 @@ import h2o.common.dao.butterflydb.ButterflyDao;
 import h2o.common.dao.butterflydb.ButterflyDb;
 import h2o.common.dao.butterflydb.impl.PreparedStatementManagerBatch;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
@@ -64,7 +65,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getField(SqlSource sqlSource, String fieldName , Object... args) throws DaoException {
+	public <T> Val<T> getField(SqlSource sqlSource, String fieldName , Object... args) throws DaoException {
 
 		try {
 
@@ -79,7 +80,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 				 return getBDao().readObject(sql, paramMap);
 			 } else {
                  Map<String, Object> data = getBDao().readMap(sql, paramMap);
-                 return data == null ? null : (T) data.get(fieldName);
+                 return data == null ? Val.empty() : new Val<>( (T) data.get(fieldName) );
 			 }
 
 		} catch (Exception e) {
@@ -127,7 +128,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 	}
 
 	@Override
-	public Map<String, Object> get(SqlSource sqlSource, Object... args) throws DaoException {
+	public Val<Map<String, Object>> get(SqlSource sqlSource, Object... args) throws DaoException {
 
 		try {
 
@@ -138,7 +139,8 @@ public class DaoImpl extends AbstractDao implements Dao {
 				log.info("get#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
 			}
 
-			return getBDao().readMap(sql, paramMap);
+			Map<String, Object> r = getBDao().readMap(sql, paramMap);
+			return r == null ? Val.empty() : new Val<>(r);
 
 		} catch (Exception e) {
 			throw new DaoException(e);
@@ -168,7 +170,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T load(final ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args) throws DaoException {
+	public <T> Val<T> load(final ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args) throws DaoException {
 		
 		try {
 			Map<String, Object> paramMap = this.argProc(args);
@@ -178,14 +180,14 @@ public class DaoImpl extends AbstractDao implements Dao {
 				log.info("load(ResultSetCallback)#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
 			}
 
-			return (T) getBDao().read(sql, new IResultSetProcessor() {
+			T r = (T) getBDao().read(sql, new IResultSetProcessor() {
 
 				@Override
 				public void init(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {
 
 					try {
 
-						rsCallback.init( rs, DaoImpl.this );
+						rsCallback.init(rs, DaoImpl.this);
 
 					} catch (SQLException e) {
 						throw e;
@@ -200,7 +202,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 					try {
 
-						rsCallback.process( rs, DaoImpl.this);
+						rsCallback.process(rs, DaoImpl.this);
 
 					} catch (SQLException e) {
 						throw e;
@@ -224,6 +226,8 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 
 			}, paramMap);
+
+			return r == null ? Val.empty() : new Val<>(r);
 
 		} catch (Exception e) {
 			throw new DaoException(e);

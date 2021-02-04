@@ -6,6 +6,7 @@ import h2o.common.concurrent.factory.InstanceTable;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.SortInfo;
+import h2o.common.lang.Val;
 import h2o.common.thirdparty.spring.util.Assert;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
@@ -199,63 +200,63 @@ public final class DaoBasicUtil<E> {
 
 
 
-    public E get( E entity ) {
+    public Val<E> get(E entity ) {
         return getByColInfos( entity , checkAndGetPk() , false );
     }
 
-    public E getAndLock( E entity ) {
+    public Val<E> getAndLock( E entity ) {
         return getByColInfos( entity , checkAndGetPk() , true );
     }
 
 
-    public E getByUnique( E entity , String uniqueName  ) {
+    public Val<E> getByUnique( E entity , String uniqueName  ) {
         return getByColInfos( entity , checkAndGetUnique(uniqueName) , false );
     }
 
-    public E getAndLockByUnique( E entity ,  String uniqueName  ) {
+    public Val<E> getAndLockByUnique( E entity ,  String uniqueName  ) {
         return getByColInfos( entity , checkAndGetUnique(uniqueName) , true );
     }
 
 
-    public E getByAttr( E entity ,  String... attrNames  ) {
+    public Val<E> getByAttr( E entity ,  String... attrNames  ) {
         return getByColInfos( entity , checkAndGetAttrs(attrNames) , false );
     }
 
-    public E getAndLockByAttr( E entity , String... attrNames  ) {
+    public Val<E> getAndLockByAttr( E entity , String... attrNames  ) {
         return getByColInfos( entity , checkAndGetAttrs(attrNames) , true );
     }
 
-    private E getByColInfos( E entity , List<ColInfo> cis , boolean lock  ){
+    private Val<E> getByColInfos( E entity , List<ColInfo> cis , boolean lock  ){
         return selectOneByColInfos( null , entity , cis , lock );
     }
 
 
 
-    public E selectOne( String[] fields , E entity  ) {
+    public Val<E> selectOne( String[] fields , E entity  ) {
         return selectOneByColInfos( fields , entity , checkAndGetPk() , false );
     }
 
-    public E selectOneAndLock( String[] fields , E entity ) {
+    public Val<E> selectOneAndLock( String[] fields , E entity ) {
         return selectOneByColInfos( fields , entity , checkAndGetPk() , true );
     }
 
-    public E selectOneByUnique( String[] fields , E entity , String uniqueName  ) {
+    public Val<E> selectOneByUnique( String[] fields , E entity , String uniqueName  ) {
         return selectOneByColInfos( fields , entity , checkAndGetUnique(uniqueName) , false );
     }
 
-    public E selectOneAndLockByUnique( String[] fields , E entity ,  String uniqueName  ) {
+    public Val<E> selectOneAndLockByUnique( String[] fields , E entity ,  String uniqueName  ) {
         return selectOneByColInfos( fields , entity , checkAndGetUnique(uniqueName) , true );
     }
 
-    public E selectOneByAttr( String[] fields , E entity , String... attrNames  ) {
+    public Val<E> selectOneByAttr( String[] fields , E entity , String... attrNames  ) {
         return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , false );
     }
 
-    public E selectOneAndLockByAttr( String[] fields , E entity , String... attrNames  ) {
+    public Val<E> selectOneAndLockByAttr( String[] fields , E entity , String... attrNames  ) {
         return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , true );
     }
 
-    private E selectOneByColInfos( String[] fields , E entity ,  List<ColInfo> cis , boolean lock  ) {
+    private Val<E> selectOneByColInfos( String[] fields , E entity ,  List<ColInfo> cis , boolean lock  ) {
 
         StringBuilder sql = new StringBuilder();
 
@@ -265,7 +266,7 @@ public final class DaoBasicUtil<E> {
             sql.append(" for update ");
         }
 
-        return (E)dao.get( entity.getClass() , sql.toString() , entity );
+        return (Val<E>) dao.get( entity.getClass() , sql.toString() , entity );
 
     }
 

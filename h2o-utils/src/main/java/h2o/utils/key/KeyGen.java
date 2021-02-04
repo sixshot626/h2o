@@ -2,6 +2,7 @@ package h2o.utils.key;
 
 
 import h2o.common.concurrent.LockMap;
+import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.math.IntArith;
@@ -152,9 +153,9 @@ public class KeyGen {
             @Override
             public Void doCallback( Dao dao , Object scopeObj ) throws Exception {
 
-                Map<String,Object> m =  dao.get( SELSEQ, "seqobj", key );
+                Val<Map<String,Object>> vm =  dao.get( SELSEQ, "seqobj", key );
 
-                if ( m == null ) {
+                if ( !vm.isPresent() ) {
 
                     try {
 
@@ -167,6 +168,8 @@ public class KeyGen {
                     rr[0] = null;
 
                 } else {
+
+                    Map<String, Object> m = vm.get();
 
                     try {
 
