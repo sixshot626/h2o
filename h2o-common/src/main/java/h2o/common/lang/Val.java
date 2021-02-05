@@ -11,7 +11,7 @@ public class Val<T> implements NullableValue , java.io.Serializable {
     
     private static final Val<?> EMPTY = new Val<>();
 
-    private final T value;
+    public  final T value;
 
     private final boolean setted;
 
