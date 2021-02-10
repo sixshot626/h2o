@@ -1,6 +1,7 @@
 package h2o.utils.store;
 
 
+import h2o.common.lang.SNumber;
 import h2o.common.util.io.StreamUtil;
 
 import java.io.Closeable;
@@ -11,13 +12,11 @@ import java.util.Map;
 
 public class FileSource implements Closeable {
 
-    public static final long MAX_PART_SIZE = 5L * 1024 * 1024 * 1024;
-
     private final InputStream inputStream;
 
     private final long objectSize;
 
-    private final long partSize;
+    private final SNumber partSize;
 
     private String contentType;
 
@@ -27,27 +26,27 @@ public class FileSource implements Closeable {
     public FileSource( InputStream inputStream, long objectSize, long partSize ) {
         this.inputStream = inputStream;
         this.objectSize = objectSize;
-        this.partSize = partSize;
+        this.partSize = new SNumber(partSize);
     }
 
     public FileSource( InputStream inputStream, String contentType, long objectSize, long partSize ) {
         this.inputStream = inputStream;
         this.objectSize = objectSize;
-        this.partSize = partSize;
+        this.partSize = new SNumber(partSize);;
         this.contentType = contentType;
     }
 
     public FileSource( InputStream inputStream, long objectSize ) {
         this.inputStream = inputStream;
         this.objectSize = objectSize;
-        this.partSize = MAX_PART_SIZE;
+        this.partSize = new SNumber();
     }
 
     public FileSource( InputStream inputStream, String contentType, long objectSize ) {
         this.inputStream = inputStream;
         this.contentType = contentType;
         this.objectSize = objectSize;
-        this.partSize = MAX_PART_SIZE;
+        this.partSize = new SNumber();
     }
 
     public void putInfo(String key , String value ) {
@@ -66,7 +65,7 @@ public class FileSource implements Closeable {
         return objectSize;
     }
 
-    public long getPartSize() {
+    public SNumber getPartSize() {
         return partSize;
     }
 

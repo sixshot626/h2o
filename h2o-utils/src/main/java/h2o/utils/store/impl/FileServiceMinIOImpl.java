@@ -4,31 +4,21 @@ package h2o.utils.store.impl;
 import h2o.common.Tools;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.exception.ExceptionUtil;
-import h2o.common.lang.LTimestamp;
 import h2o.common.result.Response;
 import h2o.common.result.TransResult;
 import h2o.common.result.TransReturn;
-import h2o.common.result.TriState;
-import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.io.StreamUtil;
 import h2o.utils.store.*;
-import io.minio.MinioClient;
-import io.minio.ObjectStat;
-import io.minio.PutObjectOptions;
+import io.minio.*;
 import io.minio.errors.ErrorResponseException;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 
 public class FileServiceMinIOImpl implements FileService {
-
-    private static final String EXT_INFO_PREFIX = "x-amz-meta-";
 
     private final MinioClient mc;
 
@@ -38,7 +28,12 @@ public class FileServiceMinIOImpl implements FileService {
 
     public FileServiceMinIOImpl(String endpoint, String accessKey, String secretKey) {
         try {
-            this.mc = new MinioClient( endpoint , accessKey , secretKey );
+            
+            this.mc =  MinioClient.builder()
+                    .endpoint(endpoint)
+                    .credentials(accessKey, secretKey)
+                    .build();
+
         } catch ( Exception e ) {
             throw ExceptionUtil.toRuntimeException( e );
         }
@@ -57,8 +52,8 @@ public class FileServiceMinIOImpl implements FileService {
 
         try {
 
-            if (!mc.bucketExists(bucket)) {
-                mc.makeBucket(bucket);
+            if (!mc.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())) {
+                mc.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
             }
         } catch ( Exception e ) {
             Tools.log.error(e);
@@ -67,16 +62,21 @@ public class FileServiceMinIOImpl implements FileService {
 
         try {
 
-            PutObjectOptions options = new PutObjectOptions(file.getObjectSize(),file.getPartSize());
+            PutObjectArgs.Builder putObjectArgsBuilder = PutObjectArgs.builder().bucket(bucket).object(fileId);
+
+
             if ( file.getContentType() != null ) {
-                options.setContentType(file.getContentType());
+                putObjectArgsBuilder.contentType(file.getContentType());
             }
             if ( file.getExtInfo() != null ) {
-                options.setHeaders(file.getExtInfo());
+                putObjectArgsBuilder.extraHeaders(file.getExtInfo());
             }
 
-            mc.putObject( bucket , fileId ,
-                    new ByteArrayInputStream( file.getFileContent() ), options );
+            putObjectArgsBuilder.stream( new ByteArrayInputStream( file.getFileContent() ) , file.getObjectSize(),
+                    file.getPartSize().isPresent() ? file.getPartSize().longValue() : ObjectWriteArgs.MAX_PART_SIZE );
+
+
+            mc.putObject( putObjectArgsBuilder.build() );
 
 
             return new TransReturn().ok(true);
@@ -91,43 +91,44 @@ public class FileServiceMinIOImpl implements FileService {
 
     @Override
     public Response putFile(String bucket, String fileId, FileSource source ) {
+
         try {
 
-            if (!mc.bucketExists(bucket)) {
-                mc.makeBucket(bucket);
+            if (!mc.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())) {
+                mc.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
             }
-
         } catch ( Exception e ) {
-
-                Tools.log.error(e);
-                return new TransReturn().setStatus( TriState.FAILURE).ok(false).exception(e);
-
+            Tools.log.error(e);
+            return new TransReturn().ok(false).exception(e);
         }
 
         try {
 
-            PutObjectOptions options = new PutObjectOptions( source.getObjectSize(), source.getPartSize() );
+            PutObjectArgs.Builder putObjectArgsBuilder = PutObjectArgs.builder().bucket(bucket).object(fileId);
+
+
             if ( source.getContentType() != null ) {
-                options.setContentType(source.getContentType());
+                putObjectArgsBuilder.contentType(source.getContentType());
             }
             if ( source.getExtInfo() != null ) {
-                options.setHeaders(source.getExtInfo());
+                putObjectArgsBuilder.extraHeaders(source.getExtInfo());
             }
 
-            mc.putObject( bucket , fileId ,
-                    source.getInputStream() , options  );
+            putObjectArgsBuilder.stream(  source.getInputStream()  , source.getObjectSize(),
+                    source.getPartSize().isPresent() ? source.getPartSize().longValue() : ObjectWriteArgs.MAX_PART_SIZE );
+
+            mc.putObject( putObjectArgsBuilder.build() );
 
 
             return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
-
             Tools.log.error(e);
             return new TransReturn().exception(e);
 
-        } finally {
+        } /* finally {
             StreamUtil.close( source );
-        }
+        }*/
     }
 
 
@@ -135,13 +136,12 @@ public class FileServiceMinIOImpl implements FileService {
     @Override
     public TransResult<FileMeta> getFileMeta(String bucket, String fileId) {
 
-        ObjectStat stat;
-        try {
-            stat = mc.statObject(bucket, fileId);
 
-            FileMeta meta = new FileMeta(stat.bucketName(), stat.name(),
-                    stat.length(), stat.contentType(), new LTimestamp( stat.createdTime().toInstant() ) ,
-                    parseExtInfo(stat.httpHeaders()));
+        try {
+            StatObjectResponse stat = mc.statObject(StatObjectArgs.builder().bucket(bucket).object(fileId).build());
+
+            FileMeta meta = new FileMeta( stat.bucket() , stat.object(),
+                    stat.size(), stat.contentType(), stat.userMetadata() );
 
             return new TransReturn<Void, FileMeta>().setResult(meta).ok(true);
 
@@ -165,16 +165,15 @@ public class FileServiceMinIOImpl implements FileService {
         BufferedInputStream fileIn = null;
         try {
 
-            fileIn = new BufferedInputStream( mc.getObject( bucket , fileId) );
+            fileIn = new BufferedInputStream( mc.getObject( GetObjectArgs.builder().bucket(bucket).object(fileId).build() ) );
 
             byte[] fileContent = h2o.jodd.io.IOUtil.readBytes(fileIn);
             FileObject fileObject = new FileObject( fileContent );
 
-            ObjectStat stat = mc.statObject(bucket, fileId);
+            StatObjectResponse stat = mc.statObject(StatObjectArgs.builder().bucket(bucket).object(fileId).build());
 
-            fileObject.setCreateTime( new LTimestamp(stat.createdTime().toInstant()) );
             fileObject.setContentType( stat.contentType() );
-            fileObject.setExtInfo( parseExtInfo( stat.httpHeaders() ) );
+            fileObject.setExtInfo( stat.userMetadata() );
 
             return new TransReturn<Void, FileObject>().setResult( fileObject ).ok(true);
 
@@ -201,12 +200,14 @@ public class FileServiceMinIOImpl implements FileService {
         FileSource source = null;
         try {
 
-            ObjectStat stat = mc.statObject(bucket, fileId);
+            StatObjectResponse stat = mc.statObject(StatObjectArgs.builder().bucket(bucket).object(fileId).build());
 
-            source = new FileSource( mc.getObject( bucket , fileId) , stat.length() );
+            GetObjectResponse objectResponse = mc.getObject(GetObjectArgs.builder().bucket(bucket).object(fileId).build());
+
+            source = new FileSource( objectResponse , stat.size() );
 
             source.setContentType( stat.contentType() );
-            source.setExtInfo( parseExtInfo( stat.httpHeaders() ) );
+            source.setExtInfo( stat.userMetadata() );
 
             consumer.accept( source );
 
@@ -218,22 +219,6 @@ public class FileServiceMinIOImpl implements FileService {
     }
 
 
-    private Map<String, String> parseExtInfo(Map<String, List<String>> headers ) {
-
-        Map<String, String> extInfo = MapBuilder.newMap();
-
-        for ( Map.Entry<String, List<String>> h : headers.entrySet() ) {
-            if ( h.getKey().startsWith( EXT_INFO_PREFIX ) ) {
-                extInfo.put(StringUtils.substringAfter( h.getKey() , EXT_INFO_PREFIX ) , h.getValue().get(0) );
-            }
-        }
-
-        return extInfo;
-
-    }
-
-
-
 
 
     @Override
@@ -241,7 +226,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         try {
 
-            mc.removeObject( bucket , fileId );
+            mc.removeObject( RemoveObjectArgs.builder().bucket(bucket).object(fileId).build() );
 
             return new TransReturn().ok(true);
 

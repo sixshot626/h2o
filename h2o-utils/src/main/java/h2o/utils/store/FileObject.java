@@ -1,49 +1,45 @@
 package h2o.utils.store;
 
-import h2o.common.lang.LTimestamp;
+import h2o.common.lang.SNumber;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FileObject implements java.io.Serializable {
 
-    public static final long MAX_PART_SIZE = 5L * 1024 * 1024 * 1024;
-
     private final byte[] fileContent;
 
     private final long objectSize;
 
-    private final long partSize;
+    private final SNumber partSize;
 
     private String contentType;
-
-    private LTimestamp createTime;
 
     private Map<String, String> extInfo;
 
     public FileObject( byte[] fileContent , long partSize) {
         this.fileContent = fileContent;
         this.objectSize = fileContent.length;
-        this.partSize = partSize;
+        this.partSize = new SNumber(partSize);
     }
 
     public FileObject( byte[] fileContent, String contentType , long partSize) {
         this.fileContent = fileContent;
         this.objectSize = fileContent.length;
-        this.partSize = partSize;
+        this.partSize = new SNumber(partSize);
         this.contentType = contentType;
     }
 
     public FileObject( byte[] fileContent) {
         this.fileContent = fileContent;
         this.objectSize = fileContent.length;
-        this.partSize = MAX_PART_SIZE;
+        this.partSize = new SNumber();
     }
 
     public FileObject( byte[] fileContent, String contentType) {
         this.fileContent = fileContent;
         this.objectSize = fileContent.length;
-        this.partSize = MAX_PART_SIZE;
+        this.partSize = new SNumber();
         this.contentType = contentType;
     }
 
@@ -62,7 +58,7 @@ public class FileObject implements java.io.Serializable {
         return objectSize;
     }
 
-    public long getPartSize() {
+    public SNumber getPartSize() {
         return partSize;
     }
 
@@ -72,14 +68,6 @@ public class FileObject implements java.io.Serializable {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
-    }
-
-    public LTimestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LTimestamp createTime) {
-        this.createTime = createTime;
     }
 
     public Map<String, String> getExtInfo() {
