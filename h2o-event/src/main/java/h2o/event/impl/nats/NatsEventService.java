@@ -75,7 +75,7 @@ public class NatsEventService<E> implements EventService<E> {
 
 
 
-    private EventSender<E> eventSender = new EventSender<E>() {
+    private final EventSender<E> eventSender = new EventSender<E>() {
 
         @Override
         public void close() throws IOException {
