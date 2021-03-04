@@ -1,10 +1,12 @@
 package h2o.event;
 
-/**
- * Created by zhangjianwei on 16/7/2.
- */
-public interface EventSender {
+import h2o.common.result.TransStatus;
+import h2o.common.result.TriState;
 
-    void putEvents(Event... events);
+import java.io.Closeable;
+
+public interface EventSender<E> extends Closeable {
+
+    TransStatus<TriState> post( String subject , E event );
 
 }
