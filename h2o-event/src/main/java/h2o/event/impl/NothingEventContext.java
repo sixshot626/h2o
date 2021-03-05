@@ -17,6 +17,6 @@ public class NothingEventContext implements EventContext {
     public void delete() {}
 
     @Override
-    public void reply(Object r) {}
+    public void reply( Object r ) {}
 
 }

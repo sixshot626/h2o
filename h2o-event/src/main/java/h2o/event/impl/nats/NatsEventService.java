@@ -30,14 +30,14 @@ public class NatsEventService<E> implements EventService<E> {
 
     private Val<Connection> connectionVal = Val.empty();
 
-    public NatsEventService(Options options , EventModem<E,ByteArray> modem ) {
+    public NatsEventService( Options options , EventModem<E,ByteArray> modem ) {
         this.options = options;
         this.modem = modem;
     }
 
     public void init() {
         try {
-            connectionVal = new Val<>(Nats.connect(options));
+            connectionVal = new Val<>( Nats.connect( options ) );
         } catch (Exception e) {
             throw ExceptionUtil.toRuntimeException(e);
         }
@@ -55,7 +55,7 @@ public class NatsEventService<E> implements EventService<E> {
         }
     }
 
-    protected TransStatus<TriState> realPublish(String subject, ByteArray body ) {
+    protected TransStatus<TriState> realPublish( String subject, ByteArray body ) {
 
         try {
             this.connectionVal.get().publish( subject , body.get() );
@@ -66,9 +66,10 @@ public class NatsEventService<E> implements EventService<E> {
 
     }
 
-    protected void realSubcribe( String topical, Consumer<ByteArray> consumer) {
+    protected void realSubcribe( String topical, Consumer<ByteArray> consumer ) {
 
-        this.connectionVal.get().createDispatcher(msq-> consumer.accept( new ByteArray(msq.getData()) ) )
+        this.connectionVal.get()
+                .createDispatcher(msq-> consumer.accept( new ByteArray(msq.getData()) ) )
                 .subscribe( topical );
 
     }
@@ -82,19 +83,19 @@ public class NatsEventService<E> implements EventService<E> {
         }
 
         @Override
-        public TransStatus<TriState> publish(String subject, E event) {
+        public TransStatus<TriState> publish( String subject, E event ) {
             return NatsEventService.this.realPublish( subject , NatsEventService.this.modem.encode( event ) );
         }
     };
 
 
     @Override
-    public EventPublisher<E> publisher(String channel) {
+    public EventPublisher<E> publisher( String channel ) {
         return eventPublisher;
     }
 
     @Override
-    public void subcribe(String topical, BiConsumer<EventContext, E> consumer ) {
+    public void subcribe( String topical, BiConsumer<EventContext, E> consumer ) {
         this.realSubcribe( topical , data-> consumer.accept(new NothingEventContext() , this.modem.parse(data) ) );
     }
 
