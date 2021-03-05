@@ -55,7 +55,7 @@ public class NatsEventService<E> implements EventService<E> {
         }
     }
 
-    protected TransStatus<TriState> realPost( String subject, ByteArray body ) {
+    protected TransStatus<TriState> realPublish(String subject, ByteArray body ) {
 
         try {
             this.connectionVal.get().publish( subject , body.get() );
@@ -82,8 +82,8 @@ public class NatsEventService<E> implements EventService<E> {
         }
 
         @Override
-        public TransStatus<TriState> post(String subject, E event) {
-            return NatsEventService.this.realPost( subject , NatsEventService.this.modem.encode( event ) );
+        public TransStatus<TriState> publish(String subject, E event) {
+            return NatsEventService.this.realPublish( subject , NatsEventService.this.modem.encode( event ) );
         }
     };
 

@@ -7,6 +7,6 @@ import java.io.Closeable;
 
 public interface EventPublisher<E> extends Closeable {
 
-    TransStatus<TriState> post( String subject , E event );
+    TransStatus<TriState> publish(String subject , E event );
 
 }
