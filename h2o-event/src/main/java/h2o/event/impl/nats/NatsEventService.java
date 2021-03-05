@@ -28,7 +28,7 @@ public class NatsEventService<E> implements EventService<E> {
 
     private final EventModem<E,ByteArray> modem;
 
-    private Val<Connection> connectionVal = Val.empty();
+    private volatile Val<Connection> connectionVal = Val.empty();
 
     public NatsEventService( Options options , EventModem<E,ByteArray> modem ) {
         this.options = options;
