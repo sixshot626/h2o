@@ -14,6 +14,7 @@ import h2o.event.EventPublisher;
 import h2o.event.EventService;
 import h2o.event.impl.NothingEventContext;
 import io.nats.client.Connection;
+import io.nats.client.Dispatcher;
 import io.nats.client.Nats;
 import io.nats.client.Options;
 
@@ -67,12 +68,15 @@ public class NatsEventService<E> implements EventService<E> {
 
     }
 
-    protected void realSubcribe( String topical, Consumer<ByteArray> consumer ) {
+    protected void realSubcribe( String topical, SString group , Consumer<ByteArray> consumer ) {
+        Dispatcher dispatcher = this.connectionVal.get()
+                .createDispatcher(msq -> consumer.accept(new ByteArray(msq.getData())));
 
-        this.connectionVal.get()
-                .createDispatcher(msq-> consumer.accept( new ByteArray(msq.getData()) ) )
-                .subscribe( topical );
-
+        if ( group.isPresent() ) {
+            dispatcher.subscribe( topical , group.get() );
+        } else {
+            dispatcher.subscribe( topical );
+        }
     }
 
 
@@ -95,8 +99,8 @@ public class NatsEventService<E> implements EventService<E> {
     }
 
     @Override
-    public void subcribe( String topical, BiConsumer<EventContext, E> consumer ) {
-        this.realSubcribe( topical , data-> consumer.accept( new NothingEventContext() , this.modem.parse(data) ) );
+    public void subcribe( String topical, SString group , BiConsumer<EventContext, E> consumer ) {
+        this.realSubcribe( topical , group , data-> consumer.accept( new NothingEventContext() , this.modem.parse(data) ) );
     }
 
 
