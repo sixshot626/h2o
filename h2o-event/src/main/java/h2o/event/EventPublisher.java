@@ -5,7 +5,7 @@ import h2o.common.result.TriState;
 
 import java.io.Closeable;
 
-public interface EventSender<E> extends Closeable {
+public interface EventPublisher<E> extends Closeable {
 
     TransStatus<TriState> post( String subject , E event );
 

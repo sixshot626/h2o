@@ -9,7 +9,7 @@ import h2o.common.result.TransStatus;
 import h2o.common.result.TriState;
 import h2o.event.EventContext;
 import h2o.event.EventModem;
-import h2o.event.EventSender;
+import h2o.event.EventPublisher;
 import h2o.event.EventService;
 import h2o.event.impl.NothingEventContext;
 import io.nats.client.Connection;
@@ -75,7 +75,7 @@ public class NatsEventService<E> implements EventService<E> {
 
 
 
-    private final EventSender<E> eventSender = new EventSender<E>() {
+    private final EventPublisher<E> eventPublisher = new EventPublisher<E>() {
 
         @Override
         public void close() throws IOException {
@@ -89,8 +89,8 @@ public class NatsEventService<E> implements EventService<E> {
 
 
     @Override
-    public EventSender<E> sender(String channel) {
-        return eventSender;
+    public EventPublisher<E> publisher(String channel) {
+        return eventPublisher;
     }
 
     @Override
