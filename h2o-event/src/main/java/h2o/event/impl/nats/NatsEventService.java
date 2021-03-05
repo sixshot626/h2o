@@ -3,6 +3,7 @@ package h2o.event.impl.nats;
 
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.ByteArray;
+import h2o.common.lang.SString;
 import h2o.common.lang.Val;
 import h2o.common.result.TransReturn;
 import h2o.common.result.TransStatus;
@@ -89,7 +90,7 @@ public class NatsEventService<E> implements EventService<E> {
 
 
     @Override
-    public EventPublisher<E> publisher( String channel ) {
+    public EventPublisher<E> publisher( SString channel ) {
         return eventPublisher;
     }
 
