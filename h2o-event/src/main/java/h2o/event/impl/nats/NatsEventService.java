@@ -28,7 +28,7 @@ public class NatsEventService<E> implements EventService<E> {
 
     private final EventModem<E,ByteArray> modem;
 
-    private volatile Val<Connection> connectionVal = Val.empty();
+    protected volatile Val<Connection> connectionVal = Val.empty();
 
     public NatsEventService( Options options , EventModem<E,ByteArray> modem ) {
         this.options = options;
@@ -37,7 +37,7 @@ public class NatsEventService<E> implements EventService<E> {
 
     public void init() {
         try {
-            connectionVal = new Val<>( Nats.connect( options ) );
+            this.connectionVal = new Val<>( Nats.connect( options ) );
         } catch (Exception e) {
             throw ExceptionUtil.toRuntimeException(e);
         }
@@ -75,7 +75,6 @@ public class NatsEventService<E> implements EventService<E> {
     }
 
 
-
     private final EventPublisher<E> eventPublisher = new EventPublisher<E>() {
 
         @Override
@@ -96,9 +95,8 @@ public class NatsEventService<E> implements EventService<E> {
 
     @Override
     public void subcribe( String topical, BiConsumer<EventContext, E> consumer ) {
-        this.realSubcribe( topical , data-> consumer.accept(new NothingEventContext() , this.modem.parse(data) ) );
+        this.realSubcribe( topical , data-> consumer.accept( new NothingEventContext() , this.modem.parse(data) ) );
     }
-
 
 
 }
