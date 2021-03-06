@@ -26,6 +26,7 @@ public class NatsEventService<E> implements EventService {
     }
 
 
+    @Override
     public void init() {
         try {
             this.connectionVal = new Val<>( Nats.connect( options ) );
@@ -34,8 +35,8 @@ public class NatsEventService<E> implements EventService {
         }
     }
 
-
-    public void close() {
+    @Override
+    public void stop() {
         if( this.connectionVal.isPresent() ) {
             try {
                 this.connectionVal.get().close();

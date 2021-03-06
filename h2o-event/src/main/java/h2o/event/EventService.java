@@ -15,4 +15,8 @@ public interface EventService {
 
     void subcribe( String topical , SString group , BiConsumer<EventContext, ByteArray> consumer );
 
+    void init();
+
+    void stop();
+
 }
