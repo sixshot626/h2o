@@ -1,10 +1,9 @@
 package h2o.event.impl;
 
+import h2o.common.lang.ByteArray;
 import h2o.event.EventContext;
 
-/**
- * Created by zhangjianwei on 2017/5/23.
- */
+
 public class NothingEventContext implements EventContext {
 
     @Override
@@ -14,9 +13,9 @@ public class NothingEventContext implements EventContext {
     public void reject() {}
 
     @Override
-    public void delete() {}
+    public void hide( java.time.Duration timeout) {}
 
     @Override
-    public void reply( Object r ) {}
+    public void reply( ByteArray r ) {}
 
 }

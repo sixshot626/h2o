@@ -1,17 +1,18 @@
 package h2o.event;
 
+import h2o.common.lang.ByteArray;
 import h2o.common.lang.SString;
 
 import java.util.function.BiConsumer;
 
-public interface EventService<E> {
+public interface EventService {
 
-    default EventPublisher<E> publisher() {
+    default EventPublisher publisher() {
         return this.publisher( new SString() );
     }
 
-    EventPublisher<E> publisher( SString channel );
+    EventPublisher publisher( SString channel );
 
-    void subcribe( String topical , SString group , BiConsumer<EventContext,E> consumer );
+    void subcribe( String topical , SString group , BiConsumer<EventContext, ByteArray> consumer );
 
 }

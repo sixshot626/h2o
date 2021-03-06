@@ -5,37 +5,26 @@ import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.ByteArray;
 import h2o.common.lang.SString;
 import h2o.common.lang.Val;
-import h2o.common.result.TransReturn;
-import h2o.common.result.TransStatus;
-import h2o.common.result.TriState;
 import h2o.event.EventContext;
-import h2o.event.EventModem;
 import h2o.event.EventPublisher;
 import h2o.event.EventService;
-import h2o.event.impl.NothingEventContext;
-import io.nats.client.Connection;
-import io.nats.client.Dispatcher;
-import io.nats.client.Nats;
-import io.nats.client.Options;
+import io.nats.client.*;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 
+public class NatsEventService<E> implements EventService {
 
-public class NatsEventService<E> implements EventService<E> {
 
-    private final Options options;
-
-    private final EventModem<E,ByteArray> modem;
-
+    protected final Options options;
     protected volatile Val<Connection> connectionVal = Val.empty();
 
-    public NatsEventService( Options options , EventModem<E,ByteArray> modem ) {
+    public NatsEventService( Options options ) {
         this.options = options;
-        this.modem = modem;
     }
+
 
     public void init() {
         try {
@@ -57,51 +46,57 @@ public class NatsEventService<E> implements EventService<E> {
         }
     }
 
-    protected TransStatus<TriState> realPublish( String subject, ByteArray body ) {
 
-        try {
-            this.connectionVal.get().publish( subject , body.get() );
-            return new TransReturn<TriState, Object>().setStatus( TriState.SUCCESS );
-        } catch ( Exception e ) {
-            return new TransReturn<TriState, Object>().setStatus( TriState.FAILURE );
-        }
+    @Override
+    public void subcribe( String topical, SString group ,  BiConsumer<EventContext , ByteArray> consumer ) {
 
-    }
-
-    protected void realSubcribe( String topical, SString group , Consumer<ByteArray> consumer ) {
         Dispatcher dispatcher = this.connectionVal.get()
-                .createDispatcher(msq -> consumer.accept(new ByteArray(msq.getData())));
+                .createDispatcher(msg -> consumer.accept( new NatsEventContext(msg) ,  new ByteArray(msg.getData())));
 
         if ( group.isPresent() ) {
             dispatcher.subscribe( topical , group.get() );
         } else {
             dispatcher.subscribe( topical );
         }
+
     }
 
 
-    private final EventPublisher<E> eventPublisher = new EventPublisher<E>() {
+    protected void natsPublish( String subject, ByteArray body ) {
+        this.connectionVal.get().publish( subject , body.get() );
+    }
+
+    protected CompletableFuture<ByteArray> natsRequest( String subject, ByteArray body ) {
+
+        CompletableFuture<Message> res = this.connectionVal.get().request(subject, body.get());
+
+        return res.thenApply( msg-> new ByteArray(msg.getData()) );
+
+    }
+
+
+    protected final EventPublisher eventPublisher = new EventPublisher() {
 
         @Override
         public void close() throws IOException {
         }
 
         @Override
-        public TransStatus<TriState> publish( String subject, E event ) {
-            return NatsEventService.this.realPublish( subject , NatsEventService.this.modem.encode( event ) );
+        public void publish( String subject, ByteArray event ) {
+            natsPublish( subject , event );
         }
+
+        @Override
+        public CompletableFuture<ByteArray> request( String subject, ByteArray event ) {
+            return natsRequest( subject , event );
+        }
+
     };
 
 
     @Override
-    public EventPublisher<E> publisher( SString channel ) {
+    public EventPublisher publisher( SString channel ) {
         return eventPublisher;
     }
-
-    @Override
-    public void subcribe( String topical, SString group , BiConsumer<EventContext, E> consumer ) {
-        this.realSubcribe( topical , group , data-> consumer.accept( new NothingEventContext() , this.modem.parse(data) ) );
-    }
-
 
 }

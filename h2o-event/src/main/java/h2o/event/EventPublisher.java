@@ -1,12 +1,14 @@
 package h2o.event;
 
-import h2o.common.result.TransStatus;
-import h2o.common.result.TriState;
+import h2o.common.lang.ByteArray;
 
 import java.io.Closeable;
+import java.util.concurrent.CompletableFuture;
 
-public interface EventPublisher<E> extends Closeable {
+public interface EventPublisher extends Closeable {
 
-    TransStatus<TriState> publish( String subject , E event );
+    void publish( String subject , ByteArray event );
+
+    CompletableFuture<ByteArray> request(String subject , ByteArray event );
 
 }

@@ -1,16 +1,17 @@
 package h2o.event;
 
-/**
- * Created by zhangjianwei on 2017/5/23.
- */
+import h2o.common.lang.ByteArray;
+
+import java.time.Duration;
+
 public interface EventContext {
 
     void confirm();
 
     void reject();
 
-    void delete();
+    void hide( Duration timeout );
 
-    void reply( Object r );
+    void reply( ByteArray r );
 
 }
