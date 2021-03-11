@@ -1,65 +1,66 @@
 package h2o.common.concurrent;
 
-public class OneTimeInitVar<T> implements java.io.Serializable {	
+public class InitVar<T> implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1482561103424372788L;
 
-	private volatile T var;
+	private volatile T value;
 	
-	private final OneTimeInitVar<?> flag;
+	private final InitVar<?> flag;
 	
 	private final String errMsg;
 	
-	public OneTimeInitVar() {
+	public InitVar() {
 		this.flag = null;
 		this.errMsg = null;
 	}
 	
-	public OneTimeInitVar( String errMsg ) {
+	public InitVar(String errMsg ) {
 		this.flag 	= null;
 		this.errMsg = errMsg;
 	}
 	
-	public OneTimeInitVar( String errMsg , T defVal ) {
+	public InitVar(String errMsg , T defVal ) {
 		this.flag 	= null;
 		this.errMsg = errMsg;
-		this.var 	= defVal;
+		this.value = defVal;
 	}
 	
-	public OneTimeInitVar( OneTimeInitVar<?> flag ) {
+	public InitVar(InitVar<?> flag ) {
 		this.flag 	= flag;
 		this.errMsg = flag.errMsg;
 	}
 	
-	public OneTimeInitVar( OneTimeInitVar<?> flag , T defVal ) {
+	public InitVar(InitVar<?> flag , T defVal ) {
 		this.flag 	= flag;
 		this.errMsg = flag.errMsg;
-		this.var 	= defVal;
+		this.value = defVal;
 	}
 
-	public T getVar() {
-		return var;
+	public T getValue() {
+	    T _v = this.value;
+		return _v;
 	}
 	
 	public boolean isSetted() {
 		if( flag == null ) {
-			T _var = this.var;
+			T _var = this.value;
 			return _var != null;
 		} else {
 			return flag.isSetted();
 		}
 	}
 	
-	public boolean setVar(T var ) {
-		return this.setVar(var, false);
+	public boolean setValue( T value ) {
+		return this.setValue(value, false);
 	}
 
-	public boolean setVar(T var , boolean isSilently ) {
+	public boolean setValue(T value , boolean isSilently ) {
 		if( isSetted() ) {
 			if( isSilently || errMsg == null ) {				
 				return false;
 			} else {
-				throw new RuntimeException(errMsg);				
+				throw new IllegalStateException(errMsg);
 			}
 		}
 		synchronized (this) {
@@ -67,10 +68,10 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 				if( isSilently || errMsg == null ) {
 					return false;
 				} else {
-					throw new RuntimeException(errMsg);
+					throw new IllegalStateException(errMsg);
 				}
 			}
-			this.var = var;
+			this.value = value;
 		}
 		return true;
 	}
@@ -81,13 +82,13 @@ public class OneTimeInitVar<T> implements java.io.Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <F> OneTimeInitVar<F> getFlag() {
-		return (OneTimeInitVar<F>)flag;
+	public <F> InitVar<F> getFlag() {
+		return (InitVar<F>)flag;
 	}
 
 	@Override
 	public String toString() {
-		return var == null ? "<null>" : var.toString();
+		return value == null ? "<null>" : value.toString();
 	}
 	
 

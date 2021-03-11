@@ -11,14 +11,14 @@ public class Var<T> implements NullableValue , java.io.Serializable {
 
     private T value;
 
-    private boolean setted;
+    private long version;
 
     private Var() {
     }
 
     public Var(T v) {
         this.value = v;
-        this.setted = true;
+        this.version = 1L;
     }
 
     public static<T> Var<T> empty() {
@@ -38,11 +38,15 @@ public class Var<T> implements NullableValue , java.io.Serializable {
 
     public void setValue(T value) {
         this.value = value;
-        this.setted = true;
+        this.version++;
+    }
+
+    public long getVersion() {
+        return version;
     }
 
     public boolean isSetted() {
-        return setted;
+        return this.version != 0;
     }
 
 

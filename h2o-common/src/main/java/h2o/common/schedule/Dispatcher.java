@@ -2,7 +2,7 @@ package h2o.common.schedule;
 
 import h2o.common.concurrent.Door;
 import h2o.common.concurrent.Locks;
-import h2o.common.concurrent.OneTimeInitVar;
+import h2o.common.concurrent.InitVar;
 import h2o.common.concurrent.RunUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +18,15 @@ public class Dispatcher {
 
     private final Door door = new Door( true );
 	
-	private final OneTimeInitVar<Boolean> f = new OneTimeInitVar<Boolean>("Has started");
+	private final InitVar<Boolean> f = new InitVar<Boolean>("Has been started!");
 	
-	private final OneTimeInitVar<Long> firstDelay 	 = new OneTimeInitVar<Long>( f ,  0L );
+	private final InitVar<Long> firstDelay 	 = new InitVar<Long>( f ,  0L );
 	
-	private final OneTimeInitVar<Long> okSleepTime	 = new OneTimeInitVar<Long>( f ,  100L );
-	private final OneTimeInitVar<Long> freeSleepTime = new OneTimeInitVar<Long>( f ,  60000L );
-	private final OneTimeInitVar<Long> errSleepTime  = new OneTimeInitVar<Long>( f ,  60000L );
+	private final InitVar<Long> okSleepTime	 = new InitVar<Long>( f ,  100L );
+	private final InitVar<Long> freeSleepTime = new InitVar<Long>( f ,  60000L );
+	private final InitVar<Long> errSleepTime  = new InitVar<Long>( f ,  60000L );
 	
-	private final OneTimeInitVar<RepetitiveTask>  task = new OneTimeInitVar<RepetitiveTask>( f ,  null);	
+	private final InitVar<RepetitiveTask> task = new InitVar<RepetitiveTask>( f ,  null);
 	
 
 	private volatile boolean stop = false;
@@ -54,7 +54,7 @@ public class Dispatcher {
 	
 	private Future<?> startTask() {		
 		
-		f.setVar(true);
+		f.setValue(true);
 		running = true;
 		
 		return RunUtil.call( new Runnable() {
@@ -63,7 +63,7 @@ public class Dispatcher {
 				
 				try {
 				
-					sleep(firstDelay.getVar());
+					sleep(firstDelay.getValue());
 					
 
 					while( !stop ) {
@@ -71,11 +71,11 @@ public class Dispatcher {
 						long st;
 						
 						try {
-                            TaskResult tr = task.getVar().doTask();
+                            TaskResult tr = task.getValue().doTask();
 							if( tr.taskState == TaskState.Free ) {
-								st = freeSleepTime.getVar();
+								st = freeSleepTime.getValue();
 							} else if( tr.taskState == TaskState.Ok ) {
-								st = okSleepTime.getVar();
+								st = okSleepTime.getValue();
 							} else if( tr.taskState == TaskState.Continue ) {
 								st = 0;
 							} else if( tr.taskState == TaskState.Wait ) {
@@ -91,13 +91,13 @@ public class Dispatcher {
 						    if( interruptible ) {
                                 throw e;
                             } else {
-                                st = errSleepTime.getVar();
+                                st = errSleepTime.getValue();
                             }
 
 						} catch( Throwable e) {
 
 							log.error("Dispatcher-run",e);
-							st = errSleepTime.getVar();
+							st = errSleepTime.getValue();
 
 						}
 
@@ -171,11 +171,11 @@ public class Dispatcher {
 		lock.lock();
 		try {
 
-			this.task.setVar(task);		
+			this.task.setValue(task);
 			
-			if( freeSleepTime > 0 ) this.freeSleepTime.setVar(freeSleepTime) ;		
-			if( okSleepTime   > 0 ) this.okSleepTime.setVar(okSleepTime);
-			if( errSleepTime  > 0 ) this.errSleepTime.setVar(errSleepTime);		
+			if( freeSleepTime > 0 ) this.freeSleepTime.setValue(freeSleepTime) ;
+			if( okSleepTime   > 0 ) this.okSleepTime.setValue(okSleepTime);
+			if( errSleepTime  > 0 ) this.errSleepTime.setValue(errSleepTime);
 			
 			return this.start();
 		
@@ -191,23 +191,23 @@ public class Dispatcher {
 
 	
 	public void setTask(RepetitiveTask task) {
-		this.task.setVar(task);
+		this.task.setValue(task);
 	}
 
 	public void setFirstDelay(long firstDelay) {
-		this.firstDelay.setVar(firstDelay);
+		this.firstDelay.setValue(firstDelay);
 	}
 	
 	public void setFreeSleepTime(long freeSleepTime) {
-		this.freeSleepTime.setVar(freeSleepTime) ;	
+		this.freeSleepTime.setValue(freeSleepTime) ;
 	}
 	
 	public void setOkSleepTime(long okSleepTime) {
-		this.okSleepTime.setVar(okSleepTime);
+		this.okSleepTime.setValue(okSleepTime);
 	}
 	
 	public void setErrSleepTime(long errSleepTime) {
-		this.errSleepTime.setVar(errSleepTime);
+		this.errSleepTime.setValue(errSleepTime);
 	}
 
     public void setInterruptible( boolean interruptible ) {

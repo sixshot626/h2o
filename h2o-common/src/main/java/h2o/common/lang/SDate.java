@@ -184,12 +184,5 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
         return this.orElse("<null>");
     }
 
-    public static void main(String[] args) {
-        System.out.println(new SDate().equals( new SDate() {
-
-        } ));
-
-    }
-
 
 }

@@ -65,13 +65,7 @@ public class SString implements NullableValue , Comparable<SString> , java.io.Se
 
     @Override
     public String toString() {
-
-        if ( this.isPresent() ) {
-            return value;
-        } else {
-            return "<null>";
-        }
-
+        return this.orElse("<null>");
     }
 
 }
