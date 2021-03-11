@@ -41,6 +41,12 @@ public class Var<T> implements NullableValue , java.io.Serializable {
         this.version++;
     }
 
+    public Var<T> update( T value ) {
+        Var<T> newVar = new Var<>(value);
+        newVar.version = this.version + 1;
+        return newVar;
+    }
+
     public long getVersion() {
         return version;
     }
@@ -48,7 +54,6 @@ public class Var<T> implements NullableValue , java.io.Serializable {
     public boolean isSetted() {
         return this.version != 0;
     }
-
 
     public T get() {
 
