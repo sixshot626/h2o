@@ -1,14 +1,16 @@
 package h2o.common.cluster;
 
 import h2o.common.Mode;
-import h2o.common.exception.ExceptionUtil;
-import h2o.common.thirdparty.redis.JedisCallBack;
-import h2o.common.thirdparty.redis.JedisProvider;
+import h2o.common.lang.EBoolean;
+import h2o.common.lang.SString;
+import h2o.common.thirdparty.redis.Redis;
+import h2o.common.thirdparty.redis.RedisProvider;
 import h2o.common.util.id.RandomString;
 import h2o.common.util.id.UuidUtil;
+import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.SetArgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,40 +24,17 @@ public class ClusterLock {
 
     private final String id;
 
-    private final JedisProvider jedisProvider;
-
-    private final JedisCommands _jedis;
-
     private final String key;
 
     private final int expire;
 
-    volatile boolean run = true;
 
-    private volatile boolean locked = false;
-
-
-    public ClusterLock( JedisProvider jedisProvider, String key, int expire ) {
-        this( uuid(), jedisProvider , key , expire  );
-    }
-
-    public ClusterLock( String id, JedisProvider jedisProvider, String key, int expire ) {
-        this.id = id;
-        this.jedisProvider = jedisProvider;
-        this._jedis = null;
-        this.key = "H2OClusterLock_" + key;
-        this.expire = expire;
-    }
+    private final RedisProvider redisClient;
 
 
-    public ClusterLock( JedisCommands jedis, String key, int expire ) {
-        this( uuid(), jedis , key , expire  );
-    }
-
-    public ClusterLock( String id, JedisCommands jedis, String key, int expire ) {
-        this.id = id;
-        this.jedisProvider = null;
-        this._jedis = jedis;
+    public ClusterLock(RedisProvider redisClient, SString id, String key, int expire ) {
+        this.id = id.orElse( uuid() );
+        this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
         this.expire = expire;
     }
@@ -63,96 +42,110 @@ public class ClusterLock {
 
 
 
+    public EBoolean isLocked() {
 
-    private void tryLock( JedisCommands jedis ) {
+        try ( Redis<String, String> redis = this.redisClient.create() ) {
 
-        if ( "OK".equals(jedis.set( key, id ,  "NX" , "EX" , expire ) ) ) {
+            return EBoolean.valueOf( id.equals( redis.get(key) ));
 
-            locked = true;
+        } catch ( Exception e ) {
+            log.error( "" , e);
+        }
 
-        } else if ( id.equals(jedis.get(key) ) )  {
+        return EBoolean.NULL;
+    }
 
-            jedis.expire(key, expire);
-            locked = true;
+
+    private boolean tryLock( Redis<String, String> redis ) {
+
+        if ( "OK".equals( redis.set(key , id , new SetArgs().nx().ex( expire ) ) ) ) {
+
+            return true;
+
+        } else if ( id.equals( redis.get(key) ) )  {
+
+            redis.expire(key, expire);
+            return true;
 
         } else {
 
-            locked = false;
+            return false;
 
         }
 
     }
 
-    public boolean tryLock() {
 
-        try {
 
-            if ( jedisProvider == null ) {
+    public EBoolean tryLock() {
 
-                tryLock( this._jedis );
+        try ( Redis<String, String> redis = this.redisClient.create() ) {
 
-            } else jedisProvider.callback(new JedisCallBack<Void>() {
-
-                @Override
-                public Void doCallBack( JedisCommands jedis) throws Exception {
-
-                    tryLock( jedis );
-
-                    return null;
-
-                }
-
-            });
+            return EBoolean.valueOf(tryLock( redis ));
 
         } catch (Exception e) {
 
             e.printStackTrace();
             log.error( "" , e);
 
-            locked = false;
-
-            throw ExceptionUtil.toRuntimeException( e );
+            return EBoolean.NULL;
 
         }
 
-        return locked;
-
     }
 
 
-    public boolean lock() {
+    public EBoolean lock() {
         return lock( DEFAULT_TIME_OUT );
     }
 
-    public boolean lock( long timeout ) {
+    public EBoolean lock( long timeout ) {
 
-        long t = System.currentTimeMillis();
+        EBoolean lock = EBoolean.NULL;
 
-        do {
+        try ( Redis<String, String> redis = this.redisClient.create() ) {
 
-            if ( tryLock() ) {
-                return true;
-            }
 
-            try {
+            long t = System.currentTimeMillis();
 
-                TimeUnit.MILLISECONDS.sleep(50 );
+            do {
 
-            } catch (InterruptedException e) {
-            }
+                try {
+                    if (tryLock(redis)) {
+                        lock = EBoolean.TRUE;
+                        return EBoolean.TRUE;
+                    } else {
+                        lock = EBoolean.FALSE;
+                    }
+                } catch ( Exception e ) {
+                    log.error("" , e );
+                    lock = EBoolean.NULL;
+                }
 
-        } while ( System.currentTimeMillis() - t < timeout);
 
-        return false;
+                try {
+
+                    TimeUnit.MILLISECONDS.sleep(50);
+
+                } catch (InterruptedException e) {
+                }
+
+            } while (System.currentTimeMillis() - t < timeout);
+
+        } catch ( Exception e ) {
+            log.error("" , e);
+        }
+
+        return lock;
 
     }
 
 
 
-    private void unlockUNLUA( JedisCommands jedis ) {
+    private void unlockUNLUA( Redis<String,String> redis ) {
 
-        if ( id.equals( jedis.get(key) ) ) {
-            jedis.del(key);
+        if ( id.equals( redis.get(key) ) ) {
+            redis.del(key);
         }
 
     }
@@ -172,79 +165,42 @@ public class ClusterLock {
         UNLOCK_LUA = sb.toString();
     }
 
-    private void unlock( JedisCommands jedis ) {
-
-        if ( UNSUPPORT_LUA ) {
-
-            unlockUNLUA(jedis);
-
-        } else  try {
-
-                List<String> keys = Collections.singletonList( key );
-                List<String> values = Collections.singletonList( id );
-
-                Long result = 0L;
-                if (jedis instanceof JedisCluster) {
-
-                    result = (Long) (( JedisClusterScriptingCommands) jedis).eval(UNLOCK_LUA, keys, values);
-
-                } else if ( jedis instanceof Jedis) {
-
-                    result = (Long) (( ScriptingCommands ) jedis).eval(UNLOCK_LUA, keys, values);
-
-                }
-
-                if ( result == null || result.longValue() != 1L ) {
-                    unlockUNLUA(jedis);
-                }
-
-        } catch (Throwable e) {
-
-            log.error( "" , e);
-
-            unlockUNLUA(jedis);
-
-        }
-    }
-
-
-
-
 
     public void unlock() {
 
-        locked = false;
+        try ( Redis<String, String> redis = this.redisClient.create() ) {
 
-        try {
+            if (UNSUPPORT_LUA) {
 
-            if ( jedisProvider == null ) {
+                unlockUNLUA(redis);
 
-                unlock( this._jedis );
+            } else {
 
-            } else jedisProvider.callback(new JedisCallBack<Void>() {
+                try {
 
-                @Override
-                public Void doCallBack( JedisCommands jedis ) throws Exception {
+                    List<String> keys = Collections.singletonList(key);
+                    List<String> values = Collections.singletonList(id);
 
-                    unlock( jedis );
+                    Integer result = redis.eval( UNLOCK_LUA , ScriptOutputType.INTEGER , new String[] { key } , new String[] { id }  );
 
-                    return null;
+
+                    if (result == null || result.intValue() != 1) {
+                        unlockUNLUA(redis);
+                    }
+
+                } catch (Throwable e) {
+
+                    log.error("", e);
+
+                    unlockUNLUA(redis);
 
                 }
-
-            });
+            }
 
         } catch ( Exception e ) {
-
-            e.printStackTrace();
             log.error( "" , e);
-
         }
 
-    }
-
-    public boolean isLocked() {
-        return run && locked;
     }
 
 
