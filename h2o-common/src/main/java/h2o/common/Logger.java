@@ -1,7 +1,5 @@
 package h2o.common;
 
-import h2o.common.concurrent.factory.AbstractInstanceFactory;
-import h2o.common.concurrent.factory.InstanceTable;
 import h2o.common.util.lang.RuntimeUtil;
 import h2o.common.util.lang.StringUtil;
 import org.slf4j.LoggerFactory;
@@ -22,31 +20,19 @@ public class Logger {
 	private static final org.slf4j.Logger DEF_LOG = LoggerFactory.getLogger(Logger.class.getName());
 	private static final String DEFFMT = "{}";
 
-	
-	private final InstanceTable<String, org.slf4j.Logger> loggers = new InstanceTable<String, org.slf4j.Logger>(new AbstractInstanceFactory<org.slf4j.Logger>() {
-
-		@Override
-		public org.slf4j.Logger create(Object id) {
-			return LoggerFactory.getLogger((String)id);
-		}
-
-	});
 
 	private org.slf4j.Logger getLogger() {
 
 		String logUtilClassName = callClassName == null ? Logger.class.getName() : callClassName;
         String loggerName = RuntimeUtil.getCallClassName(logUtilClassName);
 
-
 		if (loggerName == null) {
 			return DEF_LOG;
 		} else {
-            return loggers.getAndCreateIfAbsent(loggerName);
+            return LoggerFactory.getLogger(loggerName);
 		}
 
 	}
-
-
 
 	public boolean isTraceEnabled() {
 		return this.getLogger().isTraceEnabled();

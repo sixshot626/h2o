@@ -1,8 +1,8 @@
 package h2o.common.schedule;
 
 import h2o.common.concurrent.Door;
-import h2o.common.concurrent.Locks;
 import h2o.common.concurrent.InitVar;
+import h2o.common.concurrent.Locks;
 import h2o.common.concurrent.RunUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
