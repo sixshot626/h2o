@@ -12,6 +12,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
 
     private static final long serialVersionUID = -263082729693656131L;
 
+    public static final SNumber NULL = new SNumber();
     public static final SNumber ZERO = new SNumber("0",true);
     public static final SNumber ONE  = new SNumber("1",true);
     

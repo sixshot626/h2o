@@ -4,6 +4,8 @@ public class ByteArray implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = -5075649510738424502L;
 
+    public static final ByteArray NULL = new ByteArray();
+
     private final byte[] value;
 
     public ByteArray() {

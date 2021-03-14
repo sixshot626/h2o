@@ -14,6 +14,8 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
 
     private static final long serialVersionUID = 3242879174207238197L;
 
+    public static final SDateTime NULL = new SDateTime();
+
     protected static final String DATE_FMT = "yyyy-MM-dd'T'HH:mm:ss";
     
     /**

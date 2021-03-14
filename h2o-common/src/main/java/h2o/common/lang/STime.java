@@ -14,6 +14,8 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
 
     private static final long serialVersionUID = -3750549384074422469L;
 
+    public static final STime NULL = new STime();
+
     protected static final String DATE_FMT = "HH:mm:ss";
 
     /**

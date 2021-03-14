@@ -14,6 +14,8 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
 
     private static final long serialVersionUID = 9012516608507340072L;
 
+    public static final SDate NULL = new SDate();
+
     protected static final String DATE_FMT = "yyyy-MM-dd";
 
 

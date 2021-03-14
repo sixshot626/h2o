@@ -13,6 +13,8 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
 
     private static final long serialVersionUID = -6995945806906201103L;
 
+    public static final LTimestamp NULL = new LTimestamp();
+
     protected static final String DATE_FMT = "yyyyMMddHHmmssSSS";
 
     protected final Long timestamp;

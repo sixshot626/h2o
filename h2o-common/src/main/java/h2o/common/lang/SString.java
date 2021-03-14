@@ -6,6 +6,8 @@ public class SString implements NullableValue , Comparable<SString> , java.io.Se
 
     private static final long serialVersionUID = -4583244600596748522L;
 
+    public static final SString NULL = new SString();
+
     protected final String value;
 
     public SString() {
