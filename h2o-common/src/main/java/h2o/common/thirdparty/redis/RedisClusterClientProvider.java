@@ -26,4 +26,7 @@ public class RedisClusterClientProvider extends AbstractRedisProvider implements
     }
 
 
+    public void shutdown() {
+        client.shutdown();
+    }
 }

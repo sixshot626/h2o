@@ -28,4 +28,7 @@ public class RedisClientProvider extends AbstractRedisProvider implements RedisP
     }
 
 
+    public void shutdown() {
+        client.shutdown();
+    }
 }
