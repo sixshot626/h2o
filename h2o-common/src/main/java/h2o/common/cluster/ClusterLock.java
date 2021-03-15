@@ -12,8 +12,8 @@ import io.lettuce.core.SetArgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 public class ClusterLock {
@@ -26,20 +26,18 @@ public class ClusterLock {
 
     private final String key;
 
-    private final int expire;
+    private final long expire;  // 秒
 
 
     private final RedisProvider redisClient;
 
 
-    public ClusterLock(RedisProvider redisClient, SString id, String key, int expire ) {
+    public ClusterLock(RedisProvider redisClient, SString id, String key, Duration expire ) {
         this.id = id.orElse( uuid() );
         this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
-        this.expire = expire;
+        this.expire = expire.get( ChronoUnit.SECONDS );
     }
-
-
 
 
     public EBoolean isLocked() {
@@ -178,11 +176,7 @@ public class ClusterLock {
 
                 try {
 
-                    List<String> keys = Collections.singletonList(key);
-                    List<String> values = Collections.singletonList(id);
-
-                    Integer result = redis.eval( UNLOCK_LUA , ScriptOutputType.INTEGER , new String[] { key } , new String[] { id }  );
-
+                    Integer result = (Integer) redis.eval( UNLOCK_LUA , ScriptOutputType.INTEGER , new String[] { key } , new String[] { id }  );
 
                     if (result == null || result.intValue() != 1) {
                         unlockUNLUA(redis);
