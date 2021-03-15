@@ -1,7 +1,6 @@
 package h2o.utils.key;
 
 
-import h2o.common.lang.Val;
 import h2o.dao.Dao;
 import h2o.dao.DaoCallback;
 import h2o.dao.DbUtil;
