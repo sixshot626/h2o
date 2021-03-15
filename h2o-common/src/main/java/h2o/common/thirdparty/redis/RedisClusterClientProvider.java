@@ -21,7 +21,7 @@ public class RedisClusterClientProvider extends AbstractRedisProvider implements
 
     @Override
     public <K, V> Redis<K, V> create( Val<RedisCodec<K, V>> codec ) {
-        StatefulRedisClusterConnection<K, V> conn = client.connect(codec.orElse((RedisCodec<K, V>) this.codec));
+        StatefulRedisClusterConnection<K, V> conn = client.connect( codec.orElse((RedisCodec<K, V>) this.defaultCodec ) );
         return this.proxy( conn , conn.sync() );
     }
 

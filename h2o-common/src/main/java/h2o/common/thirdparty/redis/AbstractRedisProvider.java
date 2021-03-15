@@ -6,10 +6,10 @@ import java.lang.reflect.Proxy;
 
 public abstract class AbstractRedisProvider {
 
-    protected RedisCodec<?,?> codec;
+    protected RedisCodec<?,?> defaultCodec;
 
     public void setCodec(RedisCodec<?, ?> codec) {
-        this.codec = codec;
+        this.defaultCodec = codec;
     }
 
 

@@ -22,8 +22,8 @@ public class RedisClientProvider extends AbstractRedisProvider implements RedisP
     }
 
     @Override
-    public <K, V> Redis<K, V> create(Val<RedisCodec<K, V>> codec) {
-        StatefulRedisConnection<K, V> conn = client.connect(codec.orElse((RedisCodec<K, V>) this.codec));
+    public <K, V> Redis<K, V> create( Val<RedisCodec<K, V>> codec ) {
+        StatefulRedisConnection<K, V> conn = client.connect(codec.orElse((RedisCodec<K, V>) this.defaultCodec));
         return this.proxy( conn , conn.sync() );
     }
 
