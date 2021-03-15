@@ -176,11 +176,11 @@ public class ClusterLock {
 
                 try {
 
-                    Integer result = (Integer) redis.eval( UNLOCK_LUA , ScriptOutputType.INTEGER , new String[] { key } , new String[] { id }  );
-
-                    if (result == null || result.intValue() != 1) {
+                    Object result = redis.eval( UNLOCK_LUA , ScriptOutputType.INTEGER , new String[] { key } , new String[] { id }  );
+                    if ( result == null ) {
                         unlockUNLUA(redis);
                     }
+
 
                 } catch (Throwable e) {
 
