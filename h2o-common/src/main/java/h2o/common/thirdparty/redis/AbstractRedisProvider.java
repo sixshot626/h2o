@@ -20,4 +20,17 @@ public abstract class AbstractRedisProvider {
                                 method.invoke( conn , args ) : method.invoke(redis, args) );
     }
 
+    protected <K, V> PubSubRedis<K, V> proxyPubSub( final Object conn , final Object redis ) {
+        return ( PubSubRedis<K, V> ) Proxy.newProxyInstance( conn.getClass().getClassLoader(),
+                new Class<?>[]{PubSubRedis.class}, ( proxy , method , args ) -> {
+                    String methodName = method.getName();
+                    if ("close".equals(methodName) ||
+                            "addListener".equals(methodName) || "removeListener".equals(methodName)) {
+                        return method.invoke(conn, args);
+                    } else {
+                        return method.invoke(redis, args);
+                    }
+                });
+    }
+
 }

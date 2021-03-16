@@ -13,6 +13,12 @@ public interface RedisProvider {
 
     <K, V> Redis<K, V> create( Val<RedisCodec<K, V>> codec );
 
+
+    PubSubRedis<String, String> createPubSub();
+
+    <K, V> PubSubRedis<K, V> createPubSub( Val<RedisCodec<K, V>> codec );
+
+
     default <R> Val<R> execute( Function<Redis<String,String> , R > func , boolean silent ) {
         try ( Redis<String,String> redis = this.create() ) {
 
@@ -49,5 +55,7 @@ public interface RedisProvider {
 
         }
     }
+
+
 
 }
