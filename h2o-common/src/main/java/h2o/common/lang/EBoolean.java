@@ -37,9 +37,4 @@ public enum EBoolean implements NullableValue {
         }
     }
 
-    public static EBoolean valueOf( BBoolean bool ) {
-       return EBoolean.valueOf( bool.getValue() );
-    }
-
-
 }

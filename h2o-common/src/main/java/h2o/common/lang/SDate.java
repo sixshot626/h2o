@@ -10,22 +10,23 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializable {
+public final class SDate implements NullableValue, Comparable<SDate>, java.io.Serializable {
 
-    private static final long serialVersionUID = 9012516608507340072L;
+    private static final long serialVersionUID = 6739233604857493058L;
 
     public static final SDate NULL = new SDate();
 
-    protected static final String DATE_FMT = "yyyy-MM-dd";
+    private static final String DATE_FMT = "yyyy-MM-dd";
+
 
 
     /**
      * 日期 yyyy-MM-dd
      */
-    protected final String date;
+    private final String value;
 
     public SDate() {
-        date = null;
+        this.value = null;
     }
 
     public SDate( String date ) {
@@ -34,9 +35,9 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
 
     public SDate( String dateStr , boolean direct ) {
         if ( direct ) {
-            this.date = dateStr;
+            this.value = dateStr;
         } else {
-            this.date = dateStr == null ? null : DateUtil.toString( toDate( dateStr , DATE_FMT ) , DATE_FMT );
+            this.value = dateStr == null ? null : DateUtil.toString( toDate( dateStr , DATE_FMT ) , DATE_FMT );
         }
     }
 
@@ -50,27 +51,27 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
 
 
     public SDate( LocalDate localDate ) {
-        this.date = localDate == null ? null : StringUtil.build(
+        this.value = localDate == null ? null : StringUtil.build(
                 StringUtils.leftPad( Integer.toString(localDate.getYear()) , 4 , '0') , "-" ,
                 StringUtils.leftPad( Integer.toString(localDate.getMonthValue()) , 2 , '0') , "-" ,
                 StringUtils.leftPad( Integer.toString(localDate.getDayOfMonth()) , 2 , '0') );
     }
 
     public SDate( Instant instant ) {
-        this.date = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+        this.value = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
     }
 
     public SDate( Date d ) {
-        this.date = d == null ? null : DateUtil.toString( d , DATE_FMT );
+        this.value = d == null ? null : DateUtil.toString( d , DATE_FMT );
     }
 
 
     public SDate( SDate sdate ) {
-        this.date = sdate.date;
+        this.value = sdate.value;
     }
 
 
-    protected static Date toDate( String date , String fmt ) {
+    static Date toDate( String date , String fmt ) {
         if ( date == null ) {
             return null;
         }
@@ -92,17 +93,17 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
 
     @Override
     public boolean isPresent() {
-        return date != null;
+        return this.value != null;
     }
 
     public String getValue() {
-        return date;
+        return this.value;
     }
 
     public String get() {
 
         if ( this.isPresent() ) {
-            return date;
+            return this.value;
         } else {
             throw new IllegalStateException();
         }
@@ -110,7 +111,7 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
     }
 
     public String orElse(String other) {
-        return  this.isPresent() ? date : other;
+        return  this.isPresent() ? this.value : other;
     }
 
     public String fmt( String fmt ) {
@@ -170,14 +171,14 @@ public class SDate implements NullableValue, Comparable<SDate>, java.io.Serializ
         SDate sDate = (SDate) o;
 
         return new EqualsBuilder()
-                .append(date, sDate.date)
+                .append(this.value, sDate.value)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(date)
+                .append(this.value)
                 .toHashCode();
     }
 

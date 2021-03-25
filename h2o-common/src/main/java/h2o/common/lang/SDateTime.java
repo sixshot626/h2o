@@ -10,21 +10,22 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.Serializable {
+public final class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.Serializable {
 
-    private static final long serialVersionUID = 3242879174207238197L;
+    private static final long serialVersionUID = 2203956607450263142L;
 
     public static final SDateTime NULL = new SDateTime();
 
-    protected static final String DATE_FMT = "yyyy-MM-dd'T'HH:mm:ss";
-    
+    private static final String DATE_FMT = "yyyy-MM-dd'T'HH:mm:ss";
+
+
     /**
      * 日期时间 yyyy-MM-dd HH:mm:ss
      */
-    protected final String dateTime;
+    private final String value;
 
     public SDateTime() {
-        dateTime = null;
+        this.value = null;
     }
 
     public SDateTime( String dateTime ) {
@@ -33,9 +34,9 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
 
     public SDateTime( String dateStr , boolean direct ) {
         if ( direct ) {
-            this.dateTime = dateStr;
+            this.value = dateStr;
         } else {
-            this.dateTime = dateStr == null ? null : DateUtil.toString( toDate(dateStr, DATE_FMT ) , DATE_FMT );
+            this.value = dateStr == null ? null : DateUtil.toString( toDate(dateStr, DATE_FMT ) , DATE_FMT );
         }
     }
 
@@ -52,7 +53,7 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
     }
 
     public SDateTime( LocalDateTime localDateTime ) {
-        this.dateTime = localDateTime == null ? null : StringUtil.build(
+        this.value = localDateTime == null ? null : StringUtil.build(
                 StringUtils.leftPad( Integer.toString(localDateTime.getYear()) , 4 , '0') , "-" ,
                 StringUtils.leftPad( Integer.toString(localDateTime.getMonthValue()) , 2 , '0') , "-" ,
                 StringUtils.leftPad( Integer.toString(localDateTime.getDayOfMonth()) , 2 , '0')  , "T" ,
@@ -62,19 +63,19 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
     }
 
     public SDateTime( Instant instant ) {
-        this.dateTime = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+        this.value = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
     }
 
     public SDateTime( Date d ) {
-        this.dateTime = d == null ? null : DateUtil.toString( d , DATE_FMT );
+        this.value = d == null ? null : DateUtil.toString( d , DATE_FMT );
     }
 
     public SDateTime( SDateTime sdatetime ) {
-        this.dateTime = sdatetime.dateTime;
+        this.value = sdatetime.value;
     }
 
 
-    protected static Date toDate( String date , String fmt ) {
+    private static Date toDate( String date , String fmt ) {
         return SDate.toDate( date, fmt );
     }
 
@@ -87,19 +88,19 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
 
     @Override
     public boolean isPresent() {
-        return dateTime != null;
+        return this.value != null;
     }
 
 
     public String getValue() {
-        return dateTime;
+        return this.value;
     }
 
 
     public String get() {
 
         if ( this.isPresent() ) {
-            return dateTime;
+            return this.value;
         } else {
             throw new IllegalStateException();
         }
@@ -109,7 +110,7 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
     public SDate getDate() {
 
         if ( this.isPresent() ) {
-            return SDate.from( this.dateTime , DATE_FMT );
+            return SDate.from( this.value, DATE_FMT );
         } else {
             return new SDate();
         }
@@ -120,7 +121,7 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
     public STime getTime() {
 
         if ( this.isPresent() ) {
-            return STime.from( this.dateTime , DATE_FMT );
+            return STime.from( this.value, DATE_FMT );
         } else {
             return new STime();
         }
@@ -129,7 +130,7 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
 
 
     public String orElse(String other) {
-        return this.isPresent() ?  dateTime : other;
+        return this.isPresent() ? value : other;
     }
 
     public String fmt( String fmt ) {
@@ -189,14 +190,14 @@ public class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.
         SDateTime sDate = (SDateTime) o;
 
         return new EqualsBuilder()
-                .append(dateTime, sDate.dateTime)
+                .append(value, sDate.value)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(dateTime)
+                .append(value)
                 .toHashCode();
     }
 

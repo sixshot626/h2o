@@ -9,57 +9,58 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.io.Serializable {
+public final class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.io.Serializable {
 
-    private static final long serialVersionUID = -6995945806906201103L;
+    private static final long serialVersionUID = -1956214343180325308L;
 
     public static final LTimestamp NULL = new LTimestamp();
 
-    protected static final String DATE_FMT = "yyyyMMddHHmmssSSS";
+    private static final String DATE_FMT = "yyyyMMddHHmmssSSS";
 
-    protected final Long timestamp;
+
+    private final Long value;
 
     public LTimestamp() {
-        this.timestamp = null;
+        this.value = null;
     }
 
     public LTimestamp( long timestamp ) {
-        this.timestamp = Long.valueOf(timestamp);
+        this.value = Long.valueOf(timestamp);
     }
 
     public LTimestamp( Long timestamp ) {
-        this.timestamp = timestamp;
+        this.value = timestamp;
     }
 
     public LTimestamp( SNumber timestamp ) {
-        this.timestamp = timestamp.toLong();
+        this.value = timestamp.toLong();
     }
 
     public LTimestamp( Instant instant ) {
-        this.timestamp = instant == null ? null : instant.toEpochMilli();
+        this.value = instant == null ? null : instant.toEpochMilli();
     }
 
     public LTimestamp( Date date ) {
-        this.timestamp = date == null ? null : date.getTime();
+        this.value = date == null ? null : date.getTime();
     }
 
     public LTimestamp( LTimestamp ltimestamp ) {
-        this.timestamp = ltimestamp.timestamp;
+        this.value = ltimestamp.value;
     }
 
     @Override
     public boolean isPresent() {
-        return timestamp != null;
+        return this.value != null;
     }
 
     public Long getValue() {
-        return timestamp;
+        return this.value;
     }
 
     public String get() {
 
         if ( this.isPresent() ) {
-            return DateUtil.toString( new Date(this.timestamp) , DATE_FMT );
+            return DateUtil.toString( new Date(this.value) , DATE_FMT );
         } else {
             throw new IllegalStateException();
         }
@@ -89,7 +90,7 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
     public Date toDate() {
 
         if ( this.isPresent() ) {
-            return new Date(this.timestamp);
+            return new Date(this.value);
         } else {
             throw new IllegalStateException();
         }
@@ -98,7 +99,7 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
     public Instant toInstant() {
 
         if ( this.isPresent() ) {
-            return Instant.ofEpochMilli(this.timestamp);
+            return Instant.ofEpochMilli(this.value);
         } else {
             throw new IllegalStateException();
         }
@@ -111,7 +112,7 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
     public SDateTime toSDateTime() {
 
         if ( this.isPresent() ) {
-            return new SDateTime( new Date( this.timestamp ) );
+            return new SDateTime( new Date( this.value) );
         } else {
             return new SDateTime();
         }
@@ -120,7 +121,7 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
 
     public SNumber toSNumber() {
         if ( this.isPresent() ) {
-            return new SNumber( this.timestamp );
+            return new SNumber( this.value);
         } else {
             return new SNumber();
         }
@@ -131,8 +132,8 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
     @Override
     public int compareTo( LTimestamp other ) {
 
-        Long l = this.isPresent() ? this.timestamp : new Long(0);
-        Long r = this.isPresent() ? other.timestamp : new Long(0);
+        Long l = this.isPresent() ? this.value : new Long(0);
+        Long r = this.isPresent() ? other.value : new Long(0);
 
         return l.compareTo(r);
 
@@ -148,14 +149,14 @@ public class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.i
         LTimestamp that = (LTimestamp) o;
 
         return new EqualsBuilder()
-                .append(timestamp, that.timestamp)
+                .append(value, that.value)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(timestamp)
+                .append(value)
                 .toHashCode();
     }
 

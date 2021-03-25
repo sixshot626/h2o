@@ -176,9 +176,7 @@ public class TypeConverterManager {
 		register(SDateTime.class, new SDateTimeConverter());
 		register(LTimestamp.class, new LTimestampConverter());
 
-		register(BBoolean.class, new BBooleanConverter());
 		register(EBoolean.class, new EBooleanConverter());
-
 
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());

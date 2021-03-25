@@ -2,13 +2,14 @@ package h2o.common.lang;
 
 import java.util.Objects;
 
-public class SString implements NullableValue , Comparable<SString> , java.io.Serializable {
+public final class SString implements NullableValue , Comparable<SString> , java.io.Serializable {
 
-    private static final long serialVersionUID = -4583244600596748522L;
+    private static final long serialVersionUID = 1323450637631928022L;
 
     public static final SString NULL = new SString();
 
-    protected final String value;
+
+    private final String value;
 
     public SString() {
         this.value = null;
@@ -20,7 +21,7 @@ public class SString implements NullableValue , Comparable<SString> , java.io.Se
 
     @Override
     public boolean isPresent() {
-        return value != null;
+        return this.value != null;
     }
 
     public String getValue() {

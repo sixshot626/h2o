@@ -1,10 +1,11 @@
 package h2o.common.lang;
 
-public class ByteArray implements NullableValue , java.io.Serializable {
+public final class ByteArray implements NullableValue , java.io.Serializable {
 
-    private static final long serialVersionUID = -5075649510738424502L;
+    private static final long serialVersionUID = 1620318712792869290L;
 
     public static final ByteArray NULL = new ByteArray();
+
 
     private final byte[] value;
 
@@ -18,17 +19,17 @@ public class ByteArray implements NullableValue , java.io.Serializable {
 
     @Override
     public boolean isPresent() {
-        return value != null;
+        return this.value != null;
     }
 
     public byte[] getValue() {
-        return value;
+        return this.value;
     }
 
     public byte[] get() {
 
         if ( this.isPresent() ) {
-            return value;
+            return this.value;
         }
 
         throw new IllegalStateException();

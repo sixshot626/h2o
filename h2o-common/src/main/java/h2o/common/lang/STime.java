@@ -10,21 +10,22 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
 
-public class STime implements NullableValue, Comparable<STime>, java.io.Serializable {
+public final class STime implements NullableValue, Comparable<STime>, java.io.Serializable {
 
-    private static final long serialVersionUID = -3750549384074422469L;
+    private static final long serialVersionUID = -1955168203520594449L;
 
     public static final STime NULL = new STime();
 
-    protected static final String DATE_FMT = "HH:mm:ss";
+    private static final String DATE_FMT = "HH:mm:ss";
+
 
     /**
      * 时间 HH:mm:ss
      */
-    protected final String time;
+    private final String value;
 
     public STime() {
-        time = null;
+        this.value = null;
     }
 
     public STime( String time ) {
@@ -33,9 +34,9 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
 
     public STime( String timeStr ,  boolean direct ) {
         if ( direct ) {
-            this.time = timeStr;
+            this.value = timeStr;
         } else {
-            this.time = timeStr == null ? null : DateUtil.toString( toDate( timeStr , DATE_FMT ) , DATE_FMT );
+            this.value = timeStr == null ? null : DateUtil.toString( toDate( timeStr , DATE_FMT ) , DATE_FMT );
         }
     }
 
@@ -46,26 +47,26 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
     }
 
     public STime( LocalTime localTime ) {
-        this.time = localTime == null ? null : StringUtil.build(
+        this.value = localTime == null ? null : StringUtil.build(
                 StringUtils.leftPad( Integer.toString(localTime.getHour()) , 2 , '0') , ":" ,
                 StringUtils.leftPad( Integer.toString(localTime.getMinute()) , 2 , '0') , ":" ,
                 StringUtils.leftPad( Integer.toString(localTime.getSecond()) , 2 , '0') );
     }
 
     public STime( Instant instant ) {
-        this.time = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+        this.value = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
     }
 
     public STime( Date d ) {
-        this.time = d == null ? null : DateUtil.toString( d , DATE_FMT );
+        this.value = d == null ? null : DateUtil.toString( d , DATE_FMT );
     }
 
     public STime( STime stime ) {
-        this.time = stime.time;
+        this.value = stime.value;
     }
 
 
-    protected static Date toDate( String date , String fmt ) {
+    private static Date toDate( String date , String fmt ) {
         return SDate.toDate( date, fmt );
     }
 
@@ -76,17 +77,17 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
 
     @Override
     public boolean isPresent() {
-        return time != null;
+        return this.value != null;
     }
 
     public String getValue() {
-        return time;
+        return this.value;
     }
 
     public String get() {
 
         if ( this.isPresent() ) {
-            return time;
+            return this.value;
         } else {
             throw new IllegalStateException();
         }
@@ -94,7 +95,7 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
     }
 
     public String orElse(String other) {
-        return this.isPresent() ? time : other;
+        return this.isPresent() ? this.value : other;
     }
 
     public String fmt( String fmt ) {
@@ -152,14 +153,14 @@ public class STime implements NullableValue, Comparable<STime>, java.io.Serializ
         STime sDate = (STime) o;
 
         return new EqualsBuilder()
-                .append(time, sDate.time)
+                .append(this.value, sDate.value)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(time)
+                .append(this.value)
                 .toHashCode();
     }
 

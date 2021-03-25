@@ -8,15 +8,16 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class SNumber extends Number implements NullableValue, Comparable<SNumber> , java.io.Serializable {
+public final class SNumber extends Number implements NullableValue, Comparable<SNumber> , java.io.Serializable {
 
-    private static final long serialVersionUID = -263082729693656131L;
+    private static final long serialVersionUID = -2650821778406349289L;
 
     public static final SNumber NULL = new SNumber();
     public static final SNumber ZERO = new SNumber("0",true);
     public static final SNumber ONE  = new SNumber("1",true);
-    
-    protected final String value;
+
+
+    private final String value;
 
     public SNumber() {
         this.value = null;
@@ -265,7 +266,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber(new BigDecimal(value).add( new BigDecimal(augend.value) ) );
+        return new SNumber(new BigDecimal(this.value).add( new BigDecimal(augend.value) ) );
     }
 
     public SNumber subtract(SNumber subtrahend) {
@@ -277,7 +278,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber( new BigDecimal(value).subtract( new BigDecimal(subtrahend.value) ) );
+        return new SNumber( new BigDecimal(this.value).subtract( new BigDecimal(subtrahend.value) ) );
     }
 
     public SNumber multiply(SNumber multiplicand) {
@@ -289,7 +290,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber( new BigDecimal(value).multiply( new BigDecimal(multiplicand.value) ) );
+        return new SNumber( new BigDecimal(this.value).multiply( new BigDecimal(multiplicand.value) ) );
     }
 
     public SNumber divide(SNumber divisor) {
@@ -301,7 +302,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) ) );
+        return new SNumber( new BigDecimal(this.value).divide( new BigDecimal(divisor.value) ) );
     }
 
     public SNumber divide(SNumber divisor , RoundingMode roundingMode) {
@@ -313,7 +314,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , roundingMode ) );
+        return new SNumber( new BigDecimal(this.value).divide( new BigDecimal(divisor.value) , roundingMode ) );
     }
 
     public SNumber divide(SNumber divisor, int scale, RoundingMode roundingMode) {
@@ -325,7 +326,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber( new BigDecimal(value).divide( new BigDecimal(divisor.value) , scale, roundingMode ) );
+        return new SNumber( new BigDecimal(this.value).divide( new BigDecimal(divisor.value) , scale, roundingMode ) );
     }
 
     public SNumber toScale(int scale, RoundingMode roundingMode) {
@@ -334,7 +335,7 @@ public class SNumber extends Number implements NullableValue, Comparable<SNumber
             throw new IllegalStateException();
         }
 
-        return new SNumber( new BigDecimal(value).setScale( scale , roundingMode ) );
+        return new SNumber( new BigDecimal(this.value).setScale( scale , roundingMode ) );
     }
 
 

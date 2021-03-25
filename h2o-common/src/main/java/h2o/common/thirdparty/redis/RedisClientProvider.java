@@ -1,15 +1,10 @@
 package h2o.common.thirdparty.redis;
 
 import h2o.common.lang.Val;
-import io.lettuce.core.ConnectionFuture;
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-
-import java.util.concurrent.CompletableFuture;
 
 
 public class RedisClientProvider extends AbstractRedisProvider implements RedisProvider {
