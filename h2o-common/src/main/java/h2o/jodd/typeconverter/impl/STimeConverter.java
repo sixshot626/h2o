@@ -59,7 +59,7 @@ public class STimeConverter implements TypeConverter<STime> {
 	public STime convert(final Object value) {
 
 		if (value == null) {
-			return new STime();
+			return STime.NULL;
 		}
 
 		if (value instanceof STime) {
@@ -94,7 +94,7 @@ public class STimeConverter implements TypeConverter<STime> {
 
 		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			if ( stringValue.toLowerCase().equals("null") || stringValue.toLowerCase().equals("<null>") ) {
-				return new STime();
+				return STime.NULL;
 			}
 			try {
 				return new STime( stringValue );

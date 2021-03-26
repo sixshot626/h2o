@@ -2,10 +2,9 @@ package h2o.common.lang;
 
 public final class NBytes implements NullableValue , java.io.Serializable {
 
-    private static final long serialVersionUID = 1620318712792869290L;
+    private static final long serialVersionUID = 180228261982672556L;
 
     public static final NBytes NULL = new NBytes();
-
 
     private final byte[] value;
 

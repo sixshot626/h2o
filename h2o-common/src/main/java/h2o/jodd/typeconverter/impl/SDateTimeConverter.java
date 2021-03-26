@@ -58,7 +58,7 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 	public SDateTime convert(final Object value) {
 
 		if (value == null) {
-			return new SDateTime();
+			return SDateTime.NULL;
 		}
 
 		if (value instanceof SDateTime) {
@@ -96,7 +96,7 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 			if (((SNumber) value).isPresent() ) {
 				return new SDateTime(new Date(((SNumber) value).longValue()));
 			} else {
-				return new SDateTime();
+				return SDateTime.NULL;
 			}
 		}
 		if (value instanceof Number) {
@@ -107,7 +107,7 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 
 		if (!StringUtil.containsOnlyDigits(stringValue)) {
 			if ( stringValue.toLowerCase().equals("null") || stringValue.toLowerCase().equals("<null>") ) {
-				return new SDateTime();
+				return SDateTime.NULL;
 			}
 			try {
 				return new SDateTime( stringValue );

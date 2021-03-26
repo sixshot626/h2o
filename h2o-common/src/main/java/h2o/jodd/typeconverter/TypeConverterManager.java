@@ -169,14 +169,15 @@ public class TypeConverterManager {
 		register(BigInteger[].class, new ArrayConverter<>(this, BigInteger.class));
 
 		register(SNumber.class, new SNumberConverter());
-		register(NString.class, new SStringConverter());
+		register(NString.class, new NStringConverter());
 
 		register(SDate.class, new SDateConverter());
 		register(STime.class, new STimeConverter());
 		register(SDateTime.class, new SDateTimeConverter());
-		register(LTime.class, new LTimestampConverter());
+		register(LTime.class, new LTimeConverter());
 
-		register(NBool.class, new EBooleanConverter());
+		register(NBool.class, new EBoolConverter());
+		register(NBytes.class, new NBytesConverter(this));
 
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());

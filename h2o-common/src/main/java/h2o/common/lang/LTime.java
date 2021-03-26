@@ -11,7 +11,7 @@ import java.util.Date;
 
 public final class LTime implements NullableValue, Comparable<LTime>, java.io.Serializable {
 
-    private static final long serialVersionUID = -1956214343180325308L;
+    private static final long serialVersionUID = 1239958588661309274L;
 
     public static final LTime NULL = new LTime();
 

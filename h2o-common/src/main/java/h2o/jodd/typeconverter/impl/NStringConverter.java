@@ -41,7 +41,7 @@ import h2o.jodd.typeconverter.TypeConverter;
  * <li>finally, <code>toString()</code> value is returned.</li>
  * </ul>
  */
-public class SStringConverter implements TypeConverter<NString> {
+public class NStringConverter implements TypeConverter<NString> {
 
 	private final StringConverter stringConverter = new StringConverter();
 
@@ -49,7 +49,7 @@ public class SStringConverter implements TypeConverter<NString> {
 	public NString convert(final Object value) {
 
 		if (value == null) {
-			return new NString();
+			return NString.NULL;
 		}
 
 		if ( value instanceof NString) {

@@ -4,10 +4,9 @@ import java.util.Objects;
 
 public final class NString implements NullableValue , Comparable<NString> , java.io.Serializable {
 
-    private static final long serialVersionUID = 1323450637631928022L;
+    private static final long serialVersionUID = -7152107032754248698L;
 
     public static final NString NULL = new NString();
-
 
     private final String value;
 

@@ -47,12 +47,12 @@ import java.util.Date;
  * </ul>
  * Number string may start with plus and minus sign.
  */
-public class LTimestampConverter implements TypeConverter<LTime> {
+public class LTimeConverter implements TypeConverter<LTime> {
 
 	public LTime convert(final Object value) {
 
 		if (value == null) {
-			return new LTime();
+			return LTime.NULL;
 		}
 
 		if (value instanceof LTime) {
