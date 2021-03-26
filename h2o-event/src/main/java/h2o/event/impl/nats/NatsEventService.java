@@ -2,8 +2,8 @@ package h2o.event.impl.nats;
 
 
 import h2o.common.exception.ExceptionUtil;
-import h2o.common.lang.ByteArray;
-import h2o.common.lang.SString;
+import h2o.common.lang.NBytes;
+import h2o.common.lang.NString;
 import h2o.common.lang.Val;
 import h2o.event.EventContext;
 import h2o.event.EventPublisher;
@@ -49,10 +49,10 @@ public class NatsEventService<E> implements EventService {
 
 
     @Override
-    public void subcribe( String topical, SString group ,  BiConsumer<EventContext , ByteArray> consumer ) {
+    public void subcribe(String topical, NString group , BiConsumer<EventContext , NBytes> consumer ) {
 
         Dispatcher dispatcher = this.connectionVal.get()
-                .createDispatcher(msg -> consumer.accept( new NatsEventContext(msg) ,  new ByteArray(msg.getData())));
+                .createDispatcher(msg -> consumer.accept( new NatsEventContext(msg) ,  new NBytes(msg.getData())));
 
         if ( group.isPresent() ) {
             dispatcher.subscribe( topical , group.get() );
@@ -63,15 +63,15 @@ public class NatsEventService<E> implements EventService {
     }
 
 
-    protected void natsPublish( String subject, ByteArray body ) {
+    protected void natsPublish( String subject, NBytes body ) {
         this.connectionVal.get().publish( subject , body.get() );
     }
 
-    protected CompletableFuture<ByteArray> natsRequest( String subject, ByteArray body ) {
+    protected CompletableFuture<NBytes> natsRequest(String subject, NBytes body ) {
 
         CompletableFuture<Message> res = this.connectionVal.get().request(subject, body.get());
 
-        return res.thenApply( msg-> new ByteArray(msg.getData()) );
+        return res.thenApply( msg-> new NBytes(msg.getData()) );
 
     }
 
@@ -83,12 +83,12 @@ public class NatsEventService<E> implements EventService {
         }
 
         @Override
-        public void publish( String subject, ByteArray event ) {
+        public void publish( String subject, NBytes event ) {
             natsPublish( subject , event );
         }
 
         @Override
-        public CompletableFuture<ByteArray> request( String subject, ByteArray event ) {
+        public CompletableFuture<NBytes> request(String subject, NBytes event ) {
             return natsRequest( subject , event );
         }
 
@@ -96,7 +96,7 @@ public class NatsEventService<E> implements EventService {
 
 
     @Override
-    public EventPublisher publisher( SString channel ) {
+    public EventPublisher publisher( NString channel ) {
         return eventPublisher;
     }
 

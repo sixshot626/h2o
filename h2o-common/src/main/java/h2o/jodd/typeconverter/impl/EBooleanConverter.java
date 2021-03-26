@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.EBoolean;
+import h2o.common.lang.NBool;
 import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
@@ -43,30 +43,30 @@ import static h2o.jodd.util.StringPool.*;
  * for <code>false</code>.</li>
  * </ul>
  */
-public class EBooleanConverter implements TypeConverter<EBoolean> {
+public class EBooleanConverter implements TypeConverter<NBool> {
 
-	public EBoolean convert(final Object value) {
+	public NBool convert(final Object value) {
 
 		if (value == null) {
-			return EBoolean.NULL;
+			return NBool.NULL;
 		}
 
 		if (value.getClass() == Boolean.class) {
-			return EBoolean.valueOf( (Boolean) value );
+			return NBool.valueOf( (Boolean) value );
 		}
 
 		if ( value instanceof SNumber ) {
-			return EBoolean.valueOf( ((SNumber)value).toBoolean() );
+			return NBool.valueOf( ((SNumber)value).toBoolean() );
 		}
 
 		String stringValue = value.toString();
 		if (stringValue.isEmpty()) {
-			return EBoolean.FALSE;
+			return NBool.FALSE;
 		}
 
 		stringValue = stringValue.trim().toLowerCase();
 		if ( stringValue.equals("null") || stringValue.equals("<null>") ) {
-			return EBoolean.NULL;
+			return NBool.NULL;
 		}
 
 		if (stringValue.equals(YES) ||
@@ -74,14 +74,14 @@ public class EBooleanConverter implements TypeConverter<EBoolean> {
 				stringValue.equals(TRUE) ||
 				stringValue.equals(ON) ||
 				stringValue.equals(ONE)) {
-			return EBoolean.TRUE;
+			return NBool.TRUE;
 		}
 		if (stringValue.equals(NO) ||
 				stringValue.equals(N) ||
 				stringValue.equals(FALSE) ||
 				stringValue.equals(OFF) ||
 				stringValue.equals(ZERO)) {
-			return EBoolean.FALSE;
+			return NBool.FALSE;
 		}
 
 		throw new TypeConversionException(value);

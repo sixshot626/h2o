@@ -2,20 +2,20 @@ package h2o.common.lang;
 
 import java.util.Objects;
 
-public final class SString implements NullableValue , Comparable<SString> , java.io.Serializable {
+public final class NString implements NullableValue , Comparable<NString> , java.io.Serializable {
 
     private static final long serialVersionUID = 1323450637631928022L;
 
-    public static final SString NULL = new SString();
+    public static final NString NULL = new NString();
 
 
     private final String value;
 
-    public SString() {
+    public NString() {
         this.value = null;
     }
 
-    public SString( String value ) {
+    public NString(String value ) {
         this.value = value;
     }
 
@@ -43,7 +43,7 @@ public final class SString implements NullableValue , Comparable<SString> , java
     }
 
     @Override
-    public int compareTo(SString o) {
+    public int compareTo(NString o) {
         if ( this.isPresent() && o.isPresent() ) {
             return this.value.compareTo( o.value );
         } else if ( ( ! this.isPresent() ) && ( ! o.isPresent())  ) {
@@ -56,9 +56,9 @@ public final class SString implements NullableValue , Comparable<SString> , java
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !( o instanceof SString )) return false;
-        SString sString = (SString) o;
-        return Objects.equals(value, sString.value);
+        if (o == null || !( o instanceof NString)) return false;
+        NString nString = (NString) o;
+        return Objects.equals(value, nString.value);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package h2o.event;
 
-import h2o.common.lang.ByteArray;
+import h2o.common.lang.NBytes;
 
 import java.time.Duration;
 
@@ -12,6 +12,6 @@ public interface EventContext {
 
     void hide( Duration timeout );
 
-    void reply( ByteArray r );
+    void reply( NBytes r );
 
 }

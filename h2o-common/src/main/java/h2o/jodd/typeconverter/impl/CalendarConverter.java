@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.LTimestamp;
+import h2o.common.lang.LTime;
 import h2o.common.lang.SDate;
 import h2o.common.lang.SDateTime;
 import h2o.common.lang.SNumber;
@@ -99,10 +99,10 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 			}
 		}
 
-		if ( value instanceof LTimestamp) {
-			if ( ((LTimestamp) value).isPresent() ) {
+		if ( value instanceof LTime) {
+			if ( ((LTime) value).isPresent() ) {
 				Calendar calendar = Calendar.getInstance();
-				calendar.setTimeInMillis(((LTimestamp) value).getValue());
+				calendar.setTimeInMillis(((LTime) value).getValue());
 				return calendar;
 			} else {
 				return null;

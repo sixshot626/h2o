@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.LTimestamp;
+import h2o.common.lang.LTime;
 import h2o.common.lang.SDate;
 import h2o.common.lang.SDateTime;
 import h2o.common.lang.SNumber;
@@ -99,9 +99,9 @@ public class SqlDateConverter implements TypeConverter<Date> {
 			}
 		}
 
-		if ( value instanceof LTimestamp) {
-			if ( ((LTimestamp) value).isPresent() ) {
-				return new Date( ((LTimestamp) value).getValue() );
+		if ( value instanceof LTime) {
+			if ( ((LTime) value).isPresent() ) {
+				return new Date( ((LTime) value).getValue() );
 			} else {
 				return null;
 			}

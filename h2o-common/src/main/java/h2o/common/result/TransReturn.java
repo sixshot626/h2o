@@ -1,6 +1,6 @@
 package h2o.common.result;
 
-import h2o.common.lang.EBoolean;
+import h2o.common.lang.NBool;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
     private static final long serialVersionUID = 2603355001138198223L;
 
-    private EBoolean ok = EBoolean.NULL;
+    private NBool ok = NBool.NULL;
 
-    private EBoolean finalState = EBoolean.NULL;
+    private NBool finalState = NBool.NULL;
 
     private String code;
 
@@ -71,12 +71,12 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
 
     @Override
-    public EBoolean ok() {
+    public NBool ok() {
         return this.ok;
     }
 
     @Override
-    public EBoolean finalState() {
+    public NBool finalState() {
         return this.finalState;
     }
 
@@ -92,32 +92,32 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
 
     public TransReturn<S, R> ok(TriState state) {
-        this.ok = ( state == TriState.UNKNOWN ? EBoolean.NULL : EBoolean.valueOf( state == TriState.SUCCESS) ) ;
+        this.ok = ( state == TriState.UNKNOWN ? NBool.NULL : NBool.valueOf( state == TriState.SUCCESS) ) ;
         return this;
     }
 
     public TransReturn<S, R> finalState(TriState state) {
-        this.finalState = ( state == TriState.UNKNOWN ? EBoolean.NULL : EBoolean.valueOf( state == TriState.SUCCESS) ) ;;
+        this.finalState = ( state == TriState.UNKNOWN ? NBool.NULL : NBool.valueOf( state == TriState.SUCCESS) ) ;;
         return this;
     }
 
-    public TransReturn<S, R> ok(EBoolean ok) {
+    public TransReturn<S, R> ok(NBool ok) {
         this.ok = ok;
         return this;
     }
 
-    public TransReturn<S, R> finalState(EBoolean finalState) {
+    public TransReturn<S, R> finalState(NBool finalState) {
         this.finalState = finalState;
         return this;
     }
 
     public TransReturn<S, R> ok(Boolean ok) {
-        this.ok = EBoolean.valueOf( ok );
+        this.ok = NBool.valueOf( ok );
         return this;
     }
 
     public TransReturn<S, R> finalState(Boolean finalState) {
-        this.finalState = EBoolean.valueOf( finalState );
+        this.finalState = NBool.valueOf( finalState );
         return this;
     }
 
@@ -156,11 +156,11 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
     // Getter
 
-    public EBoolean getOk() {
+    public NBool getOk() {
         return ok;
     }
 
-    public EBoolean getFinalState() {
+    public NBool getFinalState() {
         return finalState;
     }
 

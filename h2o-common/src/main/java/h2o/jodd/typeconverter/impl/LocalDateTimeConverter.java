@@ -78,9 +78,9 @@ public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
 			throw new TypeConversionException("Can't convert to date just from time: " + value);
 		}
 
-		if (value instanceof LTimestamp) {
-			if (((LTimestamp) value).isPresent() ) {
-				return ((LTimestamp) value).toLocalDateTime();
+		if (value instanceof LTime) {
+			if (((LTime) value).isPresent() ) {
+				return ((LTime) value).toLocalDateTime();
 			} else {
 				return null;
 			}

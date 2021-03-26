@@ -85,9 +85,9 @@ public class LocalTimeConverter implements TypeConverter<LocalTime> {
 			}
 		}
 
-		if (value instanceof LTimestamp) {
-			if (((LTimestamp) value).isPresent() ) {
-				return ((LTimestamp) value).toSDateTime().toLocalDateTime().toLocalTime();
+		if (value instanceof LTime) {
+			if (((LTime) value).isPresent() ) {
+				return ((LTime) value).toSDateTime().toLocalDateTime().toLocalTime();
 			} else {
 				return null;
 			}

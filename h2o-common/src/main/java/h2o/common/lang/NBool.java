@@ -1,6 +1,6 @@
 package h2o.common.lang;
 
-public enum EBoolean implements NullableValue {
+public enum NBool implements NullableValue {
 
     FALSE, TRUE, NULL;
 
@@ -25,11 +25,11 @@ public enum EBoolean implements NullableValue {
     }
 
 
-    public static EBoolean valueOf( boolean bool ) {
+    public static NBool valueOf(boolean bool ) {
         return bool ? TRUE : FALSE;
     }
 
-    public static EBoolean valueOf( Boolean bool ) {
+    public static NBool valueOf(Boolean bool ) {
         if ( bool == null ) {
             return NULL;
         } else {

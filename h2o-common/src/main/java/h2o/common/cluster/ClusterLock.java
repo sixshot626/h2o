@@ -1,8 +1,8 @@
 package h2o.common.cluster;
 
 import h2o.common.Mode;
-import h2o.common.lang.EBoolean;
-import h2o.common.lang.SString;
+import h2o.common.lang.NBool;
+import h2o.common.lang.NString;
 import h2o.common.thirdparty.redis.Redis;
 import h2o.common.thirdparty.redis.RedisProvider;
 import h2o.common.util.id.RandomString;
@@ -32,7 +32,7 @@ public class ClusterLock {
     private final RedisProvider redisClient;
 
 
-    public ClusterLock(RedisProvider redisClient, SString id, String key, Duration expire ) {
+    public ClusterLock(RedisProvider redisClient, NString id, String key, Duration expire ) {
         this.id = id.orElse( uuid() );
         this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
@@ -40,17 +40,17 @@ public class ClusterLock {
     }
 
 
-    public EBoolean isLocked() {
+    public NBool isLocked() {
 
         try ( Redis<String, String> redis = this.redisClient.create() ) {
 
-            return EBoolean.valueOf( id.equals( redis.get(key) ));
+            return NBool.valueOf( id.equals( redis.get(key) ));
 
         } catch ( Exception e ) {
             log.error( "" , e);
         }
 
-        return EBoolean.NULL;
+        return NBool.NULL;
     }
 
 
@@ -75,31 +75,31 @@ public class ClusterLock {
 
 
 
-    public EBoolean tryLock() {
+    public NBool tryLock() {
 
         try ( Redis<String, String> redis = this.redisClient.create() ) {
 
-            return EBoolean.valueOf(tryLock( redis ));
+            return NBool.valueOf(tryLock( redis ));
 
         } catch (Exception e) {
 
             e.printStackTrace();
             log.error( "" , e);
 
-            return EBoolean.NULL;
+            return NBool.NULL;
 
         }
 
     }
 
 
-    public EBoolean lock() {
+    public NBool lock() {
         return lock( DEFAULT_TIME_OUT );
     }
 
-    public EBoolean lock( long timeout ) {
+    public NBool lock(long timeout ) {
 
-        EBoolean lock = EBoolean.NULL;
+        NBool lock = NBool.NULL;
 
         try ( Redis<String, String> redis = this.redisClient.create() ) {
 
@@ -110,14 +110,14 @@ public class ClusterLock {
 
                 try {
                     if (tryLock(redis)) {
-                        lock = EBoolean.TRUE;
-                        return EBoolean.TRUE;
+                        lock = NBool.TRUE;
+                        return NBool.TRUE;
                     } else {
-                        lock = EBoolean.FALSE;
+                        lock = NBool.FALSE;
                     }
                 } catch ( Exception e ) {
                     log.error("" , e );
-                    lock = EBoolean.NULL;
+                    lock = NBool.NULL;
                 }
 
 

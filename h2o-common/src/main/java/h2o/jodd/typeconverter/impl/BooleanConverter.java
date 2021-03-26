@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.EBoolean;
+import h2o.common.lang.NBool;
 import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
@@ -54,8 +54,8 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 			return (Boolean) value;
 		}
 
-		if (value.getClass() == EBoolean.class) {
-			return ((EBoolean) value) == EBoolean.TRUE;
+		if (value.getClass() == NBool.class) {
+			return ((NBool) value) == NBool.TRUE;
 		}
 
 		if ( value instanceof SNumber ) {

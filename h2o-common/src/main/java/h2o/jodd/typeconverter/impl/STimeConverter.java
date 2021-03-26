@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.LTimestamp;
+import h2o.common.lang.LTime;
 import h2o.common.lang.SDateTime;
 import h2o.common.lang.STime;
 import h2o.jodd.time.JulianDate;
@@ -68,8 +68,8 @@ public class STimeConverter implements TypeConverter<STime> {
 		if (value instanceof SDateTime) {
 			return ((SDateTime) value).getTime();
 		}
-		if (value instanceof LTimestamp) {
-			return ((LTimestamp) value).toSDateTime().getTime();
+		if (value instanceof LTime) {
+			return ((LTime) value).toSDateTime().getTime();
 		}
 		if (value instanceof Date) {
 			return new STime((Date) value);

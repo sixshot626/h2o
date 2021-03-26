@@ -1,6 +1,6 @@
 package h2o.event.impl.nats;
 
-import h2o.common.lang.ByteArray;
+import h2o.common.lang.NBytes;
 import h2o.event.EventContext;
 import io.nats.client.Message;
 
@@ -24,7 +24,7 @@ public class NatsEventContext implements EventContext {
     public void hide( Duration timeout ) {}
 
     @Override
-    public void reply( ByteArray r ) {
+    public void reply( NBytes r ) {
         message.getConnection().publish( message.getReplyTo() ,  r.get()  );
     }
 }

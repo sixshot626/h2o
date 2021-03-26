@@ -1,6 +1,6 @@
 package h2o.common.result;
 
-import h2o.common.lang.EBoolean;
+import h2o.common.lang.NBool;
 
 public enum TriState {
 
@@ -13,10 +13,10 @@ public enum TriState {
         this.value = value;
     }
 
-    public static TriState valueOf( EBoolean ok ) {
-        if ( ok == EBoolean.TRUE) {
+    public static TriState valueOf( NBool ok ) {
+        if ( ok == NBool.TRUE) {
             return SUCCESS;
-        } else if ( ok == EBoolean.FALSE) {
+        } else if ( ok == NBool.FALSE) {
             return FAILURE;
         } else {
             return UNKNOWN;

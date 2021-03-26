@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.LTimestamp;
+import h2o.common.lang.LTime;
 import h2o.common.lang.SNumber;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
@@ -47,39 +47,39 @@ import java.util.Date;
  * </ul>
  * Number string may start with plus and minus sign.
  */
-public class LTimestampConverter implements TypeConverter<LTimestamp> {
+public class LTimestampConverter implements TypeConverter<LTime> {
 
-	public LTimestamp convert(final Object value) {
+	public LTime convert(final Object value) {
 
 		if (value == null) {
-			return new LTimestamp();
+			return new LTime();
 		}
 
-		if (value instanceof LTimestamp) {
-			return (LTimestamp)value;
+		if (value instanceof LTime) {
+			return (LTime)value;
 		}
 
 		if (value instanceof Date) {
-			return new LTimestamp(((Date)value).getTime());
+			return new LTime(((Date)value).getTime());
 		}
 		if (value instanceof Calendar) {
-			return new LTimestamp(((Calendar)value).getTimeInMillis());
+			return new LTime(((Calendar)value).getTimeInMillis());
 		}
 		if (value instanceof JulianDate) {
-			return new LTimestamp(((JulianDate) value).toMilliseconds());
+			return new LTime(((JulianDate) value).toMilliseconds());
 		}
 		if (value instanceof LocalDateTime) {
-			return new LTimestamp(TimeUtil.toMilliseconds((LocalDateTime)value));
+			return new LTime(TimeUtil.toMilliseconds((LocalDateTime)value));
 		}
 
 		if (value.getClass() == Long.class) {
-			return new LTimestamp((Long) value);
+			return new LTime((Long) value);
 		}
 		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
-			return new LTimestamp();
+			return new LTime();
 		}
 		if (value instanceof Number) {
-			return new LTimestamp(Long.valueOf(((Number)value).longValue()));
+			return new LTime(Long.valueOf(((Number)value).longValue()));
 		}
 
 		try {
@@ -87,7 +87,7 @@ public class LTimestampConverter implements TypeConverter<LTimestamp> {
 			if (StringUtil.startsWithChar(stringValue, '+')) {
 				stringValue = stringValue.substring(1);
 			}
-			return new LTimestamp( Long.valueOf(stringValue) );
+			return new LTime( Long.valueOf(stringValue) );
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

@@ -25,7 +25,7 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.SString;
+import h2o.common.lang.NString;
 import h2o.jodd.typeconverter.TypeConverter;
 
 /**
@@ -41,21 +41,21 @@ import h2o.jodd.typeconverter.TypeConverter;
  * <li>finally, <code>toString()</code> value is returned.</li>
  * </ul>
  */
-public class SStringConverter implements TypeConverter<SString> {
+public class SStringConverter implements TypeConverter<NString> {
 
 	private final StringConverter stringConverter = new StringConverter();
 
 	@Override
-	public SString convert(final Object value) {
+	public NString convert(final Object value) {
 
 		if (value == null) {
-			return new SString();
+			return new NString();
 		}
 
-		if ( value instanceof SString ) {
-			return (SString)value;
+		if ( value instanceof NString) {
+			return (NString)value;
 		}
-		return new SString( stringConverter.convert( value ) );
+		return new NString( stringConverter.convert( value ) );
 	}
 
 }

@@ -9,42 +9,42 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-public final class LTimestamp implements NullableValue, Comparable<LTimestamp>, java.io.Serializable {
+public final class LTime implements NullableValue, Comparable<LTime>, java.io.Serializable {
 
     private static final long serialVersionUID = -1956214343180325308L;
 
-    public static final LTimestamp NULL = new LTimestamp();
+    public static final LTime NULL = new LTime();
 
     private static final String DATE_FMT = "yyyyMMddHHmmssSSS";
 
 
     private final Long value;
 
-    public LTimestamp() {
+    public LTime() {
         this.value = null;
     }
 
-    public LTimestamp( long timestamp ) {
+    public LTime(long timestamp ) {
         this.value = Long.valueOf(timestamp);
     }
 
-    public LTimestamp( Long timestamp ) {
+    public LTime(Long timestamp ) {
         this.value = timestamp;
     }
 
-    public LTimestamp( SNumber timestamp ) {
+    public LTime(SNumber timestamp ) {
         this.value = timestamp.toLong();
     }
 
-    public LTimestamp( Instant instant ) {
+    public LTime(Instant instant ) {
         this.value = instant == null ? null : instant.toEpochMilli();
     }
 
-    public LTimestamp( Date date ) {
+    public LTime(Date date ) {
         this.value = date == null ? null : date.getTime();
     }
 
-    public LTimestamp( LTimestamp ltimestamp ) {
+    public LTime(LTime ltimestamp ) {
         this.value = ltimestamp.value;
     }
 
@@ -130,7 +130,7 @@ public final class LTimestamp implements NullableValue, Comparable<LTimestamp>, 
 
 
     @Override
-    public int compareTo( LTimestamp other ) {
+    public int compareTo( LTime other ) {
 
         Long l = this.isPresent() ? this.value : new Long(0);
         Long r = this.isPresent() ? other.value : new Long(0);
@@ -144,9 +144,9 @@ public final class LTimestamp implements NullableValue, Comparable<LTimestamp>, 
 
         if (this == o) return true;
 
-        if (o == null || !(o instanceof LTimestamp)) return false;
+        if (o == null || !(o instanceof LTime)) return false;
 
-        LTimestamp that = (LTimestamp) o;
+        LTime that = (LTime) o;
 
         return new EqualsBuilder()
                 .append(value, that.value)

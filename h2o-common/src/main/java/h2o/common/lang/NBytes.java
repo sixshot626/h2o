@@ -1,19 +1,19 @@
 package h2o.common.lang;
 
-public final class ByteArray implements NullableValue , java.io.Serializable {
+public final class NBytes implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = 1620318712792869290L;
 
-    public static final ByteArray NULL = new ByteArray();
+    public static final NBytes NULL = new NBytes();
 
 
     private final byte[] value;
 
-    public ByteArray() {
+    public NBytes() {
         this.value = null;
     }
 
-    public ByteArray( byte[] value ) {
+    public NBytes(byte[] value ) {
         this.value = value;
     }
 

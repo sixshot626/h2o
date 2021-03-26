@@ -71,8 +71,8 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 				return new SDateTime();
 			}
 		}
-		if (value instanceof LTimestamp) {
-			return ((LTimestamp) value).toSDateTime();
+		if (value instanceof LTime) {
+			return ((LTime) value).toSDateTime();
 		}
 		if (value instanceof Date) {
 			return new SDateTime((Date) value);
