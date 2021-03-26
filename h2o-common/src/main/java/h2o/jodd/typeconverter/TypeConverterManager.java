@@ -176,7 +176,7 @@ public class TypeConverterManager {
 		register(SDateTime.class, new SDateTimeConverter());
 		register(LTime.class, new LTimeConverter());
 
-		register(NBool.class, new EBoolConverter());
+		register(NBool.class, new NBoolConverter());
 		register(NBytes.class, new NBytesConverter(this));
 
 		register(java.util.Date.class, new DateConverter());

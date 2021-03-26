@@ -43,7 +43,7 @@ import static h2o.jodd.util.StringPool.*;
  * for <code>false</code>.</li>
  * </ul>
  */
-public class EBoolConverter implements TypeConverter<NBool> {
+public class NBoolConverter implements TypeConverter<NBool> {
 
 	public NBool convert(final Object value) {
 
