@@ -27,4 +27,7 @@ public class NatsEventContext implements EventContext {
     public void reply( NBytes r ) {
         message.getConnection().publish( message.getReplyTo() ,  r.get()  );
     }
+
+    @Override
+    public void complete(boolean ok) {}
 }

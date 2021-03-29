@@ -18,4 +18,7 @@ public class NothingEventContext implements EventContext {
     @Override
     public void reply( NBytes r ) {}
 
+    @Override
+    public void complete(boolean ok) {}
+
 }
