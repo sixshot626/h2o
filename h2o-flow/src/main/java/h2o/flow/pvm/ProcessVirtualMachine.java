@@ -19,6 +19,7 @@ import h2o.flow.pvm.runtime.RuntimeScopeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,13 +32,11 @@ public final class ProcessVirtualMachine {
 	//  运行监听器
 	//=================================================
 	
-	private final List<ProcessRunListener> processRunListeners = ListBuilder.newList();
+	private final List<ProcessRunListener> processRunListeners = ListBuilder.newCopyOnWriteArrayList();
 	
 	public ProcessVirtualMachine addProcessRunListener( ProcessRunListener... processRunListeners ) {
 		if( !CollectionUtil.argsIsBlank(processRunListeners) ) {
-			for( ProcessRunListener processRunListener : processRunListeners ) {
-				this.processRunListeners.add(processRunListener);
-			}
+			this.processRunListeners.addAll(Arrays.asList(processRunListeners));
 		}
 		return this;
 	}
