@@ -9,6 +9,8 @@ import java.util.List;
 
 public class ExecResult implements java.io.Serializable {
 
+    private static final long serialVersionUID = -9122018447087854697L;
+
     private final RunStatus status;
 
     private final List<Line> lines;

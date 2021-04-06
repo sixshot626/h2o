@@ -2,6 +2,8 @@ package h2o.flow.pvm.exception;
 
 public class NoLineExcepion extends FlowException {
 
+    private static final long serialVersionUID = 7054709524760032123L;
+
     public NoLineExcepion() {
     }
 

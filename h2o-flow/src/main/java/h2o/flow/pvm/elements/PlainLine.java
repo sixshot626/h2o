@@ -5,6 +5,8 @@ import h2o.flow.pvm.exception.FlowException;
 
 public class PlainLine implements Line , java.io.Serializable {
 
+    private static final long serialVersionUID = -5866843635506637167L;
+
     private final String targetNodeId;
 
     public PlainLine(String targetNodeId) {

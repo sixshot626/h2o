@@ -5,12 +5,12 @@ package h2o.flow.pvm.exception;
 
 public abstract class FlowException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 9096081634629771374L;
 
 	public FlowException() {
 		super();		
 	}
-	
 
 	public FlowException(String message, Throwable cause) {
 		super(message, cause);		
