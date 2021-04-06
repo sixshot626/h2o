@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public final class ProcessVirtualMachine {
@@ -32,21 +33,34 @@ public final class ProcessVirtualMachine {
 	//  运行监听器
 	//=================================================
 	
-	private final List<ProcessRunListener> processRunListeners = ListBuilder.newCopyOnWriteArrayList();
-	
-	public ProcessVirtualMachine addProcessRunListener( ProcessRunListener... processRunListeners ) {
-		if( !CollectionUtil.argsIsBlank(processRunListeners) ) {
-			this.processRunListeners.addAll(Arrays.asList(processRunListeners));
-		}
-		return this;
+	private final List<ProcessRunListener> processRunListeners;
+
+	private final FlowTransactionManager transactionManager;
+
+
+	public ProcessVirtualMachine( ProcessRunListener... processRunListeners ) {
+		this( null , processRunListeners);
+	}
+
+	public ProcessVirtualMachine( Collection<? extends ProcessRunListener> processRunListeners  ) {
+		this( null , processRunListeners);
 	}
 	
-	public ProcessVirtualMachine addProcessRunListeners( Collection<? extends ProcessRunListener> processRunListeners ) {
-		if( CollectionUtil.isNotBlank( processRunListeners ) ) {
-			this.processRunListeners.addAll( processRunListeners );
-		}
-		return this;
+	public ProcessVirtualMachine( FlowTransactionManager transactionManager , ProcessRunListener... processRunListeners  ) {
+		this.transactionManager = transactionManager;
+		this.processRunListeners = CollectionUtil.argsIsBlank( processRunListeners ) ? Collections.EMPTY_LIST :
+						Collections.unmodifiableList( Arrays.asList( processRunListeners ) );
 	}
+	
+	public ProcessVirtualMachine( FlowTransactionManager transactionManager , Collection<? extends ProcessRunListener> processRunListeners  ) {
+		this.transactionManager = transactionManager;
+		this.processRunListeners = CollectionUtil.isBlank( processRunListeners ) ? Collections.EMPTY_LIST :
+				Collections.unmodifiableList( ListBuilder.newListAndAddAll( processRunListeners ) );
+
+	}
+
+
+
 	
 	private void fireStartEvent(RunContext runContext , Node node , boolean signal , Object[] args ) {
 		if( ! processRunListeners.isEmpty() ) {
@@ -108,11 +122,6 @@ public final class ProcessVirtualMachine {
 	
 
 
-	private volatile FlowTransactionManager transactionManager;
-
-	public void setTransactionManager(FlowTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
 
 	//=================================================
 	//  核心实现
