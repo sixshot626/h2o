@@ -3,7 +3,7 @@ package h2o.common.lang;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class Val<T> implements NullableValue , java.io.Serializable {
+public final class Val<T> implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = -5406301526511160202L;
     
