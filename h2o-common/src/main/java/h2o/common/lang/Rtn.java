@@ -14,6 +14,17 @@ public final class Rtn<T> implements java.io.Serializable {
         this.value = value;
     }
 
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Rtn{");
+        sb.append("ok=").append(ok);
+        sb.append(", msg=").append(msg);
+        sb.append(", value=").append(value);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static <R> Rtn<R> ok() {
         return new Rtn<>( true , NString.NULL , Val.empty()  );
     }
