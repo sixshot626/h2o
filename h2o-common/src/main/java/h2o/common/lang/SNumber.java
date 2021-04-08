@@ -217,6 +217,20 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         }
     }
 
+    public String toPlainString() {
+        if ( this.isPresent() ) {
+            return new BigDecimal(this.value).toPlainString();
+        }
+        return null;
+    }
+
+    public String toPlainStringExact() {
+        if ( this.isPresent() ) {
+            return new BigDecimal(this.value).toPlainString();
+        } else {
+            throw new IllegalStateException();
+        }
+    }
 
 
     @Override
@@ -387,6 +401,8 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
                 .append(value)
                 .toHashCode();
     }
+
+
 
 
     @Override
