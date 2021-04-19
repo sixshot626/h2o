@@ -18,6 +18,9 @@ public interface RedisProvider {
 
     <K, V> PubSubRedis<K, V> createPubSub( Val<RedisCodec<K, V>> codec );
 
+    default <R> Val<R> execute( Function<Redis<String,String> , R > func ) {
+        return this.execute( func , true );
+    }
 
     default <R> Val<R> execute( Function<Redis<String,String> , R > func , boolean silent ) {
         try ( Redis<String,String> redis = this.create() ) {
@@ -35,6 +38,10 @@ public interface RedisProvider {
             }
 
         }
+    }
+
+    default <K,V,R> Val<R> execute( Val<RedisCodec<K, V>> codec , Function<Redis<K,V> , R > func ) {
+        return this.execute( codec , func , true );
     }
 
     default <K,V,R> Val<R> execute( Val<RedisCodec<K, V>> codec , Function<Redis<K,V> , R > func , boolean silent ) {
