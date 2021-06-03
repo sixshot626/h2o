@@ -29,6 +29,7 @@ public class SpringFactory implements BeanFactoryAware {
 		setStaticConfigPath(path);
 	}
 
+	@Override
     public void setBeanFactory(BeanFactory bf) throws BeansException {
         lock.lock();
         try {

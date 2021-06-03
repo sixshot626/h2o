@@ -17,153 +17,160 @@ import java.util.Map;
 @Component
 public class SpringContext implements ApplicationContextAware {
 
-    private volatile ApplicationContext applicationContext;
+    private static volatile ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
+    public static ApplicationContext getApplicationContext() {
+        ApplicationContext context = applicationContext;
+        if ( context == null ) {
+            throw new IllegalStateException("ApplicationContext not initialized");
+        }
+        return context;
+    }
 
     /*====== delegate =====*/
 
-    public String getId() {
-        return applicationContext.getId();
+    public static String getId() {
+        return getApplicationContext().getId();
     }
 
-    public String getApplicationName() {
-        return applicationContext.getApplicationName();
+    public static String getApplicationName() {
+        return getApplicationContext().getApplicationName();
     }
 
-    public String getDisplayName() {
-        return applicationContext.getDisplayName();
+    public static String getDisplayName() {
+        return getApplicationContext().getDisplayName();
     }
 
-    public long getStartupDate() {
-        return applicationContext.getStartupDate();
+    public static long getStartupDate() {
+        return getApplicationContext().getStartupDate();
     }
 
-    public ApplicationContext getParent() {
-        return applicationContext.getParent();
+    public static ApplicationContext getParent() {
+        return getApplicationContext().getParent();
     }
 
-    public AutowireCapableBeanFactory getAutowireCapableBeanFactory() throws IllegalStateException {
-        return applicationContext.getAutowireCapableBeanFactory();
+    public static AutowireCapableBeanFactory getAutowireCapableBeanFactory() throws IllegalStateException {
+        return getApplicationContext().getAutowireCapableBeanFactory();
     }
 
-    public Environment getEnvironment() {
-        return applicationContext.getEnvironment();
+    public static Environment getEnvironment() {
+        return getApplicationContext().getEnvironment();
     }
 
-    public boolean containsBeanDefinition(String s) {
-        return applicationContext.containsBeanDefinition(s);
+    public static boolean containsBeanDefinition(String s) {
+        return getApplicationContext().containsBeanDefinition(s);
     }
 
-    public int getBeanDefinitionCount() {
-        return applicationContext.getBeanDefinitionCount();
+    public static int getBeanDefinitionCount() {
+        return getApplicationContext().getBeanDefinitionCount();
     }
 
-    public String[] getBeanDefinitionNames() {
-        return applicationContext.getBeanDefinitionNames();
+    public static String[] getBeanDefinitionNames() {
+        return getApplicationContext().getBeanDefinitionNames();
     }
 
-    public String[] getBeanNamesForType(Class<?> aClass) {
-        return applicationContext.getBeanNamesForType(aClass);
+    public static String[] getBeanNamesForType(Class<?> aClass) {
+        return getApplicationContext().getBeanNamesForType(aClass);
     }
 
-    public String[] getBeanNamesForType(Class<?> aClass, boolean b, boolean b1) {
-        return applicationContext.getBeanNamesForType(aClass, b, b1);
+    public static String[] getBeanNamesForType(Class<?> aClass, boolean b, boolean b1) {
+        return getApplicationContext().getBeanNamesForType(aClass, b, b1);
     }
 
-    public <T> Map<String, T> getBeansOfType(Class<T> aClass) throws BeansException {
-        return applicationContext.getBeansOfType(aClass);
+    public static <T> Map<String, T> getBeansOfType(Class<T> aClass) throws BeansException {
+        return getApplicationContext().getBeansOfType(aClass);
     }
 
-    public <T> Map<String, T> getBeansOfType(Class<T> aClass, boolean b, boolean b1) throws BeansException {
-        return applicationContext.getBeansOfType(aClass, b, b1);
+    public static <T> Map<String, T> getBeansOfType(Class<T> aClass, boolean b, boolean b1) throws BeansException {
+        return getApplicationContext().getBeansOfType(aClass, b, b1);
     }
 
-    public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> aClass) throws BeansException {
-        return applicationContext.getBeansWithAnnotation(aClass);
+    public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> aClass) throws BeansException {
+        return getApplicationContext().getBeansWithAnnotation(aClass);
     }
 
-    public <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass) {
-        return applicationContext.findAnnotationOnBean(s, aClass);
+    public static <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass) {
+        return getApplicationContext().findAnnotationOnBean(s, aClass);
     }
 
-    public Object getBean(String s) throws BeansException {
-        return applicationContext.getBean(s);
+    public static Object getBean(String s) throws BeansException {
+        return getApplicationContext().getBean(s);
     }
 
-    public <T> T getBean(String s, Class<T> aClass) throws BeansException {
-        return applicationContext.getBean(s, aClass);
+    public static <T> T getBean(String s, Class<T> aClass) throws BeansException {
+        return getApplicationContext().getBean(s, aClass);
     }
 
-    public <T> T getBean(Class<T> aClass) throws BeansException {
-        return applicationContext.getBean(aClass);
+    public static <T> T getBean(Class<T> aClass) throws BeansException {
+        return getApplicationContext().getBean(aClass);
     }
 
-    public Object getBean(String s, Object... objects) throws BeansException {
-        return applicationContext.getBean(s, objects);
+    public static Object getBean(String s, Object... objects) throws BeansException {
+        return getApplicationContext().getBean(s, objects);
     }
 
-    public boolean containsBean(String s) {
-        return applicationContext.containsBean(s);
+    public static boolean containsBean(String s) {
+        return getApplicationContext().containsBean(s);
     }
 
-    public boolean isSingleton(String s) throws NoSuchBeanDefinitionException {
-        return applicationContext.isSingleton(s);
+    public static boolean isSingleton(String s) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().isSingleton(s);
     }
 
-    public boolean isPrototype(String s) throws NoSuchBeanDefinitionException {
-        return applicationContext.isPrototype(s);
+    public static boolean isPrototype(String s) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().isPrototype(s);
     }
 
-    public boolean isTypeMatch(String s, Class<?> aClass) throws NoSuchBeanDefinitionException {
-        return applicationContext.isTypeMatch(s, aClass);
+    public static boolean isTypeMatch(String s, Class<?> aClass) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().isTypeMatch(s, aClass);
     }
 
-    public Class<?> getType(String s) throws NoSuchBeanDefinitionException {
-        return applicationContext.getType(s);
+    public static Class<?> getType(String s) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().getType(s);
     }
 
-    public String[] getAliases(String s) {
-        return applicationContext.getAliases(s);
+    public static String[] getAliases(String s) {
+        return getApplicationContext().getAliases(s);
     }
 
-    public BeanFactory getParentBeanFactory() {
-        return applicationContext.getParentBeanFactory();
+    public static BeanFactory getParentBeanFactory() {
+        return getApplicationContext().getParentBeanFactory();
     }
 
-    public boolean containsLocalBean(String s) {
-        return applicationContext.containsLocalBean(s);
+    public static boolean containsLocalBean(String s) {
+        return getApplicationContext().containsLocalBean(s);
     }
 
-    public String getMessage(String s, Object[] objects, String s1, Locale locale) {
-        return applicationContext.getMessage(s, objects, s1, locale);
+    public static String getMessage(String s, Object[] objects, String s1, Locale locale) {
+        return getApplicationContext().getMessage(s, objects, s1, locale);
     }
 
-    public String getMessage(String s, Object[] objects, Locale locale) throws NoSuchMessageException {
-        return applicationContext.getMessage(s, objects, locale);
+    public static String getMessage(String s, Object[] objects, Locale locale) throws NoSuchMessageException {
+        return getApplicationContext().getMessage(s, objects, locale);
     }
 
-    public String getMessage(MessageSourceResolvable messageSourceResolvable, Locale locale) throws NoSuchMessageException {
-        return applicationContext.getMessage(messageSourceResolvable, locale);
+    public static String getMessage(MessageSourceResolvable messageSourceResolvable, Locale locale) throws NoSuchMessageException {
+        return getApplicationContext().getMessage(messageSourceResolvable, locale);
     }
 
-    public void publishEvent(ApplicationEvent applicationEvent) {
-        applicationContext.publishEvent(applicationEvent);
+    public static void publishEvent(ApplicationEvent applicationEvent) {
+        getApplicationContext().publishEvent(applicationEvent);
     }
 
-    public Resource[] getResources(String s) throws IOException {
-        return applicationContext.getResources(s);
+    public static Resource[] getResources(String s) throws IOException {
+        return getApplicationContext().getResources(s);
     }
 
-    public Resource getResource(String s) {
-        return applicationContext.getResource(s);
+    public static Resource getResource(String s) {
+        return getApplicationContext().getResource(s);
     }
 
-    public ClassLoader getClassLoader() {
-        return applicationContext.getClassLoader();
+    public static ClassLoader getClassLoader() {
+        return getApplicationContext().getClassLoader();
     }
 }
