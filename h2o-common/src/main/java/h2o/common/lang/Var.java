@@ -7,13 +7,14 @@ public final class Var<T> implements NullableValue , java.io.Serializable {
 
     private static final long serialVersionUID = -1525947429459499316L;
 
-    private static final Var<?> EMPTY = new Var<>();
 
     private T value;
 
     private long version;
 
-    private Var() {
+    public Var() {
+        this.value = null;
+        this.version = 0L;
     }
 
     public Var(T v) {
@@ -21,11 +22,6 @@ public final class Var<T> implements NullableValue , java.io.Serializable {
         this.version = 1L;
     }
 
-    public static<T> Var<T> empty() {
-        @SuppressWarnings("unchecked")
-        Var<T> t = (Var<T>) EMPTY;
-        return t;
-    }
 
     @Override
     public boolean isPresent() {

@@ -1,5 +1,6 @@
 package h2o.flow.pvm;
 
+import h2o.common.lang.Val;
 import h2o.common.util.collection.ListBuilder;
 import h2o.flow.pvm.elements.Line;
 
@@ -7,32 +8,49 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class ExecResult implements java.io.Serializable {
-
-    private static final long serialVersionUID = -9122018447087854697L;
+public class ExecResult {
 
     private final RunStatus status;
 
     private final List<Line> lines;
 
-    private boolean present;
-    private Object result;
+    private final Val<Object> result;
 
+    public ExecResult( Object result , RunStatus status ) {
+        this.status = status;
+        this.lines = Collections.emptyList();
+        this.result = new Val<>(result);
+    }
+
+    public ExecResult( Object result , RunStatus status, Line... lines ) {
+        this.status = status;
+        this.lines = Collections.unmodifiableList(ListBuilder.newList(lines));
+        this.result = new Val<>(result);
+    }
+
+    public ExecResult( Object result  , RunStatus status, Collection<Line> lines ) {
+        this.status = status;
+        this.lines = Collections.unmodifiableList(ListBuilder.newListAndAddAll( lines ) );
+        this.result = new Val<>(result);
+    }
 
 
     public ExecResult(RunStatus status) {
         this.status = status;
         this.lines = Collections.emptyList();
+        this.result = Val.empty();
     }
 
     public ExecResult(RunStatus status, Line... lines ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(ListBuilder.newList(lines));
+        this.result = Val.empty();
     }
 
     public ExecResult(RunStatus status, Collection<Line> lines ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(ListBuilder.newListAndAddAll( lines ) );
+        this.result = Val.empty();
     }
 
 
@@ -65,20 +83,11 @@ public class ExecResult implements java.io.Serializable {
         return lines;
     }
 
-
-    public boolean isPresent() {
-        return present;
-    }
-
-    public Object getResult() {
+    public Val<Object> getResult() {
         return result;
     }
 
-    public ExecResult setResult(Object result) {
-        this.result = result;
-        this.present = true;
-        return this;
-    }
+
 
     @Override
     public String toString() {
