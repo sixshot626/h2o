@@ -38,6 +38,11 @@ public class TransactionHelper {
         return this;
     }
 
+    public TransactionHelper readOnly() {
+        transactionTemplate.setReadOnly(true);
+        return this;
+    }
+
 
 
     public <T> T executeAndReturn( TransactionCallback<T> action ) throws TransactionException {
