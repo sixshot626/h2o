@@ -6,7 +6,6 @@ package h2o.flow.pvm;
 
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.Val;
-import h2o.common.lang.Var;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.flow.pvm.elements.Line;
