@@ -54,6 +54,28 @@ public class ExecResult {
     }
 
 
+
+    public static ExecResult pause( Object result ) {
+        return new ExecResult( result , RunStatus.PAUSE );
+    }
+
+    public static ExecResult end( Object result ) {
+        return new ExecResult( result , RunStatus.END );
+    }
+
+    public static ExecResult exception( Object result ) {
+        return new ExecResult( result , RunStatus.EXCEPTION );
+    }
+
+    public static ExecResult goOn( Object result , Line... lines ) {
+        return new ExecResult( result , RunStatus.RUNNING , lines );
+    }
+
+    public static ExecResult goOn( Object result , Collection<Line> lines ) {
+        return new ExecResult( result , RunStatus.RUNNING , lines );
+    }
+
+
     public static ExecResult pause() {
         return new ExecResult( RunStatus.PAUSE );
     }
