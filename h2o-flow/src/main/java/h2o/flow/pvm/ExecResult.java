@@ -63,10 +63,6 @@ public class ExecResult {
         return new ExecResult( result , RunStatus.END );
     }
 
-    public static ExecResult exception( Object result ) {
-        return new ExecResult( result , RunStatus.EXCEPTION );
-    }
-
     public static ExecResult goOn( Object result , Line... lines ) {
         return new ExecResult( result , RunStatus.RUNNING , lines );
     }
@@ -82,10 +78,6 @@ public class ExecResult {
 
     public static ExecResult end() {
         return new ExecResult( RunStatus.END );
-    }
-
-    public static ExecResult exception() {
-        return new ExecResult( RunStatus.EXCEPTION );
     }
 
     public static ExecResult goOn( Line... lines ) {
