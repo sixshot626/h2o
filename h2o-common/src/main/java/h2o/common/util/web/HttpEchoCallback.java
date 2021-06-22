@@ -1,6 +1,6 @@
 package h2o.common.util.web;
 
-import h2o.common.util.io.CharsetWrapper;
+import h2o.common.io.CharsetWrapper;
 import org.apache.http.HttpResponse;
 
 /**

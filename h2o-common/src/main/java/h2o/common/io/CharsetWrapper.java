@@ -1,4 +1,4 @@
-package h2o.common.util.io;
+package h2o.common.io;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
