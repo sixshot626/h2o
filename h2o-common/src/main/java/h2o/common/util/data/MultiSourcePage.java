@@ -2,8 +2,8 @@ package h2o.common.util.data;
 
 import h2o.common.data.domain.PageInfo;
 import h2o.common.data.domain.ResultInfo;
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 
@@ -71,7 +71,7 @@ public class MultiSourcePage {
 		}
 		
 		
-		return TupleUtil.t(pageInfo, resultInfos);
+		return Tuple.t(pageInfo, resultInfos);
 		
 	}
 	

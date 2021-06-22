@@ -1,8 +1,10 @@
 package h2o.common.result;
 
-import h2o.common.lang.NullableValue;
+import h2o.common.lang.OptionalValue;
 
-public interface TransResult<R> extends Response , NullableValue {
+public interface TransResult<R> extends Response {
+
+    boolean isPresent();
 
     boolean hasResult();
 

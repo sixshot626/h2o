@@ -3,7 +3,10 @@ package h2o.common.lang;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public final class Var<T> implements NullableValue , java.io.Serializable {
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
+
+public final class Var<T> implements OptionalValue<T>, java.io.Serializable {
 
     private static final long serialVersionUID = -1525947429459499316L;
 
@@ -49,19 +52,6 @@ public final class Var<T> implements NullableValue , java.io.Serializable {
 
     public boolean isSetted() {
         return this.version != 0;
-    }
-
-    public T get() {
-
-        if ( this.isPresent() ) {
-            return value;
-        }
-
-        throw new IllegalStateException();
-    }
-
-    public T orElse( T other) {
-        return value == null ? other : value;
     }
 
 

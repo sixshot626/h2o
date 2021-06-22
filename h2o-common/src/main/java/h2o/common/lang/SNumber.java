@@ -7,8 +7,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
-public final class SNumber extends Number implements NullableValue, Comparable<SNumber> , java.io.Serializable {
+public final class SNumber extends Number implements OptionalValue<String>, Comparable<SNumber> , java.io.Serializable {
 
     private static final long serialVersionUID = -2650821778406349289L;
 
@@ -67,28 +69,9 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
 
 
     @Override
-    public boolean isPresent() {
-        return value != null;
-    }
-
     public String getValue() {
         return value;
     }
-
-    public String get() {
-
-        if ( this.isPresent() ) {
-            return value;
-        }
-
-        throw new IllegalStateException();
-
-    }
-
-    public String orElse(String other) {
-        return this.isPresent() ? value : other;
-    }
-
 
     public String fmt( String fmt ) {
        return new DecimalFormat(fmt).format( this.toBigDecimalExact() );
@@ -113,7 +96,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal( this.value );
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -130,7 +113,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal( this.value ).toBigIntegerExact();
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -147,7 +130,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return Integer.valueOf(new BigDecimal( this.value ).intValueExact());
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -163,7 +146,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return Long.valueOf(new BigDecimal( this.value ).longValueExact());
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -179,7 +162,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return Float.valueOf(new BigDecimal( this.value ).floatValue());
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -197,7 +180,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return Double.valueOf(new BigDecimal( this.value ).doubleValue());
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -213,7 +196,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return !(new BigDecimal( this.value ).intValueExact() == 0);
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -228,7 +211,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal(this.value).toPlainString();
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -238,7 +221,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal( this.value ).intValue();
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -247,7 +230,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal( this.value ).longValue();
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -256,7 +239,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal( this.value ).floatValue();
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -265,7 +248,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
         if ( this.isPresent() ) {
             return new BigDecimal( this.value ).doubleValue();
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -277,7 +260,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
             throw new IllegalArgumentException();
         }
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber(new BigDecimal(this.value).add( new BigDecimal(augend.value) ) );
@@ -289,7 +272,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
             throw new IllegalArgumentException();
         }
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber( new BigDecimal(this.value).subtract( new BigDecimal(subtrahend.value) ) );
@@ -301,7 +284,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
             throw new IllegalArgumentException();
         }
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber( new BigDecimal(this.value).multiply( new BigDecimal(multiplicand.value) ) );
@@ -313,7 +296,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
             throw new IllegalArgumentException();
         }
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber( new BigDecimal(this.value).divide( new BigDecimal(divisor.value) ) );
@@ -325,7 +308,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
             throw new IllegalArgumentException();
         }
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber( new BigDecimal(this.value).divide( new BigDecimal(divisor.value) , roundingMode ) );
@@ -337,7 +320,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
             throw new IllegalArgumentException();
         }
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber( new BigDecimal(this.value).divide( new BigDecimal(divisor.value) , scale, roundingMode ) );
@@ -346,7 +329,7 @@ public final class SNumber extends Number implements NullableValue, Comparable<S
     public SNumber toScale(int scale, RoundingMode roundingMode) {
 
         if ( !this.isPresent() ) {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
 
         return new SNumber( new BigDecimal(this.value).setScale( scale , roundingMode ) );

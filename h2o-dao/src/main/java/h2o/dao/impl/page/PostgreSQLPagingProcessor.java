@@ -2,8 +2,8 @@ package h2o.dao.impl.page;
 
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.page.PagingProcessor;
@@ -32,7 +32,7 @@ public class PostgreSQLPagingProcessor extends AbstractPagingProcessor implement
         pageSql.append( this.orderProc( sql , pageRequest.getSorts() ) );
         StringUtil.append(pageSql , "\n) page_query limit :" , P2 , " offset :" , P1);
 
-        return TupleUtil.t( pageSql.toString() , args);
+        return Tuple.t( pageSql.toString() , args);
     }
 
 }

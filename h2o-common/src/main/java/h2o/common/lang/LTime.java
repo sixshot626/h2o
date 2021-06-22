@@ -8,8 +8,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
-public final class LTime implements NullableValue, Comparable<LTime>, java.io.Serializable {
+public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java.io.Serializable {
 
     private static final long serialVersionUID = 1239958588661309274L;
 
@@ -49,35 +51,34 @@ public final class LTime implements NullableValue, Comparable<LTime>, java.io.Se
     }
 
     @Override
-    public boolean isPresent() {
-        return this.value != null;
-    }
-
     public Long getValue() {
         return this.value;
     }
 
-    public String get() {
 
+    public String getTimestampString() {
+        return DateUtil.toString( new Date(this.get()) , DATE_FMT );
+    }
+
+    public String orElseString(String other ) {
+        return this.isPresent() ? this.getTimestampString() : other;
+    }
+
+    public <X extends Throwable> String orElseStringThrow(Supplier<? extends X> exceptionSupplier) throws X {
         if ( this.isPresent() ) {
-            return DateUtil.toString( new Date(this.value) , DATE_FMT );
+            return this.getTimestampString();
         } else {
-            throw new IllegalStateException();
+            throw exceptionSupplier.get();
         }
-
     }
 
-
-    public String orElse(String other) {
-        return this.isPresent() ? this.get() : other;
-    }
 
     public String fmt( String fmt ) {
 
         if ( DATE_FMT.equals( fmt ) ) {
-            return this.get();
+            return this.getTimestampString();
         } else {
-            return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
+            return DateUtil.str2Str(this.getTimestampString(), DATE_FMT, fmt);
         }
 
     }
@@ -92,7 +93,7 @@ public final class LTime implements NullableValue, Comparable<LTime>, java.io.Se
         if ( this.isPresent() ) {
             return new Date(this.value);
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -101,7 +102,7 @@ public final class LTime implements NullableValue, Comparable<LTime>, java.io.Se
         if ( this.isPresent() ) {
             return Instant.ofEpochMilli(this.value);
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 
@@ -163,6 +164,6 @@ public final class LTime implements NullableValue, Comparable<LTime>, java.io.Se
 
     @Override
     public String toString() {
-        return this.orElse("<null>");
+        return this.orElseString("<null>");
     }
 }

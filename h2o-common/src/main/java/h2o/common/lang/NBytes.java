@@ -4,8 +4,10 @@ import h2o.common.io.CharsetWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
-public final class NBytes implements NullableValue , java.io.Serializable {
+public final class NBytes implements OptionalValue<byte[]>, java.io.Serializable {
 
     private static final long serialVersionUID = 180228261982672556L;
 
@@ -34,24 +36,9 @@ public final class NBytes implements NullableValue , java.io.Serializable {
     }
 
     @Override
-    public boolean isPresent() {
-        return this.value != null;
-    }
-
     public byte[] getValue() {
         return this.value;
     }
-
-    public byte[] get() {
-
-        if ( this.isPresent() ) {
-            return this.value;
-        }
-
-        throw new IllegalStateException();
-
-    }
-
 
     @Override
     public String toString() {

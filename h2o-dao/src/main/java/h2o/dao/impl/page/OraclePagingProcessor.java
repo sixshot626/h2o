@@ -2,8 +2,8 @@ package h2o.dao.impl.page;
 
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.page.PagingProcessor;
@@ -32,7 +32,7 @@ public class OraclePagingProcessor extends AbstractPagingProcessor implements Pa
         pageSql.append( this.orderProc( sql , pageRequest.getSorts() ) );
         StringUtil.append(pageSql , "\n    ) page_query  where rownum <= :" , P2 , " \n) where page_row_num >= :" , P1);
 
-        return TupleUtil.t( pageSql.toString() , args);
+        return Tuple.t( pageSql.toString() , args);
     }
 
 }

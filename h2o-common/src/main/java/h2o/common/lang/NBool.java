@@ -1,6 +1,8 @@
 package h2o.common.lang;
 
-public enum NBool implements NullableValue {
+import java.util.NoSuchElementException;
+
+public enum NBool implements OptionalValue<Boolean> {
 
     FALSE, TRUE, NULL;
 
@@ -10,20 +12,10 @@ public enum NBool implements NullableValue {
         return this != NULL;
     }
 
+    @Override
     public Boolean getValue() {
         return this == NULL ? null : Boolean.valueOf( this == TRUE);
     }
-
-    public boolean get() {
-
-        if ( this.isPresent() ) {
-            return this == TRUE;
-        } else {
-            throw new IllegalStateException();
-        }
-
-    }
-
 
     public static NBool valueOf(boolean bool ) {
         return bool ? TRUE : FALSE;

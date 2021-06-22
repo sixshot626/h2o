@@ -1,8 +1,10 @@
 package h2o.common.lang;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-public final class NString implements NullableValue , Comparable<NString> , java.io.Serializable {
+public final class NString implements OptionalValue<String>, Comparable<NString> , java.io.Serializable {
 
     private static final long serialVersionUID = -7152107032754248698L;
 
@@ -19,26 +21,8 @@ public final class NString implements NullableValue , Comparable<NString> , java
     }
 
     @Override
-    public boolean isPresent() {
-        return this.value != null;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public String get() {
-
-        if ( this.isPresent() ) {
-            return value;
-        }
-
-        throw new IllegalStateException();
-
-    }
-
-    public String orElse(String other) {
-        return this.isPresent() ? value : other;
     }
 
     @Override

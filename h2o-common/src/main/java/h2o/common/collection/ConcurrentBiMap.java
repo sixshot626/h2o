@@ -1,8 +1,8 @@
 package h2o.common.collection;
 
 import h2o.common.exception.ReadonlyException;
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -335,13 +335,13 @@ public class ConcurrentBiMap<K, V> implements java.io.Serializable {
 	
 	public Tuple2<Map<K, V>, Map<V, K>> getMM() {
 		if( this.readonly ) {
-			return TupleUtil.t(getM1(), getM2());
+			return Tuple.t(getM1(), getM2());
 		}
 
 		Lock lock = rwlock.readLock();
 		lock.lock();
 		try {
-			return TupleUtil.t(getM1(), getM2());
+			return Tuple.t(getM1(), getM2());
 		} finally {
 			lock.unlock();
 		}

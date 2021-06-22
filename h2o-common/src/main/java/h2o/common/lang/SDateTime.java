@@ -9,8 +9,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
-public final class SDateTime implements NullableValue, Comparable<SDateTime>, java.io.Serializable {
+public final class SDateTime implements OptionalValue<String>, Comparable<SDateTime>, java.io.Serializable {
 
     private static final long serialVersionUID = 2203956607450263142L;
 
@@ -87,24 +89,8 @@ public final class SDateTime implements NullableValue, Comparable<SDateTime>, ja
 
 
     @Override
-    public boolean isPresent() {
-        return this.value != null;
-    }
-
-
     public String getValue() {
         return this.value;
-    }
-
-
-    public String get() {
-
-        if ( this.isPresent() ) {
-            return this.value;
-        } else {
-            throw new IllegalStateException();
-        }
-
     }
 
     public SDate getDate() {
@@ -129,9 +115,6 @@ public final class SDateTime implements NullableValue, Comparable<SDateTime>, ja
     }
 
 
-    public String orElse(String other) {
-        return this.isPresent() ? value : other;
-    }
 
     public String fmt( String fmt ) {
 
@@ -164,7 +147,7 @@ public final class SDateTime implements NullableValue, Comparable<SDateTime>, ja
                     time.getHour(), time.getMinute(), time.getSecond());
 
         } else {
-            throw new IllegalStateException();
+            throw new NoSuchElementException("No value present");
         }
     }
 

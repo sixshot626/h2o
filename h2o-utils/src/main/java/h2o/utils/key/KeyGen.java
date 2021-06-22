@@ -3,8 +3,8 @@ package h2o.utils.key;
 
 import h2o.common.concurrent.LockMap;
 import h2o.common.lang.Val;
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.math.IntArith;
 import h2o.dao.Dao;
 import h2o.dao.DaoCallback;
@@ -203,12 +203,9 @@ public class KeyGen {
         });
 
 
-        return rr[0] == null ? null : TupleUtil.t( rr[0], rr[1] );
+        return rr[0] == null ? null : Tuple.t( rr[0], rr[1] );
 
     }
-
-
-
 
 
 }

@@ -9,8 +9,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
-public final class SDate implements NullableValue, Comparable<SDate>, java.io.Serializable {
+public final class SDate implements OptionalValue<String>, Comparable<SDate>, java.io.Serializable {
 
     private static final long serialVersionUID = 6739233604857493058L;
 
@@ -92,27 +94,10 @@ public final class SDate implements NullableValue, Comparable<SDate>, java.io.Se
 
 
     @Override
-    public boolean isPresent() {
-        return this.value != null;
-    }
-
     public String getValue() {
         return this.value;
     }
 
-    public String get() {
-
-        if ( this.isPresent() ) {
-            return this.value;
-        } else {
-            throw new IllegalStateException();
-        }
-
-    }
-
-    public String orElse(String other) {
-        return  this.isPresent() ? this.value : other;
-    }
 
     public String fmt( String fmt ) {
 

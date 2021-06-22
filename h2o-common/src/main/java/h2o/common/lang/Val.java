@@ -3,7 +3,9 @@ package h2o.common.lang;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public final class Val<T> implements NullableValue , java.io.Serializable {
+import java.util.function.Supplier;
+
+public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
     private static final long serialVersionUID = -5406301526511160202L;
     
@@ -30,34 +32,13 @@ public final class Val<T> implements NullableValue , java.io.Serializable {
         return t;
     }
 
-
     public boolean isSetted() {
         return setted;
-    }
-
-
-    @Override
-    public boolean isPresent() {
-        return value != null;
     }
 
     public T getValue() {
         return value;
     }
-
-    public T get() {
-
-        if ( this.isPresent() ) {
-            return value;
-        }
-
-        throw new IllegalStateException();
-    }
-
-    public T orElse( T other ) {
-        return value == null ? other : value;
-    }
-
 
     @Override
     public boolean equals(Object o) {

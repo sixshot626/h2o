@@ -1,8 +1,8 @@
 package h2o.dao.impl.page;
 
 import h2o.common.data.domain.SortInfo;
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.dao.page.PagingProcessor;
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +17,7 @@ public abstract class AbstractPagingProcessor implements PagingProcessor {
 
         String countSql = "select count(*) as count_num from (\n" + sql + "\n) page_count ";
 
-        return TupleUtil.t( countSql , "count_num" );
+        return Tuple.t( countSql , "count_num" );
     }
 
 

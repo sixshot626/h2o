@@ -1,7 +1,7 @@
 package h2o.common.util.valid;
 
+import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.lang.tuple.TupleUtil;
 import h2o.common.util.collection.ListBuilder;
 
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public final class ValidateUtil {
 				continue;
 			}
 			if( !validator.validate(bean) ) {
-				rs.add( TupleUtil.t( k , validator.getMessage() ) );
+				rs.add( Tuple.t( k , validator.getMessage() ) );
 				ks.add(k);
 			}
 		}
@@ -35,7 +35,7 @@ public final class ValidateUtil {
 		
 		for( Validator validator : validators ) {
 			if( !validator.validate(bean) ) {
-				return TupleUtil.t( validator.getK() ,  validator.getMessage() );
+				return Tuple.t( validator.getK() ,  validator.getMessage() );
 			}
 		}
 		return null;

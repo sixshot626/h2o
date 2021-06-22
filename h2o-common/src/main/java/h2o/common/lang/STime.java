@@ -9,8 +9,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.function.Supplier;
 
-public final class STime implements NullableValue, Comparable<STime>, java.io.Serializable {
+public final class STime implements OptionalValue<String>, Comparable<STime>, java.io.Serializable {
 
     private static final long serialVersionUID = -1955168203520594449L;
 
@@ -76,26 +77,8 @@ public final class STime implements NullableValue, Comparable<STime>, java.io.Se
 
 
     @Override
-    public boolean isPresent() {
-        return this.value != null;
-    }
-
     public String getValue() {
         return this.value;
-    }
-
-    public String get() {
-
-        if ( this.isPresent() ) {
-            return this.value;
-        } else {
-            throw new IllegalStateException();
-        }
-
-    }
-
-    public String orElse(String other) {
-        return this.isPresent() ? this.value : other;
     }
 
     public String fmt( String fmt ) {
