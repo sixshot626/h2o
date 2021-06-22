@@ -11,18 +11,28 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
     
     private static final Val<?> EMPTY = new Val<>();
 
-    private  final T value;
+    private final T value;
 
     private final boolean setted;
+
+    public final long version;
 
     private Val() {
         this.value = null;
         this.setted = false;
+        this.version = 0L;
     }
 
     public Val(T value) {
         this.value = value;
         this.setted = true;
+        this.version = 0L;
+    }
+
+    public Val( T value , long version ) {
+        this.value = value;
+        this.setted = true;
+        this.version = version;
     }
 
 
@@ -38,6 +48,10 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
     public T getValue() {
         return value;
+    }
+
+    public long getVersion() {
+        return version;
     }
 
     @Override

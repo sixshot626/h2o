@@ -16,22 +16,22 @@ public class ExecResult {
 
     private final Val<Object> result;
 
-    public ExecResult( Object result , RunStatus status ) {
+    public ExecResult( Val<Object> result , RunStatus status ) {
         this.status = status;
         this.lines = Collections.emptyList();
-        this.result = new Val<>(result);
+        this.result = result;
     }
 
-    public ExecResult( Object result , RunStatus status, Line... lines ) {
+    public ExecResult( Val<Object> result , RunStatus status, Line... lines ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(ListBuilder.newList(lines));
-        this.result = new Val<>(result);
+        this.result = result;
     }
 
-    public ExecResult( Object result  , RunStatus status, Collection<Line> lines ) {
+    public ExecResult( Val<Object> result , RunStatus status, Collection<Line> lines ) {
         this.status = status;
         this.lines = Collections.unmodifiableList(ListBuilder.newListAndAddAll( lines ) );
-        this.result = new Val<>(result);
+        this.result = result;
     }
 
 
@@ -55,19 +55,19 @@ public class ExecResult {
 
 
 
-    public static ExecResult pause( Object result ) {
+    public static ExecResult pause(  Val<Object> result ) {
         return new ExecResult( result , RunStatus.PAUSE );
     }
 
-    public static ExecResult end( Object result ) {
+    public static ExecResult end(  Val<Object> result ) {
         return new ExecResult( result , RunStatus.END );
     }
 
-    public static ExecResult goOn( Object result , Line... lines ) {
+    public static ExecResult goOn(  Val<Object> result , Line... lines ) {
         return new ExecResult( result , RunStatus.RUNNING , lines );
     }
 
-    public static ExecResult goOn( Object result , Collection<Line> lines ) {
+    public static ExecResult goOn(  Val<Object> result , Collection<Line> lines ) {
         return new ExecResult( result , RunStatus.RUNNING , lines );
     }
 

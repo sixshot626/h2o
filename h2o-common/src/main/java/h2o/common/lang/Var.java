@@ -10,7 +10,6 @@ public final class Var<T> implements OptionalValue<T>, java.io.Serializable {
 
     private static final long serialVersionUID = -1525947429459499316L;
 
-
     private T value;
 
     private long version;

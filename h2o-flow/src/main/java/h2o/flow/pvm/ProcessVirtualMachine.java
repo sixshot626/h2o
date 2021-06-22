@@ -216,7 +216,8 @@ public final class ProcessVirtualMachine {
 			fireEnterNodeEvent( nodeRunScoeObject , runContext, node , isSignal , args );
 
 			final ExecResult nodeExecResult = isSignal ? ( (SignalNode) node).signal( runContext , args ) : node.exec( runContext , args );
-			if ( !this.result.isSetted() && nodeExecResult.getResult().isSetted() ) {
+			if ( nodeExecResult.getResult().isSetted() &&
+					( !this.result.isSetted() || nodeExecResult.getResult().version > this.result.version  ) ){
 				this.result = nodeExecResult.getResult();
 			}
 
