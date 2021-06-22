@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface OptionalValue<T> {
@@ -9,6 +10,12 @@ public interface OptionalValue<T> {
 
     default boolean isPresent() {
         return this.getValue() != null;
+    }
+
+    default void ifPresent(Consumer<? super T> consumer) {
+        if ( this.isPresent() ) {
+            consumer.accept( this.getValue() );
+        }
     }
 
     default T get() {
@@ -34,8 +41,6 @@ public interface OptionalValue<T> {
             throw exceptionSupplier.get();
         }
     }
-
-
 
 
 }
