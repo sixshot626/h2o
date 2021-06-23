@@ -25,8 +25,8 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.NBool;
 import h2o.common.lang.LTime;
+import h2o.common.lang.NBool;
 import h2o.common.lang.SNumber;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;

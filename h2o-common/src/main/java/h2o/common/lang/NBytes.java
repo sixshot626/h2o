@@ -1,11 +1,10 @@
 package h2o.common.lang;
 
+import h2o.common.exception.ExceptionUtil;
 import h2o.common.io.CharsetWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.NoSuchElementException;
-import java.util.function.Supplier;
 
 public final class NBytes implements OptionalValue<byte[]>, java.io.Serializable {
 
@@ -23,13 +22,13 @@ public final class NBytes implements OptionalValue<byte[]>, java.io.Serializable
         this.value = value;
     }
 
-    public NBytes( String str ) {
-        this.value = str == null ? null : str.getBytes(StandardCharsets.UTF_8);
+    public static NBytes from( String str ) {
+        return new NBytes( str == null ? null : str.getBytes(StandardCharsets.UTF_8) );
     }
 
-    public NBytes( String str , CharsetWrapper charset ) {
+    public static NBytes from( String str , CharsetWrapper charsetWrapper ) {
         try {
-            this.value = str == null ? null : str.getBytes( charset.charset );
+            return new NBytes( str == null ? null : str.getBytes( charsetWrapper.charset ) );
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException(e);
         }
@@ -39,6 +38,19 @@ public final class NBytes implements OptionalValue<byte[]>, java.io.Serializable
     public byte[] getValue() {
         return this.value;
     }
+
+    public String buildString() {
+        return new String( this.get() , StandardCharsets.UTF_8 );
+    }
+
+    public String buildString( CharsetWrapper charsetWrapper  ) {
+        try {
+            return new String( this.get() , charsetWrapper.charset );
+        } catch (UnsupportedEncodingException e) {
+           throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
+
 
     @Override
     public String toString() {

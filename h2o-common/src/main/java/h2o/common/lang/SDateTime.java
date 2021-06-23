@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.NoSuchElementException;
-import java.util.function.Supplier;
 
 public final class SDateTime implements OptionalValue<String>, Comparable<SDateTime>, java.io.Serializable {
 

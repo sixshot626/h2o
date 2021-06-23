@@ -1,7 +1,5 @@
 package h2o.common.lang;
 
-import java.util.NoSuchElementException;
-
 public enum NBool implements OptionalValue<Boolean> {
 
     FALSE, TRUE, NULL;

@@ -3,9 +3,6 @@ package h2o.common.lang;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import java.util.NoSuchElementException;
-import java.util.function.Supplier;
-
 public final class Var<T> implements OptionalValue<T>, java.io.Serializable {
 
     private static final long serialVersionUID = -1525947429459499316L;

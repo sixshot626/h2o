@@ -9,7 +9,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
-import java.util.function.Supplier;
 
 public final class STime implements OptionalValue<String>, Comparable<STime>, java.io.Serializable {
 

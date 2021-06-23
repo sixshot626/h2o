@@ -9,8 +9,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.function.Supplier;
 
 public final class SDate implements OptionalValue<String>, Comparable<SDate>, java.io.Serializable {
 

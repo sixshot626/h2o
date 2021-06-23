@@ -1,8 +1,6 @@
 package h2o.common.lang;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public final class NString implements OptionalValue<String>, Comparable<NString> , java.io.Serializable {
 

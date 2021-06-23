@@ -26,19 +26,8 @@
 package h2o.jodd.typeconverter.impl;
 
 import h2o.common.lang.NBytes;
-import h2o.common.lang.NString;
-import h2o.jodd.io.FileUtil;
-import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.typeconverter.TypeConverterManager;
-import h2o.jodd.util.StringUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Converts given object to <code>byte[]</code>.

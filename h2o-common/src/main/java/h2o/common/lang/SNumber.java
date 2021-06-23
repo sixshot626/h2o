@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.NoSuchElementException;
-import java.util.function.Supplier;
 
 public final class SNumber extends Number implements OptionalValue<String>, Comparable<SNumber> , java.io.Serializable {
 
