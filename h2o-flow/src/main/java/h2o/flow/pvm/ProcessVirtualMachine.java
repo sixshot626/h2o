@@ -216,8 +216,8 @@ public final class ProcessVirtualMachine {
 			fireEnterNodeEvent( nodeRunScoeObject , runContext, node , isSignal , args );
 
 			final ExecResult nodeExecResult = isSignal ? ( (SignalNode) node).signal( runContext , args ) : node.exec( runContext , args );
-			if ( nodeExecResult.getResult().isSetted() &&
-					( !this.result.isSetted() || nodeExecResult.getResult().version > this.result.version  ) ){
+
+			if ( nodeExecResult.getResult().isSetted() &&  ( !this.result.isSetted() || nodeExecResult.getResult().version > this.result.version  ) ) {
 				this.result = nodeExecResult.getResult();
 			}
 
@@ -235,8 +235,6 @@ public final class ProcessVirtualMachine {
 
 					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;
 
-
-
 					RuntimeScopeObject lineRunScoeObject = new RuntimeScopeObject();
 
 					fireEnterLineEvent(lineRunScoeObject , nextRunContext , line , args );
@@ -244,7 +242,6 @@ public final class ProcessVirtualMachine {
 					Node nextNode = line.pass( nextRunContext , args );
 
 					fireLeaveLineEvent(lineRunScoeObject , nextRunContext , line , nextNode );
-
 
 					runNode( nextRunContext , nextNode , false , args );
 
@@ -260,10 +257,6 @@ public final class ProcessVirtualMachine {
 			return nodeExecResult;
 
 		}
-
-
-
-
 
 	}
 	
