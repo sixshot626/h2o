@@ -11,8 +11,7 @@ public abstract class Singleton<T> {
             synchronized (this) {
                 ins = instance;
                 if ( ins == null ) {
-                    ins = create();
-                    instance = ins;
+                    ins = instance = create();
                 }
             }
         }
