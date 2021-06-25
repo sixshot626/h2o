@@ -13,24 +13,24 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
     private final boolean setted;
 
-    public final long version;
+    public final SNumber stamp;
 
     private Val() {
         this.value = null;
         this.setted = false;
-        this.version = 0L;
+        this.stamp = SNumber.NULL;
     }
 
     public Val(T value) {
         this.value = value;
         this.setted = true;
-        this.version = 0L;
+        this.stamp = SNumber.NULL;
     }
 
-    public Val( T value , long version ) {
+    public Val( T value , SNumber stamp) {
         this.value = value;
         this.setted = true;
-        this.version = version;
+        this.stamp = stamp;
     }
 
 
@@ -48,8 +48,8 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
         return value;
     }
 
-    public long getVersion() {
-        return version;
+    public SNumber getStamp() {
+        return stamp;
     }
 
     @Override
