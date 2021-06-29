@@ -68,7 +68,7 @@ public class EntityParser {
     public ColInfo getAttr( String attrName ) {
 
         for ( ColInfo ci : colInfos ) {
-            if ( ci.attrName.equals(attrName)  ) {
+            if ( ci.attrName.equalsIgnoreCase(attrName)  ) {
                 return ci;
             }
         }
@@ -81,10 +81,13 @@ public class EntityParser {
         Assert.isTrue( !CollectionUtil.argsIsBlank(attrNames) );
 
         List<ColInfo> cis = ListBuilder.newList();
-        List<String> ans = Arrays.asList( attrNames );
+        List<String> ans = ListBuilder.newList();
+        for ( String attr : attrNames ) {
+            ans.add( attr.toUpperCase() );
+        }
 
         for ( ColInfo ci : colInfos ) {
-            if ( ans.contains( ci.attrName ) ) {
+            if ( ans.contains( ci.attrName.toUpperCase() ) ) {
                 cis.add(ci);
             }
         }
