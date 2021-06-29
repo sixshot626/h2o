@@ -8,6 +8,8 @@ import h2o.dao.colinfo.ColInfoUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class EntityParser {
 
@@ -59,7 +61,6 @@ public class EntityParser {
             }
         }
 
-
         return u;
 
     }
@@ -81,7 +82,7 @@ public class EntityParser {
         Assert.isTrue( !CollectionUtil.argsIsBlank(attrNames) );
 
         List<ColInfo> cis = ListBuilder.newList();
-        List<String> ans = ListBuilder.newList();
+        Set<String> ans = new TreeSet<>();
         for ( String attr : attrNames ) {
             ans.add( attr.toUpperCase() );
         }
