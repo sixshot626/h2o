@@ -7,6 +7,7 @@ import h2o.common.lang.Val;
 import h2o.common.util.lang.GenericsUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
+import h2o.dao.colinfo.ColInfo;
 
 import java.util.List;
 
@@ -244,6 +245,19 @@ public abstract class BasicRepository<E> {
 
     protected DaoBasicUtil<E> createDaoBasicUtil() {
         return new DaoBasicUtil<E>( this.getEntityClass(), this.getEntityParser() , this.getDao() );
+    }
+
+
+    public String tableName() {
+        return this.getEntityParser().getTableName();
+    }
+
+    public String column( String attrName ) {
+        ColInfo colInfo = this.getEntityParser().getAttr(attrName);
+        if ( colInfo == null ) {
+            throw new IllegalArgumentException(attrName);
+        }
+        return colInfo.colName;
     }
 
 

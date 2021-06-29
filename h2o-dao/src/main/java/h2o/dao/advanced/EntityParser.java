@@ -64,6 +64,18 @@ public class EntityParser {
 
     }
 
+
+    public ColInfo getAttr( String attrName ) {
+
+        for ( ColInfo ci : colInfos ) {
+            if ( ci.attrName.equals(attrName)  ) {
+                return ci;
+            }
+        }
+
+        return null;
+    }
+
     public List<ColInfo> getAttrs( String... attrNames ) {
 
         Assert.isTrue( !CollectionUtil.argsIsBlank(attrNames) );
