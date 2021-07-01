@@ -1,8 +1,8 @@
-package h2o.dao.colinfo;
+package h2o.dao.column;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class ColInfo {
+public class ColumnMeta {
 
 	public final String attrName;
 	public final String colName;
@@ -12,7 +12,7 @@ public class ColInfo {
 	public final String[] uniqueNames;
 
 
-    public ColInfo( ColInfoVar civ ) {
+    public ColumnMeta(ColumnMetaBuilder civ ) {
         this.attrName    = civ.attrName;
         this.colName     = civ.colName;
         this.defVal      = civ.defVal;

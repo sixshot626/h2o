@@ -3,8 +3,8 @@ package h2o.dao.advanced;
 import h2o.common.thirdparty.spring.util.Assert;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
-import h2o.dao.colinfo.ColInfo;
-import h2o.dao.colinfo.ColInfoUtil;
+import h2o.dao.column.ColumnMeta;
+import h2o.dao.column.ColumnMetaUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,32 +13,32 @@ import java.util.TreeSet;
 
 public class EntityParser {
 
-    private final ColInfo[] colInfos;
+    private final ColumnMeta[] columnMetas;
 
     private final String tableName;
 
-    private final ColInfo[] ids;
+    private final ColumnMeta[] ids;
 
 
     public EntityParser( Class<?> entityClazz ) {
 
         {
-            List<ColInfo> cil = ColInfoUtil.getColInfos(entityClazz);
-            this.colInfos = cil.toArray(new ColInfo[cil.size()]);
+            List<ColumnMeta> cil = ColumnMetaUtil.getColInfos(entityClazz);
+            this.columnMetas = cil.toArray(new ColumnMeta[cil.size()]);
         }
 
-        this.tableName = ColInfoUtil.getTableName( entityClazz );
+        this.tableName = ColumnMetaUtil.getTableName( entityClazz );
 
         {
-            List<ColInfo> idl = ListBuilder.newList();
+            List<ColumnMeta> idl = ListBuilder.newList();
 
-            for (ColInfo ci : colInfos) {
+            for (ColumnMeta ci : columnMetas) {
                 if (ci.pk) {
                     idl.add(ci);
                 }
             }
 
-            ids = idl.toArray( new ColInfo[idl.size()] );
+            ids = idl.toArray( new ColumnMeta[idl.size()] );
         }
 
     }
@@ -47,16 +47,18 @@ public class EntityParser {
         return tableName;
     }
 
-    public List<ColInfo> getPK() {
+    public List<ColumnMeta> getPK() {
         return ListBuilder.newList( ids );
     }
 
-    public List<ColInfo> getUnique( String uniqueName ) {
+    public List<ColumnMeta> listColumnByUniqueName(String uniqueName ) {
 
-        List<ColInfo> u = ListBuilder.newList();
+        List<ColumnMeta> u = ListBuilder.newList();
 
-        for ( ColInfo ci : colInfos ) {
-            if ( ci.uniqueNames != null && Arrays.asList(ci.uniqueNames).contains( uniqueName ) ) {
+        for ( ColumnMeta ci : columnMetas) {
+            if ( ci.uniqueNames != null &&
+                    Arrays.asList(ci.uniqueNames).stream()
+                            .anyMatch( colUniName ->  colUniName.equalsIgnoreCase( uniqueName ) ) ) {
                 u.add(ci);
             }
         }
@@ -66,9 +68,9 @@ public class EntityParser {
     }
 
 
-    public ColInfo getAttr( String attrName ) {
+    public ColumnMeta getColumn(String attrName ) {
 
-        for ( ColInfo ci : colInfos ) {
+        for ( ColumnMeta ci : columnMetas) {
             if ( ci.attrName.equalsIgnoreCase(attrName)  ) {
                 return ci;
             }
@@ -77,17 +79,17 @@ public class EntityParser {
         return null;
     }
 
-    public List<ColInfo> getAttrs( String... attrNames ) {
+    public List<ColumnMeta> listColumns(String... attrNames ) {
 
         Assert.isTrue( !CollectionUtil.argsIsBlank(attrNames) );
 
-        List<ColInfo> cis = ListBuilder.newList();
+        List<ColumnMeta> cis = ListBuilder.newList();
         Set<String> ans = new TreeSet<>();
         for ( String attr : attrNames ) {
             ans.add( attr.toUpperCase() );
         }
 
-        for ( ColInfo ci : colInfos ) {
+        for ( ColumnMeta ci : columnMetas) {
             if ( ans.contains( ci.attrName.toUpperCase() ) ) {
                 cis.add(ci);
             }
@@ -98,11 +100,11 @@ public class EntityParser {
     }
 
 
-    public List<ColInfo> getAllAttrs() {
+    public List<ColumnMeta> listAllColumns() {
 
-        List<ColInfo> cis = ListBuilder.newList();
+        List<ColumnMeta> cis = ListBuilder.newList();
 
-        for ( ColInfo ci : colInfos ) {
+        for ( ColumnMeta ci : columnMetas) {
              cis.add(ci);
         }
 

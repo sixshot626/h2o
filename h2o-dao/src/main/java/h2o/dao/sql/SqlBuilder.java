@@ -1,8 +1,8 @@
 package h2o.dao.sql;
 
 import h2o.common.util.collection.MapBuilder;
-import h2o.dao.colinfo.ColInfo;
-import h2o.dao.colinfo.ColInfoUtil;
+import h2o.dao.column.ColumnMeta;
+import h2o.dao.column.ColumnMetaUtil;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 import org.apache.commons.lang.StringUtils;
@@ -45,13 +45,13 @@ public class SqlBuilder {
 
 	public SqlSource buildInsertSql( boolean includeNull , boolean isAllattr , Object bean  , String[] attrNames , String[] skipAttrNames ) throws DaoException {
 		
-		String tabName = ColInfoUtil.getTableName(bean);		
-		List<ColInfo> colInfos = ColInfoUtil.getColInfoInAttrNames( bean , isAllattr , attrNames , skipAttrNames , this.isSilently);		
-		if(colInfos == null ) {			
+		String tabName = ColumnMetaUtil.getTableName(bean);
+		List<ColumnMeta> columnMetas = ColumnMetaUtil.getColInfoInAttrNames( bean , isAllattr , attrNames , skipAttrNames , this.isSilently);
+		if(columnMetas == null ) {
 			return null;		
 		}
 		
-		Map<String,ColInfo> colInfoMap = MapBuilder.newMap();
+		Map<String, ColumnMeta> colInfoMap = MapBuilder.newMap();
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -65,7 +65,7 @@ public class SqlBuilder {
 		sbv.append(") VALUES (");
 		
 		int i = 0;
-		for( ColInfo ci :  colInfos ) {
+		for( ColumnMeta ci : columnMetas) {
 			
 			colInfoMap.put( ci.attrName , ci );
 			
@@ -130,20 +130,20 @@ public class SqlBuilder {
 	public SqlSource buildUpdateSql( boolean includeNull , boolean isAllattr , Object bean ,  String where  , String[] attrNames , String[] skipAttrNames  ) throws DaoException {
 		
 		
-		String tabName = ColInfoUtil.getTableName(bean);		
-		List<ColInfo> colInfos = ColInfoUtil.getColInfoInAttrNames(bean , isAllattr , attrNames , skipAttrNames , this.isSilently);		
-		if(colInfos == null ) {			
+		String tabName = ColumnMetaUtil.getTableName(bean);
+		List<ColumnMeta> columnMetas = ColumnMetaUtil.getColInfoInAttrNames(bean , isAllattr , attrNames , skipAttrNames , this.isSilently);
+		if(columnMetas == null ) {
 			return null;		
 		}
 		
-		Map<String,ColInfo> colInfoMap = MapBuilder.newMap();
+		Map<String, ColumnMeta> colInfoMap = MapBuilder.newMap();
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(" UPDATE " );
 		sb.append(tabName);
 		sb.append(" SET ");	
 		int i = 0;
-		for( ColInfo ci :  colInfos ) {
+		for( ColumnMeta ci : columnMetas) {
 			
 			colInfoMap.put( ci.attrName , ci );
 			

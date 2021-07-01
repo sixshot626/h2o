@@ -7,7 +7,7 @@ import h2o.common.lang.Val;
 import h2o.common.util.lang.GenericsUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
-import h2o.dao.colinfo.ColInfo;
+import h2o.dao.column.ColumnMeta;
 
 import java.util.List;
 
@@ -253,11 +253,11 @@ public abstract class BasicRepository<E> {
     }
 
     public String column( String attrName ) {
-        ColInfo colInfo = this.getEntityParser().getAttr(attrName);
-        if ( colInfo == null ) {
+        ColumnMeta columnMeta = this.getEntityParser().getColumn(attrName);
+        if ( columnMeta == null ) {
             throw new IllegalArgumentException(attrName);
         }
-        return colInfo.colName;
+        return columnMeta.colName;
     }
 
 

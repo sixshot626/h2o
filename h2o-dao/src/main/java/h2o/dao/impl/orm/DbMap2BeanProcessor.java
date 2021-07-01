@@ -3,8 +3,8 @@ package h2o.dao.impl.orm;
 import h2o.common.Tools;
 import h2o.common.util.bean.BeanUtil;
 import h2o.common.util.collection.MapBuilder;
-import h2o.dao.colinfo.ColInfo;
-import h2o.dao.colinfo.ColInfoUtil;
+import h2o.dao.column.ColumnMeta;
+import h2o.dao.column.ColumnMetaUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +25,12 @@ public class DbMap2BeanProcessor {
 	
 		
 		Map<String,String> caMap = null;
-		if( ColInfoUtil.hasTableAnnotation( beanClazz ) ) {
+		if( ColumnMetaUtil.hasTableAnnotation( beanClazz ) ) {
 			
 			caMap = MapBuilder.newMap();
 			
-			List<ColInfo> cis = ColInfoUtil.getColInfos( beanClazz );
-			for( ColInfo ci : cis ) {
+			List<ColumnMeta> cis = ColumnMetaUtil.getColInfos( beanClazz );
+			for( ColumnMeta ci : cis ) {
 				caMap.put( ci.attrName , ci.colName );
 			}
 			

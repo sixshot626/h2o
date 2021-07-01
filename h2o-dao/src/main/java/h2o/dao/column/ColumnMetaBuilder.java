@@ -1,6 +1,6 @@
-package h2o.dao.colinfo;
+package h2o.dao.column;
 
-public class ColInfoVar {
+public class ColumnMetaBuilder {
 
     String attrName;
     String colName;
@@ -9,10 +9,10 @@ public class ColInfoVar {
     boolean pk;
     String[] uniqueNames;
 
-    public ColInfoVar() {
+    public ColumnMetaBuilder() {
     }
 
-    public ColInfoVar( ColInfo ci ) {
+    public ColumnMetaBuilder(ColumnMeta ci ) {
         this.attrName    = ci.attrName;
         this.colName     = ci.colName;
         this.defVal      = ci.defVal;
@@ -20,32 +20,32 @@ public class ColInfoVar {
         this.uniqueNames = ci.uniqueNames;
     }
 
-    public ColInfoVar setAttrName(String attrName) {
+    public ColumnMetaBuilder setAttrName(String attrName) {
         this.attrName = attrName;
         return this;
     }
 
-    public ColInfoVar setColName(String colName) {
+    public ColumnMetaBuilder setColName(String colName) {
         this.colName = colName;
         return this;
     }
 
-    public ColInfoVar setDefVal( String defVal ) {
+    public ColumnMetaBuilder setDefVal(String defVal ) {
         this.defVal = defVal;
         return this;
     }
 
-    public ColInfoVar setPk( boolean pk) {
+    public ColumnMetaBuilder setPk(boolean pk) {
         this.pk = pk;
         return this;
     }
 
-    public ColInfoVar setUniqueNames( String[] uniqueNames) {
+    public ColumnMetaBuilder setUniqueNames(String[] uniqueNames) {
         this.uniqueNames = uniqueNames;
         return this;
     }
 
-    public ColInfo get() {
-        return new ColInfo(this);
+    public ColumnMeta get() {
+        return new ColumnMeta(this);
     }
 }

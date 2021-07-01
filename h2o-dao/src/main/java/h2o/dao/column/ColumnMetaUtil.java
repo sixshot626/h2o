@@ -1,4 +1,4 @@
-package h2o.dao.colinfo;
+package h2o.dao.column;
 
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class ColInfoUtil {
+public class ColumnMetaUtil {
 
-    private static final Logger log = LoggerFactory.getLogger( ColInfoUtil.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger( ColumnMetaUtil.class.getName() );
 
-    private ColInfoUtil() {}
+    private ColumnMetaUtil() {}
 
 	public static boolean hasTableAnnotation( Object bean ) {
 		
@@ -55,10 +55,10 @@ public class ColInfoUtil {
 		
 	}
 	
-	public static List<ColInfo> getColInfoInAttrNames( Object bean , boolean isAllAttr , String[] attrNames , String[] skipAttrNames , boolean isSilently ) throws DaoException  {
+	public static List<ColumnMeta> getColInfoInAttrNames(Object bean , boolean isAllAttr , String[] attrNames , String[] skipAttrNames , boolean isSilently ) throws DaoException  {
 		
-		List<ColInfo> colInfos = getColInfos(bean);
-		if(colInfos.isEmpty()) {
+		List<ColumnMeta> columnMetas = getColInfos(bean);
+		if(columnMetas.isEmpty()) {
 			if( isSilently ) {
 				return null;
 			} else {
@@ -86,8 +86,8 @@ public class ColInfoUtil {
 			
 			if(!isAllAttr) {				
 				
-				List<ColInfo> colInfosTmp = new ArrayList<ColInfo>();
-				for( ColInfo ci :  colInfos ) {
+				List<ColumnMeta> colInfosTmp = new ArrayList<ColumnMeta>();
+				for( ColumnMeta ci : columnMetas) {
 					if( attrNameSet.contains(ci.attrName) ) {
 						colInfosTmp.add(ci);
 					}		
@@ -101,24 +101,24 @@ public class ColInfoUtil {
 						throw new DaoException( "ColInfos in attrNames is empty");
 					}
 				} else {
-					colInfos = colInfosTmp;
+					columnMetas = colInfosTmp;
 				}
 			
 			}		
 			
 
-			List<ColInfo> defColInfos = ListBuilder.newList( colInfos.size() );
-			for( ColInfo ci :  colInfos ) {
+			List<ColumnMeta> defColumnMetas = ListBuilder.newList( columnMetas.size() );
+			for( ColumnMeta ci : columnMetas) {
 				if( defValMap.containsKey(ci.attrName) ) {
-				    ColInfoVar vci = new ColInfoVar( ci );
+				    ColumnMetaBuilder vci = new ColumnMetaBuilder( ci );
                     vci.defVal = defValMap.get(ci.attrName);
-                    defColInfos.add( vci.get() );
+                    defColumnMetas.add( vci.get() );
 				} else {
-				    defColInfos.add( ci );
+				    defColumnMetas.add( ci );
                 }
 				
 			}
-			colInfos = defColInfos;
+			columnMetas = defColumnMetas;
 					
 			
 			
@@ -129,31 +129,31 @@ public class ColInfoUtil {
 			
 			List<String> skipAttrNameList = Arrays.asList(skipAttrNames);
 			
-			List<ColInfo> skipColInfos = new ArrayList<ColInfo>();
-			for( ColInfo ci :  colInfos ) {
+			List<ColumnMeta> skipColumnMetas = new ArrayList<ColumnMeta>();
+			for( ColumnMeta ci : columnMetas) {
 				if( ! skipAttrNameList.contains(ci.attrName) ) {
-					skipColInfos.add(ci);
+					skipColumnMetas.add(ci);
 				}				
 			}
 			
-			colInfos = skipColInfos;
+			columnMetas = skipColumnMetas;
 			
 		}
 		
-		log.debug("colInfos ===== {}" , colInfos);
+		log.debug("colInfos ===== {}" , columnMetas);
 		
-		return colInfos;
+		return columnMetas;
 		
 	}
 	
-	public static List<ColInfo> getColInfos( Object bean ) {
+	public static List<ColumnMeta> getColInfos(Object bean ) {
 		
 		boolean isClass = (bean instanceof Class);
 		
 		@SuppressWarnings("rawtypes")
 		Class beanClass = isClass ? (Class)bean : bean.getClass();
 		
-		List<ColInfo> colInfos = new ArrayList<ColInfo>();
+		List<ColumnMeta> columnMetas = new ArrayList<ColumnMeta>();
 		
 		Field[] fs = h2o.jodd.util.ClassUtil.getSupportedFields(beanClass);
 		for( Field f : fs ) {
@@ -163,7 +163,7 @@ public class ColInfoUtil {
 				continue;
 			}
 			
-			ColInfoVar ci = new ColInfoVar();
+			ColumnMetaBuilder ci = new ColumnMetaBuilder();
 			
 			String fieldName = f.getName();
 			
@@ -190,11 +190,11 @@ public class ColInfoUtil {
                 ci.uniqueNames = unique.value();
             }
 			
-			colInfos.add(ci.get());
+			columnMetas.add(ci.get());
 		}
 		
 		
-		return colInfos;
+		return columnMetas;
 	}
 	
 	

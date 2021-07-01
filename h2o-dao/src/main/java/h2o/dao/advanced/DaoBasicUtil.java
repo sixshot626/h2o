@@ -14,7 +14,7 @@ import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
-import h2o.dao.colinfo.ColInfo;
+import h2o.dao.column.ColumnMeta;
 
 import java.util.List;
 import java.util.Map;
@@ -166,10 +166,10 @@ public final class DaoBasicUtil<E> {
 
 
 
-    private int updateByColInfos( boolean includeNull , String[] fields , E entity , List<ColInfo> cis ) {
+    private int updateByColInfos( boolean includeNull , String[] fields , E entity , List<ColumnMeta> cis ) {
 
         List<String> ks = ListBuilder.newList();
-        for ( ColInfo ci : cis ) {
+        for ( ColumnMeta ci : cis ) {
             ks.add( ci.attrName );
         }
 
@@ -226,7 +226,7 @@ public final class DaoBasicUtil<E> {
         return getByColInfos( entity , checkAndGetAttrs(attrNames) , true );
     }
 
-    private Val<E> getByColInfos( E entity , List<ColInfo> cis , boolean lock  ){
+    private Val<E> getByColInfos(E entity , List<ColumnMeta> cis , boolean lock  ){
         return selectOneByColInfos( null , entity , cis , lock );
     }
 
@@ -256,7 +256,7 @@ public final class DaoBasicUtil<E> {
         return selectOneByColInfos( fields , entity , checkAndGetAttrs(attrNames) , true );
     }
 
-    private Val<E> selectOneByColInfos( String[] fields , E entity ,  List<ColInfo> cis , boolean lock  ) {
+    private Val<E> selectOneByColInfos(String[] fields , E entity , List<ColumnMeta> cis , boolean lock  ) {
 
         StringBuilder sql = new StringBuilder();
 
@@ -287,7 +287,7 @@ public final class DaoBasicUtil<E> {
 
     public List<E> selectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , String... attrNames  ) {
 
-        List<ColInfo> cis = checkAndGetAttrs(attrNames);
+        List<ColumnMeta> cis = checkAndGetAttrs(attrNames);
 
         StringBuilder sql = new StringBuilder();
 
@@ -347,7 +347,7 @@ public final class DaoBasicUtil<E> {
 
     public Page<E> pagingSelectByAttr( String[] fields , PageRequest pageRequest , E entity , String... attrNames  ) {
 
-        List<ColInfo> cis = checkAndGetAttrs(attrNames);
+        List<ColumnMeta> cis = checkAndGetAttrs(attrNames);
 
         StringBuilder sql = new StringBuilder();
 
@@ -393,9 +393,9 @@ public final class DaoBasicUtil<E> {
         }
 
         Map<String,String> attrMap = MapBuilder.newMap( size );
-        for ( ColInfo colInfo : entityParser.getAllAttrs() ) {
-            if ( sortInfoMap.containsKey( colInfo.attrName ) ) {
-                attrMap.put( colInfo.attrName , colInfo.colName );
+        for ( ColumnMeta columnMeta : entityParser.listAllColumns() ) {
+            if ( sortInfoMap.containsKey( columnMeta.attrName ) ) {
+                attrMap.put( columnMeta.attrName , columnMeta.colName );
             }
         }
 
@@ -429,7 +429,7 @@ public final class DaoBasicUtil<E> {
         return delByColInfos( entity , checkAndGetAttrs(attrNames) );
     }
 
-    private int delByColInfos( E entity , List<ColInfo> cis  ) {
+    private int delByColInfos( E entity , List<ColumnMeta> cis  ) {
         return dao.update( "delete from " + this.entityParser.getTableName() +
                 " where " +  buildWhereStr( cis ) , entity );
     }
@@ -454,25 +454,25 @@ public final class DaoBasicUtil<E> {
 
 
 
-    private List<ColInfo> checkAndGetPk() {
+    private List<ColumnMeta> checkAndGetPk() {
 
-        List<ColInfo> cis = this.entityParser.getPK();
+        List<ColumnMeta> cis = this.entityParser.getPK();
         Assert.notEmpty( cis , "Primary key not defined" );
 
         return cis;
     }
 
-    private List<ColInfo> checkAndGetUnique( String uniqueName ) {
+    private List<ColumnMeta> checkAndGetUnique(String uniqueName ) {
 
-        List<ColInfo> cis = this.entityParser.getUnique( uniqueName );
+        List<ColumnMeta> cis = this.entityParser.listColumnByUniqueName( uniqueName );
         Assert.notEmpty( cis , "The unique constraint '" + uniqueName + "' is undefined" );
 
         return cis;
     }
 
-    private List<ColInfo> checkAndGetAttrs( String[] attrNames  ) {
+    private List<ColumnMeta> checkAndGetAttrs(String[] attrNames  ) {
 
-        List<ColInfo> cis = this.entityParser.getAttrs( attrNames );
+        List<ColumnMeta> cis = this.entityParser.listColumns( attrNames );
         Assert.notEmpty( cis , "Column is undefined" );
 
         return cis;
@@ -483,11 +483,11 @@ public final class DaoBasicUtil<E> {
 
 
 
-    private String buildWhereStr( List<ColInfo> wColInfos  ) {
+    private String buildWhereStr( List<ColumnMeta> wColumnMetas) {
 
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for ( ColInfo ci : wColInfos ) {
+        for ( ColumnMeta ci : wColumnMetas) {
             if (  i++ > 0 ) {
                 sb.append( " and ");
             }
@@ -504,18 +504,18 @@ public final class DaoBasicUtil<E> {
 
     private String connectSelectFileds( String... attrs ) {
         return CollectionUtil.argsIsBlank( attrs ) ?
-                this._connectSelectFileds( this.entityParser.getAllAttrs() ) :
-                this._connectSelectFileds( this.entityParser.getAttrs( attrs ) );
+                this._connectSelectFileds( this.entityParser.listAllColumns() ) :
+                this._connectSelectFileds( this.entityParser.listColumns( attrs ) );
     }
 
 
 
-    private String _connectSelectFileds( List<ColInfo> fs ) {
+    private String _connectSelectFileds( List<ColumnMeta> fs ) {
 
         StringBuilder sb = new StringBuilder();
         sb.append( ' ' );
         int i = 0;
-        for ( ColInfo ci : fs ) {
+        for ( ColumnMeta ci : fs ) {
             if (  i++ > 0 ) {
                 sb.append( " , ");
             }
