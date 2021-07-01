@@ -51,7 +51,7 @@ public class EntityParser {
         return ListBuilder.newList( ids );
     }
 
-    public List<ColumnMeta> listColumnByUniqueName(String uniqueName ) {
+    public List<ColumnMeta> listColumnsByUniqueName(String uniqueName ) {
 
         List<ColumnMeta> u = ListBuilder.newList();
 

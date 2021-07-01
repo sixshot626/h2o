@@ -464,7 +464,7 @@ public final class DaoBasicUtil<E> {
 
     private List<ColumnMeta> checkAndGetUnique(String uniqueName ) {
 
-        List<ColumnMeta> cis = this.entityParser.listColumnByUniqueName( uniqueName );
+        List<ColumnMeta> cis = this.entityParser.listColumnsByUniqueName( uniqueName );
         Assert.notEmpty( cis , "The unique constraint '" + uniqueName + "' is undefined" );
 
         return cis;
