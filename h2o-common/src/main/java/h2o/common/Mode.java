@@ -2,6 +2,7 @@ package h2o.common;
 
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.util.collection.CollectionUtil;
+import h2o.jodd.util.SystemUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,19 +37,19 @@ public class Mode {
 
         boolean debug = false;
 
-        String[] uma = new String[0];
+
 
 		String m;
+		String userModes;
 		
 		try {
 
 			PropertiesConfiguration config = new PropertiesConfiguration("mode.properties");
-			
-			m = config.getString("mode", PROD ).trim().toUpperCase();
-			try {
-                debug  = config.getBoolean("debug" , false );
-            } catch ( Exception e ) {
 
+			m = SystemUtil.get("H2OMode" , config.getString("mode", PROD )).trim().toUpperCase();
+			try {
+                debug  = SystemUtil.getBoolean("H2ODebug" , config.getBoolean("debug" , false ));
+            } catch ( Exception e ) {
             }
 
 			if ( PROD.equals( m ) ) {
@@ -61,22 +62,33 @@ public class Mode {
                 throw new IllegalArgumentException(m);
 			}
 			
-			String userModes = config.getString("userMode","").trim().toUpperCase();
-			
-			if( !"".equals(userModes) ) {
-                List<String> ums =  CollectionUtil.toList( userModes, new String[] {":",",",";"," ", "\t"}  );
-                uma = ums.toArray( new String[ums.size()] );
-			}
-			
-			
+			userModes = SystemUtil.get("H2OUserMode" , config.getString("userMode","")).trim().toUpperCase();
+
 			
 		} catch (Throwable e) {
 
-		    e.fillInStackTrace();
-		    log.error( "" , e );
+			m = SystemUtil.get("H2OMode");
 
-		    throw ExceptionUtil.toRuntimeException(e);
+			if ( m == null ) {
 
+				e.fillInStackTrace();
+				log.error("", e);
+
+				throw ExceptionUtil.toRuntimeException(e);
+			}
+
+			debug  = SystemUtil.getBoolean("H2ODebug" , false);
+			userModes = SystemUtil.get("H2OUserMode","").trim().toUpperCase();
+
+
+		}
+
+
+		String[] uma = new String[0];
+
+		if( !"".equals(userModes) ) {
+			List<String> ums =  CollectionUtil.toList( userModes, new String[] {":",",",";"," ", "\t"}  );
+			uma = ums.toArray( new String[ums.size()] );
 		}
 		
 		prodMode    = p;
@@ -93,6 +105,7 @@ public class Mode {
 		log.info("Mode : {}"       , mode );
         log.info("Debug Mode : {}" , debugMode );
 		log.info("User Mode : {}"  , userModeArrays );
+
 	}
 	
 	private Mode() {}
