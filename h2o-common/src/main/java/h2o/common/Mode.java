@@ -44,7 +44,7 @@ public class Mode {
 
 			PropertiesConfiguration config = new PropertiesConfiguration("mode.properties");
 
-			m = SystemUtil.get("H2OMode" , config.getString("mode", PROD )).trim().toUpperCase();
+			m = SystemUtil.get("H2OMode" , config.getString("mode", PROD ));
 			try {
                 debug  = SystemUtil.getBoolean("H2ODebug" , config.getBoolean("debug" , false ));
             } catch ( Exception e ) {
@@ -55,7 +55,7 @@ public class Mode {
 			
 		} catch (Throwable e) {
 
-			m = SystemUtil.get("H2OMode").trim().toUpperCase();
+			m = SystemUtil.get("H2OMode");
 
 			if ( m == null ) {
 
@@ -68,8 +68,9 @@ public class Mode {
 			debug  = SystemUtil.getBoolean("H2ODebug" , false);
 			userModes = SystemUtil.get("H2OUserMode","").trim().toUpperCase();
 
-
 		}
+
+		m = m.trim().toUpperCase();
 
 		if ( PROD.equals( m ) ) {
 			p = true;
