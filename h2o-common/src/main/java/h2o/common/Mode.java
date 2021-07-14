@@ -1,6 +1,5 @@
 package h2o.common;
 
-import h2o.common.exception.ExceptionUtil;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.jodd.util.SystemUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -45,26 +44,12 @@ public class Mode {
 			PropertiesConfiguration config = new PropertiesConfiguration("mode.properties");
 
 			m = SystemUtil.get("H2OMode" , config.getString("mode", PROD ));
-			try {
-                debug  = SystemUtil.getBoolean("H2ODebug" , config.getBoolean("debug" , false ));
-            } catch ( Exception e ) {
-            }
-
+            debug  = SystemUtil.getBoolean("H2ODebug" , config.getBoolean("debug" , false ));
 			userModes = SystemUtil.get("H2OUserMode" , config.getString("userMode","")).trim().toUpperCase();
 
-			
 		} catch (Throwable e) {
 
-			m = SystemUtil.get("H2OMode");
-
-			if ( m == null ) {
-
-				e.fillInStackTrace();
-				log.error("", e);
-
-				throw ExceptionUtil.toRuntimeException(e);
-			}
-
+			m = SystemUtil.get("H2OMode" , PROD).trim().toUpperCase();
 			debug  = SystemUtil.getBoolean("H2ODebug" , false);
 			userModes = SystemUtil.get("H2OUserMode","").trim().toUpperCase();
 
