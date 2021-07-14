@@ -37,8 +37,6 @@ public class Mode {
 
         boolean debug = false;
 
-
-
 		String m;
 		String userModes;
 		
@@ -52,22 +50,12 @@ public class Mode {
             } catch ( Exception e ) {
             }
 
-			if ( PROD.equals( m ) ) {
-			    p = true;
-            } else if ( TEST.equals( m ) ) {
-				t = true;				
-			} else if ( DEV.equals( m ) ) {
-				d = true;				
-			} else {				
-                throw new IllegalArgumentException(m);
-			}
-			
 			userModes = SystemUtil.get("H2OUserMode" , config.getString("userMode","")).trim().toUpperCase();
 
 			
 		} catch (Throwable e) {
 
-			m = SystemUtil.get("H2OMode");
+			m = SystemUtil.get("H2OMode").trim().toUpperCase();
 
 			if ( m == null ) {
 
@@ -83,6 +71,15 @@ public class Mode {
 
 		}
 
+		if ( PROD.equals( m ) ) {
+			p = true;
+		} else if ( TEST.equals( m ) ) {
+			t = true;
+		} else if ( DEV.equals( m ) ) {
+			d = true;
+		} else {
+			throw new IllegalArgumentException(m);
+		}
 
 		String[] uma = new String[0];
 
