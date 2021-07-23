@@ -102,7 +102,11 @@ public final class DaoBasicUtil<E> {
     }
 
     public int editByAttr( E entity , String attrName , String... more  ) {
-        return updateByColInfos( false , (String[])null , entity , checkAndGetAttrs( attrName , more ) );
+        return editByAttr( entity , ArgsUtil.more2List( attrName , more ) );
+    }
+
+    public int editByAttr( E entity , List<String> attrNames  ) {
+        return updateByColInfos( false , (String[])null , entity , checkAndGetAttrs( attrNames ) );
     }
 
     public int editWhere( E entity , String where , Object... args  ) {
@@ -120,8 +124,14 @@ public final class DaoBasicUtil<E> {
     }
 
     public int editByAttr( String[] fields , E entity , String attrName , String... more  ) {
-        return updateByColInfos( false , fields , entity ,  checkAndGetAttrs( attrName , more ) );
+        return editByAttr( fields , entity , ArgsUtil.more2List( attrName , more ) );
     }
+
+    public int editByAttr( String[] fields , E entity , List<String> attrNames  ) {
+        return updateByColInfos( false , fields , entity ,  checkAndGetAttrs( attrNames ) );
+    }
+
+
 
     public int editWhere( String[] fields , E entity , String where , Object... args  ) {
         return updateWhere( false , fields , entity ,  where , args );
@@ -138,8 +148,13 @@ public final class DaoBasicUtil<E> {
     }
 
     public int updateByAttr(  E entity ,  String attrName , String... more ) {
-        return updateByColInfos( true , (String[])null , entity  , checkAndGetAttrs( attrName , more ) );
+        return updateByAttr( entity , ArgsUtil.more2List( attrName , more ) );
     }
+
+    public int updateByAttr(  E entity ,  List<String> attrNames ) {
+        return updateByColInfos( true , (String[])null , entity  , checkAndGetAttrs( attrNames ) );
+    }
+
 
     public int updateWhere(  E entity ,  String where  , Object... args  ) {
         return updateWhere( true , (String[])null , entity  , where  , args );
@@ -156,7 +171,11 @@ public final class DaoBasicUtil<E> {
     }
 
     public int updateByAttr( String[] fields , E entity ,  String attrName , String... more  ) {
-        return updateByColInfos( true , fields , entity  , checkAndGetAttrs( attrName , more ) );
+        return updateByAttr( fields , entity , ArgsUtil.more2List( attrName , more ) );
+    }
+
+    public int updateByAttr( String[] fields , E entity ,  List<String> attrNames  ) {
+        return updateByColInfos( true , fields , entity  , checkAndGetAttrs( attrNames ) );
     }
 
 
@@ -220,12 +239,21 @@ public final class DaoBasicUtil<E> {
 
 
     public Val<E> getByAttr( E entity ,  String attrName , String... more  ) {
-        return getByColInfos( entity , checkAndGetAttrs(attrName , more) , false );
+        return getByAttr( entity , ArgsUtil.more2List( attrName , more ) );
+    }
+
+    public Val<E> getByAttr( E entity ,  List<String> attrNames  ) {
+        return getByColInfos( entity , checkAndGetAttrs( attrNames ) , false );
     }
 
     public Val<E> getAndLockByAttr( E entity , String attrName , String... more  ) {
-        return getByColInfos( entity , checkAndGetAttrs(attrName , more) , true );
+        return getAndLockByAttr( entity , ArgsUtil.more2List( attrName , more ) );
     }
+
+    public Val<E> getAndLockByAttr( E entity , List<String> attrNames ) {
+        return getByColInfos( entity , checkAndGetAttrs( attrNames ) , true );
+    }
+
 
     private Val<E> getByColInfos(E entity , List<ColumnMeta> cis , boolean lock  ){
         return selectOneByColInfos( null , entity , cis , lock );
@@ -250,12 +278,21 @@ public final class DaoBasicUtil<E> {
     }
 
     public Val<E> selectOneByAttr( String[] fields , E entity , String attrName , String... more ) {
-        return selectOneByColInfos( fields , entity , checkAndGetAttrs( attrName , more ) , false );
+        return selectOneByAttr( fields , entity , ArgsUtil.more2List( attrName , more ) );
+    }
+
+    public Val<E> selectOneByAttr( String[] fields , E entity , List<String> attrNames ) {
+        return selectOneByColInfos( fields , entity , checkAndGetAttrs( attrNames ) , false );
     }
 
     public Val<E> selectOneAndLockByAttr( String[] fields , E entity , String attrName , String... more ) {
-        return selectOneByColInfos( fields , entity , checkAndGetAttrs( attrName , more ) , true );
+        return selectOneAndLockByAttr( fields , entity , ArgsUtil.more2List( attrName , more ) );
     }
+
+    public Val<E> selectOneAndLockByAttr( String[] fields , E entity , List<String> attrNames ) {
+        return selectOneByColInfos( fields , entity , checkAndGetAttrs( attrNames ) , true );
+    }
+
 
     private Val<E> selectOneByColInfos(String[] fields , E entity , List<ColumnMeta> cis , boolean lock  ) {
 
@@ -277,18 +314,34 @@ public final class DaoBasicUtil<E> {
         return selectByAttr( null , null , entity , attrName , more );
     }
 
+    public List<E> loadByAttr( E entity , List<String> attrNames ) {
+        return selectByAttr( null , null , entity , attrNames );
+    }
+
 
     public List<E> selectByAttr( String[] fields  , E entity  , String attrName , String... more  ) {
         return selectByAttr( fields , null, entity , attrName , more );
+    }
+
+    public List<E> selectByAttr( String[] fields  , E entity  , List<String> attrNames  ) {
+        return selectByAttr( fields , null, entity , attrNames );
     }
 
     public List<E> loadByAttr( SortInfo[] sortInfos ,  E entity , String attrName , String... more ) {
         return selectByAttr( null , sortInfos , entity , attrName , more );
     }
 
-    public List<E> selectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , String attrName , String... more  ) {
+    public List<E> loadByAttr( SortInfo[] sortInfos ,  E entity , List<String> attrNames ) {
+        return selectByAttr( null , sortInfos , entity , attrNames );
+    }
 
-        List<ColumnMeta> cis = checkAndGetAttrs( attrName , more );
+    public List<E> selectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , String attrName , String... more  ) {
+        return selectByAttr( fields , sortInfos , entity , ArgsUtil.more2List( attrName , more ) );
+    }
+
+    public List<E> selectByAttr( String[] fields , SortInfo[] sortInfos ,  E entity  , List<String> attrNames  ) {
+
+        List<ColumnMeta> cis = checkAndGetAttrs( attrNames );
 
         StringBuilder sql = new StringBuilder();
 
@@ -345,10 +398,18 @@ public final class DaoBasicUtil<E> {
         return pagingSelectByAttr( null , pageRequest , entity , attrName , more );
     }
 
+    public Page<E> pagingLoadByAttr( PageRequest pageRequest , E entity , List<String> attrNames   ) {
+        return pagingSelectByAttr( null , pageRequest , entity , attrNames );
+    }
+
 
     public Page<E> pagingSelectByAttr( String[] fields , PageRequest pageRequest , E entity , String attrName , String... more  ) {
+        return pagingSelectByAttr( fields , pageRequest , entity , ArgsUtil.more2List( attrName , more ) );
+    }
 
-        List<ColumnMeta> cis = checkAndGetAttrs( attrName , more );
+    public Page<E> pagingSelectByAttr( String[] fields , PageRequest pageRequest , E entity , List<String> attrNames  ) {
+
+        List<ColumnMeta> cis = checkAndGetAttrs( attrNames );
 
         StringBuilder sql = new StringBuilder();
 
@@ -426,8 +487,14 @@ public final class DaoBasicUtil<E> {
         return delByColInfos( entity , checkAndGetUnique(uniqueName) );
     }
 
+
+
     public int delByAttr( E entity , String attrName , String... more  ) {
-        return delByColInfos( entity , checkAndGetAttrs( attrName , more ) );
+        return delByAttr( entity , ArgsUtil.more2List( attrName , more ) );
+    }
+
+    public int delByAttr( E entity , List<String> attrNames  ) {
+        return delByColInfos( entity , checkAndGetAttrs( attrNames ) );
     }
 
     private int delByColInfos( E entity , List<ColumnMeta> cis  ) {
@@ -471,17 +538,14 @@ public final class DaoBasicUtil<E> {
         return cis;
     }
 
-    private List<ColumnMeta> checkAndGetAttrs( String attrName ,  String... more  ) {
 
-        List<ColumnMeta> cis = this.entityParser.listColumns( attrName , more );
+    private List<ColumnMeta> checkAndGetAttrs( List<String> attrNames  ) {
+
+        List<ColumnMeta> cis = this.entityParser.listColumns( attrNames );
         Assert.notEmpty( cis , "Column is undefined" );
 
         return cis;
     }
-
-
-
-
 
 
     private String buildWhereStr( List<ColumnMeta> wColumnMetas) {
@@ -506,7 +570,7 @@ public final class DaoBasicUtil<E> {
     private String connectSelectFileds( String... attrs ) {
         return CollectionUtil.argsIsBlank( attrs ) ?
                 this._connectSelectFileds( this.entityParser.listAllColumns() ) :
-                this._connectSelectFileds( this.entityParser.listColumns( attrs[0] , ArgsUtil.cdr(attrs)) );
+                this._connectSelectFileds( this.entityParser.listColumns( ArgsUtil.toList(attrs) ) );
     }
 
 

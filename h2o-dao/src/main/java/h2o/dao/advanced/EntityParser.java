@@ -79,10 +79,14 @@ public class EntityParser {
     }
 
     public List<ColumnMeta> listColumns( String attrName , String... more  ) {
+        return listColumns( ArgsUtil.more2List(attrName , more ) );
+    }
+
+    public List<ColumnMeta> listColumns( List<String> attrNames ) {
 
         List<ColumnMeta> cis = ListBuilder.newList();
         Set<String> ans = new TreeSet<>();
-        for ( String attr : ArgsUtil.more2List(attrName , more ) ) {
+        for ( String attr : attrNames ) {
             ans.add( attr.toUpperCase() );
         }
 
