@@ -3,7 +3,10 @@ package h2o.common.util.lang;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;  
   
-public class GenericsUtil {
+public abstract class GenericsUtil {
+
+    private GenericsUtil() {}
+
     /**   
      * 通过反射,获得定义Class时声明的父类的范型参数的类型.   
      * 如public BookManager extends GenricManager<Book>   

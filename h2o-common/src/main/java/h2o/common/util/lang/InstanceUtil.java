@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 
-public class InstanceUtil {
+public abstract class InstanceUtil {
 
     private static final Logger log = LoggerFactory.getLogger( InstanceUtil.class.getName() );
 

@@ -12,7 +12,7 @@ import java.util.List;
 import static org.apache.commons.lang.StringUtils.INDEX_NOT_FOUND;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-public class StringUtil {
+public abstract class StringUtil {
 
 	private StringUtil() {
 	}

@@ -1,8 +1,7 @@
 package h2o.dao.advanced;
 
-import h2o.common.thirdparty.spring.util.Assert;
-import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
+import h2o.common.util.lang.ArgsUtil;
 import h2o.dao.column.ColumnMeta;
 import h2o.dao.column.ColumnMetaUtil;
 
@@ -79,13 +78,11 @@ public class EntityParser {
         return null;
     }
 
-    public List<ColumnMeta> listColumns(String... attrNames ) {
-
-        Assert.isTrue( !CollectionUtil.argsIsBlank(attrNames) );
+    public List<ColumnMeta> listColumns( String attrName , String... more  ) {
 
         List<ColumnMeta> cis = ListBuilder.newList();
         Set<String> ans = new TreeSet<>();
-        for ( String attr : attrNames ) {
+        for ( String attr : ArgsUtil.more2List(attrName , more ) ) {
             ans.add( attr.toUpperCase() );
         }
 

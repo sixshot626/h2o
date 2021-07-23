@@ -53,8 +53,8 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().editByUnique(entity, uniqueName);
     }
 
-    public int editByAttr(E entity, String... attrNames) {
-        return createDaoBasicUtil().editByAttr(entity, attrNames);
+    public int editByAttr(E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().editByAttr(entity, attrName , more );
     }
 
     public int editWhere( E entity , String where , Object... args  ) {
@@ -70,8 +70,8 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().editByUnique(  fields ,  entity, uniqueName );
     }
 
-    public int editByAttr( String[] fields , E entity, String... attrNames) {
-        return createDaoBasicUtil().editByAttr(  fields ,  entity, attrNames );
+    public int editByAttr( String[] fields , E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().editByAttr(  fields ,  entity, attrName , more );
     }
 
     public int editWhere( String[] fields , E entity , String where , Object... args  ) {
@@ -88,8 +88,8 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().updateByUnique(entity, uniqueName);
     }
 
-    public int updateByAttr(E entity, String... attrNames) {
-        return createDaoBasicUtil().updateByAttr(entity, attrNames);
+    public int updateByAttr(E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().updateByAttr(entity, attrName , more );
     }
 
     public int updateWhere( E entity , String where , Object... args  ) {
@@ -106,8 +106,8 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().updateByUnique( fields , entity, uniqueName);
     }
 
-    public int updateByAttr(String[] fields , E entity, String... attrNames) {
-        return createDaoBasicUtil().updateByAttr( fields , entity, attrNames);
+    public int updateByAttr(String[] fields , E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().updateByAttr( fields , entity, attrName , more );
     }
 
 
@@ -135,12 +135,12 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().getAndLockByUnique(entity, uniqueName);
     }
 
-    public Val<E> getByAttr(E entity, String... attrNames) {
-        return createDaoBasicUtil().getByAttr(entity, attrNames);
+    public Val<E> getByAttr(E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().getByAttr(entity, attrName , more );
     }
 
-    public Val<E> getAndLockByAttr(E entity, String... attrNames) {
-        return createDaoBasicUtil().getAndLockByAttr(entity, attrNames);
+    public Val<E> getAndLockByAttr(E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().getAndLockByAttr(entity, attrName , more );
     }
 
     public Val<E> selectOne(String[] fields, E entity) {
@@ -159,28 +159,28 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().selectOneAndLockByUnique(fields, entity, uniqueName);
     }
 
-    public Val<E> selectOneByAttr(String[] fields, E entity, String... attrNames) {
-        return createDaoBasicUtil().selectOneByAttr(fields, entity, attrNames);
+    public Val<E> selectOneByAttr(String[] fields, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().selectOneByAttr(fields, entity, attrName , more );
     }
 
-    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, String... attrNames) {
-        return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrNames);
+    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrName , more );
     }
 
-    public List<E> loadByAttr(E entity, String... attrNames) {
-        return createDaoBasicUtil().loadByAttr(entity, attrNames);
+    public List<E> loadByAttr(E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().loadByAttr(entity, attrName , more );
     }
 
-    public List<E> selectByAttr(String[] fields, E entity, String... attrNames) {
-        return createDaoBasicUtil().selectByAttr(fields, entity, attrNames);
+    public List<E> selectByAttr(String[] fields, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().selectByAttr(fields, entity, attrName , more );
     }
 
-    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, String... attrNames) {
-        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrNames);
+    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrName, more );
     }
 
-    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, String... attrNames) {
-        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrNames);
+    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrName , more );
     }
 
     public List<E> loadAll(SortInfo... sortInfos) {
@@ -191,12 +191,12 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().selectAll(fields, sortInfos);
     }
 
-    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String... attrNames) {
-        return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrNames);
+    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrName , more );
     }
 
-    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, String... attrNames) {
-        return createDaoBasicUtil().pagingSelectByAttr(fields, pageRequest, entity, attrNames);
+    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().pagingSelectByAttr(fields, pageRequest, entity, attrName , more );
     }
 
     public Page<E> pagingLoad(PageRequest pageRequest) {
@@ -215,8 +215,8 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().delByUnique(entity, uniqueName);
     }
 
-    public int delByAttr(E entity, String... attrNames) {
-        return createDaoBasicUtil().delByAttr(entity, attrNames);
+    public int delByAttr(E entity, String attrName , String... more ) {
+        return createDaoBasicUtil().delByAttr(entity, attrName , more );
     }
 
 

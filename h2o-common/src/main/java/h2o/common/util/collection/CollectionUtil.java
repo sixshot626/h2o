@@ -1,5 +1,6 @@
 package h2o.common.util.collection;
 
+import h2o.common.util.lang.ArgsUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -13,7 +14,7 @@ public class CollectionUtil {
 	
 	
 	public static boolean argsIsBlank( Object[] args ) {
-		return args == null || args.length == 0 || ( args.length == 1 && args[0] == null);
+		return ArgsUtil.isBlank(args);
 	}
 	
 	public static boolean isBlank( Collection<?> c ) {

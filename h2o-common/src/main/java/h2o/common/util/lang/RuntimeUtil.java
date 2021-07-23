@@ -1,6 +1,6 @@
 package h2o.common.util.lang;
 
-public final class RuntimeUtil {
+public abstract class RuntimeUtil {
 
 	private RuntimeUtil() {}
 
