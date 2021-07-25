@@ -46,7 +46,7 @@ public abstract class ArgsUtil {
         }
     }
 
-    public static  <T> T[] cdr( T... args ) {
+    public static  <T> T[] rest(T... args ) {
         if ( args == null || args.length < 2 ) {
             return (T[]) new Object[0];
         } else {
