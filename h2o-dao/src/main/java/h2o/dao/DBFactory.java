@@ -23,7 +23,7 @@ public interface DBFactory {
 
     OrmProcessor getOrmProcessor();
 
-    Optional<PagingProcessor> getPagingProcessor();
+    Optional<PagingProcessor> getPagingProcessor( String dataSourceName );
 
     Optional<ScopeManager> getScopeManager();
 

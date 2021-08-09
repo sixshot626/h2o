@@ -3,6 +3,7 @@ package h2o.dao.impl;
 import h2o.common.dao.SqlTable;
 import h2o.common.ioc.Factory;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
+import h2o.common.util.lang.StringUtil;
 import h2o.dao.DBFactory;
 import h2o.dao.Db;
 import h2o.dao.DbUtil;
@@ -65,8 +66,8 @@ public class DBFactoryImpl implements DBFactory {
     }
 
     @Override
-    public Optional<PagingProcessor> getPagingProcessor() {
-        return Optional.ofNullable(factory.silentlyGet(PAGINGPROCESSOR_BEANID));
+    public Optional<PagingProcessor> getPagingProcessor( String dataSourceName ) {
+        return Optional.ofNullable(factory.silentlyGet(StringUtil.build(dataSourceName , "_" , PAGINGPROCESSOR_BEANID )));
     }
 
     @Override

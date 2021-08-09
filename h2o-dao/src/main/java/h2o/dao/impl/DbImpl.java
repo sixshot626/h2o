@@ -48,7 +48,7 @@ public class DbImpl extends AbstractDb implements Db {
 		daoImpl.setArgProcessor( DbUtil.DBFACTORY.getArgProcessor() );
 		daoImpl.setOrmProcessor( DbUtil.DBFACTORY.getOrmProcessor() );
 
-		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor();
+		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor( this.dataSourceName );
 		if ( pagingProcessor.isPresent() ) {
 			daoImpl.setPagingProcessor( pagingProcessor.get() );
 		}
