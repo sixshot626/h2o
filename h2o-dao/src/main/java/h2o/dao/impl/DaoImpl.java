@@ -73,7 +73,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			String sql = sqlSource.getSql( paramMap );
 
 			if ( SHOWSQL ) {
-				log.info("getField({})#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", fieldName, sql, paramMap );
+				log.info("SQL:getField({})#\r\n{}\r\nPARA:{}\r\n", fieldName, sql, paramMap );
 			}
 
 			 if(fieldName == null) {
@@ -97,7 +97,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			String sql = sqlSource.getSql( paramMap );
 
 			if ( SHOWSQL ) {
-				log.info("loadFields({})#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", fieldName, sql, paramMap );
+				log.info("SQL:loadFields({})#\r\n{}\r\nPARA:{}\r\n", fieldName, sql, paramMap );
 			}
 
 			return getBDao().read(sql, new IResultSetProcessor() {
@@ -136,7 +136,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			String sql = sqlSource.getSql( paramMap );
 
 			if ( SHOWSQL ) {
-				log.info("get#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+				log.info("SQL:get#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
 			}
 
 			Map<String, Object> r = getBDao().readMap(sql, paramMap);
@@ -154,7 +154,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			String sql = sqlSource.getSql( paramMap );
 
 			if ( SHOWSQL ) {
-				log.info("load#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+				log.info("SQL:load#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
 			}
 
 			return getBDao().readMapList(sql, paramMap);
@@ -177,7 +177,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			String sql = sqlSource.getSql( paramMap );
 
 			if ( SHOWSQL ) {
-				log.info("load(ResultSetCallback)#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+				log.info("SQL:load(ResultSetCallback)#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
 			}
 
 			T r = (T) getBDao().read(sql, new IResultSetProcessor() {
@@ -246,7 +246,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			String sql = sqlSource.getSql( paramMap );
 
 			if ( SHOWSQL ) {
-				log.info("update#\r\n          SQL:{{}};\r\n          PARA:{}\r\n", sql, paramMap );
+				log.info("SQL:update#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
 			}
 
 			return getBDao().update(sql, paramMap);
@@ -288,7 +288,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			}
 
 			if ( SHOWSQL ) {
-				log.info("batchUpdate#\r\n          SQL:{{}};\r\n", nSql );
+				log.info("SQL:batchUpdate#\r\n{}\r\n", nSql );
 			}
 
 			PreparedStatementManagerBatch preparedStatementManagerBatch = new PreparedStatementManagerBatch(nArgs);
