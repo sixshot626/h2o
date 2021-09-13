@@ -5,6 +5,7 @@ import h2o.common.Tools;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.result.Response;
+import h2o.common.result.TransResponse;
 import h2o.common.result.TransResult;
 import h2o.common.result.TransReturn;
 import h2o.common.util.date.DateUtil;
@@ -134,7 +135,7 @@ public class FileServiceMinIOImpl implements FileService {
 
 
     @Override
-    public TransResult<FileMeta> getFileMeta(String bucket, String fileId) {
+    public TransResponse<GetFileStatus,FileMeta> getFileMeta(String bucket, String fileId) {
 
 
         try {
@@ -143,24 +144,32 @@ public class FileServiceMinIOImpl implements FileService {
             FileMeta meta = new FileMeta( stat.bucket() , stat.object(),
                     stat.size(), stat.contentType(), stat.userMetadata() );
 
-            return new TransReturn<Void, FileMeta>().setResult(meta).ok(true);
+            return new TransReturn<GetFileStatus, FileMeta>().setStatus(GetFileStatus.OK).setResult(meta).ok(true);
 
         } catch ( ErrorResponseException e ) {
 
             Tools.log.error(e);
-            return new TransReturn<Void, FileMeta>().exception(e);
+
+            if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
+                return new TransReturn<GetFileStatus,FileMeta>()
+                        .setStatus(GetFileStatus.NOT_FOUND).error(e.errorResponse().code() , e.errorResponse().message());
+            } else {
+                return new TransReturn<GetFileStatus, FileMeta>()
+                        .setStatus(GetFileStatus.FAIL).exception(e);
+            }
 
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<Void, FileMeta>().ok(false).exception(e);
+            return new TransReturn<GetFileStatus,FileMeta>()
+                    .setStatus(GetFileStatus.FAIL).exception(e);
 
         }
 
     }
 
     @Override
-    public TransResult<FileObject> getFile(String bucket , String fileId ) {
+    public TransResponse<GetFileStatus,FileObject> getFile(String bucket , String fileId ) {
 
         BufferedInputStream fileIn = null;
         try {
@@ -175,17 +184,25 @@ public class FileServiceMinIOImpl implements FileService {
             fileObject.setContentType( stat.contentType() );
             fileObject.setExtInfo( stat.userMetadata() );
 
-            return new TransReturn<Void, FileObject>().setResult( fileObject ).ok(true);
+            return new TransReturn<GetFileStatus, FileObject>().setStatus(GetFileStatus.OK).setResult( fileObject ).ok(true);
 
         } catch ( ErrorResponseException e ) {
 
             Tools.log.error(e);
-            return new TransReturn<Void, FileObject>().exception(e);
+
+            if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
+                return new TransReturn<GetFileStatus,FileObject>()
+                        .setStatus(GetFileStatus.NOT_FOUND).error(e.errorResponse().code() , e.errorResponse().message());
+            } else {
+                return new TransReturn<GetFileStatus, FileObject>()
+                        .setStatus(GetFileStatus.FAIL).exception(e);
+            }
 
         } catch ( Exception e ) {
 
             Tools.log.error(e);
-            return new TransReturn<Void, FileObject>().ok(false).exception(e);
+            return new TransReturn<GetFileStatus,FileObject>()
+                    .setStatus(GetFileStatus.FAIL).exception(e);
 
         } finally {
             StreamUtil.close( fileIn );
@@ -234,6 +251,15 @@ public class FileServiceMinIOImpl implements FileService {
             Tools.log.error(e);
             return new TransReturn().ok(false).exception(e);
         }
+
+    }
+
+
+    public static void main(String[] args) {
+
+        FileService fs = new FileServiceMinIOImpl("http://127.0.0.1:9000" , "admin" , "admin123");
+        TransResult<FileMeta> r = fs.getFileMeta("test", "ttttttttt.txt");
+        System.out.println( r );
 
     }
 }
