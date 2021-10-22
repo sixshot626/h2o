@@ -102,7 +102,7 @@ public class RunUtil {
 	}
 	
 	
-	public  static  Future<?> call( Runnable task ) {
+	public  static  Future<?> run( Runnable task ) {
 		
 		RunUtil runUtil = new RunUtil();
 		
@@ -114,12 +114,12 @@ public class RunUtil {
 	
 	
 
-	public static  Future<?>[]  call( Runnable task , int n ) {
+	public static  Future<?>[] run( Runnable task , int n ) {
 		
 		if( n < 1) {
 			return null;
 		} else if( n == 1 ) {
-			return new Future[] { call(task) };
+			return new Future[] { run(task) };
 		}
 		
 		RunUtil runUtil = new RunUtil(n,true);

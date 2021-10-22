@@ -57,7 +57,7 @@ public class Dispatcher {
 		f.setValue(true);
 		running = true;
 		
-		return RunUtil.call( new Runnable() {
+		return RunUtil.run( new Runnable() {
 
 			public void run() {
 				
