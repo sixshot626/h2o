@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 
-public class NatsEventService<E> implements EventService {
+public class NatsEventService implements EventService {
 
 
     protected final Options options;
