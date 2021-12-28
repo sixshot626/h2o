@@ -160,7 +160,7 @@ public class RunUtil {
 			long nanosRemaining = TimeUnit.MILLISECONDS.toNanos(timeout);
 			lock.lock();
 			try {
-				while (nanosRemaining > 0L) {
+				while (nanosRemaining > 500000L) {
 					nanosRemaining = available.awaitNanos(nanosRemaining);
 				}
 				return true;
