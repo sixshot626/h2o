@@ -25,18 +25,25 @@ public class TimeDelayer {
     }
 
 
-    public void delayTo( long time ) {
+    public boolean delayTo( long time ) {
+
+        long part = 10000;
+
         if ( System.currentTimeMillis() >= time ) {
-            return;
+            return true;
         }
 
         long delay = time - System.currentTimeMillis();
         while ( delay > 0 ) {
-            if ( delay < 10000 && this.delay( delay >= 10000 ? 10000 : delay ) ) {
-                return;
+            if ( !this.delay( delay >= part ? part : delay ) ) {
+                return false;
+            } else if ( delay < part ) {
+                return true;
             }
             delay = time - System.currentTimeMillis();
         }
+
+        return false;
     }
 
 
