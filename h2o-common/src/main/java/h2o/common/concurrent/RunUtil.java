@@ -150,47 +150,13 @@ public class RunUtil {
     }
 
 
-
-	private static class DelayHelper {
-
-		private final ReentrantLock lock = new ReentrantLock();
-		private final Condition available = lock.newCondition();
-
-		public boolean delay( long timeout ) {
-			long nanosRemaining = TimeUnit.MILLISECONDS.toNanos(timeout);
-			lock.lock();
-			try {
-				while (nanosRemaining > 500000L) {
-					nanosRemaining = available.awaitNanos(nanosRemaining);
-				}
-				return true;
-			} catch ( Exception e ) {
-				return false;
-			} finally {
-				lock.unlock();
-			}
-		}
+	public static boolean delay( long timeout ) {
+		return new TimeDelayer().delay( timeout );
 	}
 
 
 	public static void delayTo( long time ) {
-		if ( System.currentTimeMillis() >= time ) {
-			return;
-		}
-		DelayHelper helper = new DelayHelper();
-
-		long delay = time - System.currentTimeMillis();
-		while ( delay > 0 ) {
-			if ( delay < 10000 && helper.delay( delay >= 10000 ? 10000 : delay ) ) {
-				return;
-			}
-			delay = time - System.currentTimeMillis();
-		}
-	}
-
-
-	public static boolean delay( long timeout ) {
-		return new DelayHelper().delay( timeout );
+		new TimeDelayer().delayTo( time );
 	}
 
 
