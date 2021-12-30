@@ -155,8 +155,8 @@ public class RunUtil {
 	}
 
 
-	public static boolean delayTo( long time ) {
-		return new TimeDelayer().delayTo( time );
+	public static void delayTo( long time ) {
+		new TimeDelayer().delayTo( time );
 	}
 
 
