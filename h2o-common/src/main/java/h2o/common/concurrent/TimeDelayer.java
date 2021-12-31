@@ -10,10 +10,13 @@ public class TimeDelayer {
     private final Condition available = lock.newCondition();
 
     public boolean delay( long timeout ) {
+        if ( timeout <= 0L ) {
+            return true;
+        }
         long nanosRemaining = TimeUnit.MILLISECONDS.toNanos(timeout);
         lock.lock();
         try {
-            while (nanosRemaining > 500000L) {
+            while (nanosRemaining > 0L) {
                 nanosRemaining = available.awaitNanos(nanosRemaining);
             }
             return true;
@@ -24,21 +27,34 @@ public class TimeDelayer {
         }
     }
 
-
-    public void delayTo( long time ) {
-
-        if ( System.currentTimeMillis() >= time ) {
-            return;
-        }
-
-        long delay = time - System.currentTimeMillis();
-        while ( delay > 0 ) {
-            boolean ok = this.delay( delay >= 10000 ? 10000 : delay );
-            if ( delay < 10000 && ok ) {
-                return;
-            }
-            delay = time - System.currentTimeMillis();
-        }
+    public boolean delayUntil( long time ) {
+        return delayUntil( time , false );
     }
+
+    public void uninterruptedDelayUntil( long time ) {
+        delayUntil( time , true );
+    }
+
+    private boolean delayUntil( long time , boolean interruptible ) {
+
+        if ( time < 0 ) {
+            throw new IllegalArgumentException();
+        }
+
+        long delayTime = time - System.currentTimeMillis();
+        while ( delayTime > 0 ) {
+            if (this.delay( delayTime >= 10000L ? 10000L : delayTime )) {
+                if ( delayTime < 10000L ) {
+                    return true;
+                }
+            } else if (interruptible) {
+                return System.currentTimeMillis() >= time;
+            }
+            delayTime = time - System.currentTimeMillis();
+        }
+
+        return true;
+    }
+
 
 }

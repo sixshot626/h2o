@@ -154,10 +154,14 @@ public class RunUtil {
 		return new TimeDelayer().delay( timeout );
 	}
 
-
-	public static void delayTo( long time ) {
-		new TimeDelayer().delayTo( time );
+	public static boolean delayUntil( long time ) {
+		return new TimeDelayer().delayUntil( time );
 	}
+
+	public static void uninterruptedDelayUntil( long time ) {
+		new TimeDelayer().uninterruptedDelayUntil( time );
+	}
+
 
 
 }
