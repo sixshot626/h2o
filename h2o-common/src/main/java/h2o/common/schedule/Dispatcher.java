@@ -17,8 +17,21 @@ public class Dispatcher {
 	private final long freeSleepTime;
 	private final long errSleepTime;
 
-	private final RepetitiveTask task;
+	private volatile RepetitiveTask task;
 
+	public void setTask(RepetitiveTask task) {
+		if ( this.task != null ) {
+			throw new IllegalStateException("Task has been setted!");
+		}
+		this.task = task;
+	}
+
+	public Dispatcher(long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+		this.firstDelay = firstDelay;
+		this.okSleepTime = okSleepTime;
+		this.freeSleepTime = freeSleepTime;
+		this.errSleepTime = errSleepTime;
+	}
 
 	public Dispatcher(RepetitiveTask task , long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
 		this.task = task;
@@ -45,7 +58,12 @@ public class Dispatcher {
 	public void wakeup() {
 		door.open();
 	}
-	
+
+
+	public Future<?> startTask( RepetitiveTask task ) {
+		this.setTask( task );
+		return this.start();
+	}
 	
 	
 	public Future<?> start() {
@@ -55,6 +73,10 @@ public class Dispatcher {
 		}
 		if ( running ) {
 			throw new IllegalStateException( "Service is running!" );
+		}
+
+		if ( task == null ) {
+			throw new IllegalStateException( "Task has not been setted!" );
 		}
 		
 		running = true;
