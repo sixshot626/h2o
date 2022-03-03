@@ -51,7 +51,7 @@ public abstract class AbstractDao implements Dao {
 
 	@Override
 	public void setLogWriter(LogWriter logWriter) {
-		this.logWriter = this.logWriter;
+		this.logWriter = logWriter;
 	}
 
 	protected ArgProcessor getArgProcessor() {
