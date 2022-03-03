@@ -1,7 +1,5 @@
 package h2o.dao.log;
 
 public interface LogWriter {
-
-    void write( String prompt , String message );
-
+    void write( String action , String sql , Object para );
 }

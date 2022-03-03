@@ -79,10 +79,9 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:getField(" + fieldName + ")", sql + "\r\nPARA:" + paramMap);
+					writer.write("getField(" + fieldName + ")", sql , paramMap);
 				}
 			}
-
 
 
 			 if(fieldName == null) {
@@ -111,7 +110,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:loadFields(" + fieldName + ")", sql + "\r\nPARA:" + paramMap);
+					writer.write("loadFields(" + fieldName + ")", sql , paramMap);
 				}
 			}
 
@@ -156,7 +155,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:get", sql + "\r\nPARA:" + paramMap);
+					writer.write("get", sql , paramMap);
 				}
 			}
 
@@ -180,7 +179,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:load", sql + "\r\nPARA:" + paramMap);
+					writer.write("load", sql , paramMap);
 				}
 			}
 
@@ -209,7 +208,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:load(ResultSetCallback)", sql + "\r\nPARA:" + paramMap);
+					writer.write("load(ResultSetCallback)", sql , paramMap);
 				}
 			}
 
@@ -284,7 +283,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:update", sql + "\r\nPARA:" + paramMap);
+					writer.write("update", sql , paramMap);
 				}
 			}
 
@@ -332,7 +331,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			{
 				LogWriter writer = this.getLogWriter();
 				if (writer != null) {
-					writer.write("SQL:batchUpdate", sql);
+					writer.write("batchUpdate", sql , null);
 				}
 			}
 
