@@ -13,6 +13,7 @@ import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
+import h2o.dao.log.LogRecorder;
 import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.sql.SqlSource;
@@ -75,6 +76,14 @@ public class DaoImpl extends AbstractDao implements Dao {
 			if ( SHOWSQL ) {
 				log.info("SQL:getField({})#\r\n{}\r\nPARA:{}\r\n", fieldName, sql, paramMap );
 			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:getField(" + fieldName + ")", sql + "\r\nPARA:" + paramMap);
+				}
+			}
+
+
 
 			 if(fieldName == null) {
 				 return getBDao().readObject(sql, paramMap);
@@ -98,6 +107,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 			if ( SHOWSQL ) {
 				log.info("SQL:loadFields({})#\r\n{}\r\nPARA:{}\r\n", fieldName, sql, paramMap );
+			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:loadFields(" + fieldName + ")", sql + "\r\nPARA:" + paramMap);
+				}
 			}
 
 			return getBDao().read(sql, new IResultSetProcessor() {
@@ -138,6 +153,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 			if ( SHOWSQL ) {
 				log.info("SQL:get#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
 			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:get", sql + "\r\nPARA:" + paramMap);
+				}
+			}
 
 			Map<String, Object> r = getBDao().readMap(sql, paramMap);
 			return r == null ? Val.empty() : new Val<>(r);
@@ -155,6 +176,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 			if ( SHOWSQL ) {
 				log.info("SQL:load#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
+			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:load", sql + "\r\nPARA:" + paramMap);
+				}
 			}
 
 			return getBDao().readMapList(sql, paramMap);
@@ -178,6 +205,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 			if ( SHOWSQL ) {
 				log.info("SQL:load(ResultSetCallback)#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
+			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:load(ResultSetCallback)", sql + "\r\nPARA:" + paramMap);
+				}
 			}
 
 			T r = (T) getBDao().read(sql, new IResultSetProcessor() {
@@ -248,6 +281,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 			if ( SHOWSQL ) {
 				log.info("SQL:update#\r\n{}\r\nPARA:{}\r\n", sql, paramMap );
 			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:update", sql + "\r\nPARA:" + paramMap);
+				}
+			}
 
 			return getBDao().update(sql, paramMap);
 
@@ -289,6 +328,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 			if ( SHOWSQL ) {
 				log.info("SQL:batchUpdate#\r\n{}\r\n", nSql );
+			}
+			{
+				LogRecorder recorder = this.getLogRecorder();
+				if (recorder != null) {
+					recorder.write("SQL:batchUpdate", sql);
+				}
 			}
 
 			PreparedStatementManagerBatch preparedStatementManagerBatch = new PreparedStatementManagerBatch(nArgs);

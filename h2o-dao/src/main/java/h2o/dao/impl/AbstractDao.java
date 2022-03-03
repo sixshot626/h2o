@@ -7,6 +7,7 @@ import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
+import h2o.dao.log.LogRecorder;
 import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
@@ -28,6 +29,8 @@ public abstract class AbstractDao implements Dao {
 	private OrmProcessor ormProcessor;
 
 	private PagingProcessor pagingProcessor;
+
+	private LogRecorder logRecorder;
 	
 
 
@@ -46,6 +49,10 @@ public abstract class AbstractDao implements Dao {
         this.pagingProcessor = pagingProcessor;
     }
 
+	@Override
+	public void setLogRecorder(LogRecorder logRecorder) {
+		this.logRecorder = logRecorder;
+	}
 
 	protected ArgProcessor getArgProcessor() {
 		return argProcessor;
@@ -59,6 +66,9 @@ public abstract class AbstractDao implements Dao {
 		return pagingProcessor;
 	}
 
+	protected LogRecorder getLogRecorder() {
+		return logRecorder;
+	}
 
 	protected Map<String, Object> argProc(Object... args) {
 		ArgProcessor _argProcessor = this.getArgProcessor();

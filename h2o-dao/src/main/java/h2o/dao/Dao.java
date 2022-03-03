@@ -4,6 +4,7 @@ import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.lang.Val;
 import h2o.dao.exception.DaoException;
+import h2o.dao.log.LogRecorder;
 import h2o.dao.orm.ArgProcessor;
 import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
@@ -25,6 +26,7 @@ public interface Dao extends Closeable {
 
 	void setPagingProcessor(PagingProcessor pagingProcessor);
 
+	void setLogRecorder(LogRecorder logRecorder);
 
 
 	<T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException;
