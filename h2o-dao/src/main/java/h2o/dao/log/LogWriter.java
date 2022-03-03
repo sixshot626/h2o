@@ -1,6 +1,6 @@
 package h2o.dao.log;
 
-public interface LogRecorder {
+public interface LogWriter {
 
     void write( String prompt , String message );
 
