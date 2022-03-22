@@ -22,90 +22,145 @@ public class SqlTable {
 	
 	private final LockMap lockm = new LockMap();	
 	
-	private volatile boolean cache = true;
-	
+	private final boolean cache;
 
-	private volatile String path_prefix = "";
-	private volatile String extName = ".sql";
-	private volatile String default_path;
-	private volatile String confFileName;
+	private final String pathPrefix;
+	private final String extName;
+	private final String defaultPath;
+	private final String confFileName;
 	
-	private volatile String realPath;
-	private volatile String runClassName;
+	private final String realPath;
+	private final String runClassName;
 	
-	private volatile TemplateUtil templateUtil = new TemplateUtil();
+	private final TemplateUtil templateUtil;
 	private final Map<String, Object> templateData = MapBuilder.newConcurrentHashMap();
 	
+
+	public static class Builder {
+
+		public Builder() {}
+
+		public Builder(boolean cache) {
+			this.cache = cache;
+		}
+
+		private boolean cache = true;
+
+		private String pathPrefix = "";
+		private String extName = ".sql";
+		private String defaultPath;
+		private String confFileName;
+
+		private String realPath;
+		private String runClassName;
+
+
+		private TemplateUtil templateUtil = new TemplateUtil();
+		private Map<String, Object> templateData = MapBuilder.newMap();
+
+
+
+		public SqlTable build() {
+			return new SqlTable( this );
+		}
+
+
+
+
+		public Builder setCache(boolean cache) {
+			this.cache = cache;
+			return this;
+		}
+
+
+
+		public Builder setTemplateUtil(TemplateUtil templateUtil) {
+			this.templateUtil = templateUtil;
+			return this;
+		}
+
+		public Builder setTemplateData(Map<String, ?> data) {
+			this.templateData.putAll(data);
+			return this;
+		}
+
+		public Builder putData(String k , Object v ) {
+			this.templateData.put( k , v );
+			return this;
+		}
+
+		public Builder setPathPrefix(String pathPrefix) {
+			this.pathPrefix = pathPrefix;
+			return this;
+		}
+
+		public Builder setExtName(String extName) {
+			this.extName = extName;
+			return this;
+		}
+
+		public Builder setDefaultPath(String defaultPath) {
+			this.defaultPath = defaultPath;
+			return this;
+		}
+
+		public Builder setConfFileName(String confFileName) {
+			this.confFileName = confFileName;
+			return this;
+		}
+
+		public Builder setRealPath(String realPath) {
+			this.realPath = realPath;
+			return this;
+		}
+
+		public Builder setRunClass(Class<?> runClass) {
+			this.runClassName = runClass.getName();
+			return this;
+		}
+
+		public Builder setRunClassName(String runClassName) {
+			this.runClassName = runClassName;
+			return this;
+		}
+	}
+
+
+
+
+
 	
 	
-	
-	public SqlTable() {}
+	public SqlTable() {
+		this( new Builder() );
+	}
 	
 	public SqlTable( boolean cache ) {
-		this.cache = cache;
-	}
-	
-	private SqlTable( SqlTable st ) {
-		this.path_prefix 	=  st.path_prefix;
-		this.extName 		=  st.extName;
-		this.default_path 	=  st.default_path;
-		this.confFileName 	=  st.confFileName;
-		this.templateUtil	=  st.templateUtil;
-		this.templateData.putAll( st.templateData );
-	}
-	
-	public SqlTable setCache(boolean cache) {
-		this.cache = cache;
-		return this;
+		this( new Builder(cache) );
 	}
 
-	public SqlTable setTemplateData(Map<String, ?> data) {
-		this.templateData.putAll(data);
-		return this;
-	}
-	
-	public SqlTable putData( String k , Object v ) {
-		this.templateData.put( k , v );
-		return this;
+	public SqlTable( Builder builder ) {
+
+		this.cache 			=  builder.cache;
+
+		this.pathPrefix     =  builder.pathPrefix;
+		this.extName 		=  builder.extName;
+		this.defaultPath    =  builder.defaultPath;
+		this.confFileName 	=  builder.confFileName;
+		this.realPath       =  builder.realPath;
+		this.runClassName   =  builder.runClassName;
+
+		this.templateUtil	=  builder.templateUtil;
+		this.templateData.putAll( builder.templateData );
 	}
 
-	public SqlTable setPath_prefix(String path_prefix) {
-		this.path_prefix = path_prefix;
-		return this;
-	}
 
-	public SqlTable setExtName(String extName) {
-		this.extName = extName;
-		return this;
-	}
-
-	public SqlTable setDefault_path(String default_path) {
-		this.default_path = default_path;
-		return this;
-	}
-	
-	public SqlTable setConfFileName(String confFileName) {
-		this.confFileName = confFileName;
-		return this;
-	}
-
-	public SqlTable setRealPath(String realPath) {
-		this.realPath = realPath;
-		return this;
-	}
-	
-	public SqlTable setRunClass(Class<?> runClass) {
-		this.runClassName = runClass.getName();
-		return this;
-	}
 
     public Map<String, Object> getTemplateData() {
         return templateData;
     }
 
-    public void setTemplateUtil(TemplateUtil templateUtil) {
-		this.templateUtil = templateUtil;
-	}
+
 
 	protected Map<String,String> loadSqlTable( String path ) {
 		
@@ -135,10 +190,10 @@ public class SqlTable {
 			if( path == null ) {		
 				String className = this.runClassName == null ? RuntimeUtil.getCallClassName(SqlTable.class.getName()) : this.runClassName ;	
 				if( className == null ) {
-					if( this.default_path == null ) {
+					if( this.defaultPath == null ) {
 						throw new RuntimeException("Get class path Exception ");
 					} else {
-						path = this.default_path;
+						path = this.defaultPath;
 					}
 				} else {
 					
@@ -156,7 +211,7 @@ public class SqlTable {
 				}
 			}		
 			
-			return path_prefix + path + extName ;	
+			return pathPrefix + path + extName ;
 		
 		} else {
 			
@@ -180,11 +235,25 @@ public class SqlTable {
 	}
 	
 	public SqlTable getSpecificSqlTable( String path ) {
-		
-		SqlTable st = new SqlTable(this);
-		st.realPath = st.convertPath(path);
-		
-		return st;
+
+		Builder builder = new Builder();
+
+		builder.setCache( this.cache );
+
+		builder.setPathPrefix( this.pathPrefix );
+		builder.setExtName( this.extName );
+		builder.setDefaultPath( this.defaultPath );
+		builder.setConfFileName( this.confFileName );
+		builder.setRunClassName( this.runClassName );
+
+		builder.setTemplateUtil( this.templateUtil );
+		builder.setTemplateData( this.templateData );
+
+
+		// Real path
+		builder.setRealPath( this.convertPath( path ) );
+
+		return builder.build();
 	}
 	
 	
