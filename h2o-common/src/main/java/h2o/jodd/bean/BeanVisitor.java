@@ -25,7 +25,11 @@
 
 package h2o.jodd.bean;
 
-import h2o.jodd.introspector.*;
+import h2o.jodd.introspector.ClassDescriptor;
+import h2o.jodd.introspector.ClassIntrospector;
+import h2o.jodd.introspector.FieldDescriptor;
+import h2o.jodd.introspector.MethodDescriptor;
+import h2o.jodd.introspector.PropertyDescriptor;
 import h2o.jodd.util.StringUtil;
 
 import java.util.ArrayList;

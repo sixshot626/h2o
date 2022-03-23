@@ -31,7 +31,12 @@ import h2o.jodd.util.CharUtil;
 import h2o.jodd.util.StringUtil;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * HTML decoder.

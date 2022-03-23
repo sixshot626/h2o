@@ -27,7 +27,11 @@ package h2o.jodd.util;
 
 import h2o.jodd.io.IOUtil;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
@@ -199,7 +203,7 @@ public class PropertiesUtil {
 
 	/**
 	 * Returns String property from a map.
-	 * @see #getProperty(java.util.Map, String) 
+	 * @see #getProperty(Map, String)
 	 */
 	public static String getProperty(final Map map, final String key, final String defaultValue) {
 		final Object val = map.get(key);

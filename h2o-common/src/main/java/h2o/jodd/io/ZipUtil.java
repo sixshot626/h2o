@@ -29,12 +29,25 @@ import h2o.jodd.util.StringPool;
 import h2o.jodd.util.StringUtil;
 import h2o.jodd.util.Wildcard;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.zip.*;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Performs zip/gzip/zlib operations on files and directories.
@@ -146,7 +159,7 @@ public class ZipUtil {
 
 	/**
 	 * Zips a file or a folder.
-	 * @see #zip(java.io.File)
+	 * @see #zip(File)
 	 */
 	public static File zip(final String file) throws IOException {
 		return zip(new File(file));
@@ -186,7 +199,7 @@ public class ZipUtil {
 
 	/**
 	 * Extracts zip file content to the target directory.
-	 * @see #unzip(java.io.File, java.io.File, String...)
+	 * @see #unzip(File, File, String...)
 	 */
 	public static void unzip(final String zipFile, final String destDir, final String... patterns) throws IOException {
 		unzip(new File(zipFile), new File(destDir), patterns);

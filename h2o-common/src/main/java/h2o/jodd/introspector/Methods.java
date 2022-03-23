@@ -29,7 +29,12 @@ import h2o.jodd.util.ArraysUtil;
 import h2o.jodd.util.ClassUtil;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Methods collection.
@@ -37,7 +42,7 @@ import java.util.*;
 public class Methods {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final Map<String, MethodDescriptor[]> methodsMap;
+	protected final HashMap<String, MethodDescriptor[]> methodsMap;
 
 	// cache
 	private MethodDescriptor[] allMethods;
@@ -50,7 +55,7 @@ public class Methods {
 	/**
 	 * Inspects types methods and return map of {@link MethodDescriptor method descriptors}.
 	 */
-	protected Map<String, MethodDescriptor[]> inspectMethods() {
+	protected HashMap<String, MethodDescriptor[]> inspectMethods() {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 
 		if (classDescriptor.isSystemClass()) {

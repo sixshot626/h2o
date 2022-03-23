@@ -27,7 +27,12 @@ package h2o.jodd.io;
 
 import h2o.jodd.util.StringPool;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 /**
  * Consumes a stream.
@@ -60,10 +65,9 @@ public class StreamGobbler extends Thread {
 
 	@Override
 	public void run() {
-		InputStreamReader isr = new InputStreamReader(is);
-		BufferedReader br = new BufferedReader(isr);
+		final InputStreamReader isr = new InputStreamReader(is);
 
-		try {
+		try (final BufferedReader br = new BufferedReader(isr)) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (out != null) {
@@ -74,24 +78,16 @@ public class StreamGobbler extends Thread {
 					out.write(StringPool.BYTES_NEW_LINE);
 				}
 			}
-		}
-		catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			if (out != null) {
 				ioe.printStackTrace(new PrintStream(out));
 			}
-		}
-		finally {
+		} finally {
 			if (out != null) {
 				try {
 					out.flush();
+				} catch (final IOException ignore) {
 				}
-				catch (IOException ignore) {
-				}
-			}
-			try {
-				br.close();
-			}
-			catch (IOException ignore) {
 			}
 		}
 
@@ -112,7 +108,7 @@ public class StreamGobbler extends Thread {
 				}
 			}
 		}
-		catch (InterruptedException ignore) {
+		catch (final InterruptedException ignore) {
 			Thread.currentThread().interrupt();
 		}
 	}

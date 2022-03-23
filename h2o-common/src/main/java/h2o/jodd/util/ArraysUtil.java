@@ -27,6 +27,8 @@ package h2o.jodd.util;
 
 import java.lang.reflect.Array;
 
+import static h2o.jodd.util.StringPool.NULL;
+
 /**
  * Array utilities.
  */
@@ -2056,7 +2058,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final Object[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2077,7 +2079,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final String[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2098,7 +2100,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final byte[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2119,7 +2121,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final char[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2140,7 +2142,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final short[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2161,7 +2163,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final int[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2182,7 +2184,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final long[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2203,7 +2205,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final float[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2224,7 +2226,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final double[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;
@@ -2245,7 +2247,7 @@ public class ArraysUtil {
 	 */
 	public static String toString(final boolean[] array) {
 		if (array == null) {
-			return StringPool.NULL;
+			return NULL;
 		}
 		if (array.length == 0) {
 			return StringPool.EMPTY;

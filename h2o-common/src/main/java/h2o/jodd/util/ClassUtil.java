@@ -30,12 +30,32 @@ import h2o.jodd.net.URLDecoder;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarFile;
 
 /**
@@ -792,7 +812,7 @@ public class ClassUtil {
 	 * returned array. Returns <code>null</code> if component type
 	 * does not exist or if index is out of bounds.
 	 *
-	 * @see #getComponentTypes(java.lang.reflect.Type)
+	 * @see #getComponentTypes(Type)
 	 */
 	public static Class getComponentType(final Type type, final int index) {
 		return getComponentType(type, null, index);
@@ -806,7 +826,7 @@ public class ClassUtil {
 	 * does not exist or if index is out of bounds.
 	 * <p>
 	 *
-	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
+	 * @see #getComponentTypes(Type, Class)
 	 */
 	public static Class getComponentType(final Type type, final Class implClass, int index) {
 		final Class[] componentTypes = getComponentTypes(type, implClass);
@@ -826,7 +846,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
+	 * @see #getComponentTypes(Type, Class)
 	 */
 	public static Class[] getComponentTypes(final Type type) {
 		return getComponentTypes(type, null);
@@ -883,7 +903,7 @@ public class ClassUtil {
 	/**
 	 * Shortcut for <code>getComponentTypes(type.getGenericSuperclass())</code>.
 	 *
-	 * @see #getComponentTypes(java.lang.reflect.Type)
+	 * @see #getComponentTypes(Type)
 	 */
 	public static Class[] getGenericSupertypes(final Class type) {
 		return getComponentTypes(type.getGenericSuperclass());
@@ -892,7 +912,7 @@ public class ClassUtil {
 	/**
 	 * Shortcut for <code>getComponentType(type.getGenericSuperclass())</code>.
 	 *
-	 * @see #getComponentType(java.lang.reflect.Type, int)
+	 * @see #getComponentType(Type, int)
 	 */
 	public static Class getGenericSupertype(final Class type, final int index) {
 		return getComponentType(type.getGenericSuperclass(), index);
@@ -905,7 +925,7 @@ public class ClassUtil {
 	 *
 	 * @param type the type to convert
 	 * @return the closest class representing the given <code>type</code>
-	 * @see #getRawType(java.lang.reflect.Type, Class)
+	 * @see #getRawType(Type, Class)
 	 */
 	public static Class getRawType(final Type type) {
 		return getRawType(type, null);
@@ -914,7 +934,7 @@ public class ClassUtil {
 	/**
 	 * Returns raw class for given <code>type</code> when implementation class is known
 	 * and it makes difference.
-	 * @see #resolveVariable(java.lang.reflect.TypeVariable, Class)
+	 * @see #resolveVariable(TypeVariable, Class)
 	 */
 	public static Class<?> getRawType(final Type type, final Class implClass) {
 		if (type instanceof Class) {

@@ -32,8 +32,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
 
-import static h2o.jodd.util.StringPool.EMPTY;
-
 /**
  * String utilities.
  */
@@ -405,7 +403,7 @@ public class StringUtil {
 	 */
 	public static String toSafeString(final Object value) {
 		if (value == null) {
-			return EMPTY;
+			return StringPool.EMPTY;
 		}
 
 		return value.toString();
@@ -737,7 +735,7 @@ public class StringUtil {
 			count++;
 			s = CharUtil.findFirstDiff(srcc, 1, delimiters);
 			if (s == -1) {							// nothing after delimiters
-				return new String[] {EMPTY, EMPTY};
+				return new String[] {StringPool.EMPTY, StringPool.EMPTY};
 			}
 			start[1] = s;							// new start
 		}
@@ -778,7 +776,7 @@ public class StringUtil {
 	 */
 	public static String[] splitc(final String src, final char delimiter) {
 		if (src.isEmpty()) {
-			return new String[] {EMPTY};
+			return new String[] {StringPool.EMPTY};
 		}
 		final char[] srcc = src.toCharArray();
 
@@ -795,7 +793,7 @@ public class StringUtil {
 			count++;
 			s = CharUtil.findFirstDiff(srcc, 1, delimiter);
 			if (s == -1) {							// nothing after delimiters
-				return new String[] {EMPTY, EMPTY};
+				return new String[] {StringPool.EMPTY, StringPool.EMPTY};
 			}
 			start[1] = s;							// new start
 		}

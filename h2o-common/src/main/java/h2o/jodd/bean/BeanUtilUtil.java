@@ -25,6 +25,10 @@
 
 package h2o.jodd.bean;
 
+import h2o.jodd.bean.exception.ForcedBeanException;
+import h2o.jodd.bean.exception.InvalidPropertyBeanException;
+import h2o.jodd.bean.exception.InvokePropertyBeanException;
+import h2o.jodd.bean.exception.PropertyNotFoundBeanException;
 import h2o.jodd.introspector.ClassIntrospector;
 import h2o.jodd.introspector.Getter;
 import h2o.jodd.introspector.MapperFunction;
@@ -102,7 +106,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 			final Class type = setter.getSetterRawType();
 
 			if (ClassUtil.isTypeOf(type, Collection.class)) {
-				Class componentType = setter.getSetterRawComponentType();
+				final Class componentType = setter.getSetterRawComponentType();
 
 				value = convertToCollection(value, type, componentType);
 			} else {
@@ -111,11 +115,11 @@ abstract class BeanUtilUtil implements BeanUtil {
 			}
 
 			setter.invokeSetter(bp.bean, value);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			if (isSilent) {
 				return null;
 			}
-			throw new BeanException("Setter failed: " + setter, ex);
+			throw new InvokePropertyBeanException("Invoking setter method failed.", bp, ex);
 		}
 		return value;
 	}
@@ -127,7 +131,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * If not the last part of indexed bean property, array will be expanded to the index if necessary.
 	 */
 	protected Object arrayForcedGet(final BeanProperty bp, Object array, final int index) {
-		Class componentType = array.getClass().getComponentType();
+		final Class componentType = array.getClass().getComponentType();
 		if (!bp.last) {
 			array = ensureArraySize(bp, array, componentType, index);
 		}
@@ -136,11 +140,11 @@ abstract class BeanUtilUtil implements BeanUtil {
 			try {
 				//noinspection unchecked
 				value = ClassUtil.newInstance(componentType);
-			} catch (Exception ex) {
+			} catch (final Exception ex) {
 				if (isSilent) {
 					return null;
 				}
-				throw new BeanException("Invalid array element: " + bp.name + '[' + index + ']', bp, ex);
+				throw new ForcedBeanException("Invalid array element: " + bp.name + '[' + index + "].", bp, ex);
 			}
 			Array.set(array, index, value);
 		}
@@ -152,7 +156,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * If speed is critical, it is better to allocate an array with proper size before using this method. 
 	 */
 	protected void arrayForcedSet(final BeanProperty bp, Object array, final int index, Object value) {
-		Class componentType = array.getClass().getComponentType();
+		final Class componentType = array.getClass().getComponentType();
 		array = ensureArraySize(bp, array, componentType, index);
 		value = convertType(value, componentType);
 		Array.set(array, index, value);
@@ -161,15 +165,15 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 	@SuppressWarnings({"SuspiciousSystemArraycopy"})
 	protected Object ensureArraySize(final BeanProperty bp, Object array, final Class componentType, final int index) {
-		int len = Array.getLength(array);
+		final int len = Array.getLength(array);
 		if (index >= len) {
 			Object newArray = Array.newInstance(componentType, index + 1);
 			System.arraycopy(array, 0, newArray, 0, len);
 
-			Setter setter = bp.getSetter(true);
+			final Setter setter = bp.getSetter(true);
 			if (setter == null) {
 				// no point to check for bp.silent, throws NPE later
-				throw new BeanException("Setter or field not found: " + bp.name, bp);
+				throw new PropertyNotFoundBeanException("Setter or field '"  + bp.name + "' not found.", bp);
 			}
 
 			newArray = invokeSetter(setter, bp, newArray);
@@ -196,12 +200,12 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 */
 	protected int indexOfDot(final String name) {
 		int ndx = 0;
-		int len = name.length();
+		final int len = name.length();
 
 		boolean insideBracket = false;
 
 		while (ndx < len) {
-			char c = name.charAt(ndx);
+			final char c = name.charAt(ndx);
 
 			if (insideBracket) {
 				if (c == ']') {
@@ -228,13 +232,13 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 */
 	protected String extractIndex(final BeanProperty bp) {
 		bp.index = null;
-		String name = bp.name;
-		int lastNdx = name.length() - 1;
+		final String name = bp.name;
+		final int lastNdx = name.length() - 1;
 		if (lastNdx < 0) {
 			return null;
 		}
 		if (name.charAt(lastNdx) == ']') {
-			int leftBracketNdx = name.lastIndexOf('[');
+			final int leftBracketNdx = name.lastIndexOf('[');
 			if (leftBracketNdx != -1) {
 				bp.setName(name.substring(0, leftBracketNdx));
 				bp.index = name.substring(leftBracketNdx + 1, lastNdx);
@@ -247,9 +251,9 @@ abstract class BeanUtilUtil implements BeanUtil {
 	protected int parseInt(final String indexString, final BeanProperty bp) {
 		try {
 			return Integer.parseInt(indexString);
-		} catch (NumberFormatException nfex) {
+		} catch (final NumberFormatException nfex) {
 			// no point to use bp.silent, as will throw exception
-			throw new BeanException("Invalid index: " + indexString, bp, nfex);
+			throw new InvalidPropertyBeanException("Property index: '" + indexString +"' not a number.", bp);
 		}
 	}
 
@@ -260,21 +264,21 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * It uses default constructor!
 	 */
 	protected Object createBeanProperty(final BeanProperty bp) {
-		Setter setter = bp.getSetter(true);
+		final Setter setter = bp.getSetter(true);
 		if (setter == null) {
 			return null;
 		}
 
-		Class type = setter.getSetterRawType();
+		final Class type = setter.getSetterRawType();
 
 		Object newInstance;
 		try {
 			newInstance = ClassUtil.newInstance(type);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			if (isSilent) {
 				return null;
 			}
-			throw new BeanException("Invalid property: " + bp.name, bp, ex);
+			throw new ForcedBeanException("Property '" + bp.name + "' creation failed.", bp, ex);
 		}
 
 		newInstance = invokeSetter(setter, bp, newInstance);
@@ -322,7 +326,7 @@ abstract class BeanUtilUtil implements BeanUtil {
 
 		try {
 			return convertType(index, indexType);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			return index;
 		}
 	}
@@ -331,16 +335,16 @@ abstract class BeanUtilUtil implements BeanUtil {
 	 * Extracts type of current property.
 	 */
 	protected Class extractType(final BeanProperty bp) {
-		Getter getter = bp.getGetter(isDeclared);
+		final Getter getter = bp.getGetter(isDeclared);
 		if (getter != null) {
 			if (bp.index != null) {
-				Class type = getter.getGetterRawComponentType();
+				final Class type = getter.getGetterRawComponentType();
 				return type == null ? Object.class : type;
 			}
 			return getter.getGetterRawType();
 		}
 
-		return null;	// this should not happens
+		return null;	// this should not happen
 	}
 
 }

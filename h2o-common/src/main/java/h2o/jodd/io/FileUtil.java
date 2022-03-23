@@ -31,7 +31,17 @@ import h2o.jodd.util.StringPool;
 import h2o.jodd.util.StringUtil;
 import h2o.jodd.util.SystemUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -1425,7 +1435,7 @@ public class FileUtil {
 	/**
 	 * Determines whether the specified file is a symbolic link rather than an actual file.
 	 *
-	 * @deprecated {@link java.nio.file.Files#isSymbolicLink(java.nio.file.Path)} provides this functionality natively as of Java 1.7.
+	 * @deprecated {@link Files#isSymbolicLink(java.nio.file.Path)} provides this functionality natively as of Java 1.7.
 	 */
 	@Deprecated
 	public static boolean isSymlink(final File file) {

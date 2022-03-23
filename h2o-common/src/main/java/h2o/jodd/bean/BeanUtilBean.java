@@ -25,6 +25,11 @@
 
 package h2o.jodd.bean;
 
+import h2o.jodd.bean.exception.InvalidPropertyBeanException;
+import h2o.jodd.bean.exception.InvokePropertyBeanException;
+import h2o.jodd.bean.exception.NullPropertyBeanException;
+import h2o.jodd.bean.exception.PropertyNotFoundBeanException;
+import h2o.jodd.bean.exception.ForcedBeanException;
 import h2o.jodd.introspector.Getter;
 import h2o.jodd.introspector.Setter;
 import h2o.jodd.util.ClassUtil;
@@ -83,6 +88,8 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		bp.setName(name);
 	}
 
+	// used only for hasProperty & getPropertyType (!)
+	// it continues to work even there is no bean instance!
 	protected boolean resolveExistingNestedProperties(final BeanProperty bp) {
 		String name = bp.name;
 		int dotNdx;
@@ -94,7 +101,17 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 				return false;
 			}
 			bp.setName(temp);
-			bp.updateBean(getIndexProperty(bp));
+
+			final Object indexProperty = bp.bean != null ? getIndexProperty(bp) : null;
+			if (indexProperty != null) {
+				// regular case, when there is an instance
+				bp.updateBean(indexProperty);
+			}
+			else {
+				// when bean is null, continue with the type
+				bp.updateBeanClassFromProperty();
+			}
+
 			name = name.substring(dotNdx + 1);
 		}
 		bp.last = true;
@@ -107,13 +124,13 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	@Override
 	public boolean hasSimpleProperty(final Object bean, final String property) {
-		return hasSimpleProperty(new BeanProperty(this, bean, property));
+		return hasSimpleProperty(new BeanProperty(this, bean, property, false));
 	}
 
 	protected boolean hasSimpleProperty(final BeanProperty bp) {
-		if (bp.bean == null) {
-			return false;
-		}
+//		if (bp.bean == null) {
+//			return false;
+//		}
 
 		// try: getter
 		final Getter getter = bp.getGetter(isDeclared);
@@ -134,17 +151,17 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	@Override
 	public <T> T getSimpleProperty(final Object bean, final String property) {
-		return (T) getSimpleProperty(new BeanProperty(this, bean, property));
+		final BeanProperty bp = new BeanProperty(this, bean, property, false);
+		return (T) getSimpleProperty(bp);
 	}
 
 	protected Object getSimpleProperty(final BeanProperty bp) {
-
 		if (bp.name.isEmpty()) {
 			if (bp.indexString != null) {
 				// index string exist, but property name is missing
 				return bp.bean;
 			}
-			throw new BeanException("Invalid property", bp);
+			throw new InvalidPropertyBeanException("Empty property name.", bp);
 		}
 
 		final Getter getter = bp.getGetter(isDeclared);
@@ -157,10 +174,10 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 				if (isSilent) {
 					return null;
 				}
-				throw new BeanException("Getter failed: " + getter, ex);
+				throw new InvokePropertyBeanException("Invoking getter method failed.", bp, ex);
 			}
 
-			if ((result == null) && (isForced)) {
+			if ((result == null) && (bp.isForced)) {
 				result = createBeanProperty(bp);
 			}
 			return result;
@@ -172,11 +189,11 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 			final Object key = convertIndexToMapKey(getter, bp.name);
 
 			if (!map.containsKey(key)) {
-				if (!isForced) {
+				if (!bp.isForced) {
 					if (isSilent) {
 						return null;
 					}
-					throw new BeanException("Map key not found: " + bp.name, bp);
+					throw new PropertyNotFoundBeanException("Map key '" +  bp.name + "' not found.", bp);
 				}
 				final Map value = new HashMap();
 				//noinspection unchecked
@@ -190,12 +207,16 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		if (isSilent) {
 			return null;
 		}
-		throw new BeanException("Simple property not found: " + bp.name, bp);
+
+		if (bp.isExistingParentNull() && bp.currentPropertyExistOnParent(isDeclared)) {
+			throw new NullPropertyBeanException("Simple property '" + bp.lastName + "' is null.", bp);
+		}
+		throw new PropertyNotFoundBeanException("Simple property '" + bp.name + "' not found.", bp);
 	}
 
 	@Override
 	public void setSimpleProperty(final Object bean, final String property, final Object value) {
-		setSimpleProperty(new BeanProperty(this, bean, property), value);
+		setSimpleProperty(new BeanProperty(this, bean, property, true), value);
 	}
 
 	/**
@@ -219,20 +240,26 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		if (isSilent) {
 			return;
 		}
-		throw new BeanException("Simple property not found: " + bp.name, bp);
+		if (bp.isExistingParentNull() && bp.currentPropertyExistOnParent(isDeclared)) {
+			throw new NullPropertyBeanException("Simple property '" + bp.lastName + "' is null.", bp);
+		}
+		throw new PropertyNotFoundBeanException("Simple property '" + bp.name + "' not found.", bp);
 	}
 
 	// ---------------------------------------------------------------- indexed property
 
 	protected boolean hasIndexProperty(final BeanProperty bp) {
-
-		if (bp.bean == null) {
-			return false;
-		}
+//		if (bp.bean == null) {
+//			return false;
+//		}
 		final String indexString = extractIndex(bp);
 
 		if (indexString == null) {
 			return hasSimpleProperty(bp);
+		}
+
+		if (bp.bean == null) {
+			return false;
 		}
 
 		final Object resultBean = getSimpleProperty(bp);
@@ -262,7 +289,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	@Override
 	public <T> T getIndexProperty(final Object bean, final String property, final int index) {
-		final BeanProperty bp = new BeanProperty(this, bean, property);
+		final BeanProperty bp = new BeanProperty(this, bean, property, false);
 
 		bp.indexString = bp.index = String.valueOf(index);
 
@@ -290,21 +317,20 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	private Object _getIndexProperty(final BeanProperty bp) {
 		final Object resultBean = getSimpleProperty(bp);
 		final Getter getter = bp.getGetter(isDeclared);
-
 		if (bp.indexString == null) {
-			return resultBean;	// no index, just simple bean
+			return resultBean;
 		}
 		if (resultBean == null) {
 			if (isSilent) {
 				return null;
 			}
-			throw new BeanException("Index property is null: " + bp.name, bp);
+			throw new NullPropertyBeanException("Index property '" + bp.name + "' is null.", bp);
 		}
 
 		// try: property[index]
 		if (resultBean.getClass().isArray()) {
 			final int index = parseInt(bp.indexString, bp);
-			if (isForced) {
+			if (bp.isForced) {
 				return arrayForcedGet(bp, resultBean, index);
 			} else {
 				return Array.get(resultBean, index);
@@ -315,7 +341,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		if (resultBean instanceof List) {
 			final int index = parseInt(bp.indexString, bp);
 			final List list = (List) resultBean;
-			if (!isForced) {
+			if (!bp.isForced) {
 				return list.get(index);
 			}
 			if (!bp.last) {
@@ -334,7 +360,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 					if (isSilent) {
 						return null;
 					}
-					throw new BeanException("Invalid list element: " + bp.name + '[' + index + ']', bp, ex);
+					throw new ForcedBeanException("Invalid list element: " + bp.name + '[' + index + "].", bp, ex);
 				}
 				//noinspection unchecked
 				list.set(index, value);
@@ -347,7 +373,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 			final Map map = (Map) resultBean;
 			final Object key = convertIndexToMapKey(getter, bp.indexString);
 
-			if (!isForced) {
+			if (!bp.isForced) {
 				return map.get(key);
 			}
 			Object value = map.get(key);
@@ -363,7 +389,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 						if (isSilent) {
 							return null;
 						}
-						throw new BeanException("Invalid map element: " + bp.name + '[' + bp.indexString + ']', bp, ex);
+						throw new ForcedBeanException("Invalid map element: " + bp.name + '[' + bp.indexString + "].", bp, ex);
 					}
 
 					//noinspection unchecked
@@ -377,12 +403,12 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		if (isSilent) {
 			return null;
 		}
-		throw new BeanException("Index property is not an array, list or map: " + bp.name, bp);
+		throw new InvalidPropertyBeanException("Index property '" + bp.name + "' is not an array, list or map.", bp);
 	}
 
 	@Override
 	public void setIndexProperty(final Object bean, final String property, final int index, final Object value) {
-		final BeanProperty bp = new BeanProperty(this, bean, property);
+		final BeanProperty bp = new BeanProperty(this, bean, property, true);
 
 		bp.indexString = bp.index = String.valueOf(index);
 
@@ -417,13 +443,13 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 			if (isSilent) {
 				return;
 			}
-			throw new BeanException("Index property is null:" + bp.name, bp);
+			throw new NullPropertyBeanException("Index property '" + bp.name + " is null.", bp);
 		}
 
 		// inner bean found
 		if (nextBean.getClass().isArray()) {
 			final int index = parseInt(bp.indexString, bp);
-			if (isForced) {
+			if (bp.isForced) {
 				arrayForcedSet(bp, nextBean, index, value);
 			} else {
 				Array.set(nextBean, index, value);
@@ -438,7 +464,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 				value = convertType(value, listComponentType);
 			}
 			final List list = (List) nextBean;
-			if (isForced) {
+			if (bp.isForced) {
 				ensureListSize(list, index);
 			}
 			list.set(index, value);
@@ -460,7 +486,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		if (isSilent) {
 			return;
 		}
-		throw new BeanException("Index property is not an array, list or map: " + bp.name, bp);
+		throw new InvalidPropertyBeanException("Index property '" + bp.name + "' is not an array, list or map.", bp);
 	}
 
 
@@ -468,7 +494,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	@Override
 	public void setProperty(final Object bean, final String name, final Object value) {
-		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name, true);
 
 		if (!isSilent) {
 			resolveNestedProperties(beanProperty);
@@ -490,7 +516,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	 */
 	@Override
 	public <T> T getProperty(final Object bean, final String name) {
-		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name, false);
 		if (!isSilent) {
 			resolveNestedProperties(beanProperty);
 			return (T) getIndexProperty(beanProperty);
@@ -510,7 +536,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	@Override
 	public boolean hasProperty(final Object bean, final String name) {
-		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name, false);
 		if (!resolveExistingNestedProperties(beanProperty)) {
 			return false;
 		}
@@ -523,7 +549,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 		if (dotNdx != -1) {
 			name = name.substring(0, dotNdx);
 		}
-		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name, false);
 		extractIndex(beanProperty);
 		return hasSimpleProperty(beanProperty);
 	}
@@ -532,7 +558,7 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 
 	@Override
 	public Class<?> getPropertyType(final Object bean, final String name) {
-		final BeanProperty beanProperty = new BeanProperty(this, bean, name);
+		final BeanProperty beanProperty = new BeanProperty(this, bean, name, false);
 		if (!resolveExistingNestedProperties(beanProperty)) {
 			return null;
 		}

@@ -33,10 +33,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
-
-import static h2o.jodd.util.ClassUtil.METHOD_GET_PREFIX;
-import static h2o.jodd.util.ClassUtil.METHOD_IS_PREFIX;
 
 /**
  * Bean properties collection. Property in Java is defined as a pair of
@@ -47,7 +43,7 @@ import static h2o.jodd.util.ClassUtil.METHOD_IS_PREFIX;
 public class Properties {
 
 	protected final ClassDescriptor classDescriptor;
-	protected final Map<String, PropertyDescriptor> propertyDescriptors;
+	protected final HashMap<String, PropertyDescriptor> propertyDescriptors;
 
 	// cache
 	private PropertyDescriptor[] allProperties;
@@ -60,11 +56,11 @@ public class Properties {
 	/**
 	 * Inspects all properties of target type.
 	 */
-	protected Map<String, PropertyDescriptor> inspectProperties() {
+	protected HashMap<String, PropertyDescriptor> inspectProperties() {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		Map<String, PropertyDescriptor> map = new HashMap<>();
+		HashMap<String, PropertyDescriptor> map = new HashMap<>();
 
 		Method[] methods = scanAccessible ? ClassUtil.getAccessibleMethods(type) : ClassUtil.getSupportedMethods(type);
 
@@ -140,7 +136,7 @@ public class Properties {
 	 * Adds a setter and/or getter method to the property.
 	 * If property is already defined, the new, updated, definition will be created.
 	 */
-	protected void addProperty(final Map<String, PropertyDescriptor> map, final String name, final MethodDescriptor methodDescriptor, final boolean isSetter) {
+	protected void addProperty(final HashMap<String, PropertyDescriptor> map, final String name, final MethodDescriptor methodDescriptor, final boolean isSetter) {
 		MethodDescriptor setterMethod = isSetter ? methodDescriptor : null;
 		MethodDescriptor getterMethod = isSetter ? null : methodDescriptor;
 
@@ -170,8 +166,8 @@ public class Properties {
 				String existingMethodName = existingMethodDescriptor.getMethod().getName();
 
 				if (
-						existingMethodName.startsWith(METHOD_IS_PREFIX) &&
-						methodName.startsWith(METHOD_GET_PREFIX)) {
+						existingMethodName.startsWith(ClassUtil.METHOD_IS_PREFIX) &&
+						methodName.startsWith(ClassUtil.METHOD_GET_PREFIX)) {
 
 					// ignore getter when ister exist
 					return;
