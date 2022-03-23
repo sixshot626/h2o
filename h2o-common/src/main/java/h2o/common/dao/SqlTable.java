@@ -1,16 +1,16 @@
 package h2o.common.dao;
 
-import h2o.common.concurrent.LockMap;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
-import h2o.common.util.collection.MapBuilder;
 import h2o.common.util.io.StreamUtil;
 import h2o.common.util.lang.RuntimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SqlTable {
 
@@ -18,10 +18,9 @@ public class SqlTable {
     private static final Logger log = LoggerFactory.getLogger( SqlTable.class.getName() );
 	
 	
-	private final Map<String,Map<String,String>> classNameSqlMap = new java.util.concurrent.ConcurrentHashMap<String,Map<String,String>>();
+	private final Map<String,Map<String,String>> classNameSqlMap = new ConcurrentHashMap<>();
 	
-	private final LockMap lockm = new LockMap();	
-	
+
 	private final boolean cache;
 
 	private final String pathPrefix;
@@ -33,7 +32,7 @@ public class SqlTable {
 	private final String runClassName;
 	
 	private final TemplateUtil templateUtil;
-	private final Map<String, Object> templateData = MapBuilder.newConcurrentHashMap();
+	private final Map<String, Object> templateData = new ConcurrentHashMap<>();
 	
 
 	public static class Builder {
@@ -56,7 +55,7 @@ public class SqlTable {
 
 
 		private TemplateUtil templateUtil = new TemplateUtil();
-		private Map<String, Object> templateData = MapBuilder.newMap();
+		private Map<String, Object> templateData = new HashMap<>();
 
 
 
@@ -65,13 +64,10 @@ public class SqlTable {
 		}
 
 
-
-
 		public Builder setCache(boolean cache) {
 			this.cache = cache;
 			return this;
 		}
-
 
 
 		public Builder setTemplateUtil(TemplateUtil templateUtil) {
@@ -155,6 +151,10 @@ public class SqlTable {
 	}
 
 
+	public SqlTable putData( String k , Object v ) {
+		this.templateData.put( k , v );
+		return this;
+	}
 
     public Map<String, Object> getTemplateData() {
         return templateData;
@@ -168,17 +168,17 @@ public class SqlTable {
 		
 		String[] sqlConfigs = StringUtils.substringsBetween(sqlConfig, ":{", "};");
 		
-		Map<String,String> sqlTable = new java.util.concurrent.ConcurrentHashMap<String,String>();
+		Map<String,String> sqlMap = new HashMap();
 		
 		for( String ss : sqlConfigs ) {
 			String key = StringUtils.substringBefore(ss, "=").trim();
 			String sql = StringUtils.substringAfter(ss, "=");
-			sqlTable.put(key, sql);
+			sqlMap.put(key, sql);
 		}
 		
-		log.debug("Load sqlTable from path:{}\n{}",path , sqlTable);
+		log.debug("Load sqlTable from path:{}\n{}",path , sqlMap);
 		
-		return sqlTable;
+		return Collections.unmodifiableMap( sqlMap );
 	}
 	
 	
@@ -216,6 +216,7 @@ public class SqlTable {
 		} else {
 			
 			return this.realPath;
+
 		}
 		
 		
@@ -226,7 +227,7 @@ public class SqlTable {
 	
 	
 	private void load( String path ) {		
-		classNameSqlMap.put( path , loadSqlTable( path ) );
+		classNameSqlMap.putIfAbsent( path , loadSqlTable( path ) );
 	}
 	
 	
@@ -261,48 +262,32 @@ public class SqlTable {
 	public Map<String,String> getSqlMap() {
 		return this.getSqlMap(null);
 	}
-	
+
 	public Map<String,String> getSqlMap( String path ) {
-		
+
 		path = convertPath(path);
-		
+
 		log.debug("Get sql from  path:{}" , path );
-		
+
 		Map<String,String> sqlMap;
 		if( this.cache ) {
-			
+
 			sqlMap = classNameSqlMap.get(path);
-			if( sqlMap == null) {		
-				
-				if( this.realPath == null ) {
-					Lock lock = lockm.getLock(path, true);
-					lock.lock();
-					try {
-						sqlMap = classNameSqlMap.get(path);
-						if( sqlMap == null ) {
-							load(path);
-							sqlMap = classNameSqlMap.get(path);
-						}				
-						
-					} finally {
-						lock.unlock();
-					}
-				} else {
-					load(path);
-					sqlMap = classNameSqlMap.get(path);
-				}
-				
+			if( sqlMap == null) {
+				load(path);
+				sqlMap = classNameSqlMap.get(path);
 			}
+
 		} else {
 			sqlMap = this.loadSqlTable(path);
 		}
-		
+
 		if( sqlMap == null) {
 			throw new RuntimeException("No serach sql config in path:" + path  ) ;
 		}
-		
+
 		return sqlMap;
-	
+
 	}
 	
 	public String getSql( String queryName ) {		
@@ -337,7 +322,7 @@ public class SqlTable {
 			return st;
 		}
 		
-		Map<String, Object> dataTmp = MapBuilder.newMap();
+		Map<String, Object> dataTmp = new HashMap<>();
 		dataTmp.putAll(this.templateData);
 		dataTmp.putAll(data);
 		
@@ -348,7 +333,6 @@ public class SqlTable {
 		return sql;
 	}
 	
-	
-	
+
 	
 }
