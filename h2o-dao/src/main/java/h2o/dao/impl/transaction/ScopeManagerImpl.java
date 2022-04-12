@@ -20,7 +20,7 @@ public class ScopeManagerImpl implements ScopeManager {
 	private final String dataSourceName;
 	private final AtomicReference<DataSource> dataSourceRef = new AtomicReference<>();
 
-	private volatile Integer transactionIsolationLevel;
+	private volatile int transactionIsolationLevel = -1;
 
 	public ScopeManagerImpl(String dataSourceName) {
 		this.dataSourceName = dataSourceName;
@@ -53,7 +53,7 @@ public class ScopeManagerImpl implements ScopeManager {
 	public Connection openConnection() {
 		try {
 			Connection conn = this.getDataSource().getConnection();
-			if ( transactionIsolationLevel != null ) {
+			if ( transactionIsolationLevel > -1 ) {
 				conn.setTransactionIsolation( transactionIsolationLevel );
 			}
 			return conn;
