@@ -3,16 +3,22 @@ package h2o.dao.impl.transaction;
 
 import com.jenkov.db.scope.ScopingDataSource;
 import h2o.dao.Dao;
+import h2o.dao.Db;
 import h2o.dao.transaction.TransactionManager;
 
 import javax.sql.DataSource;
 
-public class TransactionManagerImpl implements TransactionManager {
+public class TransactionManagerImpl extends ScopeManagerImpl implements TransactionManager {
+
+
+	public TransactionManagerImpl(String dataSourceName) {
+		super(dataSourceName);
+	}
 
 	@Override
-	public Object beginTransaction(Dao dao) {
+	public Object beginTransaction() {
 
-		DataSource dataSource = dao.getDataSource();
+		DataSource dataSource = getDataSource();
 		if ( dataSource instanceof ScopingDataSource) {
 			((ScopingDataSource)dataSource).beginTransactionScope();
 			return dataSource;

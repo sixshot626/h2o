@@ -1,54 +1,36 @@
 package h2o.dao.impl;
 
-import h2o.common.dao.butterflydb.ButterflyDb;
 import h2o.dao.Dao;
 import h2o.dao.Db;
 import h2o.dao.DbUtil;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.transaction.ScopeManager;
 
-import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.Optional;
 
 
 public class DbImpl extends AbstractDb implements Db {
 
-	private final String dataSourceName;
 
-	private final DataSource dataSource;
-
-	public DbImpl(String dataSourceName) {
-		this.dataSourceName = dataSourceName;
-		this.dataSource = DbUtil.getDataSource(dataSourceName);
-	}
-
-	public DbImpl(String dataSourceName, DataSource dataSource) {
-		this.dataSourceName = dataSourceName;
-		this.dataSource = dataSource;
+	public DbImpl(ScopeManager scopeManager) {
+		super(scopeManager);
 	}
 
 	@Override
 	public Dao getDao() {
-		return this.getDao(true);
+		return createDao(this.getScopeManager().openConnection());
 	}
 
 	@Override
-	public Dao getDao(boolean autoClose) {
+	public Dao createDao(Connection connection) {
 
-		ButterflyDb bdb = new ButterflyDb(this.dataSource);
-		Dao dao = createDao(bdb,autoClose);
-
-		return dao;
-
-	}
-	
-	protected Dao createDao( ButterflyDb bdb , boolean autoClose ) {
-
-		DaoImpl daoImpl = new DaoImpl( bdb , autoClose );
+		DaoImpl daoImpl = new DaoImpl( connection );
 
 		daoImpl.setArgProcessor( DbUtil.DBFACTORY.getArgProcessor() );
 		daoImpl.setOrmProcessor( DbUtil.DBFACTORY.getOrmProcessor() );
 
-		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor( this.dataSourceName );
+		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor( this.getScopeManager().getDataSourceName());
 		if ( pagingProcessor.isPresent() ) {
 			daoImpl.setPagingProcessor( pagingProcessor.get() );
 		}

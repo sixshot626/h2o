@@ -1,25 +1,17 @@
 
-sqlTable 		= 1 h2o.common.dao.SqlTable();
+
 sqlTemplateUtil = 1 h2o.common.thirdparty.freemarker.TemplateUtil();
+sqlTable 		= 1 h2o.dao.sql.SqlTable();
 sqlBuilder 		= 1	h2o.dao.sql.SqlBuilder();
 
 
 argProcessor    = 1 h2o.dao.impl.orm.DefaultArgProcessor();
 ormProcessor    = 1 h2o.dao.impl.orm.DefaultOrmProcessor();
-pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
-
-/*
-dao = * h2o.dao.impl.DaoImpl( $1 , $2 ).setArgProcessor( argProcessor )
-									   .setOrmProcessor( ormProcessor )
-									   .setPagingProcessor( pagingProcessor ); */
+ds2_pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
 
 
-scopeManager        = 1 h2o.dao.impl.transaction.ScopeManagerImpl();
-transactionManager  = 1 h2o.dao.impl.transaction.TransactionManagerImpl();
 
-
-db 	= * h2o.dao.impl.DbImpl( $0 ).setScopeManager( scopeManager )
-                                 .setTransactionManager( transactionManager );
+db 	= * h2o.dao.impl.DbImpl( h2o.dao.impl.transaction.TransactionManagerImpl($0) );
 
 
 /*

@@ -12,13 +12,16 @@ import h2o.dao.sql.SqlSource;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public interface Dao extends Closeable {
 
+	void setAutoClose(boolean autoClose);
 
+	boolean isAutoClose();
 
 	void setArgProcessor(ArgProcessor argProcessor);
 
@@ -94,9 +97,7 @@ public interface Dao extends Closeable {
 	int[] batchUpdate(SqlSource sqlSource, Collection<?> args)  throws DaoException;
 
 
-
-	DataSource getDataSource();
-
+	Connection getConnection();
 
 	void close() throws DaoException;
 	

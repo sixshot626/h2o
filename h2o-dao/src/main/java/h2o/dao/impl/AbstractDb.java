@@ -4,64 +4,54 @@ import h2o.common.exception.ExceptionUtil;
 import h2o.dao.Dao;
 import h2o.dao.DaoCallback;
 import h2o.dao.Db;
+import h2o.dao.DbUtil;
 import h2o.dao.transaction.ScopeManager;
 import h2o.dao.transaction.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import java.util.Optional;
 
 
 public abstract class AbstractDb implements Db {
 
     private static final Logger log = LoggerFactory.getLogger( AbstractDb.class.getName() );
 
-    private volatile ScopeManager scopeManager;
 
-	private volatile TransactionManager transactionManager;
+	private final ScopeManager scopeManager;
 
-	@Override
-	public void setScopeManager(ScopeManager scopeManager) {
+	public AbstractDb(ScopeManager scopeManager) {
 		this.scopeManager = scopeManager;
 	}
 
 	@Override
-	public void setTransactionManager(TransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
-
-	protected ScopeManager getScopeManager() {
+	public ScopeManager getScopeManager() {
 		return scopeManager;
 	}
 
-	protected TransactionManager getTransactionManager() {
-		return transactionManager;
-	}
-
-
-
-	@Override
-	public abstract Dao getDao();
 
 	@Override
 	public <T> T q( DaoCallback<T> daoCallback) {
-		
-		Dao dao = this.getDao(false);
 
-        ScopeManager scopeManager = this.getScopeManager();
-		Object scope = scopeManager == null ? null : scopeManager.beginScope(dao);
+		ScopeManager scopeManager = this.getScopeManager();
+		Object scope = scopeManager.beginScope();
+
+		Dao dao = this.getDao();
 
 		try {
-			
+
 			return daoCallback.doCallback( dao , scope );
-			
+
 		} catch (Exception e) {
 
 			log.debug("doCallback",e);
 			throw ExceptionUtil.toRuntimeException(e);
 
 		} finally {
-			
-			if ( scopeManager != null ) try {
-                scopeManager.endScope(scope);
+
+			try {
+				scopeManager.endScope(scope);
 			} catch ( Exception e ) {
 				log.error("endScope",e);
 			}
@@ -71,20 +61,26 @@ public abstract class AbstractDb implements Db {
 			} catch( Exception e ) {
 				log.error("dao.close",e);
 			}
-			
-			
+
 		}
-		
+
 	}
 
 	@Override
 	public <T> T tx( DaoCallback<T> daoCallback) {
-		
-	
-		Dao dao = this.getDao( false );
 
-        TransactionManager txManager = this.getTransactionManager();
-        Object txObj = txManager == null ? null : txManager.beginTransaction(dao);
+
+		ScopeManager scopeManager = this.getScopeManager();
+		TransactionManager txManager = scopeManager instanceof TransactionManager ?
+				(TransactionManager) this.getScopeManager() : null;
+
+		Object txObj = null;
+
+		if ( txManager != null ) {
+			txObj = txManager.beginTransaction();
+		}
+
+		Dao dao = this.getDao();
 
 		try {
 			

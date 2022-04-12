@@ -1,11 +1,11 @@
 package h2o.dao;
 
 
-import h2o.common.dao.SqlTable;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.exception.DaoException;
 import h2o.dao.sql.SqlBuilder;
+import h2o.dao.sql.SqlTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ public final class DbUtil {
 	}
 
 
-	public static final SqlBuilder 		sqlBuilder 			= DBFACTORY.getSqlBuilder();
+	public static final SqlBuilder      sqlBuilder 			= DBFACTORY.getSqlBuilder();
 	public static final TemplateUtil 	sqlTemplateUtil 	= DBFACTORY.getSqlTemplateUtil();
 
 
@@ -66,6 +66,10 @@ public final class DbUtil {
 	}
 
 
+	public static Db createDb( String dsName ){
+		return DBFACTORY.createDb( dsName );
+	}
+
 
 	public static Db getDb(){
 		return getDb(DEFAULT_DATASOURCE_NAME);
@@ -76,7 +80,6 @@ public final class DbUtil {
 	}
 
 
-
 	public static Dao getDao(){
 		return getDb().getDao();
 	}
@@ -84,5 +87,6 @@ public final class DbUtil {
 	public static Dao getDao( String dsName ){
 		return getDb(dsName).getDao();
 	}
+
 
 }

@@ -16,6 +16,8 @@ import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
 import h2o.dao.sql.SqlSource;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +25,11 @@ import java.util.Map;
 
 public abstract class AbstractDao implements Dao {
 
+	private final Connection connection;
+
+	public AbstractDao(Connection connection) {
+		this.connection = connection;
+	}
 
 	private ArgProcessor argProcessor;
 
@@ -31,8 +38,19 @@ public abstract class AbstractDao implements Dao {
 	private PagingProcessor pagingProcessor;
 
 	private LogWriter logWriter;
-	
 
+	private boolean autoClose = true;
+
+
+	@Override
+	public void setAutoClose(boolean autoClose) {
+		this.autoClose = autoClose;
+	}
+
+	@Override
+	public boolean isAutoClose() {
+		return autoClose;
+	}
 
 	@Override
 	public void setArgProcessor(ArgProcessor argProcessor) {
@@ -53,6 +71,9 @@ public abstract class AbstractDao implements Dao {
 	public void setLogWriter(LogWriter logWriter) {
 		this.logWriter = logWriter;
 	}
+
+
+
 
 	protected ArgProcessor getArgProcessor() {
 		return argProcessor;
@@ -218,5 +239,8 @@ public abstract class AbstractDao implements Dao {
 	}
 
 
-
+	@Override
+	public Connection getConnection() {
+		return connection;
+	}
 }

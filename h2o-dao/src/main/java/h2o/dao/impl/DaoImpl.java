@@ -4,15 +4,15 @@ import com.jenkov.db.itf.IDaos;
 import com.jenkov.db.itf.IResultSetProcessor;
 import com.jenkov.db.itf.PersistenceException;
 import h2o.common.Mode;
-import h2o.common.dao.butterflydb.ButterflyDao;
-import h2o.common.dao.butterflydb.ButterflyDb;
-import h2o.common.dao.butterflydb.impl.PreparedStatementManagerBatch;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.Val;
-import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
+import h2o.dao.jdbc.JdbcDao;
+import h2o.dao.jdbc.PreparedSqlAndParameters;
+import h2o.dao.jdbc.PreparedStatementManagerBatch;
+import h2o.dao.jdbc.parameter.SqlParameterUtil;
 import h2o.dao.log.LogWriter;
 import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
@@ -20,14 +20,13 @@ import h2o.dao.sql.SqlSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static h2o.common.dao.util.SqlParameterUtil.toPreparedSqlAndPara;
 
 
 public class DaoImpl extends AbstractDao implements Dao {
@@ -36,30 +35,13 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 	private static boolean SHOWSQL = !Mode.isUserMode("DONT_SHOW_SQL");
 
-	private final boolean autoClose;
 
-	private final ButterflyDb bdb;
-	private ButterflyDao bdao;
+	private final JdbcDao jdbcDao;
 
-
-	public DaoImpl(ButterflyDb bdb) {
-		this(bdb, true);
-	}
-
-	public DaoImpl(ButterflyDb bdb, boolean autoClose) {
-		this.autoClose = autoClose;
-		this.bdb = bdb;
-	}
-
-	private ButterflyDao getBDao() {
-		if (autoClose) {
-			return bdb.getDao(true);
-		} else {
-			if (bdao == null) {
-				bdao = bdb.getDao(false);
-			}
-			return bdao;
-		}
+	public DaoImpl(Connection connection) {
+		super(connection);
+		this.jdbcDao = new JdbcDao(connection);
+		this.jdbcDao.setAutoClose(false);
 	}
 
 
@@ -85,14 +67,16 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 
 			 if(fieldName == null) {
-				 return getBDao().readObject(sql, paramMap);
+				 return jdbcDao.readObject(sql, paramMap);
 			 } else {
-                 Map<String, Object> data = getBDao().readMap(sql, paramMap);
+                 Map<String, Object> data = jdbcDao.readMap(sql, paramMap);
                  return data == null ? Val.empty() : new Val<>( (T) data.get(fieldName) );
 			 }
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		}  finally {
+			autoCloseDao();
 		}
 
 	}
@@ -114,7 +98,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 			}
 
-			return getBDao().read(sql, new IResultSetProcessor() {
+			return jdbcDao.read(sql, new IResultSetProcessor() {
 				
 				private final List<T> r = ListBuilder.newList();
 
@@ -138,6 +122,8 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		} finally {
+			autoCloseDao();
 		}
 	}
 
@@ -159,11 +145,13 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 			}
 
-			Map<String, Object> r = getBDao().readMap(sql, paramMap);
+			Map<String, Object> r = jdbcDao.readMap(sql, paramMap);
 			return r == null ? Val.empty() : new Val<>(r);
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		} finally {
+			autoCloseDao();
 		}
 	}
 
@@ -183,10 +171,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 			}
 
-			return getBDao().readMapList(sql, paramMap);
+			return jdbcDao.readMapList(sql, paramMap);
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		} finally {
+			autoCloseDao();
 		}
 	}
 
@@ -212,7 +202,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 			}
 
-			T r = (T) getBDao().read(sql, new IResultSetProcessor() {
+			T r = (T) jdbcDao.read(sql, new IResultSetProcessor() {
 
 				@Override
 				public void init(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {
@@ -263,6 +253,8 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		} finally {
+			autoCloseDao();
 		}
 	}
 
@@ -287,10 +279,12 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 			}
 
-			return getBDao().update(sql, paramMap);
+			return jdbcDao.update(sql, paramMap);
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		} finally {
+			autoCloseDao();
 		}
 	}
 
@@ -318,10 +312,10 @@ public class DaoImpl extends AbstractDao implements Dao {
 				}
 				
 				Map<String, Object> paramMap = this.argProc(aa);
-				
-				Tuple2<String,Object[]> sqlAndPara = toPreparedSqlAndPara(sql, paramMap);
-				nArgs.add( sqlAndPara.e1 );
-				nSql = sqlAndPara.e0;
+
+				PreparedSqlAndParameters sqlAndPara = SqlParameterUtil.toPreparedSqlAndPara(sql, paramMap);
+				nArgs.add( sqlAndPara.paras );
+				nSql = sqlAndPara.sql;
 				
 			}
 
@@ -337,36 +331,34 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 			PreparedStatementManagerBatch preparedStatementManagerBatch = new PreparedStatementManagerBatch(nArgs);
 
-			getBDao().update(nSql, preparedStatementManagerBatch);
+			jdbcDao.update(nSql, preparedStatementManagerBatch);
 
 			return preparedStatementManagerBatch.getUpdateRows();
 
 		} catch (Exception e) {
 			throw new DaoException(e);
+		} finally {
+			autoCloseDao();
 		}
 	}
 
 
 
 
+
 	@Override
-	public DataSource getDataSource() {
-		return bdb.persistenceManager.getDataSource();
+	public void close() throws DaoException {
+		try {
+			this.jdbcDao.close();
+		} catch (Exception e) {
+			throw new DaoException(e);
+		}
 	}
 
 
-
-    @Override
-	public void close() throws DaoException {
-		if (this.bdao != null) {
-			try {
-				
-				this.bdao.closeConnection();
-				this.bdao = null;
-				
-			} catch (Exception e) {
-				throw new DaoException(e);
-			}
+	private void autoCloseDao() {
+		if( this.isAutoClose() ) {
+			this.close();
 		}
 	}
 

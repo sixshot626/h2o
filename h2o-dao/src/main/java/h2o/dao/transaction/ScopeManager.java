@@ -1,11 +1,20 @@
 package h2o.dao.transaction;
 
-import h2o.dao.Dao;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
 
 public interface ScopeManager {
 
-	Object beginScope(Dao dao);
+	String getDataSourceName();
+	DataSource getDataSource();
+
+	void setTransactionIsolationLevel(Integer transactionIsolationLevel);
+
+	Connection openConnection();
+
+	Object beginScope();
 	
 	void endScope(Object scopeObj);
-	
+
 }
