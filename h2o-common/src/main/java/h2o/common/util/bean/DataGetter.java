@@ -49,7 +49,7 @@ public class DataGetter {
 
         Collection<Object> c = this.get( pname );
 
-        if (CollectionUtil.isBlank( c )) {
+        if (CollectionUtil.isEmpty( c )) {
 
             return ListBuilder.newEmptyList();
 

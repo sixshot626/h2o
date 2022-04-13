@@ -2,7 +2,6 @@ package h2o.utils.key;
 
 import h2o.common.concurrent.Locks;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.util.math.IntArith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,9 +142,14 @@ public class CachedKeyGen {
             if (ki > cache_size) {
                 return null;
             }
-            return IntArith.add(key, Integer.toString(ki));
+            return add(key, Integer.toString(ki));
         }
 
+    }
+
+
+    private static String add( String a , String b ) {
+        return new BigInteger(a).add( new BigInteger(b) ).toString();
     }
 
 

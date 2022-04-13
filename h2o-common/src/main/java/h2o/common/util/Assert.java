@@ -14,8 +14,12 @@
  * the License.
  */
 
-package h2o.common.thirdparty.spring.util;
+package h2o.common.util;
 
+
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.lang.ObjectUtil;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -211,7 +215,7 @@ public abstract class Assert {
 	 * @throws IllegalArgumentException if the object array is <code>null</code> or has no elements
 	 */
 	public static void notEmpty(Object[] array, String message) {
-		if (ObjectUtils.isEmpty(array)) {
+		if (ObjectUtil.isEmpty(array)) {
 			throw new IllegalArgumentException(message);
 		}
 	}
@@ -266,7 +270,7 @@ public abstract class Assert {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static void notEmpty(Collection collection, String message) {
-		if (CollectionUtils.isEmpty(collection)) {
+		if (CollectionUtil.isEmpty(collection)) {
 			throw new IllegalArgumentException(message);
 		}
 	}
@@ -294,7 +298,7 @@ public abstract class Assert {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static void notEmpty(Map map, String message) {
-		if (CollectionUtils.isEmpty(map)) {
+		if (CollectionUtil.isEmpty(map)) {
 			throw new IllegalArgumentException(message);
 		}
 	}

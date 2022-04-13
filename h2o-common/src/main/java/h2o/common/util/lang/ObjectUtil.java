@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package h2o.common.thirdparty.spring.util;
+package h2o.common.util.lang;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ import java.util.Arrays;
  * @since 19.03.2004
  * @see org.apache.commons.lang.ObjectUtils
  */
-public abstract class ObjectUtils {
+public abstract class ObjectUtil {
 
 	private static final int INITIAL_HASH = 7;
 	private static final int MULTIPLIER = 31;

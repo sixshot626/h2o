@@ -334,7 +334,7 @@ public class JdbcDao implements Closeable {
 		try {
 			
 			Map data = mapDao.readMap(sql);
-			return CollectionUtil.isBlank( data ) ? null : (T)data.values().iterator().next();
+			return CollectionUtil.isEmpty( data ) ? null : (T)data.values().iterator().next();
 			
 		} catch (PersistenceException e) {
 			throw new DaoException(e);
@@ -353,7 +353,7 @@ public class JdbcDao implements Closeable {
 		try {
 			
 			Map data = mapDao.readMap(sql, parameters);
-			return CollectionUtil.isBlank( data ) ? null : (T)data.values().iterator().next();
+			return CollectionUtil.isEmpty( data ) ? null : (T)data.values().iterator().next();
 
 		} catch (PersistenceException e) {
 			throw new DaoException(e);

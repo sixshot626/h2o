@@ -54,7 +54,7 @@ public final class ProcessVirtualMachine {
 	
 	public ProcessVirtualMachine( FlowTransactionManager transactionManager , Collection<? extends ProcessRunListener> processRunListeners  ) {
 		this.transactionManager = transactionManager;
-		this.processRunListeners = CollectionUtil.isBlank( processRunListeners ) ? Collections.EMPTY_LIST :
+		this.processRunListeners = CollectionUtil.isEmpty( processRunListeners ) ? Collections.EMPTY_LIST :
 				Collections.unmodifiableList( ListBuilder.newListAndAddAll( processRunListeners ) );
 
 	}
@@ -226,7 +226,7 @@ public final class ProcessVirtualMachine {
 			if( nodeExecResult.getStatus() == RunStatus.RUNNING && this.runStatus != RunStatus.END ) {
 
 				List<Line> lines = nodeExecResult.getLines();
-				if( CollectionUtil.isBlank( lines ) ) {
+				if( CollectionUtil.isEmpty( lines ) ) {
 					throw new NoLineExcepion();
 				}
 

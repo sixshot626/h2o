@@ -2,7 +2,7 @@ package h2o.common.util.bean;
 
 import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.lang.tuple.Entry;
-import h2o.common.thirdparty.spring.util.Assert;
+import h2o.common.util.Assert;
 import h2o.common.util.bean.support.DefaultBeanPropertyInfoImpl;
 import h2o.common.util.bean.support.JoddBeanDescriptorImpl;
 import h2o.common.util.bean.support.JoddBeanUtilVOImpl;

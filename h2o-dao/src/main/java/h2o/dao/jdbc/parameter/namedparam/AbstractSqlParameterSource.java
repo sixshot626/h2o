@@ -16,7 +16,7 @@
 
 package h2o.dao.jdbc.parameter.namedparam;
 
-import h2o.common.thirdparty.spring.util.Assert;
+import h2o.common.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;

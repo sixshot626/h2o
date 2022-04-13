@@ -5,8 +5,6 @@ import h2o.common.concurrent.LockMap;
 import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
-import h2o.common.util.math.IntArith;
-import h2o.dao.Dao;
 import h2o.dao.DbUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -179,7 +177,7 @@ public class KeyGen {
 
                         String r0 = ( cyclicSpace.equals( oldCyc) ) ?  oldNo : "0";
 
-                        String r = IntArith.add( r0 , incNum );
+                        String r = add( r0 , incNum );
 
                         dao.update( UPDSEQ , "seqobj", key  , "cyclicspace" , cyclicSpace , "seqno" , r );
 
@@ -199,6 +197,11 @@ public class KeyGen {
 
         return rr[0] == null ? null : Tuple.t( rr[0], rr[1] );
 
+    }
+
+
+    private static String add( String a , String b ) {
+        return new BigInteger(a).add( new BigInteger(b) ).toString();
     }
 
 

@@ -16,23 +16,16 @@ public class CollectionUtil {
 	public static boolean argsIsBlank( Object[] args ) {
 		return ArgsUtil.isBlank(args);
 	}
-	
-	public static boolean isBlank( Collection<?> c ) {
-		return c == null || c.isEmpty();
+
+	public static boolean isEmpty(Collection collection) {
+		return (collection == null || collection.isEmpty());
 	}
-	
-	public static boolean isNotBlank( Collection<?> c ) {
-		return c != null && !c.isEmpty();
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isEmpty(Map map) {
+		return (map == null || map.isEmpty());
 	}
-	
-	public static boolean isBlank( Map<?,?> m ) {
-		return m == null || m.isEmpty();
-	}
-	
-	public static boolean isNotBlank( Map<?,?> m  ) {
-		return m != null && !m.isEmpty();
-	}
-	
+
 
 	@SuppressWarnings("rawtypes")
 	public static String toString(Collection c) {

@@ -298,7 +298,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 			List<Object[]> nArgs = ListBuilder.newList();
 			String nSql = null;
 			
-			if( CollectionUtil.isBlank( args ) ) {
+			if( CollectionUtil.isEmpty( args ) ) {
 				
 				throw new IllegalArgumentException( "Args is empty." );
 				

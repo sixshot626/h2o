@@ -7,7 +7,7 @@ import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.Val;
-import h2o.common.thirdparty.spring.util.Assert;
+import h2o.common.util.Assert;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.collection.MapBuilder;
@@ -443,7 +443,7 @@ public final class DaoBasicUtil<E> {
 
     private List<SortInfo> convertSorts(List<SortInfo> sortInfos  ) {
 
-        if ( CollectionUtil.isBlank( sortInfos ) ) {
+        if ( CollectionUtil.isEmpty( sortInfos ) ) {
             return sortInfos;
         }
 

@@ -25,7 +25,7 @@ public abstract class AbstractPagingProcessor implements PagingProcessor {
 
     protected String orderProc( String sql, List<SortInfo> strts ) {
 
-        if (CollectionUtil.isBlank(strts)) {
+        if (CollectionUtil.isEmpty(strts)) {
             return sql;
         }
 
