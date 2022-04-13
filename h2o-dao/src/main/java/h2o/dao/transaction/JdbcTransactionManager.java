@@ -50,9 +50,8 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 			}
 			connection.setAutoCommit(false);
 		} catch ( SQLException e ) {
-			throw new DaoException(e);
-		} finally {
 			close();
+			throw new DaoException(e);
 		}
 	}
 
