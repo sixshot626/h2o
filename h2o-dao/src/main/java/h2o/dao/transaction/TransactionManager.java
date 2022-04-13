@@ -7,7 +7,7 @@ public interface TransactionManager {
 
 	void begin();
 	
-	void rollBack();
+	void rollback();
 	
 	void commit();
 

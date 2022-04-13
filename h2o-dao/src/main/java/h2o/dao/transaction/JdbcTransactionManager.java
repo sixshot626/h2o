@@ -6,12 +6,24 @@ import h2o.dao.DbUtil;
 import h2o.dao.exception.DaoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import h2o.dao.connection.ConnectionProxy;
 
 import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class JdbcTransactionManager implements TransactionManager , Closeable {
+
+
+	private static class ManagedConnection extends ConnectionProxy {
+		public ManagedConnection(Connection realConnection) {
+			super(realConnection);
+		}
+
+		@Override
+		public void close() throws SQLException {
+		}
+	}
 
 	private static final Logger log = LoggerFactory.getLogger( JdbcTransactionManager.class.getName() );
 
@@ -45,7 +57,7 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 	}
 
 	@Override
-	public void rollBack() {
+	public void rollback() {
 		try {
 			this.connection.rollback();
 		} catch ( SQLException e ) {
@@ -71,7 +83,7 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 		if ( connection == null ) {
 			throw new DaoException("Connection is null");
 		}
-		Dao dao = DbUtil.getDb( this.name ).createDao( this.connection );
+		Dao dao = DbUtil.getDb( this.name ).createDao( new ManagedConnection(this.connection));
 		dao.setAutoClose(false);
 		return dao;
 	}

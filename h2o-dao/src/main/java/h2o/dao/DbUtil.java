@@ -135,7 +135,7 @@ public final class DbUtil {
 
 			log.debug("doCallback",e);
 
-			txManager.rollBack();
+			txManager.rollback();
 
 			throw ExceptionUtil.toRuntimeException(e);
 
