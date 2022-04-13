@@ -70,7 +70,7 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 	@Override
 	public void commit() {
 		try {
-			this.connection.rollback();
+			this.connection.commit();
 		} catch ( SQLException e ) {
 			throw new DaoException(e);
 		} finally {
