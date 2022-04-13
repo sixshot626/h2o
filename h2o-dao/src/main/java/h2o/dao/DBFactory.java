@@ -21,10 +21,13 @@ public interface DBFactory {
 
     OrmProcessor getOrmProcessor();
 
-    Optional<PagingProcessor> getPagingProcessor( String dataSourceName );
+    Optional<PagingProcessor> getPagingProcessor( String name);
 
-    Db getDb(String dateSourceName);
-    Db createDb(String dateSourceName);
+    // 获取name对应单例Db对象
+    Db getDb(String name);
+
+    // 创建新Db对象
+    Db createDb(String name);
 
     DbUtil getDbUtil();
 

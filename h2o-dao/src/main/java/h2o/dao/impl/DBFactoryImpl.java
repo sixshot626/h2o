@@ -64,8 +64,8 @@ public class DBFactoryImpl implements DBFactory {
     }
 
     @Override
-    public Optional<PagingProcessor> getPagingProcessor( String dataSourceName ) {
-        return Optional.ofNullable(factory.silentlyGet(StringUtil.build(dataSourceName , "_" , PAGINGPROCESSOR_BEANID )));
+    public Optional<PagingProcessor> getPagingProcessor( String name ) {
+        return Optional.ofNullable(factory.silentlyGet(StringUtil.build(name , "_" , PAGINGPROCESSOR_BEANID )));
     }
 
 
@@ -73,8 +73,8 @@ public class DBFactoryImpl implements DBFactory {
 
     private final InstanceTable<String,Db> dbTable = new InstanceTable<>(new InstanceFactory<Db>() {
         @Override
-        public Db create(Object dateSourceName) {
-            return createDb((String)dateSourceName);
+        public Db create(Object name) {
+            return createDb((String)name);
         }
 
         @Override
@@ -87,13 +87,13 @@ public class DBFactoryImpl implements DBFactory {
     });
 
     @Override
-    public Db getDb(String dateSourceName) {
-        return dbTable.getAndCreateIfAbsent(dateSourceName);
+    public Db getDb(String name) {
+        return dbTable.getAndCreateIfAbsent(name);
     }
 
     @Override
-    public Db createDb(String dateSourceName) {
-        return factory.get(DB_BEANID, dateSourceName);
+    public Db createDb(String name) {
+        return factory.get(DB_BEANID, name);
     }
 
     @Override

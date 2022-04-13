@@ -11,7 +11,7 @@ ds2_pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
 
 
 
-db 	= * h2o.dao.impl.DbImpl( h2o.dao.impl.transaction.TransactionManagerImpl($0) );
+db 	= * h2o.dao.impl.DbImpl( h2o.dao.connection.JdbcConnectionManager($0) );
 
 
 /*

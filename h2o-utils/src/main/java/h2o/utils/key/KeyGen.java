@@ -7,7 +7,6 @@ import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.math.IntArith;
 import h2o.dao.Dao;
-import h2o.dao.DaoCallback;
 import h2o.dao.DbUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -148,10 +147,7 @@ public class KeyGen {
 
         final String[] rr = {"-1", "-1"};
 
-        DbUtil.getDb("common" ).tx( new DaoCallback<Void>() {
-
-            @Override
-            public Void doCallback( Dao dao , Object scopeObj ) throws Exception {
+        DbUtil.tx( "common" , dao->{
 
                 Val<Map<String,Object>> vm =  dao.get( SELSEQ, "seqobj", key );
 
@@ -198,9 +194,7 @@ public class KeyGen {
                 }
 
                 return null;
-            }
-
-        });
+            });
 
 
         return rr[0] == null ? null : Tuple.t( rr[0], rr[1] );

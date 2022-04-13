@@ -1,9 +1,8 @@
 package h2o.utils.key;
 
 
-import h2o.dao.Dao;
-import h2o.dao.DaoCallback;
 import h2o.dao.DbUtil;
+import h2o.dao.transaction.JdbcTransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,26 +45,25 @@ public class KeyVersion {
 
     public static boolean incVersion( final String key ) {
 
-        return DbUtil.getDb("common").tx( new DaoCallback<Boolean>() {
+        return DbUtil.tx( new JdbcTransactionManager( "common") ,
 
-            @Override
-            public Boolean doCallback( Dao dao , Object scopeObj ) throws Exception {
+                dao-> {
 
-                if ( dao.update( UPDSEQ , "seqobj", key ) == 0 ) {
 
-                    if ( dao.get(SELSEQ, "seqobj", key) == null ) try {
-                        dao.update(INSSEQ, "seqobj", key);
-                    } catch (Exception e) {
-                        log.error("",e);
+                    if ( dao.update( UPDSEQ , "seqobj", key ) == 0 ) {
+
+                        if ( dao.get(SELSEQ, "seqobj", key) == null ) try {
+                            dao.update(INSSEQ, "seqobj", key);
+                        } catch (Exception e) {
+                            log.error("",e);
+                        }
+
+                        return dao.update( UPDSEQ , "seqobj", key ) > 0;
+
                     }
 
-                    return dao.update( UPDSEQ , "seqobj", key ) > 0;
-
-                }
-
-                return true;
-            }
-        });
+                    return true;
+                });
 
     }
 

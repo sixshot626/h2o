@@ -1,13 +1,16 @@
 package h2o.dao.transaction;
 
 
+import h2o.dao.Dao;
 
-public interface TransactionManager extends ScopeManager {
+public interface TransactionManager {
 
-	Object beginTransaction();
+	void begin();
 	
-	void rollBack(Object transactionObj , Throwable rootCause);
+	void rollBack();
 	
-	void commit(Object transactionObj);
+	void commit();
+
+	Dao getDao();
 
 }

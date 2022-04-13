@@ -532,8 +532,7 @@ public class JdbcDao implements Closeable {
 		try {
 			this.daos.closeConnection();
 		} catch (PersistenceException e) {
-			log.error("closeConnection", e);
-			throw new DaoException(e);
+			log.warn("closeConnection", e);
 		}
 	}
 

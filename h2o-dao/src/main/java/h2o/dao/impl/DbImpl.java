@@ -3,23 +3,35 @@ package h2o.dao.impl;
 import h2o.dao.Dao;
 import h2o.dao.Db;
 import h2o.dao.DbUtil;
+import h2o.dao.connection.ConnectionManager;
 import h2o.dao.page.PagingProcessor;
-import h2o.dao.transaction.ScopeManager;
 
 import java.sql.Connection;
 import java.util.Optional;
 
 
-public class DbImpl extends AbstractDb implements Db {
+public class DbImpl implements Db {
 
 
-	public DbImpl(ScopeManager scopeManager) {
-		super(scopeManager);
+	private String name;
+
+	private final ConnectionManager connectionManager;
+
+	public DbImpl(String name, ConnectionManager connectionManager) {
+		this.name = name;
+		this.connectionManager = connectionManager;
 	}
 
 	@Override
+	public String getName() {
+		return name;
+	}
+
+
+	@Override
 	public Dao getDao() {
-		return createDao(this.getScopeManager().openConnection());
+		ConnectionManager cm = this.connectionManager;
+		return createDao(cm.getConnection());
 	}
 
 	@Override
@@ -30,7 +42,7 @@ public class DbImpl extends AbstractDb implements Db {
 		daoImpl.setArgProcessor( DbUtil.DBFACTORY.getArgProcessor() );
 		daoImpl.setOrmProcessor( DbUtil.DBFACTORY.getOrmProcessor() );
 
-		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor( this.getScopeManager().getDataSourceName());
+		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor( this.getName() );
 		if ( pagingProcessor.isPresent() ) {
 			daoImpl.setPagingProcessor( pagingProcessor.get() );
 		}
