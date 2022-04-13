@@ -16,8 +16,8 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 
 
 	private static class ManagedConnection extends ConnectionProxy {
-		public ManagedConnection(Connection realConnection) {
-			super(realConnection);
+		public ManagedConnection(Connection targetConnection) {
+			super(targetConnection);
 		}
 
 		@Override

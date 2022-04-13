@@ -9,8 +9,8 @@ public class ConnectionProxy implements java.sql.Connection {
 
     private final Connection targetConnection;
 
-    public ConnectionProxy(Connection realConnection) {
-        this.targetConnection = realConnection;
+    public ConnectionProxy(Connection targetConnection) {
+        this.targetConnection = targetConnection;
     }
 
     public Connection getTargetConnection() {
