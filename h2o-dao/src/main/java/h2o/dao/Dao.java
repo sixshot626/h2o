@@ -10,7 +10,6 @@ import h2o.dao.orm.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
 import h2o.dao.sql.SqlSource;
 
-import javax.sql.DataSource;
 import java.io.Closeable;
 import java.sql.Connection;
 import java.util.Collection;

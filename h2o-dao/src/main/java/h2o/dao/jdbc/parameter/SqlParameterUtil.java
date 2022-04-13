@@ -6,8 +6,8 @@ import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.jdbc.PreparedSqlAndParameters;
-import h2o.dao.jdbc.parameter.namedparam.SqlParameterInfo;
 import h2o.dao.jdbc.parameter.namedparam.NamedParameterUtils;
+import h2o.dao.jdbc.parameter.namedparam.SqlParameterInfo;
 
 import java.util.Collection;
 import java.util.Iterator;

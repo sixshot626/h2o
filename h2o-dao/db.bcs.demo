@@ -38,11 +38,7 @@ ds2 = 1 org.springframework.jdbc.datasource.DriverManagerDataSource()
                     .setPassword("pwd");
 
 
-
-sds = 1 com.jenkov.db.scope.ScopingDataSource( ds );
-
-
-dss = 1 <'default':ds , 'common':sds , 'db2':ds2>;
+dss = 1 <'default':ds , 'common':ds , 'db2':ds2>;
 
 */
 

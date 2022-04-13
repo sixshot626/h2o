@@ -8,8 +8,8 @@ import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.exception.DaoException;
-import h2o.dao.jdbc.rowproc.RowDataProcessor;
 import h2o.dao.jdbc.parameter.SqlParameterUtil;
+import h2o.dao.jdbc.rowproc.RowDataProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
