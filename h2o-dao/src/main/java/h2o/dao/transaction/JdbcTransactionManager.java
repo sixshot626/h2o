@@ -69,7 +69,7 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 	@Override
 	public Dao getDao() {
 		if ( connection == null ) {
-			throw new IllegalStateException();
+			throw new DaoException("Connection is null");
 		}
 		Dao dao = DbUtil.getDb( this.name ).createDao( this.connection );
 		dao.setAutoClose(false);
