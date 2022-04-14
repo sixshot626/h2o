@@ -121,8 +121,6 @@ public final class DbUtil {
 
 		try {
 
-			txManager.begin();
-
 			dao = txManager.getDao();
 
 			T t = txCallback.apply( dao );
@@ -141,17 +139,18 @@ public final class DbUtil {
 
 		} finally {
 
+			if ( dao != null ) {
+				try {
+					dao.close();
+				} catch ( Exception e ) {}
+			}
+
 			if ( txManager instanceof AutoCloseable ) {
 				try {
 					((AutoCloseable) txManager).close();
 				} catch ( Exception e ) {}
 			}
 
-			if ( dao != null ) {
-				try {
-					dao.close();
-				} catch ( Exception e ) {}
-			}
 		}
 	}
 

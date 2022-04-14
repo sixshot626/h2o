@@ -41,7 +41,7 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 		this.isolationLevel = isolationLevel;
 	}
 
-	@Override
+
 	public void begin() {
 		if ( this.connection == null ) {
 			try {
@@ -86,7 +86,7 @@ public class JdbcTransactionManager implements TransactionManager , Closeable {
 	@Override
 	public Dao getDao() {
 		if ( this.connection == null ) {
-			throw new DaoException("Connection is null");
+			this.begin();
 		}
 		Dao dao = DbUtil.getDb( this.name ).createDao( new ManagedConnection(this.connection));
 		dao.setAutoClose(false);

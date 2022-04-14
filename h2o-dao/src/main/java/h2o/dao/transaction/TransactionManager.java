@@ -5,8 +5,6 @@ import h2o.dao.Dao;
 
 public interface TransactionManager {
 
-	void begin();
-	
 	void rollback();
 	
 	void commit();
