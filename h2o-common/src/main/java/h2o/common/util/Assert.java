@@ -19,7 +19,7 @@ package h2o.common.util;
 
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.lang.ObjectUtil;
-import org.springframework.util.StringUtils;
+import h2o.common.util.lang.StringUtil;
 
 import java.util.Collection;
 import java.util.Map;
@@ -144,7 +144,7 @@ public abstract class Assert {
      * @see StringUtils#hasLength
      */
     public static void hasLength(String text, String message) {
-        if (!StringUtils.hasLength(text)) {
+        if (!StringUtil.hasLength(text)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -172,7 +172,7 @@ public abstract class Assert {
      * @see StringUtils#hasText
      */
     public static void hasText(String text, String message) {
-        if (!StringUtils.hasText(text)) {
+        if (!StringUtil.hasText(text)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -199,7 +199,7 @@ public abstract class Assert {
      * @param message      the exception message to use if the assertion fails
      */
     public static void doesNotContain(String textToSearch, String substring, String message) {
-        if (StringUtils.hasLength(textToSearch) && StringUtils.hasLength(substring) &&
+        if (StringUtil.hasLength(textToSearch) && StringUtil.hasLength(substring) &&
                 textToSearch.indexOf(substring) != -1) {
             throw new IllegalArgumentException(message);
         }
