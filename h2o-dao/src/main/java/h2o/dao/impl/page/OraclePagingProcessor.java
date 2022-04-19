@@ -18,21 +18,21 @@ public class OraclePagingProcessor extends AbstractPagingProcessor implements Pa
     @Override
     public Tuple2<String, Map<String, Object>> pagingSql(String sql, PageRequest pageRequest) {
 
-        ResultInfo resultInfo = new ResultInfo( pageRequest );
+        ResultInfo resultInfo = new ResultInfo(pageRequest);
 
         Long pageRowNum1 = resultInfo.getStart() + 1;
         Long pageRowNum2 = resultInfo.getStart() + resultInfo.getSize();
 
-        Map<String,Object> args = MapBuilder.so(2)
-                .put( P1 , pageRowNum1 )
-                .put( P2 , pageRowNum2 ).get();
+        Map<String, Object> args = MapBuilder.so(2)
+                .put(P1, pageRowNum1)
+                .put(P2, pageRowNum2).get();
 
         StringBuilder pageSql = new StringBuilder();
         pageSql.append("select * from (\n    select page_query.*, rownum as page_row_num from (\n");
-        pageSql.append( this.orderProc( sql , pageRequest.getSorts() ) );
-        StringUtil.append(pageSql , "\n    ) page_query  where rownum <= :" , P2 , " \n) where page_row_num >= :" , P1);
+        pageSql.append(this.orderProc(sql, pageRequest.getSorts()));
+        StringUtil.append(pageSql, "\n    ) page_query  where rownum <= :", P2, " \n) where page_row_num >= :", P1);
 
-        return Tuple.t( pageSql.toString() , args);
+        return Tuple.t(pageSql.toString(), args);
     }
 
 }

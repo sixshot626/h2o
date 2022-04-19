@@ -17,13 +17,11 @@ public abstract class AbstractPagingProcessor implements PagingProcessor {
 
         String countSql = "select count(*) as count_num from (\n" + sql + "\n) page_count ";
 
-        return Tuple.t( countSql , "count_num" );
+        return Tuple.t(countSql, "count_num");
     }
 
 
-
-
-    protected String orderProc( String sql, List<SortInfo> strts ) {
+    protected String orderProc(String sql, List<SortInfo> strts) {
 
         if (CollectionUtil.isEmpty(strts)) {
             return sql;
@@ -38,12 +36,12 @@ public abstract class AbstractPagingProcessor implements PagingProcessor {
             orderBy.append(sortInfo.toSqlString());
         }
 
-        String schSql =  StringUtils.contains(sql, ')' ) ?
-             StringUtils.substringAfterLast( sql , ")") : sql;
+        String schSql = StringUtils.contains(sql, ')') ?
+                StringUtils.substringAfterLast(sql, ")") : sql;
 
-        boolean hasOrderBy = StringUtils.contains( schSql , "order" );
+        boolean hasOrderBy = StringUtils.contains(schSql, "order");
 
-        if ( hasOrderBy ) {
+        if (hasOrderBy) {
             return sql + " , " + orderBy.toString();
         } else {
             return sql + " order by " + orderBy.toString();

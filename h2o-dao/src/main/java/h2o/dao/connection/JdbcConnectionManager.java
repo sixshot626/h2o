@@ -22,18 +22,18 @@ public class JdbcConnectionManager implements ConnectionManager {
     public Connection getConnection() {
 
         DataSource ds = dataSourceRef.get();
-        if ( ds == null ) {
-            ds = DbUtil.getDataSource( this.dataSourceName );
-            dataSourceRef.compareAndSet(null,ds);
+        if (ds == null) {
+            ds = DbUtil.getDataSource(this.dataSourceName);
+            dataSourceRef.compareAndSet(null, ds);
         }
 
-        if ( ds == null ) {
+        if (ds == null) {
             throw new DaoException("DataSource is null");
         }
 
         try {
             return ds.getConnection();
-        } catch ( SQLException e ) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
 

@@ -18,21 +18,21 @@ public class MySQLPagingProcessor extends AbstractPagingProcessor implements Pag
     @Override
     public Tuple2<String, Map<String, Object>> pagingSql(String sql, PageRequest pageRequest) {
 
-        ResultInfo resultInfo = new ResultInfo( pageRequest );
+        ResultInfo resultInfo = new ResultInfo(pageRequest);
 
         Long pageRowStart = resultInfo.getStart();
         Long pageRowSize = resultInfo.getSize();
 
-        Map<String,Object> args = MapBuilder.so(2)
-                .put( P1 , pageRowStart )
-                .put( P2 , pageRowSize ).get();
+        Map<String, Object> args = MapBuilder.so(2)
+                .put(P1, pageRowStart)
+                .put(P2, pageRowSize).get();
 
         StringBuilder pageSql = new StringBuilder();
         pageSql.append("select * from (\n");
-        pageSql.append( this.orderProc( sql , pageRequest.getSorts() ) );
-        StringUtil.append(pageSql , "\n) page_query limit :" , P1 , ", :" , P2);
+        pageSql.append(this.orderProc(sql, pageRequest.getSorts()));
+        StringUtil.append(pageSql, "\n) page_query limit :", P1, ", :", P2);
 
-        return Tuple.t( pageSql.toString() , args);
+        return Tuple.t(pageSql.toString(), args);
     }
 
 }

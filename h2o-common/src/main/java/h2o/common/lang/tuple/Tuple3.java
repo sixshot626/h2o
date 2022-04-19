@@ -3,7 +3,7 @@ package h2o.common.lang.tuple;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class Tuple3<A,B,C> implements Tuple {
+public class Tuple3<A, B, C> implements Tuple {
 
 
     private static final long serialVersionUID = 8515896572423195899L;
@@ -13,12 +13,11 @@ public class Tuple3<A,B,C> implements Tuple {
     public final B e1;
     public final C e2;
 
-    public Tuple3( A e0 , B e1 , C e2) {
+    public Tuple3(A e0, B e1, C e2) {
         this.e0 = e0;
         this.e1 = e1;
         this.e2 = e2;
     }
-
 
 
     public A getE0() {
@@ -82,26 +81,22 @@ public class Tuple3<A,B,C> implements Tuple {
     }
 
 
-
-
     @SuppressWarnings("unchecked")
     public <T> T getE(int i) {
-        if( i < 0 || i > 2 ) {
+        if (i < 0 || i > 2) {
             throw new IndexOutOfBoundsException();
         }
-        switch( i ) {
+        switch (i) {
             case 0:
-                return (T)e0;
+                return (T) e0;
             case 1:
-                return (T)e1;
+                return (T) e1;
             case 2:
-                return (T)e2;
+                return (T) e2;
         }
 
         return null;
     }
-
-
 
 
 }

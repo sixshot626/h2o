@@ -7,10 +7,10 @@ public abstract class Singleton<T> {
     public T get() {
 
         T ins = instance;
-        if ( ins == null ) {
+        if (ins == null) {
             synchronized (this) {
                 ins = instance;
-                if ( ins == null ) {
+                if (ins == null) {
                     ins = instance = create();
                 }
             }

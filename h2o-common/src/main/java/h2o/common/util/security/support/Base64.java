@@ -11,20 +11,20 @@ public class Base64 implements Encryptor {
         this.charset = null;
     }
 
-    public Base64( String charset ) {
+    public Base64(String charset) {
         this.charset = charset;
     }
 
-	private volatile Base64Util b64Util = new Base64Util();
+    private volatile Base64Util b64Util = new Base64Util();
 
-	public Base64 setBase64Util( Base64Util b64Util ) {
-		this.b64Util = b64Util;
-		return this;
-	}
+    public Base64 setBase64Util(Base64Util b64Util) {
+        this.b64Util = b64Util;
+        return this;
+    }
 
 
-	public String enc( String str ) {
-		return charset == null ?  b64Util.encode( str ) : b64Util.encode( str , charset );
-	}
+    public String enc(String str) {
+        return charset == null ? b64Util.encode(str) : b64Util.encode(str, charset);
+    }
 
 }

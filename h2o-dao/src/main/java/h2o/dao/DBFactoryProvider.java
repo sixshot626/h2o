@@ -11,34 +11,34 @@ import org.slf4j.LoggerFactory;
  */
 public final class DBFactoryProvider {
 
-    private static final Logger log = LoggerFactory.getLogger( DBFactoryProvider.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(DBFactoryProvider.class.getName());
 
     public static DBFactory getDbFactory() {
 
-        ButterflyFactory dbButterflyFactory = new ButterflyFactory( "db" , Mode.prodMode ? "db.bcs" : "db-" + Mode.name + ".bcs" );
+        ButterflyFactory dbButterflyFactory = new ButterflyFactory("db", Mode.prodMode ? "db.bcs" : "db-" + Mode.name + ".bcs");
 
         DBFactory factory = null;
 
         try {
             factory = dbButterflyFactory.get("dbFactory");
-        } catch ( Exception e ) {
+        } catch (Exception e) {
         }
 
 
-        if ( factory != null ) {
+        if (factory != null) {
 
             try {
                 dbButterflyFactory.dispose();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
             }
 
         } else {
 
-            factory  = new DBFactoryImpl(dbButterflyFactory);
+            factory = new DBFactoryImpl(dbButterflyFactory);
 
         }
 
-        log.info( "DBFactory : {}" , factory.getClass().getName() );
+        log.info("DBFactory : {}", factory.getClass().getName());
 
         return factory;
 

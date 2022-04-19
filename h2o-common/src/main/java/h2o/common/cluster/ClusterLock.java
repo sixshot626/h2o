@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ClusterLock {
 
-    private static final Logger log = LoggerFactory.getLogger( ClusterLock.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(ClusterLock.class.getName());
 
     private static final long DEFAULT_TIME_OUT = 5000;
 
@@ -32,35 +32,35 @@ public class ClusterLock {
     private final RedisProvider redisClient;
 
 
-    public ClusterLock(RedisProvider redisClient, NString id, String key, Duration expire ) {
-        this.id = id.orElse( uuid() );
+    public ClusterLock(RedisProvider redisClient, NString id, String key, Duration expire) {
+        this.id = id.orElse(uuid());
         this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
-        this.expire = expire.get( ChronoUnit.SECONDS );
+        this.expire = expire.get(ChronoUnit.SECONDS);
     }
 
 
     public NBool isLocked() {
 
-        try ( Redis<String, String> redis = this.redisClient.create() ) {
+        try (Redis<String, String> redis = this.redisClient.create()) {
 
-            return NBool.valueOf( id.equals( redis.get(key) ));
+            return NBool.valueOf(id.equals(redis.get(key)));
 
-        } catch ( Exception e ) {
-            log.error( "" , e);
+        } catch (Exception e) {
+            log.error("", e);
         }
 
         return NBool.NULL;
     }
 
 
-    private boolean tryLock( Redis<String, String> redis ) {
+    private boolean tryLock(Redis<String, String> redis) {
 
-        if ( "OK".equals( redis.set(key , id , new SetArgs().nx().ex( expire ) ) ) ) {
+        if ("OK".equals(redis.set(key, id, new SetArgs().nx().ex(expire)))) {
 
             return true;
 
-        } else if ( id.equals( redis.get(key) ) )  {
+        } else if (id.equals(redis.get(key))) {
 
             redis.expire(key, expire);
             return true;
@@ -74,17 +74,16 @@ public class ClusterLock {
     }
 
 
-
     public NBool tryLock() {
 
-        try ( Redis<String, String> redis = this.redisClient.create() ) {
+        try (Redis<String, String> redis = this.redisClient.create()) {
 
-            return NBool.valueOf(tryLock( redis ));
+            return NBool.valueOf(tryLock(redis));
 
         } catch (Exception e) {
 
             e.printStackTrace();
-            log.error( "" , e);
+            log.error("", e);
 
             return NBool.NULL;
 
@@ -94,14 +93,14 @@ public class ClusterLock {
 
 
     public NBool lock() {
-        return lock( DEFAULT_TIME_OUT );
+        return lock(DEFAULT_TIME_OUT);
     }
 
-    public NBool lock(long timeout ) {
+    public NBool lock(long timeout) {
 
         NBool lock = NBool.NULL;
 
-        try ( Redis<String, String> redis = this.redisClient.create() ) {
+        try (Redis<String, String> redis = this.redisClient.create()) {
 
 
             long t = System.currentTimeMillis();
@@ -115,8 +114,8 @@ public class ClusterLock {
                     } else {
                         lock = NBool.FALSE;
                     }
-                } catch ( Exception e ) {
-                    log.error("" , e );
+                } catch (Exception e) {
+                    log.error("", e);
                     lock = NBool.NULL;
                 }
 
@@ -130,8 +129,8 @@ public class ClusterLock {
 
             } while (System.currentTimeMillis() - t < timeout);
 
-        } catch ( Exception e ) {
-            log.error("" , e);
+        } catch (Exception e) {
+            log.error("", e);
         }
 
         return lock;
@@ -139,10 +138,9 @@ public class ClusterLock {
     }
 
 
+    private void unlockUNLUA(Redis<String, String> redis) {
 
-    private void unlockUNLUA( Redis<String,String> redis ) {
-
-        if ( id.equals( redis.get(key) ) ) {
+        if (id.equals(redis.get(key))) {
             redis.del(key);
         }
 
@@ -166,7 +164,7 @@ public class ClusterLock {
 
     public void unlock() {
 
-        try ( Redis<String, String> redis = this.redisClient.create() ) {
+        try (Redis<String, String> redis = this.redisClient.create()) {
 
             if (UNSUPPORT_LUA) {
 
@@ -176,7 +174,7 @@ public class ClusterLock {
 
                 try {
 
-                    redis.eval( UNLOCK_LUA , ScriptOutputType.INTEGER , new String[] { key } , new String[] { id }  );
+                    redis.eval(UNLOCK_LUA, ScriptOutputType.INTEGER, new String[]{key}, new String[]{id});
 
                 } catch (Throwable e) {
 
@@ -186,8 +184,8 @@ public class ClusterLock {
                 }
             }
 
-        } catch ( Exception e ) {
-            log.error( "" , e);
+        } catch (Exception e) {
+            log.error("", e);
         }
 
     }

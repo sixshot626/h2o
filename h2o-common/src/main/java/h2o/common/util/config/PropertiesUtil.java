@@ -16,9 +16,9 @@ public class PropertiesUtil {
 
     private final PropertiesConfiguration config;
 
-    public PropertiesUtil( String propFile ) {
+    public PropertiesUtil(String propFile) {
         try {
-             config = new PropertiesConfiguration(propFile);
+            config = new PropertiesConfiguration(propFile);
         } catch (Throwable e) {
             e.printStackTrace();
             throw ExceptionUtil.toRuntimeException(e);
@@ -26,7 +26,8 @@ public class PropertiesUtil {
     }
 
 
-    protected void preSet( PropertiesConfiguration config ) {}
+    protected void preSet(PropertiesConfiguration config) {
+    }
 
     public Iterator<String> getKeys(String prefix) {
         return config.getKeys(prefix);

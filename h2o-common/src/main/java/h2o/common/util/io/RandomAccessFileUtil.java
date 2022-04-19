@@ -11,100 +11,100 @@ public final class RandomAccessFileUtil {
 
     private static final Logger log = LoggerFactory.getLogger(RandomAccessFileUtil.class.getName());
 
-	private RandomAccessFileUtil() {
-	}
+    private RandomAccessFileUtil() {
+    }
 
-	public static void create(String path, long size) {
+    public static void create(String path, long size) {
 
-		RandomAccessFile accessFile = null;
-		try {
+        RandomAccessFile accessFile = null;
+        try {
 
-			accessFile = new RandomAccessFile(path, "rwd");
-			accessFile.setLength(size);
+            accessFile = new RandomAccessFile(path, "rwd");
+            accessFile.setLength(size);
 
-		} catch (Exception e) {
-			log.debug("", e);
-			throw ExceptionUtil.toRuntimeException(e);
-		} finally {
-			close( accessFile );
-		}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        } finally {
+            close(accessFile);
+        }
 
-	}
+    }
 
-	public static long getFileLength(String path) {
+    public static long getFileLength(String path) {
 
-		RandomAccessFile accessFile = null;
-		try {
+        RandomAccessFile accessFile = null;
+        try {
 
-			accessFile = new RandomAccessFile(path, "r");
-			return accessFile.length();
+            accessFile = new RandomAccessFile(path, "r");
+            return accessFile.length();
 
-		} catch (Exception e) {
-			log.debug("", e);
-			throw ExceptionUtil.toRuntimeException(e);
-		} finally {
-			close( accessFile );
-		}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        } finally {
+            close(accessFile);
+        }
 
-	}
+    }
 
-	public static void writePart(String path, long start, byte[] data, int off,	int len) {
-		
-		RandomAccessFile accessFile = null;
-		try {
+    public static void writePart(String path, long start, byte[] data, int off, int len) {
 
-			accessFile = new RandomAccessFile(path, "rw");
-			accessFile.seek(start);
-			accessFile.write(data, off, len);
+        RandomAccessFile accessFile = null;
+        try {
 
-		} catch (Exception e) {
-			log.debug("", e);
-			throw ExceptionUtil.toRuntimeException(e);
-		} finally {
-			close( accessFile );
-		}
+            accessFile = new RandomAccessFile(path, "rw");
+            accessFile.seek(start);
+            accessFile.write(data, off, len);
 
-	}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        } finally {
+            close(accessFile);
+        }
 
-	public static int readPart(String path, long start, byte[] data, int off, int len) {
+    }
 
-		RandomAccessFile accessFile = null;
+    public static int readPart(String path, long start, byte[] data, int off, int len) {
 
-		try {
-			
-			accessFile = new RandomAccessFile(path, "r");
-			
-			long l = accessFile.length();
+        RandomAccessFile accessFile = null;
 
-			if (start >= l) {
-				
-				return -1;
-				
-			} else {
+        try {
 
-				accessFile.seek(start);
-				return accessFile.read(data, off, len);
-			}
+            accessFile = new RandomAccessFile(path, "r");
 
-		} catch (Exception e) {
+            long l = accessFile.length();
 
-			log.debug("", e);
-			throw ExceptionUtil.toRuntimeException(e);
+            if (start >= l) {
 
-		} finally {
-			close( accessFile );
-		}
+                return -1;
 
-	}
-	
-	private static void close( RandomAccessFile accessFile ) {
-		if( accessFile != null ) {
-			try {
-				accessFile.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+            } else {
+
+                accessFile.seek(start);
+                return accessFile.read(data, off, len);
+            }
+
+        } catch (Exception e) {
+
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+
+        } finally {
+            close(accessFile);
+        }
+
+    }
+
+    private static void close(RandomAccessFile accessFile) {
+        if (accessFile != null) {
+            try {
+                accessFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

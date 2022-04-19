@@ -9,63 +9,61 @@ import java.net.URL;
 
 public class FileUtil {
 
-    private static final Logger log = LoggerFactory.getLogger( FileUtil.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(FileUtil.class.getName());
 
-    private FileUtil() {}
+    private FileUtil() {
+    }
 
-	private static void rm(File f) {
-		if (f.isDirectory()) {
-			File[] subfs = f.listFiles();
-			for (int i = 0; i < subfs.length; i++) {
-				rm(subfs[i]);
-			}
-		}
+    private static void rm(File f) {
+        if (f.isDirectory()) {
+            File[] subfs = f.listFiles();
+            for (int i = 0; i < subfs.length; i++) {
+                rm(subfs[i]);
+            }
+        }
 
-		f.delete();
-	}
+        f.delete();
+    }
 
-	public static boolean rmdir(File dir) {
+    public static boolean rmdir(File dir) {
 
-		if (dir.exists() && dir.isDirectory()) {
-			rm(dir);
-			return true;
-		}
+        if (dir.exists() && dir.isDirectory()) {
+            rm(dir);
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static void mkdirs(String dir) {
+    public static void mkdirs(String dir) {
 
-		File fdir = new File(dir);
-		if (!fdir.exists()) {
-			fdir.mkdirs();
-		}
+        File fdir = new File(dir);
+        if (!fdir.exists()) {
+            fdir.mkdirs();
+        }
 
-	}
+    }
 
-	public static String getExtname(String fileNmae) {
+    public static String getExtname(String fileNmae) {
 
-		int i = fileNmae.lastIndexOf('.');
-		if (i != -1) {
-			return fileNmae.substring(i + 1).toLowerCase();
-		}
+        int i = fileNmae.lastIndexOf('.');
+        if (i != -1) {
+            return fileNmae.substring(i + 1).toLowerCase();
+        }
 
-		return null;
-	}
-	
-	
-	
-	public static File newFile( String path ) {
-		
-		log.debug("newFile path -- {}" , path );
-		URL fileUrl = ConfigurationUtils.locate(path);
-		
-		log.debug("newFile fileUrl -- {}" , fileUrl );
-		
-		return ConfigurationUtils.fileFromURL(fileUrl);
-	}
-	
-	
+        return null;
+    }
+
+
+    public static File newFile(String path) {
+
+        log.debug("newFile path -- {}", path);
+        URL fileUrl = ConfigurationUtils.locate(path);
+
+        log.debug("newFile fileUrl -- {}", fileUrl);
+
+        return ConfigurationUtils.fileFromURL(fileUrl);
+    }
 
 
 }

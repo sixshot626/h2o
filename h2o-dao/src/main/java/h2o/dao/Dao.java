@@ -18,87 +18,77 @@ import java.util.Map;
 
 public interface Dao extends Closeable {
 
-	void setAutoClose(boolean autoClose);
+    void setAutoClose(boolean autoClose);
 
-	boolean isAutoClose();
+    boolean isAutoClose();
 
-	void setArgProcessor(ArgProcessor argProcessor);
+    void setArgProcessor(ArgProcessor argProcessor);
 
-	void setOrmProcessor(OrmProcessor ormProcessor);
+    void setOrmProcessor(OrmProcessor ormProcessor);
 
-	void setPagingProcessor(PagingProcessor pagingProcessor);
+    void setPagingProcessor(PagingProcessor pagingProcessor);
 
-	void setLogWriter(LogWriter logWriter);
-
-
-	<T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException;
-
-	<T> Val<T> getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
+    void setLogWriter(LogWriter logWriter);
 
 
+    <T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException;
 
-	<T> List<T> loadFields(String sql, String fieldName, Object... args) throws DaoException;
-
-	<T> List<T> loadFields(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
-
+    <T> Val<T> getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
 
 
-	Val<Map<String,Object>> get(String sql, Object... args)  throws DaoException;
+    <T> List<T> loadFields(String sql, String fieldName, Object... args) throws DaoException;
 
-	Val<Map<String,Object>> get(SqlSource sqlSource, Object... args)  throws DaoException;
-
-
-
-	List<Map<String,Object>> load(String sql, Object... args)  throws DaoException;
-	
-	List<Map<String,Object>> load(SqlSource sqlSource, Object... args)  throws DaoException;
+    <T> List<T> loadFields(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;
 
 
+    Val<Map<String, Object>> get(String sql, Object... args) throws DaoException;
 
-	<T> Val<T> get(Class<T> clazz, String sql, Object... args)  throws DaoException;
-
-	<T> Val<T> get(Class<T> clazz, SqlSource sqlSource, Object... args)  throws DaoException;
-
+    Val<Map<String, Object>> get(SqlSource sqlSource, Object... args) throws DaoException;
 
 
-	<T> List<T> load(Class<T> clazz, String sql, Object... args)  throws DaoException;
-	
-	<T> List<T> load(Class<T> clazz, SqlSource sqlSource, Object... args)  throws DaoException;
+    List<Map<String, Object>> load(String sql, Object... args) throws DaoException;
+
+    List<Map<String, Object>> load(SqlSource sqlSource, Object... args) throws DaoException;
 
 
+    <T> Val<T> get(Class<T> clazz, String sql, Object... args) throws DaoException;
 
-	<T> Val<T> load(ResultSetCallback<T> rsCallback, String sql, Object... args)   throws DaoException;
-
-	<T> Val<T> load(ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args)   throws DaoException;
-
+    <T> Val<T> get(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException;
 
 
-	Page<Map<String,Object>> pagingLoad(String sql, PageRequest pageRequest,  Object... args) throws DaoException;;
+    <T> List<T> load(Class<T> clazz, String sql, Object... args) throws DaoException;
 
-    Page<Map<String,Object>> pagingLoad(SqlSource sqlSource, PageRequest pageRequest,  Object... args) throws DaoException;;
-
-
-
-    <T> Page<T> pagingLoad(Class<T> clazz, String sql, PageRequest pageRequest, Object... args)  throws DaoException;
-
-    <T> Page<T> pagingLoad(Class<T> clazz, SqlSource sqlSource, PageRequest pageRequest, Object... args)  throws DaoException;
+    <T> List<T> load(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException;
 
 
+    <T> Val<T> load(ResultSetCallback<T> rsCallback, String sql, Object... args) throws DaoException;
 
-	int update(String sql, Object... args)  throws DaoException;
-	
-	int update(SqlSource sqlSource, Object... args)  throws DaoException;
-
+    <T> Val<T> load(ResultSetCallback<T> rsCallback, SqlSource sqlSource, Object... args) throws DaoException;
 
 
-	int[] batchUpdate(String sql, Collection<?> args)  throws DaoException;
-	
-	int[] batchUpdate(SqlSource sqlSource, Collection<?> args)  throws DaoException;
+    Page<Map<String, Object>> pagingLoad(String sql, PageRequest pageRequest, Object... args) throws DaoException;
+
+    Page<Map<String, Object>> pagingLoad(SqlSource sqlSource, PageRequest pageRequest, Object... args) throws DaoException;
 
 
-	Connection getConnection();
+    <T> Page<T> pagingLoad(Class<T> clazz, String sql, PageRequest pageRequest, Object... args) throws DaoException;
 
-	void close() throws DaoException;
-	
+    <T> Page<T> pagingLoad(Class<T> clazz, SqlSource sqlSource, PageRequest pageRequest, Object... args) throws DaoException;
+
+
+    int update(String sql, Object... args) throws DaoException;
+
+    int update(SqlSource sqlSource, Object... args) throws DaoException;
+
+
+    int[] batchUpdate(String sql, Collection<?> args) throws DaoException;
+
+    int[] batchUpdate(SqlSource sqlSource, Collection<?> args) throws DaoException;
+
+
+    Connection getConnection();
+
+    void close() throws DaoException;
+
 
 }

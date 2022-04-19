@@ -26,7 +26,7 @@ public class SpringContext implements ApplicationContextAware {
 
     public static ApplicationContext getApplicationContext() {
         ApplicationContext context = applicationContext;
-        if ( context == null ) {
+        if (context == null) {
             throw new IllegalStateException("ApplicationContext not initialized");
         }
         return context;

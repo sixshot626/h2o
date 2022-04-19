@@ -12,15 +12,15 @@ public enum NBool implements OptionalValue<Boolean> {
 
     @Override
     public Boolean getValue() {
-        return this == NULL ? null : Boolean.valueOf( this == TRUE);
+        return this == NULL ? null : Boolean.valueOf(this == TRUE);
     }
 
-    public static NBool valueOf(boolean bool ) {
+    public static NBool valueOf(boolean bool) {
         return bool ? TRUE : FALSE;
     }
 
-    public static NBool valueOf(Boolean bool ) {
-        if ( bool == null ) {
+    public static NBool valueOf(Boolean bool) {
+        if (bool == null) {
             return NULL;
         } else {
             return bool.booleanValue() ? TRUE : FALSE;

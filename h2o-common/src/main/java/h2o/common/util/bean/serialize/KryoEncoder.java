@@ -11,59 +11,59 @@ import java.io.ByteArrayOutputStream;
 
 public class KryoEncoder implements BeanSerializer {
 
-    private static final Logger log = LoggerFactory.getLogger( KryoEncoder.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(KryoEncoder.class.getName());
 
     public final Kryo kryo;
-	
-	public KryoEncoder() {
-		this.kryo = new Kryo();
-	}
 
-	public KryoEncoder(Kryo kryo) {
-		this.kryo = kryo;
-	}
+    public KryoEncoder() {
+        this.kryo = new Kryo();
+    }
 
-	public byte[] bean2bytes(Object bean) {
+    public KryoEncoder(Kryo kryo) {
+        this.kryo = kryo;
+    }
 
-		Output out = null;
-		try {
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
-			out = new Output(bao);
-			kryo.writeClassAndObject(out, bean);
+    public byte[] bean2bytes(Object bean) {
 
-			return out.toBytes();
+        Output out = null;
+        try {
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            out = new Output(bao);
+            kryo.writeClassAndObject(out, bean);
 
-		} catch (Exception e) {
-			log.debug("", e);
-			throw ExceptionUtil.toRuntimeException(e);
-		} finally {
-			if( out != null ) {
-				out.close();
-			}
-		}
-	}
+            return out.toBytes();
 
-	public Object bytes2bean(byte[] bs) {
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
 
-		Input in = null;
-		try {
+    public Object bytes2bean(byte[] bs) {
 
-			Object obj = null;
+        Input in = null;
+        try {
 
-			in = new Input(bs);
-			obj = kryo.readClassAndObject(in);
+            Object obj = null;
 
-			return obj;
+            in = new Input(bs);
+            obj = kryo.readClassAndObject(in);
 
-		} catch (Exception e) {
-			log.debug("",e);
-			throw ExceptionUtil.toRuntimeException(e);
-		} finally {
-			if( in != null ) {
-				in.close();
-			}
-		}
+            return obj;
 
-	}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+
+    }
 
 }

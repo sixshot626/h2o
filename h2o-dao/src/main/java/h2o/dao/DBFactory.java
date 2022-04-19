@@ -21,7 +21,7 @@ public interface DBFactory {
 
     OrmProcessor getOrmProcessor();
 
-    Optional<PagingProcessor> getPagingProcessor( String name);
+    Optional<PagingProcessor> getPagingProcessor(String name);
 
     // 获取name对应单例Db对象
     Db getDb(String name);

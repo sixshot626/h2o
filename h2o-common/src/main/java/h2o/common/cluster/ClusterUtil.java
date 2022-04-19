@@ -11,24 +11,25 @@ import java.time.ZoneOffset;
 
 public abstract class ClusterUtil {
 
-    private ClusterUtil() {}
+    private ClusterUtil() {
+    }
 
     public static long getWorkerId() {
-        long workerId = Long.parseLong(h2o.jodd.util.SystemUtil.get("H2OWorkerId" , "0"));
-        Tools.log.info("SYS PARA - workerId : {}" , workerId );
+        long workerId = Long.parseLong(h2o.jodd.util.SystemUtil.get("H2OWorkerId", "0"));
+        Tools.log.info("SYS PARA - workerId : {}", workerId);
         return workerId;
     }
 
 
     public static class IdGenerator {
 
-        private final SnowGarlandIdGen idGen = new SnowGarlandIdGen( ClusterUtil.getWorkerId() );
+        private final SnowGarlandIdGen idGen = new SnowGarlandIdGen(ClusterUtil.getWorkerId());
 
         public synchronized String makeId() {
-            LocalDate localDate = LocalDate.now( ZoneOffset.UTC );
+            LocalDate localDate = LocalDate.now(ZoneOffset.UTC);
             String yyyy = Integer.toString(localDate.getYear());
-            return StringUtils.substring( yyyy , -2 ) +
-                    idGen.nextKey( new SDate( yyyy  + "-01-01"  ,true )  );
+            return StringUtils.substring(yyyy, -2) +
+                    idGen.nextKey(new SDate(yyyy + "-01-01", true));
         }
 
     }

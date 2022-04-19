@@ -7,49 +7,49 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Map;
 
-public class TSql extends Sql implements SqlSource {	
+public class TSql extends Sql implements SqlSource {
 
-	private Map<String,?> tdata;
-	
-	public TSql( String sql ) {
-		super( sql );
-	}
-	
+    private Map<String, ?> tdata;
 
-	public TSql setData(Map<String, Object> data) {
-		this.tdata = data;
-		return this;
-	}
-	
+    public TSql(String sql) {
+        super(sql);
+    }
 
 
-	@Override
-	public String getSql( Map<String,Object> data ) {
-		
-		String sql = this.getSql();
-		
-		if( StringUtils.isBlank(sql) ) {
-			return sql;
-		}
-		
-		if( data == null ) {
-			data = MapBuilder.newMap();
-		}
-		
-		Map<String,Object> tSqldata = MapBuilder.newMap(); {
+    public TSql setData(Map<String, Object> data) {
+        this.tdata = data;
+        return this;
+    }
+
+
+    @Override
+    public String getSql(Map<String, Object> data) {
+
+        String sql = this.getSql();
+
+        if (StringUtils.isBlank(sql)) {
+            return sql;
+        }
+
+        if (data == null) {
+            data = MapBuilder.newMap();
+        }
+
+        Map<String, Object> tSqldata = MapBuilder.newMap();
+        {
 
             Map<String, Object> templateData = DbUtil.newSqlTable().getTemplateData();
-            if( templateData != null ) {
-                tSqldata.putAll( templateData );
+            if (templateData != null) {
+                tSqldata.putAll(templateData);
             }
-            if( this.tdata != null ) {
+            if (this.tdata != null) {
                 tSqldata.putAll(this.tdata);
             }
-            tSqldata.putAll( data );
+            tSqldata.putAll(data);
 
-		}
-		
-		return DbUtil.sqlTemplateUtil.process( tSqldata , sql ) ;
-	}
+        }
+
+        return DbUtil.sqlTemplateUtil.process(tSqldata, sql);
+    }
 
 }

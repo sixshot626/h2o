@@ -14,96 +14,96 @@ import java.util.Map;
 
 public class TemplateUtil {
 
-    private static final Logger log = LoggerFactory.getLogger( TemplateUtil.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(TemplateUtil.class.getName());
 
 
     @SuppressWarnings("deprecation")
-	protected Configuration createDefaultConfiguration() {
+    protected Configuration createDefaultConfiguration() {
         Configuration config = new Configuration();
         configurationPreSet(config);
         return config;
     }
-    
-    protected void configurationPreSet( Configuration config ) {}
-	
-	
-	public String process( Map<String, ?> data , String t ) {
-		
-		java.io.StringReader sr = new java.io.StringReader(t);
-		String s = this.process(data, sr);
-		
-		sr.close();
-		
-		return s;
-		
-	}
-	
 
-	
-	public String process(Map<String, ?> data, Reader r) {
+    protected void configurationPreSet(Configuration config) {
+    }
 
-		StringWriter sw = new StringWriter();
 
-		process(data, r, sw, this.createDefaultConfiguration());
+    public String process(Map<String, ?> data, String t) {
 
-		sw.flush();
-		try {
-			sw.close();
-		} catch (IOException e) {			
-			log.debug("process" , e);
-		}
-		
-		return sw.toString();
+        java.io.StringReader sr = new java.io.StringReader(t);
+        String s = this.process(data, sr);
 
-	}
-	
-	
-	public static String process(Map<String, ?> data, Template  t ) {
+        sr.close();
 
-		StringWriter sw = new StringWriter();
+        return s;
 
-		process(data, t , sw);
+    }
 
-		sw.flush();
-		try {
-			sw.close();
-		} catch (IOException e) {			
-			log.debug("process" , e);
-		}
-		
-		return sw.toString();
 
-	}
-	
+    public String process(Map<String, ?> data, Reader r) {
 
-	public static void process( Map<String, ?> data , Reader r  , Writer w , Configuration c) {
-		
-		try {
-		
-			Template  t = new Template( "stringTemplate" , r , c );				
-			t.process(data , w );	
-			
-			
-		} catch( Exception e) {			
-			log.debug("process" , e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
-			
-			
-	}
-	
-	public static void process( Map<String, ?> data , Template  t  , Writer w ) {
-		
-		try {
-			t.process(data , w );	
-				
-		} catch( Exception e) {			
-			log.debug("process" , e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
-			
-			
-	}
+        StringWriter sw = new StringWriter();
+
+        process(data, r, sw, this.createDefaultConfiguration());
+
+        sw.flush();
+        try {
+            sw.close();
+        } catch (IOException e) {
+            log.debug("process", e);
+        }
+
+        return sw.toString();
+
+    }
+
+
+    public static String process(Map<String, ?> data, Template t) {
+
+        StringWriter sw = new StringWriter();
+
+        process(data, t, sw);
+
+        sw.flush();
+        try {
+            sw.close();
+        } catch (IOException e) {
+            log.debug("process", e);
+        }
+
+        return sw.toString();
+
+    }
+
+
+    public static void process(Map<String, ?> data, Reader r, Writer w, Configuration c) {
+
+        try {
+
+            Template t = new Template("stringTemplate", r, c);
+            t.process(data, w);
+
+
+        } catch (Exception e) {
+            log.debug("process", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+
+
+    }
+
+    public static void process(Map<String, ?> data, Template t, Writer w) {
+
+        try {
+            t.process(data, w);
+
+        } catch (Exception e) {
+            log.debug("process", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+
+
+    }
 
 
 }

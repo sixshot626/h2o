@@ -11,95 +11,93 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 
-
 public final class DateTime {
 
-    private static final Logger log = LoggerFactory.getLogger( DateTime.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(DateTime.class.getName());
 
 
     private volatile boolean silently;
-	
-	
-
-	public boolean isSilently() {
-		return silently;
-	}
 
 
-	public void setSilently(boolean silently) {
-		this.silently = silently;
-	}
-	
-	
-	public DateTime() {		
-		this.silently = true;
-	}
-
-	public DateTime(boolean isSilently) {		
-		this.silently = isSilently;
-	}
-
-
-
-
-	private static final String fmt = "yyyy-MM-dd HH:mm:ss";
-	public String toString(Date d) {
-		return toString( d , fmt );
-	}
-
-	private static final String shortFmt = "yyyy-MM-dd";
-	public String toShortString(Date d) {
-		return toString( d , shortFmt );
-	}
-
-	private static final String longFmt = "yyyy-MM-dd HH:mm:ss.SSS";
-	public String toLongString(Date d) {
-		return toString( d , longFmt );
-	}
-
-
-
-    private static final String timeFmt = "HH:mm:ss";
-    public String toTimeString(Date d) {
-        return toString( d , timeFmt );
+    public boolean isSilently() {
+        return silently;
     }
 
 
+    public void setSilently(boolean silently) {
+        this.silently = silently;
+    }
 
-    public String toString( Date d, String fmt ) {
-		return new SimpleDateFormat(fmt).format(d);
-	}
-	
-	public Date toDate( String sd ) {
-		return toDate(sd,"yyyy-MM-dd");			
-	}
-	
-	
-	public Date toDate( String sd , String fmt ) {
-		try {
-			return new SimpleDateFormat(fmt).parse(sd);
-		} catch (ParseException e) {			
-			log.debug("toDate" , e);
-			if( !this.silently ) {
-				throw ExceptionUtil.toRuntimeException(e);
-			}
-		}
-		
-		return null;
-	}
-	
-	public String str2Str( String sd , String sfmt , String tfmt ) {
-		return toString( toDate(sd , sfmt) , tfmt );
-	}
-	
 
-	public int getDaysOfMonth( String year, String month ) {
-		Calendar cal = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month) - 1, 1);
-		int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		return days;
-	}
+    public DateTime() {
+        this.silently = true;
+    }
 
-	public int getDaysBetween( Date date_start, Date date_end ) {
+    public DateTime(boolean isSilently) {
+        this.silently = isSilently;
+    }
+
+
+    private static final String fmt = "yyyy-MM-dd HH:mm:ss";
+
+    public String toString(Date d) {
+        return toString(d, fmt);
+    }
+
+    private static final String shortFmt = "yyyy-MM-dd";
+
+    public String toShortString(Date d) {
+        return toString(d, shortFmt);
+    }
+
+    private static final String longFmt = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    public String toLongString(Date d) {
+        return toString(d, longFmt);
+    }
+
+
+    private static final String timeFmt = "HH:mm:ss";
+
+    public String toTimeString(Date d) {
+        return toString(d, timeFmt);
+    }
+
+
+    public String toString(Date d, String fmt) {
+        return new SimpleDateFormat(fmt).format(d);
+    }
+
+    public Date toDate(String sd) {
+        return toDate(sd, "yyyy-MM-dd");
+    }
+
+
+    public Date toDate(String sd, String fmt) {
+        try {
+            return new SimpleDateFormat(fmt).parse(sd);
+        } catch (ParseException e) {
+            log.debug("toDate", e);
+            if (!this.silently) {
+                throw ExceptionUtil.toRuntimeException(e);
+            }
+        }
+
+        return null;
+    }
+
+    public String str2Str(String sd, String sfmt, String tfmt) {
+        return toString(toDate(sd, sfmt), tfmt);
+    }
+
+
+    public int getDaysOfMonth(String year, String month) {
+        Calendar cal = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month) - 1, 1);
+        int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        return days;
+    }
+
+    public int getDaysBetween(Date date_start, Date date_end) {
         try {
 
             Calendar d1 = Calendar.getInstance();
@@ -128,8 +126,7 @@ public final class DateTime {
     }
 
 
-
-    public int getMonthsBetween( Date date_start, Date date_end ) {
+    public int getMonthsBetween(Date date_start, Date date_end) {
 
         try {
 
@@ -148,10 +145,10 @@ public final class DateTime {
             int y2 = d2.get(Calendar.YEAR);
             int y1 = d1.get(Calendar.YEAR);
 
-            ms += ( y2 - y1 ) * 12;
+            ms += (y2 - y1) * 12;
 
-            if( d2.get( Calendar.DAY_OF_MONTH ) < d1.get( Calendar.DAY_OF_MONTH )
-                    /*&& d2.get( Calendar.DAY_OF_MONTH ) != d2.getActualMaximum( Calendar.DATE ) */ ) {
+            if (d2.get(Calendar.DAY_OF_MONTH) < d1.get(Calendar.DAY_OF_MONTH)
+                /*&& d2.get( Calendar.DAY_OF_MONTH ) != d2.getActualMaximum( Calendar.DATE ) */) {
 
                 ms -= 1;
 
@@ -166,42 +163,39 @@ public final class DateTime {
     }
 
 
+    public int getActualMaximum(Date date) {
 
-    public int getActualMaximum( Date date ) {
-        
         Calendar d = Calendar.getInstance();
-        d.setTime( date );
+        d.setTime(date);
 
-        return d.getActualMaximum( Calendar.DATE );
-        
+        return d.getActualMaximum(Calendar.DATE);
+
     }
 
 
+    public Date getAfterDay(Date date, int count) {
+        return getAfterDate(date, Calendar.DATE, count);
+    }
 
-	
-	public Date getAfterDay( Date date, int count ) {
-		return getAfterDate( date , Calendar.DATE , count );
-	}
+    public Date getAfterDate(Date date, int type, int count) {
+        try {
 
-	public Date getAfterDate( Date date, int type , int count ) {
-		try {
-		
-			Calendar c = Calendar.getInstance();
-			c.setTime( date );
-			c.add( type, count );
-			
-			return c.getTime();
-			
-		} catch ( Exception e ) {
-			log.debug("getAfterDate", e);
-			
-			if( this.silently ) {
-				return null;
-			} else {
-				throw ExceptionUtil.toRuntimeException(e);
-			}
-		}
-	}
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(type, count);
+
+            return c.getTime();
+
+        } catch (Exception e) {
+            log.debug("getAfterDate", e);
+
+            if (this.silently) {
+                return null;
+            } else {
+                throw ExceptionUtil.toRuntimeException(e);
+            }
+        }
+    }
 
 
 }

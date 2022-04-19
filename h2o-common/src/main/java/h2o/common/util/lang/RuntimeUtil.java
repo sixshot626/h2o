@@ -2,22 +2,23 @@ package h2o.common.util.lang;
 
 public abstract class RuntimeUtil {
 
-	private RuntimeUtil() {}
+    private RuntimeUtil() {
+    }
 
 
-    public static String getCallClassName( String runClassName ) {
+    public static String getCallClassName(String runClassName) {
 
         String[] classNames = getCallingClasses();
-        if ( classNames == null ) {
+        if (classNames == null) {
             return null;
         }
 
         String callClassName = null;
 
         int i = 0;
-        for ( String cn : classNames) {
+        for (String cn : classNames) {
 
-            if ( cn.equals(runClassName)) {
+            if (cn.equals(runClassName)) {
                 i++;
             } else if (i > 0) {
                 callClassName = cn;
@@ -30,24 +31,22 @@ public abstract class RuntimeUtil {
     }
 
 
-
-
     public static String[] getCallingClasses() {
 
-	    String[] classNames =  getCallingClassesBySecurityManager();
-	    return classNames == null ? getCallingClassesByStackTrace() : classNames;
+        String[] classNames = getCallingClassesBySecurityManager();
+        return classNames == null ? getCallingClassesByStackTrace() : classNames;
 
     }
 
-    private static String[] getCallingClassesByStackTrace( ) {
+    private static String[] getCallingClassesByStackTrace() {
 
         StackTraceElement[] stes = Thread.currentThread().getStackTrace();
-        if ( stes == null ) {
+        if (stes == null) {
             return null;
         }
 
-        String[] classNames = new String[ stes.length ];
-        for ( int i = 0 ; i < stes.length ; i++ ) {
+        String[] classNames = new String[stes.length];
+        for (int i = 0; i < stes.length; i++) {
             classNames[i] = stes[i].getClassName();
         }
 
@@ -68,6 +67,7 @@ public abstract class RuntimeUtil {
 
     private static RuntimeUtil.ClassContextSecurityManager SECURITY_MANAGER;
     private static boolean SECURITY_MANAGER_CREATION_ALREADY_ATTEMPTED = false;
+
     static {
         getSecurityManager();
     }
@@ -101,20 +101,18 @@ public abstract class RuntimeUtil {
         }
 
         Class<?>[] callingClasses = securityManager.getClassContext();
-        if ( callingClasses == null ) {
+        if (callingClasses == null) {
             return null;
         }
 
-        String[] classNames = new String[ callingClasses.length ];
-        for ( int i = 0 ; i < callingClasses.length ; i++ ) {
+        String[] classNames = new String[callingClasses.length];
+        for (int i = 0; i < callingClasses.length; i++) {
             classNames[i] = callingClasses[i].getName();
         }
 
         return classNames;
 
     }
-
-
 
 
 }

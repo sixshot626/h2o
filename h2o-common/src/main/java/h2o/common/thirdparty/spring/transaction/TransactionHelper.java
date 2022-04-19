@@ -20,11 +20,11 @@ public class TransactionHelper {
         this("transactionManager");
     }
 
-    public TransactionHelper(String transactionManagerName ) {
+    public TransactionHelper(String transactionManagerName) {
         this.transactionTemplate = new TransactionTemplate(SpringFactory.<PlatformTransactionManager>getObject(transactionManagerName));
     }
 
-    public TransactionHelper(PlatformTransactionManager transactionManager ) {
+    public TransactionHelper(PlatformTransactionManager transactionManager) {
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
@@ -34,7 +34,7 @@ public class TransactionHelper {
 
 
     public TransactionHelper inNewTx() {
-        transactionTemplate.setPropagationBehavior( TransactionDefinition.PROPAGATION_REQUIRES_NEW );
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         return this;
     }
 
@@ -44,29 +44,25 @@ public class TransactionHelper {
     }
 
 
-
-    public <T> T executeAndReturn( TransactionCallback<T> action ) throws TransactionException {
+    public <T> T executeAndReturn(TransactionCallback<T> action) throws TransactionException {
         return transactionTemplate.execute(action);
     }
 
 
-    public void execute( TransactionCallbackWithoutResult action ) throws TransactionException {
+    public void execute(TransactionCallbackWithoutResult action) throws TransactionException {
         transactionTemplate.execute(new TransactionCallback<Void>() {
             @Override
             public Void doInTransaction(TransactionStatus status) {
-                action.doInTransaction( status );
+                action.doInTransaction(status);
                 return null;
             }
         });
     }
 
 
-
     public PlatformTransactionManager getTransactionManager() {
         return transactionTemplate.getTransactionManager();
     }
-
-
 
 
     public TransactionHelper setPropagationBehaviorName(String constantName) throws IllegalArgumentException {
@@ -123,7 +119,6 @@ public class TransactionHelper {
     public String getName() {
         return transactionTemplate.getName();
     }
-
 
 
     @Override

@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
     private static final long serialVersionUID = -5406301526511160202L;
-    
+
     private static final Val<?> EMPTY = new Val<>();
 
     private final T value;
@@ -27,14 +27,14 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
         this.stamp = SNumber.NULL;
     }
 
-    public Val( T value , SNumber stamp) {
+    public Val(T value, SNumber stamp) {
         this.value = value;
         this.setted = true;
         this.stamp = stamp;
     }
 
 
-    public static<T> Val<T> empty() {
+    public static <T> Val<T> empty() {
         @SuppressWarnings("unchecked")
         Val<T> t = (Val<T>) EMPTY;
         return t;

@@ -29,53 +29,53 @@ public class FileMonitor {
 
     private FileChangeListener changeListener;
 
-    private FileMonitor( FileFilter filter ) {
+    private FileMonitor(FileFilter filter) {
         IOFileFilter baseFilter = FileFilterUtils.or(FileFilterUtils.fileFileFilter(), FileFilterUtils.directoryFileFilter());
-        if ( filter == null ) {
+        if (filter == null) {
             this.filter = baseFilter;
         } else {
-            this.filter = FileFilterUtils.and(baseFilter, new ProxyIOFileFilter( filter ) );
+            this.filter = FileFilterUtils.and(baseFilter, new ProxyIOFileFilter(filter));
         }
     }
 
 
-    public static FileMonitor monitor( String[] paths , FileFilter filter  ) throws Exception {
+    public static FileMonitor monitor(String[] paths, FileFilter filter) throws Exception {
 
         FileMonitor fileMonitor = new FileMonitor(filter);
 
         fileMonitor.observers = ListBuilder.newList();
 
-        for ( String path : paths ) {
+        for (String path : paths) {
 
-            AlterationObserver observer = new AlterationObserver( path , fileMonitor.filter );
+            AlterationObserver observer = new AlterationObserver(path, fileMonitor.filter);
 
             observer.initialize();
-            observer.addListener( fileMonitor.fileAlterationListener );
+            observer.addListener(fileMonitor.fileAlterationListener);
 
-            fileMonitor.observers.add( observer );
+            fileMonitor.observers.add(observer);
         }
 
         return fileMonitor;
     }
 
 
-    public static FileMonitor reliableMonitor( String[] paths , FileFilter filter , String saveFilePath , boolean reset ) throws Exception {
+    public static FileMonitor reliableMonitor(String[] paths, FileFilter filter, String saveFilePath, boolean reset) throws Exception {
 
         FileMonitor fileMonitor = new FileMonitor(filter);
-        fileMonitor.enableReliableMode( saveFilePath );
+        fileMonitor.enableReliableMode(saveFilePath);
 
-        if ( reset && fileMonitor.hasBackupFile() ) {
+        if (reset && fileMonitor.hasBackupFile()) {
 
             fileMonitor.reset();
 
-            if ( ! fileMonitor.diffPaths( paths ) ) {
+            if (!fileMonitor.diffPaths(paths)) {
                 throw new IllegalArgumentException("The paths is different from backup data.");
             }
 
         } else {
 
-            fileMonitor = monitor( paths , filter  );
-            fileMonitor.enableReliableMode( saveFilePath );
+            fileMonitor = monitor(paths, filter);
+            fileMonitor.enableReliableMode(saveFilePath);
             fileMonitor.save();
 
         }
@@ -84,40 +84,40 @@ public class FileMonitor {
     }
 
 
-    public boolean diffPaths( String[] paths ) throws IOException {
+    public boolean diffPaths(String[] paths) throws IOException {
 
         try {
 
             Set<String> paths1 = new HashSet<String>();
-            for ( String path : paths ) {
-                paths1.add( new File(path).getPath()  );
+            for (String path : paths) {
+                paths1.add(new File(path).getPath());
             }
 
             Set<String> paths2 = new HashSet<String>();
-            for ( FileAlterationObserver observer : observers ) {
-                paths2.add( observer.getDirectory().getPath()  );
+            for (FileAlterationObserver observer : observers) {
+                paths2.add(observer.getDirectory().getPath());
             }
 
             return paths1.equals(paths2);
 
-        } catch ( UncheckedException ioe ) {
+        } catch (UncheckedException ioe) {
             throw (IOException) ioe.getCause();
         }
 
     }
 
 
-    public static FileMonitor loadByBackup( FileFilter filter , String saveFilePath  ) throws Exception {
+    public static FileMonitor loadByBackup(FileFilter filter, String saveFilePath) throws Exception {
 
-        FileMonitor fileMonitor = new FileMonitor( filter );
-        fileMonitor.enableReliableMode( saveFilePath );
+        FileMonitor fileMonitor = new FileMonitor(filter);
+        fileMonitor.enableReliableMode(saveFilePath);
         fileMonitor.reset();
 
         return fileMonitor;
     }
 
 
-    public void enableReliableMode( String saveFilePath ) {
+    public void enableReliableMode(String saveFilePath) {
         this.saveFilePath = saveFilePath;
         reliableMode = true;
     }
@@ -132,16 +132,16 @@ public class FileMonitor {
 
         try {
 
-            for ( FileAlterationObserver observer : observers ) {
+            for (FileAlterationObserver observer : observers) {
                 observer.checkAndNotify();
             }
 
-        } catch ( UncheckedException e ) {
+        } catch (UncheckedException e) {
 
-            if ( reliableMode ) {
+            if (reliableMode) {
                 try {
                     reset();
-                } catch ( Exception e2 ) {
+                } catch (Exception e2) {
                     Tools.log.error(e2);
                 }
 
@@ -149,12 +149,12 @@ public class FileMonitor {
 
             throw (Exception) e.getCause();
 
-        } catch ( Exception e ) {
+        } catch (Exception e) {
 
-            if ( reliableMode ) {
+            if (reliableMode) {
                 try {
                     reset();
-                } catch ( Exception e2 ) {
+                } catch (Exception e2) {
                     Tools.log.error(e2);
                 }
             }
@@ -162,10 +162,9 @@ public class FileMonitor {
             throw e;
         }
 
-        if ( reliableMode ) {
+        if (reliableMode) {
             save();
         }
-
 
 
     }
@@ -173,45 +172,45 @@ public class FileMonitor {
 
     public void save() throws Exception {
 
-        List<FileEntry> fileEntries = ListBuilder.newList( observers.size() );
+        List<FileEntry> fileEntries = ListBuilder.newList(observers.size());
 
-        for ( AlterationObserver observer : observers ) {
-            fileEntries.add( observer.getEntry()  );
+        for (AlterationObserver observer : observers) {
+            fileEntries.add(observer.getEntry());
         }
 
-        this.save( fileEntries );
+        this.save(fileEntries);
     }
 
 
-    private void save( List<FileEntry> fileEntries ) throws Exception {
+    private void save(List<FileEntry> fileEntries) throws Exception {
 
         OutputStream os = null;
         try {
 
-            os = new BufferedOutputStream( new FileOutputStream( getTmpFilePath() ) );
+            os = new BufferedOutputStream(new FileOutputStream(getTmpFilePath()));
 
             HessianOutput ho = new HessianOutput(os);
-            ho.writeObject( fileEntries );
+            ho.writeObject(fileEntries);
 
         } finally {
             StreamUtil.close(os);
         }
 
-        File fileBak = new File( this.saveFilePath + ".bak" );
-        if ( fileBak.exists() ) {
+        File fileBak = new File(this.saveFilePath + ".bak");
+        if (fileBak.exists()) {
             fileBak.delete();
         }
-        File file = new File( this.saveFilePath );
-        if ( file.exists() ) {
+        File file = new File(this.saveFilePath);
+        if (file.exists()) {
             file.renameTo(fileBak);
         }
-        new File( getTmpFilePath()  ).renameTo( file );
+        new File(getTmpFilePath()).renameTo(file);
 
     }
 
 
     private boolean hasBackupFile() {
-        return new File( this.saveFilePath ).exists() || new File( this.getTmpFilePath() ).exists();
+        return new File(this.saveFilePath).exists() || new File(this.getTmpFilePath()).exists();
     }
 
 
@@ -220,62 +219,60 @@ public class FileMonitor {
     }
 
 
-
     public void reset() throws Exception {
 
-        if ( ! hasBackupFile() ) {
+        if (!hasBackupFile()) {
             throw new FileNotFoundException(this.saveFilePath);
         }
 
         try {
 
-            this.reset( load( this.saveFilePath ) );
+            this.reset(load(this.saveFilePath));
 
-        } catch ( Exception e ) {
+        } catch (Exception e) {
 
             try {
-                this.reset( load( getTmpFilePath() ) );
-            } catch ( Exception e2 ) {
-                Tools.log.error( e2 );
+                this.reset(load(getTmpFilePath()));
+            } catch (Exception e2) {
+                Tools.log.error(e2);
                 throw e;
             }
 
-            Tools.log.error( e );
+            Tools.log.error(e);
         }
 
     }
 
-    private void reset(List<FileEntry> entries ) {
+    private void reset(List<FileEntry> entries) {
 
-        List<AlterationObserver> observers = ListBuilder.newList( entries.size() );
+        List<AlterationObserver> observers = ListBuilder.newList(entries.size());
 
-        for ( FileEntry entry : entries ) {
+        for (FileEntry entry : entries) {
 
-            AlterationObserver observer = new AlterationObserver( entry , filter );
-            observer.addListener( fileAlterationListener );
+            AlterationObserver observer = new AlterationObserver(entry, filter);
+            observer.addListener(fileAlterationListener);
 
-            observers.add( observer );
+            observers.add(observer);
         }
 
         this.observers = observers;
     }
 
-    private List<FileEntry> load( String path ) throws IOException {
+    private List<FileEntry> load(String path) throws IOException {
 
         InputStream is = null;
         try {
 
-            is = new BufferedInputStream( new FileInputStream( path ) );
+            is = new BufferedInputStream(new FileInputStream(path));
 
             HessianInput hi = new HessianInput(is);
-            return (List<FileEntry>)hi.readObject();
+            return (List<FileEntry>) hi.readObject();
 
         } finally {
             StreamUtil.close(is);
         }
 
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,10 +283,10 @@ public class FileMonitor {
         private final FileEntry entry;
 
         public AlterationObserver(String path, FileFilter fileFilter) {
-            this( new FileEntry( new File( path) ) , fileFilter );
+            this(new FileEntry(new File(path)), fileFilter);
         }
 
-        public AlterationObserver(FileEntry rootEntry, FileFilter fileFilter ) {
+        public AlterationObserver(FileEntry rootEntry, FileFilter fileFilter) {
             super(rootEntry, fileFilter, null);
             this.entry = rootEntry;
         }
@@ -300,9 +297,6 @@ public class FileMonitor {
     }
 
 
-
-
-
     private final FileAlterationListener fileAlterationListener = new FileAlterationListener() {
 
         @Override
@@ -311,54 +305,54 @@ public class FileMonitor {
 
         @Override
         public void onDirectoryCreate(File directory) {
-            if ( changeListener != null  ) try {
-                changeListener.onDirectoryCreate( directory );
-            } catch ( Exception e ) {
+            if (changeListener != null) try {
+                changeListener.onDirectoryCreate(directory);
+            } catch (Exception e) {
                 throw new UncheckedException(e);
             }
         }
 
         @Override
         public void onDirectoryChange(File directory) {
-            if ( changeListener != null  ) try {
-                changeListener.onDirectoryChange( directory );
-            } catch ( Exception e ) {
+            if (changeListener != null) try {
+                changeListener.onDirectoryChange(directory);
+            } catch (Exception e) {
                 throw new UncheckedException(e);
             }
         }
 
         @Override
         public void onDirectoryDelete(File directory) {
-            if ( changeListener != null  ) try {
-                changeListener.onDirectoryDelete( directory );
-            } catch ( Exception e ) {
+            if (changeListener != null) try {
+                changeListener.onDirectoryDelete(directory);
+            } catch (Exception e) {
                 throw new UncheckedException(e);
             }
         }
 
         @Override
         public void onFileCreate(File file) {
-            if ( changeListener != null  ) try {
-                changeListener.onFileCreate( file );
-            } catch ( Exception e ) {
+            if (changeListener != null) try {
+                changeListener.onFileCreate(file);
+            } catch (Exception e) {
                 throw new UncheckedException(e);
             }
         }
 
         @Override
         public void onFileChange(File file) {
-            if ( changeListener != null  ) try {
-                changeListener.onFileChange( file );
-            } catch ( Exception e ) {
+            if (changeListener != null) try {
+                changeListener.onFileChange(file);
+            } catch (Exception e) {
                 throw new UncheckedException(e);
             }
         }
 
         @Override
         public void onFileDelete(File file) {
-            if ( changeListener != null  ) try {
-                changeListener.onFileDelete( file );
-            } catch ( Exception e ) {
+            if (changeListener != null) try {
+                changeListener.onFileDelete(file);
+            } catch (Exception e) {
                 throw new UncheckedException(e);
             }
         }
@@ -380,13 +374,13 @@ public class FileMonitor {
 
         private final FileFilter fileFilter;
 
-        public ProxyIOFileFilter( FileFilter fileFilter) {
+        public ProxyIOFileFilter(FileFilter fileFilter) {
             this.fileFilter = fileFilter;
         }
 
         @Override
         public boolean accept(File file) {
-            return fileFilter.accept( file );
+            return fileFilter.accept(file);
         }
 
 

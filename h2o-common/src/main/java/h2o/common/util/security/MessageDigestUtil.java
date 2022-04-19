@@ -8,24 +8,25 @@ import java.security.MessageDigest;
 
 public final class MessageDigestUtil {
 
-    private static final Logger log = LoggerFactory.getLogger( MessageDigestUtil.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(MessageDigestUtil.class.getName());
 
-    private MessageDigestUtil() {}
+    private MessageDigestUtil() {
+    }
 
-	public static String digest(String mdName, String str , String charset ) {
+    public static String digest(String mdName, String str, String charset) {
 
-		try {
+        try {
 
-			MessageDigest md = MessageDigest.getInstance(mdName);
+            MessageDigest md = MessageDigest.getInstance(mdName);
 
-			return HexUtil.byteArrayToHexString( md.digest( charset == null ? str.getBytes() : str.getBytes(charset) ) );
+            return HexUtil.byteArrayToHexString(md.digest(charset == null ? str.getBytes() : str.getBytes(charset)));
 
-		} catch ( Exception e ) {
-			log.debug("", e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
 
-	}
-	
+    }
+
 
 }

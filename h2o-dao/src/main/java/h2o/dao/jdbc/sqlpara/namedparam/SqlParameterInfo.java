@@ -1,4 +1,4 @@
-package h2o.dao.jdbc.parameter.namedparam;
+package h2o.dao.jdbc.sqlpara.namedparam;
 
 public class SqlParameterInfo {
 

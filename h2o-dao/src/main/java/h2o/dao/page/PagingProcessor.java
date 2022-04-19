@@ -9,6 +9,6 @@ public interface PagingProcessor {
 
     Tuple2<String, String> totalSql(String sql);
 
-    Tuple2<String, Map<String,Object>> pagingSql(String sql, PageRequest pageRequest);
+    Tuple2<String, Map<String, Object>> pagingSql(String sql, PageRequest pageRequest);
 
 }

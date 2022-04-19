@@ -8,141 +8,139 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RunUtil {
 
-	private final ExecutorService executorService;
-	private final AtomicInteger count;
-	private final boolean autoShutdown;
+    private final ExecutorService executorService;
+    private final AtomicInteger count;
+    private final boolean autoShutdown;
 
-	public RunUtil() {
+    public RunUtil() {
 
-		count = null;
-		autoShutdown = false;
+        count = null;
+        autoShutdown = false;
 
-		this.executorService = Executors.newSingleThreadExecutor();
-	}
+        this.executorService = Executors.newSingleThreadExecutor();
+    }
 
-	public RunUtil( int n , boolean autoShutdown ) {
+    public RunUtil(int n, boolean autoShutdown) {
 
-		this.autoShutdown = autoShutdown;
-		if( autoShutdown ) {
-			count = new AtomicInteger(n);
-		} else {
-			count = null;
-		}
+        this.autoShutdown = autoShutdown;
+        if (autoShutdown) {
+            count = new AtomicInteger(n);
+        } else {
+            count = null;
+        }
 
-		this.executorService = Executors.newFixedThreadPool(n);
-	}
-
-
-	public ExecutorService getExecutorService() {
-		return executorService;
-	}
-
-	public <T> Future<T>  submit( Callable<T> task ) {
-
-		Future<T> f = executorService.submit(task);
-
-		this.ShutdownAuto();
-
-		return f;
-
-	}
-
-	public Future<?> submit( Runnable task ) {
-
-		Future<?> f = executorService.submit(task);
-
-		this.ShutdownAuto();
-
-		return f;
-	}
+        this.executorService = Executors.newFixedThreadPool(n);
+    }
 
 
-	private void ShutdownAuto() {
-		if( this.autoShutdown ) {
-			if( count.decrementAndGet() == 0 ) {
-				executorService.shutdown();
-			}
-		}
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
 
-	}
+    public <T> Future<T> submit(Callable<T> task) {
 
-	public void shutdown() {
-		executorService.shutdown();
-	}
+        Future<T> f = executorService.submit(task);
 
+        this.ShutdownAuto();
 
-	public static <T> Future<T>  call( Callable<T> task ) {
+        return f;
 
-		RunUtil runUtil = new RunUtil();
+    }
 
-		Future<T> f = runUtil.submit(task);
-		runUtil.shutdown();
+    public Future<?> submit(Runnable task) {
 
-		return f;
-	}
+        Future<?> f = executorService.submit(task);
 
-	@SuppressWarnings("unchecked")
-	public static <T> Future<T>[]  call( Callable<T> task , int n ) {
+        this.ShutdownAuto();
 
-		if( n < 1) {
-			return null;
-		} else if( n == 1 ) {
-			return new Future[] { call(task) };
-		}
-
-		RunUtil runUtil = new RunUtil(n,true);
-
-		Future<T>[] fs = new Future[n];
-
-		for( int i = 0 ; i < n ;  i++ ) {
-			fs[i] = runUtil.submit(task);
-		}
-
-		return fs;
-	}
+        return f;
+    }
 
 
-	public  static  Future<?> run( Runnable task ) {
+    private void ShutdownAuto() {
+        if (this.autoShutdown) {
+            if (count.decrementAndGet() == 0) {
+                executorService.shutdown();
+            }
+        }
 
-		RunUtil runUtil = new RunUtil();
+    }
 
-		Future<?> f = runUtil.submit(task);
-		runUtil.shutdown();
-
-		return f;
-	}
+    public void shutdown() {
+        executorService.shutdown();
+    }
 
 
+    public static <T> Future<T> call(Callable<T> task) {
 
-	public static  Future<?>[] run( Runnable task , int n ) {
+        RunUtil runUtil = new RunUtil();
 
-		if( n < 1) {
-			return null;
-		} else if( n == 1 ) {
-			return new Future[] { run(task) };
-		}
+        Future<T> f = runUtil.submit(task);
+        runUtil.shutdown();
 
-		RunUtil runUtil = new RunUtil(n,true);
+        return f;
+    }
 
-		Future<?>[] fs = new Future[n];
+    @SuppressWarnings("unchecked")
+    public static <T> Future<T>[] call(Callable<T> task, int n) {
 
-		for( int i = 0 ; i < n ;  i++ ) {
-			fs[i] = runUtil.submit(task);
-		}
+        if (n < 1) {
+            return null;
+        } else if (n == 1) {
+            return new Future[]{call(task)};
+        }
 
-		return fs;
-	}
+        RunUtil runUtil = new RunUtil(n, true);
+
+        Future<T>[] fs = new Future[n];
+
+        for (int i = 0; i < n; i++) {
+            fs[i] = runUtil.submit(task);
+        }
+
+        return fs;
+    }
+
+
+    public static Future<?> run(Runnable task) {
+
+        RunUtil runUtil = new RunUtil();
+
+        Future<?> f = runUtil.submit(task);
+        runUtil.shutdown();
+
+        return f;
+    }
+
+
+    public static Future<?>[] run(Runnable task, int n) {
+
+        if (n < 1) {
+            return null;
+        } else if (n == 1) {
+            return new Future[]{run(task)};
+        }
+
+        RunUtil runUtil = new RunUtil(n, true);
+
+        Future<?>[] fs = new Future[n];
+
+        for (int i = 0; i < n; i++) {
+            fs[i] = runUtil.submit(task);
+        }
+
+        return fs;
+    }
 
 
     /**
-     *
      * @param millis
      * @return interrupted
      */
-	public static boolean sleep( long millis) {
+    public static boolean sleep(long millis) {
 
         try {
-            Thread.sleep( millis );
+            Thread.sleep(millis);
             return false;
         } catch (InterruptedException e) {
             return true;
@@ -151,18 +149,17 @@ public class RunUtil {
     }
 
 
-	public static boolean delay( long timeout ) {
-		return new TimeDelayer().delay( timeout );
-	}
+    public static boolean delay(long timeout) {
+        return new TimeDelayer().delay(timeout);
+    }
 
-	public static boolean delayUntil( long time ) {
-		return new TimeDelayer().delayUntil( time );
-	}
+    public static boolean delayUntil(long time) {
+        return new TimeDelayer().delayUntil(time);
+    }
 
-	public static void uninterruptedDelayUntil( long time ) {
-		new TimeDelayer().uninterruptedDelayUntil( time );
-	}
-
+    public static void uninterruptedDelayUntil(long time) {
+        new TimeDelayer().uninterruptedDelayUntil(time);
+    }
 
 
 }

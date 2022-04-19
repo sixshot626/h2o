@@ -94,17 +94,17 @@ public class MiniSnowflakeIdGen {
     //==============================Constructors=====================================
 
 
-    public MiniSnowflakeIdGen( long twepoch , long workerId) {
-        this( twepoch , workerId , 0L );
+    public MiniSnowflakeIdGen(long twepoch, long workerId) {
+        this(twepoch, workerId, 0L);
     }
 
     /**
      * 构造函数
      *
-     * @param workerId     工作ID (0~1023)
-     * @param timerId      时钟ID (0~31)
+     * @param workerId 工作ID (0~1023)
+     * @param timerId  时钟ID (0~31)
      */
-    public MiniSnowflakeIdGen( long twepoch , long workerId, long timerId) {
+    public MiniSnowflakeIdGen(long twepoch, long workerId, long timerId) {
 
         this.twepoch = twepoch;
 
@@ -125,10 +125,9 @@ public class MiniSnowflakeIdGen {
         return nextKey(19);
     }
 
-    public String nextKey( int n ) {
-        return StringUtils.leftPad( Long.toString( nextId() ) ,  n , '0' );
+    public String nextKey(int n) {
+        return StringUtils.leftPad(Long.toString(nextId()), n, '0');
     }
-
 
 
     /**

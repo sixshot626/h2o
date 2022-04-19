@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class HessianBeanSerializer implements BeanSerializer {
 
-    private static final Logger log = LoggerFactory.getLogger( HessianBeanSerializer.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(HessianBeanSerializer.class.getName());
 
 
     @Override
@@ -28,7 +28,7 @@ public class HessianBeanSerializer implements BeanSerializer {
             return os.toByteArray();
 
         } catch (Exception e) {
-            log.debug("" , e);
+            log.debug("", e);
             throw ExceptionUtil.toRuntimeException(e);
         }
     }
@@ -43,7 +43,7 @@ public class HessianBeanSerializer implements BeanSerializer {
             return hi.readObject();
 
         } catch (Exception e) {
-            log.debug("" , e);
+            log.debug("", e);
             throw ExceptionUtil.toRuntimeException(e);
         }
 

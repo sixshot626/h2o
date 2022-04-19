@@ -29,23 +29,23 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
     public TransReturn() {
     }
 
-    public TransReturn( Response response ) {
+    public TransReturn(Response response) {
 
 
-        this.ok                 = response.ok();
-        this.finalState         = response.finalState();
-        this.code               = response.getCode();
-        this.msg                = response.getMsg();
-        this.hasException       = response.hasException();
-        this.exception          = response.getException();
+        this.ok = response.ok();
+        this.finalState = response.finalState();
+        this.code = response.getCode();
+        this.msg = response.getMsg();
+        this.hasException = response.hasException();
+        this.exception = response.getException();
 
-        if ( response instanceof TransStatus ) {
-            this.status         = ((TransStatus) response).getStatus();
+        if (response instanceof TransStatus) {
+            this.status = ((TransStatus) response).getStatus();
         }
 
-        if ( response instanceof TransResult ) {
-            this.hasResult      = ((TransResult)response).hasResult();
-            this.result         = ((TransResult)response).getResult();
+        if (response instanceof TransResult) {
+            this.hasResult = ((TransResult) response).hasResult();
+            this.result = ((TransResult) response).getResult();
         }
 
     }
@@ -92,12 +92,13 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
 
 
     public TransReturn<S, R> ok(TriState state) {
-        this.ok = ( state == TriState.UNKNOWN ? NBool.NULL : NBool.valueOf( state == TriState.SUCCESS) ) ;
+        this.ok = (state == TriState.UNKNOWN ? NBool.NULL : NBool.valueOf(state == TriState.SUCCESS));
         return this;
     }
 
     public TransReturn<S, R> finalState(TriState state) {
-        this.finalState = ( state == TriState.UNKNOWN ? NBool.NULL : NBool.valueOf( state == TriState.SUCCESS) ) ;;
+        this.finalState = (state == TriState.UNKNOWN ? NBool.NULL : NBool.valueOf(state == TriState.SUCCESS));
+        ;
         return this;
     }
 
@@ -112,12 +113,12 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
     }
 
     public TransReturn<S, R> ok(Boolean ok) {
-        this.ok = NBool.valueOf( ok );
+        this.ok = NBool.valueOf(ok);
         return this;
     }
 
     public TransReturn<S, R> finalState(Boolean finalState) {
-        this.finalState = NBool.valueOf( finalState );
+        this.finalState = NBool.valueOf(finalState);
         return this;
     }
 

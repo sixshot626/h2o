@@ -3,25 +3,25 @@ package h2o.common.lang.tuple;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class Tuple2<A,B> implements Tuple {
+public class Tuple2<A, B> implements Tuple {
 
-	private static final long serialVersionUID = 5786178318377966323L;
-	
-	public final A e0;	
-	public final B e1;	
-	
-	public Tuple2( A e0 , B e1) {
-		this.e0 = e0;
-		this.e1 = e1;
-	}
+    private static final long serialVersionUID = 5786178318377966323L;
 
-	public A getE0() {
-		return e0;
-	}
+    public final A e0;
+    public final B e1;
 
-	public B getE1() {
-		return e1;
-	}
+    public Tuple2(A e0, B e1) {
+        this.e0 = e0;
+        this.e1 = e1;
+    }
+
+    public A getE0() {
+        return e0;
+    }
+
+    public B getE1() {
+        return e1;
+    }
 
     public A _1() {
         return e0;
@@ -31,9 +31,9 @@ public class Tuple2<A,B> implements Tuple {
         return e1;
     }
 
-	public int size() {		
-		return 2;
-	}
+    public int size() {
+        return 2;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -58,29 +58,24 @@ public class Tuple2<A,B> implements Tuple {
     }
 
     @Override
-	public String toString() {
-		return String.format("Tuple2[e0=%s, e1=%s]", e0, e1);
-	}
+    public String toString() {
+        return String.format("Tuple2[e0=%s, e1=%s]", e0, e1);
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T getE(int i) {
-		if( i < 0 || i > 1 ) {
-			throw new IndexOutOfBoundsException();
-		}
-		switch( i ) {
-		case 0:
-			return (T)e0;
-		case 1:
-			return (T)e1;
-		}
-		
-		return null;
-	}
-	
-	
-	
-	
-	 
-	
+    @SuppressWarnings("unchecked")
+    public <T> T getE(int i) {
+        if (i < 0 || i > 1) {
+            throw new IndexOutOfBoundsException();
+        }
+        switch (i) {
+            case 0:
+                return (T) e0;
+            case 1:
+                return (T) e1;
+        }
+
+        return null;
+    }
+
 
 }

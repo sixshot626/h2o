@@ -64,17 +64,15 @@ public class DBFactoryImpl implements DBFactory {
     }
 
     @Override
-    public Optional<PagingProcessor> getPagingProcessor( String name ) {
-        return Optional.ofNullable(factory.silentlyGet(StringUtil.build(name , "_" , PAGINGPROCESSOR_BEANID )));
+    public Optional<PagingProcessor> getPagingProcessor(String name) {
+        return Optional.ofNullable(factory.silentlyGet(StringUtil.build(name, "_", PAGINGPROCESSOR_BEANID)));
     }
 
 
-
-
-    private final InstanceTable<String,Db> dbTable = new InstanceTable<>(new InstanceFactory<Db>() {
+    private final InstanceTable<String, Db> dbTable = new InstanceTable<>(new InstanceFactory<Db>() {
         @Override
         public Db create(Object name) {
-            return createDb((String)name);
+            return createDb((String) name);
         }
 
         @Override

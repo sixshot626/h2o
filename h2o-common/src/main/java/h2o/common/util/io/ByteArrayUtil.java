@@ -39,10 +39,10 @@ public class ByteArrayUtil {
     }
 
     public static void putInt(int value, byte[] array, int offset) {
-        array[offset] = (byte)(0xff & (value >>> 24));
-        array[offset + 1] = (byte)(0xff & (value >>> 16));
-        array[offset + 2] = (byte)(0xff & (value >>> 8));
-        array[offset + 3] = (byte)(0xff & value);
+        array[offset] = (byte) (0xff & (value >>> 24));
+        array[offset + 1] = (byte) (0xff & (value >>> 16));
+        array[offset + 2] = (byte) (0xff & (value >>> 8));
+        array[offset + 3] = (byte) (0xff & value);
     }
 
     public static int getInt(byte[] array, int offset) {
@@ -51,38 +51,32 @@ public class ByteArrayUtil {
     }
 
     public static void putLong(long value, byte[] array, int offset) {
-        array[offset] = (byte)(0xff & (value >>> 56));
-        array[offset + 1] = (byte)(0xff & (value >>> 48));
-        array[offset + 2] = (byte)(0xff & (value >>> 40));
-        array[offset + 3] = (byte)(0xff & (value >>> 32));
-        array[offset + 4] = (byte)(0xff & (value >>> 24));
-        array[offset + 5] = (byte)(0xff & (value >>> 16));
-        array[offset + 6] = (byte)(0xff & (value >>> 8));
-        array[offset + 7] = (byte)(0xff & value);
+        array[offset] = (byte) (0xff & (value >>> 56));
+        array[offset + 1] = (byte) (0xff & (value >>> 48));
+        array[offset + 2] = (byte) (0xff & (value >>> 40));
+        array[offset + 3] = (byte) (0xff & (value >>> 32));
+        array[offset + 4] = (byte) (0xff & (value >>> 24));
+        array[offset + 5] = (byte) (0xff & (value >>> 16));
+        array[offset + 6] = (byte) (0xff & (value >>> 8));
+        array[offset + 7] = (byte) (0xff & value);
     }
 
     public static long getLong(byte[] array, int offset) {
-        return ((long)(array[offset] & 0xff) << 56) | ((long)(array[offset + 1] & 0xff) << 48)
-                | ((long)(array[offset + 2] & 0xff) << 40) | ((long)(array[offset + 3] & 0xff) << 32)
-                | ((long)(array[offset + 4] & 0xff) << 24) | ((long)(array[offset + 5] & 0xff) << 16)
-                | ((long)(array[offset + 6] & 0xff) << 8) | ((long)(array[offset + 7] & 0xff));
+        return ((long) (array[offset] & 0xff) << 56) | ((long) (array[offset + 1] & 0xff) << 48)
+                | ((long) (array[offset + 2] & 0xff) << 40) | ((long) (array[offset + 3] & 0xff) << 32)
+                | ((long) (array[offset + 4] & 0xff) << 24) | ((long) (array[offset + 5] & 0xff) << 16)
+                | ((long) (array[offset + 6] & 0xff) << 8) | ((long) (array[offset + 7] & 0xff));
     }
 
     /**
      * Retrieve a byte from a byte array.
-     * 
-     * @param a
-     *        the byte array to look in
-     * @param fromIndex
-     *        the position from which to start looking
-     * @param toIndex
-     *        the position up to which to look
-     * @param key
-     *        the byte to find
-     * 
+     *
+     * @param a         the byte array to look in
+     * @param fromIndex the position from which to start looking
+     * @param toIndex   the position up to which to look
+     * @param key       the byte to find
      * @return the position of the byte in the array, or -1 if the byte was not
-     *         found in the array
-     * 
+     * found in the array
      */
     public static int find(byte[] a, int fromIndex, int toIndex, byte key) {
         int result = -1;
@@ -103,18 +97,13 @@ public class ByteArrayUtil {
 
     /**
      * Look for a sequence of bytes in a byte array.
-     * 
-     * @param a
-     *        the byte array to look in
-     * @param fromIndex
-     *        the position from which to start looking
-     * @param toIndex
-     *        the position up to which to look
-     * @param key
-     *        the bytes to find
-     * 
+     *
+     * @param a         the byte array to look in
+     * @param fromIndex the position from which to start looking
+     * @param toIndex   the position up to which to look
+     * @param key       the bytes to find
      * @return the position of the bytes in the array, or -1 if the bytes were
-     *         not found in the array
+     * not found in the array
      */
     public static int find(byte[] a, int fromIndex, int toIndex, byte[] key) {
         int result = -1;
@@ -140,8 +129,7 @@ public class ByteArrayUtil {
 
         if (sublen == 0) {
             result = 0;
-        }
-        else if (sp == sublen) {
+        } else if (sp == sublen) {
             result = (first - 1);
         }
 
@@ -180,20 +168,15 @@ public class ByteArrayUtil {
     /**
      * Compares two regions of bytes, indicating whether one is larger than the
      * other.
-     * 
-     * @param array1
-     *        The first byte array.
-     * @param startIdx1
-     *        The start of the region in the first array.
-     * @param array2
-     *        The second byte array.
-     * @param startIdx2
-     *        The start of the region in the second array.
-     * @param length
-     *        The length of the region that should be compared.
+     *
+     * @param array1    The first byte array.
+     * @param startIdx1 The start of the region in the first array.
+     * @param array2    The second byte array.
+     * @param startIdx2 The start of the region in the second array.
+     * @param length    The length of the region that should be compared.
      * @return A negative number when the first region is smaller than the
-     *         second, a positive number when the first region is larger than the
-     *         second, or 0 if the regions are equal.
+     * second, a positive number when the first region is larger than the
+     * second, or 0 if the regions are equal.
      */
     public static int compareRegion(byte[] array1, int startIdx1, byte[] array2, int startIdx2, int length) {
         int result = 0;
@@ -230,7 +213,7 @@ public class ByteArrayUtil {
     }
 
     private static byte byteMask(int bitNo) {
-        return (byte)(0x80 >>> (bitNo % 8));
+        return (byte) (0x80 >>> (bitNo % 8));
     }
 
     /**

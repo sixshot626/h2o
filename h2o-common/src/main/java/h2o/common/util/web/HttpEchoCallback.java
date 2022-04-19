@@ -8,6 +8,6 @@ import org.apache.http.HttpResponse;
  */
 public interface HttpEchoCallback {
 
-    String getString( HttpResponse response , CharsetWrapper charset );
+    String getString(HttpResponse response, CharsetWrapper charset);
 
 }

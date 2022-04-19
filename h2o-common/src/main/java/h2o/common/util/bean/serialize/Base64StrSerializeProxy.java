@@ -27,14 +27,13 @@ public class Base64StrSerializeProxy implements BeanSerializer, BeanStrSerialize
 
     @Override
     public String bean2string(Object bean) {
-        return base64Util.encode( this.bean2bytes(bean) );
+        return base64Util.encode(this.bean2bytes(bean));
     }
 
     @Override
     public Object string2bean(String str) {
-        return this.bytes2bean( base64Util.decode( str ) );
+        return this.bytes2bean(base64Util.decode(str));
     }
-
 
 
     public void setBase64Util(Base64Util base64Util) {

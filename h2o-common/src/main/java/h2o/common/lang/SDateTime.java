@@ -29,61 +29,60 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
         this.value = null;
     }
 
-    public SDateTime( String dateTime ) {
-        this( dateTime , false );
+    public SDateTime(String dateTime) {
+        this(dateTime, false);
     }
 
-    public SDateTime( String dateStr , boolean direct ) {
-        if ( direct ) {
+    public SDateTime(String dateStr, boolean direct) {
+        if (direct) {
             this.value = dateStr;
         } else {
-            this.value = dateStr == null ? null : DateUtil.toString( toDate(dateStr, DATE_FMT ) , DATE_FMT );
+            this.value = dateStr == null ? null : DateUtil.toString(toDate(dateStr, DATE_FMT), DATE_FMT);
         }
     }
 
 
-    public SDateTime( int year , int month , int day , int hour, int minute, int second ) {
-        this( StringUtil.build(
-                StringUtils.leftPad( Integer.toString(year) , 4 , '0') , "-" ,
-                StringUtils.leftPad( Integer.toString(month) , 2 , '0') , "-" ,
-                StringUtils.leftPad( Integer.toString(day) , 2 , '0')  , "T" ,
-                StringUtils.leftPad( Integer.toString(hour) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(second) , 2 , '0') ) );
+    public SDateTime(int year, int month, int day, int hour, int minute, int second) {
+        this(StringUtil.build(
+                StringUtils.leftPad(Integer.toString(year), 4, '0'), "-",
+                StringUtils.leftPad(Integer.toString(month), 2, '0'), "-",
+                StringUtils.leftPad(Integer.toString(day), 2, '0'), "T",
+                StringUtils.leftPad(Integer.toString(hour), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(minute), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(second), 2, '0')));
 
     }
 
-    public SDateTime( LocalDateTime localDateTime ) {
+    public SDateTime(LocalDateTime localDateTime) {
         this.value = localDateTime == null ? null : StringUtil.build(
-                StringUtils.leftPad( Integer.toString(localDateTime.getYear()) , 4 , '0') , "-" ,
-                StringUtils.leftPad( Integer.toString(localDateTime.getMonthValue()) , 2 , '0') , "-" ,
-                StringUtils.leftPad( Integer.toString(localDateTime.getDayOfMonth()) , 2 , '0')  , "T" ,
-                StringUtils.leftPad( Integer.toString(localDateTime.getHour()) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(localDateTime.getMinute()) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(localDateTime.getSecond()) , 2 , '0') );
+                StringUtils.leftPad(Integer.toString(localDateTime.getYear()), 4, '0'), "-",
+                StringUtils.leftPad(Integer.toString(localDateTime.getMonthValue()), 2, '0'), "-",
+                StringUtils.leftPad(Integer.toString(localDateTime.getDayOfMonth()), 2, '0'), "T",
+                StringUtils.leftPad(Integer.toString(localDateTime.getHour()), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(localDateTime.getMinute()), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(localDateTime.getSecond()), 2, '0'));
     }
 
-    public SDateTime( Instant instant ) {
-        this.value = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+    public SDateTime(Instant instant) {
+        this.value = instant == null ? null : DateUtil.toString(new Date(instant.toEpochMilli()), DATE_FMT);
     }
 
-    public SDateTime( Date d ) {
-        this.value = d == null ? null : DateUtil.toString( d , DATE_FMT );
+    public SDateTime(Date d) {
+        this.value = d == null ? null : DateUtil.toString(d, DATE_FMT);
     }
 
-    public SDateTime( SDateTime sdatetime ) {
+    public SDateTime(SDateTime sdatetime) {
         this.value = sdatetime.value;
     }
 
 
-    private static Date toDate( String date , String fmt ) {
-        return SDate.toDate( date, fmt );
+    private static Date toDate(String date, String fmt) {
+        return SDate.toDate(date, fmt);
     }
 
 
-
-    public static SDateTime from( String dateTime, String fmt ) {
-        return new SDateTime( toDate(dateTime, fmt ) );
+    public static SDateTime from(String dateTime, String fmt) {
+        return new SDateTime(toDate(dateTime, fmt));
     }
 
 
@@ -94,8 +93,8 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
 
     public SDate getDate() {
 
-        if ( this.isPresent() ) {
-            return SDate.from( this.value, DATE_FMT );
+        if (this.isPresent()) {
+            return SDate.from(this.value, DATE_FMT);
         } else {
             return new SDate();
         }
@@ -105,8 +104,8 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
 
     public STime getTime() {
 
-        if ( this.isPresent() ) {
-            return STime.from( this.value, DATE_FMT );
+        if (this.isPresent()) {
+            return STime.from(this.value, DATE_FMT);
         } else {
             return new STime();
         }
@@ -114,10 +113,9 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
     }
 
 
+    public String fmt(String fmt) {
 
-    public String fmt( String fmt ) {
-
-        if ( DATE_FMT.equals( fmt ) ) {
+        if (DATE_FMT.equals(fmt)) {
             return this.get();
         } else {
             return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
@@ -125,19 +123,18 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
 
     }
 
-    public String fmt( String fmt , String def ) {
-        return this.isPresent() ? this.fmt( fmt ) : def;
+    public String fmt(String fmt, String def) {
+        return this.isPresent() ? this.fmt(fmt) : def;
     }
 
 
-
     public Date toDate() {
-        return DateUtil.toDate( this.get() , DATE_FMT );
+        return DateUtil.toDate(this.get(), DATE_FMT);
     }
 
     public LocalDateTime toLocalDateTime() {
 
-        if ( this.isPresent() ) {
+        if (this.isPresent()) {
 
             SDate date = this.getDate();
             STime time = this.getTime();
@@ -151,9 +148,8 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
     }
 
 
-
     @Override
-    public int compareTo( SDateTime other ) {
+    public int compareTo(SDateTime other) {
 
         String l = this.orElse("");
         String r = other.orElse("");

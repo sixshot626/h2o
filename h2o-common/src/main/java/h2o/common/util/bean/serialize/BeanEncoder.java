@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
 
 public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
 
-    private static final Logger log = LoggerFactory.getLogger( BeanEncoder.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(BeanEncoder.class.getName());
 
     private final String charsetName;
 
@@ -21,86 +21,86 @@ public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
         this.charsetName = "UTF-8";
     }
 
-    public BeanEncoder( String charsetName ) {
+    public BeanEncoder(String charsetName) {
         this.charsetName = charsetName;
     }
 
-	public byte[] bean2bytes(Object bean) {
+    public byte[] bean2bytes(Object bean) {
 
-		try {
+        try {
 
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
-			ObjectOutputStream out = new ObjectOutputStream(bao);
-			out.writeObject(bean);
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bao);
+            out.writeObject(bean);
 
-			out.close();
+            out.close();
 
-			return bao.toByteArray();
+            return bao.toByteArray();
 
-		} catch (Exception e) {
-			log.debug( "" , e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
-	}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
 
-	public Object bytes2bean(byte[] bs) {
+    public Object bytes2bean(byte[] bs) {
 
-		try {
+        try {
 
-			Object obj = null;
-			ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(bs));
+            Object obj = null;
+            ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(bs));
 
-			try {
-				obj = oin.readObject();
-			} finally {
-				if (oin != null) {
-					oin.close();
-				}
-			}
+            try {
+                obj = oin.readObject();
+            } finally {
+                if (oin != null) {
+                    oin.close();
+                }
+            }
 
-			return obj;
+            return obj;
 
-		} catch (Exception e) {
-			log.debug( "" , e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
 
-	}
+    }
 
-	public String bean2string(Object bean) {
+    public String bean2string(Object bean) {
 
-		try {
+        try {
 
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
 
-			XMLEncoder xe = new XMLEncoder(bao);
-			xe.writeObject(bean);
-			xe.close();
+            XMLEncoder xe = new XMLEncoder(bao);
+            xe.writeObject(bean);
+            xe.close();
 
-			return new String(bao.toByteArray(), charsetName);
+            return new String(bao.toByteArray(), charsetName);
 
-		} catch (Exception e) {
-			log.debug( "" , e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
-	}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
 
-	public Object string2bean(String xml) {
+    public Object string2bean(String xml) {
 
-		try {
+        try {
 
-			ByteArrayInputStream bai = new ByteArrayInputStream(xml.getBytes(charsetName));
+            ByteArrayInputStream bai = new ByteArrayInputStream(xml.getBytes(charsetName));
 
-			XMLDecoder xd = new XMLDecoder(bai);
-			Object bean = xd.readObject();
-			xd.close();
+            XMLDecoder xd = new XMLDecoder(bai);
+            Object bean = xd.readObject();
+            xd.close();
 
-			return bean;
+            return bean;
 
-		} catch (Exception e) {
-			log.debug( "" , e);
-			throw ExceptionUtil.toRuntimeException(e);
-		}
-	}
+        } catch (Exception e) {
+            log.debug("", e);
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
 
 }

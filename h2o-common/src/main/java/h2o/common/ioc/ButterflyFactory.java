@@ -5,38 +5,38 @@ import org.slf4j.LoggerFactory;
 
 public class ButterflyFactory implements Factory {
 
-    private static final Logger log = LoggerFactory.getLogger( ButterflyFactory.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(ButterflyFactory.class.getName());
 
     private final String name;
-	
-	private final Butterfly bf;
-	
-	public ButterflyFactory( String name , String bcs ) {
-		this.name = name;
-		bf = new Butterfly( bcs );
-	}
-	
-	
-	public <T> T get( String id , Object... args) {
-		
-		log.debug("{}: get({})", name , id);
-		
-		return bf.instance(id , args );
-	}
-	
-	
-	public <T> T silentlyGet( String id , Object... args) {
-		
-		try {
-			
-			return get(id , args );
-			
-		} catch( Exception e ) {
-			log.debug("",e);
-		}
-		
-		return null;
-	}
+
+    private final Butterfly bf;
+
+    public ButterflyFactory(String name, String bcs) {
+        this.name = name;
+        bf = new Butterfly(bcs);
+    }
+
+
+    public <T> T get(String id, Object... args) {
+
+        log.debug("{}: get({})", name, id);
+
+        return bf.instance(id, args);
+    }
+
+
+    public <T> T silentlyGet(String id, Object... args) {
+
+        try {
+
+            return get(id, args);
+
+        } catch (Exception e) {
+            log.debug("", e);
+        }
+
+        return null;
+    }
 
 
     public void init() {
@@ -52,7 +52,7 @@ public class ButterflyFactory implements Factory {
     }
 
     public void dispose() {
-		bf.dispose();
-	}
+        bf.dispose();
+    }
 
 }

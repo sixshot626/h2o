@@ -1,4 +1,4 @@
-package h2o.dao.jdbc;
+package h2o.dao.jdbc.sqlpara;
 
 
 public class PreparedSqlAndParameters {

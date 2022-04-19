@@ -2,7 +2,7 @@ package h2o.common.lang;
 
 import java.util.Objects;
 
-public final class NString implements OptionalValue<String>, Comparable<NString> , java.io.Serializable {
+public final class NString implements OptionalValue<String>, Comparable<NString>, java.io.Serializable {
 
     private static final long serialVersionUID = -7152107032754248698L;
 
@@ -14,7 +14,7 @@ public final class NString implements OptionalValue<String>, Comparable<NString>
         this.value = null;
     }
 
-    public NString(String value ) {
+    public NString(String value) {
         this.value = value;
     }
 
@@ -25,9 +25,9 @@ public final class NString implements OptionalValue<String>, Comparable<NString>
 
     @Override
     public int compareTo(NString o) {
-        if ( this.isPresent() && o.isPresent() ) {
-            return this.value.compareTo( o.value );
-        } else if ( ( ! this.isPresent() ) && ( ! o.isPresent())  ) {
+        if (this.isPresent() && o.isPresent()) {
+            return this.value.compareTo(o.value);
+        } else if ((!this.isPresent()) && (!o.isPresent())) {
             return 0;
         } else {
             return this.isPresent() ? 1 : -1;
@@ -37,7 +37,7 @@ public final class NString implements OptionalValue<String>, Comparable<NString>
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !( o instanceof NString)) return false;
+        if (o == null || !(o instanceof NString)) return false;
         NString nString = (NString) o;
         return Objects.equals(value, nString.value);
     }

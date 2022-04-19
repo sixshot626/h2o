@@ -13,7 +13,7 @@ public class TimestampSequence {
 
         public final long sequence;
 
-        public Sequence(long workerId , long timeId, long timestamp, long sequence) {
+        public Sequence(long workerId, long timeId, long timestamp, long sequence) {
             this.workerId = workerId;
             this.timeId = timeId;
             this.timestamp = timestamp;
@@ -40,7 +40,7 @@ public class TimestampSequence {
      */
     private long lastTimestamp = -1L;
 
-    public TimestampSequence(long workerId, long timerId , long maxTimerId, long maxSequence ) {
+    public TimestampSequence(long workerId, long timerId, long maxTimerId, long maxSequence) {
         this.workerId = workerId;
         this.timerId = timerId;
         this.maxTimerId = maxTimerId;
@@ -55,15 +55,14 @@ public class TimestampSequence {
     }
 
     public TimestampSequence(long workerId) {
-        this(workerId,0);
+        this(workerId, 0);
     }
 
     public TimestampSequence() {
-        this(0,0);
+        this(0, 0);
     }
 
     // ==============================Methods==========================================
-
 
 
     public synchronized Sequence next() {
@@ -73,7 +72,7 @@ public class TimestampSequence {
         //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过
         if (timestamp < lastTimestamp) {
             timerId++;
-            if ( timerId >= maxTimerId ) {
+            if (timerId >= maxTimerId) {
                 timerId = 0;
             }
         }
@@ -81,7 +80,7 @@ public class TimestampSequence {
         //如果是同一时间生成的，则进行毫秒内序列
         if (lastTimestamp == timestamp) {
             sequence++;
-            if ( sequence >= this.maxSequence ) {
+            if (sequence >= this.maxSequence) {
                 sequence = 0;
             }
             //毫秒内序列溢出
@@ -99,7 +98,7 @@ public class TimestampSequence {
         lastTimestamp = timestamp;
 
         //移位并通过或运算拼到一起组成64位的ID
-        return new Sequence( workerId , timerId , timestamp , sequence );
+        return new Sequence(workerId, timerId, timestamp, sequence);
 
     }
 

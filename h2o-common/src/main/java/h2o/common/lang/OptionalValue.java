@@ -13,20 +13,20 @@ public interface OptionalValue<T> {
     }
 
     default void ifPresent(Consumer<? super T> consumer) {
-        if ( this.isPresent() ) {
-            consumer.accept( this.getValue() );
+        if (this.isPresent()) {
+            consumer.accept(this.getValue());
         }
     }
 
     default T get() {
-        if ( this.isPresent() ) {
+        if (this.isPresent()) {
             return this.getValue();
         } else {
             throw new NoSuchElementException("No value present");
         }
     }
 
-    default T orElse( T other ) {
+    default T orElse(T other) {
         return this.isPresent() ? this.getValue() : other;
     }
 

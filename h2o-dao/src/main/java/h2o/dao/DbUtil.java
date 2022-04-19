@@ -18,140 +18,141 @@ import java.util.function.Function;
 
 public final class DbUtil {
 
-    private static final Logger log = LoggerFactory.getLogger( DbUtil.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(DbUtil.class.getName());
 
     public static final String DEFAULT_DATASOURCE_NAME = "default";
 
     public static final DBFactory DBFACTORY = DBFactoryProvider.getDbFactory();
 
-	public static final SqlTable sqlTable = newSqlTable();
+    public static final SqlTable sqlTable = newSqlTable();
 
-	public static SqlTable newSqlTable() {
-		return DBFACTORY.getSqlTable();
-	}
-
-
-	public static final SqlBuilder      sqlBuilder 			= DBFACTORY.getSqlBuilder();
-	public static final TemplateUtil 	sqlTemplateUtil 	= DBFACTORY.getSqlTemplateUtil();
+    public static SqlTable newSqlTable() {
+        return DBFACTORY.getSqlTable();
+    }
 
 
-	private static class S {
-		public static final DbUtil dbUtil = DBFACTORY.getDbUtil();
-	}
+    public static final SqlBuilder sqlBuilder = DBFACTORY.getSqlBuilder();
+    public static final TemplateUtil sqlTemplateUtil = DBFACTORY.getSqlTemplateUtil();
 
 
-	private final Map<String,DataSource> dsMap = MapBuilder.newConcurrentHashMap();
-
-	public void setDataSources( Map<String,DataSource> dataSources ) {
-		dsMap.putAll(dataSources);
-	}
-
-	public void addDataSource( String name , DataSource ds ) {
-		dsMap.put( name , ds );
-	}
+    private static class S {
+        public static final DbUtil dbUtil = DBFACTORY.getDbUtil();
+    }
 
 
+    private final Map<String, DataSource> dsMap = MapBuilder.newConcurrentHashMap();
 
-	public static DataSource getDataSource() {
-		return getDataSource(DEFAULT_DATASOURCE_NAME);
-	}
+    public void setDataSources(Map<String, DataSource> dataSources) {
+        dsMap.putAll(dataSources);
+    }
 
-	public static DataSource getDataSource(String name) {
-
-		log.debug(" getDataSource('{}') ... " , name );
-
-		DataSource ds =  S.dbUtil.dsMap.get( name );
-		if( ds == null ) {
-			throw new DaoException( "DataSource [" + name + "] undefined." );
-		}
-
-		return ds;
-	}
+    public void addDataSource(String name, DataSource ds) {
+        dsMap.put(name, ds);
+    }
 
 
+    public static DataSource getDataSource() {
+        return getDataSource(DEFAULT_DATASOURCE_NAME);
+    }
 
-	public static Db getDb(){
-		return getDb(DEFAULT_DATASOURCE_NAME);
-	}
+    public static DataSource getDataSource(String name) {
 
-	public static Db getDb( String name ){
-		return DBFACTORY.getDb( name );
-	}
+        log.debug(" getDataSource('{}') ... ", name);
 
+        DataSource ds = S.dbUtil.dsMap.get(name);
+        if (ds == null) {
+            throw new DaoException("DataSource [" + name + "] undefined.");
+        }
 
-	public static Dao getDao(){
-		return getDb().getDao();
-	}
-
-	public static Dao getDao( String name ){
-		return getDb(name).getDao();
-	}
+        return ds;
+    }
 
 
-	public static  <T> T qx( String name, Function<Dao, T> daoCallback) {
+    public static Db getDb() {
+        return getDb(DEFAULT_DATASOURCE_NAME);
+    }
 
-		Dao dao = null;
-
-		try {
-			dao = getDao(name);
-			return daoCallback.apply( dao );
-
-		} catch (Exception e) {
-
-			log.debug("doCallback",e);
-			throw ExceptionUtil.toRuntimeException(e);
-
-		} finally {
-			if ( dao != null ) {
-				try {
-					dao.close();
-				} catch (Exception e) {}
-			}
-		}
-	}
+    public static Db getDb(String name) {
+        return DBFACTORY.getDb(name);
+    }
 
 
-	public static  <T> T tx( String name, Function<Dao, T> txCallback ) {
-		return tx( new JdbcTransactionManager(name) , txCallback );
-	}
+    public static Dao getDao() {
+        return getDb().getDao();
+    }
 
-	public static  <T> T tx(TransactionManager txManager, Function<Dao, T> txCallback) {
+    public static Dao getDao(String name) {
+        return getDb(name).getDao();
+    }
 
-		Dao dao = null;
 
-		try {
+    public static <T> T qx(String name, Function<Dao, T> daoCallback) {
 
-			dao = txManager.getDao();
+        Dao dao = null;
 
-			T t = txCallback.apply( dao );
+        try {
+            dao = getDao(name);
+            return daoCallback.apply(dao);
 
-			txManager.commit();
+        } catch (Exception e) {
 
-			return t;
+            log.debug("doCallback", e);
+            throw ExceptionUtil.toRuntimeException(e);
 
-		} catch (Exception e) {
+        } finally {
+            if (dao != null) {
+                try {
+                    dao.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 
-			log.debug("doCallback",e);
 
-			txManager.rollback();
+    public static <T> T tx(String name, Function<Dao, T> txCallback) {
+        return tx(new JdbcTransactionManager(name), txCallback);
+    }
 
-			throw ExceptionUtil.toRuntimeException(e);
+    public static <T> T tx(TransactionManager txManager, Function<Dao, T> txCallback) {
 
-		} finally {
+        Dao dao = null;
 
-			if ( dao != null ) {
-				try {
-					dao.close();
-				} catch ( Exception e ) {}
-			}
+        try {
 
-			if ( txManager instanceof AutoCloseable ) {
-				try {
-					((AutoCloseable) txManager).close();
-				} catch ( Exception e ) {}
-			}
+            dao = txManager.getDao();
 
-		}
-	}
+            T t = txCallback.apply(dao);
+
+            txManager.commit();
+
+            return t;
+
+        } catch (Exception e) {
+
+            log.debug("doCallback", e);
+
+            txManager.rollback();
+
+            throw ExceptionUtil.toRuntimeException(e);
+
+        } finally {
+
+            if (dao != null) {
+                try {
+                    dao.close();
+                } catch (Exception e) {
+                }
+            }
+
+            if (txManager instanceof AutoCloseable) {
+                try {
+                    ((AutoCloseable) txManager).close();
+                } catch (Exception e) {
+                }
+            }
+
+        }
+    }
 
 }

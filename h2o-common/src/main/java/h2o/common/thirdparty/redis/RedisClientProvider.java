@@ -19,27 +19,27 @@ public class RedisClientProvider extends AbstractRedisProvider implements RedisP
     @Override
     public Redis<String, String> create() {
         StatefulRedisConnection<String, String> conn = client.connect();
-        return this.proxy( conn , conn.sync() );
+        return this.proxy(conn, conn.sync());
     }
 
     @Override
-    public <K, V> Redis<K, V> create( Val<RedisCodec<K, V>> codec ) {
+    public <K, V> Redis<K, V> create(Val<RedisCodec<K, V>> codec) {
         StatefulRedisConnection<K, V> conn =
                 client.connect(codec.orElse((RedisCodec<K, V>) this.defaultCodec));
-        return this.proxy( conn , conn.sync() );
+        return this.proxy(conn, conn.sync());
     }
 
     @Override
     public PubSubRedis<String, String> createPubSub() {
         StatefulRedisPubSubConnection<String, String> conn = client.connectPubSub();
-        return this.proxyPubSub( conn , conn.sync() );
+        return this.proxyPubSub(conn, conn.sync());
     }
 
     @Override
-    public <K, V> PubSubRedis<K, V> createPubSub( Val<RedisCodec<K, V>> codec ) {
+    public <K, V> PubSubRedis<K, V> createPubSub(Val<RedisCodec<K, V>> codec) {
         StatefulRedisPubSubConnection<K, V> conn =
                 client.connectPubSub(codec.orElse((RedisCodec<K, V>) this.defaultCodec));
-        return this.proxyPubSub( conn , conn.sync() );
+        return this.proxyPubSub(conn, conn.sync());
     }
 
 

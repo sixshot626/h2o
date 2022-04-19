@@ -4,7 +4,6 @@ import h2o.common.util.security.Encryptor;
 import h2o.common.util.security.MessageDigestUtil;
 
 
-
 public class SHA implements Encryptor {
 
     private final String charset;
@@ -17,8 +16,8 @@ public class SHA implements Encryptor {
         this.charset = charset;
     }
 
-	public String enc(String str) {
-		return MessageDigestUtil.digest("SHA", str , charset );
-	}
+    public String enc(String str) {
+        return MessageDigestUtil.digest("SHA", str, charset);
+    }
 
 }

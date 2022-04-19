@@ -7,27 +7,26 @@ import h2o.dao.orm.OrmProcessor;
 import java.util.Map;
 
 
+public class DefaultOrmProcessor implements OrmProcessor {
 
-public class DefaultOrmProcessor implements OrmProcessor {	
 
+    @Override
+    public <T> T proc(Map<String, Object> row, Class<T> clazz) throws DaoException {
 
-	@Override
-	public <T> T proc( Map<String, Object> row , Class<T> clazz ) throws DaoException {
+        if (row == null) {
+            return null;
+        }
 
-		if ( row == null ) {
-			return null;
-		}
+        try {
+            return new DbMap2BeanProcessor(clazz).toBean(row, createBean(clazz));
+        } catch (Exception e) {
+            throw new DaoException(e);
+        }
 
-		try {
-			return new DbMap2BeanProcessor(clazz).toBean( row , createBean(clazz) );
-		} catch( Exception  e ) {
-			throw new DaoException(e);
-		}
+    }
 
-	}
-
-	protected <T> T createBean( Class<T> beanClazz ) {
-		return InstanceUtil.newInstance( beanClazz );
-	}
+    protected <T> T createBean(Class<T> beanClazz) {
+        return InstanceUtil.newInstance(beanClazz);
+    }
 
 }

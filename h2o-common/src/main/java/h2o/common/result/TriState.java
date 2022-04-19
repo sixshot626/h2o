@@ -13,10 +13,10 @@ public enum TriState {
         this.value = value;
     }
 
-    public static TriState valueOf( NBool ok ) {
-        if ( ok == NBool.TRUE) {
+    public static TriState valueOf(NBool ok) {
+        if (ok == NBool.TRUE) {
             return SUCCESS;
-        } else if ( ok == NBool.FALSE) {
+        } else if (ok == NBool.FALSE) {
             return FAILURE;
         } else {
             return UNKNOWN;

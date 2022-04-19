@@ -13,41 +13,41 @@ import java.util.Optional;
 public class DbImpl implements Db {
 
 
-	private String name;
+    private String name;
 
-	private final ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
 
-	public DbImpl(String name, ConnectionManager connectionManager) {
-		this.name = name;
-		this.connectionManager = connectionManager;
-	}
+    public DbImpl(String name, ConnectionManager connectionManager) {
+        this.name = name;
+        this.connectionManager = connectionManager;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
 
-	@Override
-	public Dao getDao() {
-		ConnectionManager cm = this.connectionManager;
-		return createDao(cm.getConnection());
-	}
+    @Override
+    public Dao getDao() {
+        ConnectionManager cm = this.connectionManager;
+        return createDao(cm.getConnection());
+    }
 
-	@Override
-	public Dao createDao(Connection connection) {
+    @Override
+    public Dao createDao(Connection connection) {
 
-		DaoImpl daoImpl = new DaoImpl( connection );
+        DaoImpl daoImpl = new DaoImpl(connection);
 
-		daoImpl.setArgProcessor( DbUtil.DBFACTORY.getArgProcessor() );
-		daoImpl.setOrmProcessor( DbUtil.DBFACTORY.getOrmProcessor() );
+        daoImpl.setArgProcessor(DbUtil.DBFACTORY.getArgProcessor());
+        daoImpl.setOrmProcessor(DbUtil.DBFACTORY.getOrmProcessor());
 
-		Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor( this.getName() );
-		if ( pagingProcessor.isPresent() ) {
-			daoImpl.setPagingProcessor( pagingProcessor.get() );
-		}
+        Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor(this.getName());
+        if (pagingProcessor.isPresent()) {
+            daoImpl.setPagingProcessor(pagingProcessor.get());
+        }
 
-		return daoImpl;
-	}
+        return daoImpl;
+    }
 
 }

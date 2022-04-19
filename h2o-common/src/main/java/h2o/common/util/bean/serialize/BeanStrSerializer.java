@@ -5,8 +5,8 @@ package h2o.common.util.bean.serialize;
  */
 public interface BeanStrSerializer {
 
-    String bean2string( Object bean );
+    String bean2string(Object bean);
 
-    Object string2bean( String str );
+    Object string2bean(String str);
 
 }

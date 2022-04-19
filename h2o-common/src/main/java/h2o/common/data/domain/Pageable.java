@@ -2,12 +2,12 @@ package h2o.common.data.domain;
 
 public interface Pageable {
 
-	long getPageNo();
+    long getPageNo();
 
-	long getPageSize();
+    long getPageSize();
 
-	long getTotalElements();
+    long getTotalElements();
 
-	long getTotalPages();
+    long getTotalPages();
 
 }

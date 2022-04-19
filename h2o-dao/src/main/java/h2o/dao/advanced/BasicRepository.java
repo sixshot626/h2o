@@ -7,7 +7,9 @@ import h2o.common.lang.Val;
 import h2o.common.util.lang.GenericsUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
-import h2o.dao.column.ColumnMeta;
+import h2o.dao.structure.ColumnMeta;
+import h2o.dao.structure.TableStruct;
+import h2o.dao.structure.TableStructParser;
 
 import java.util.List;
 
@@ -33,8 +35,6 @@ public abstract class BasicRepository<E> {
     }
 
 
-
-
     public void add(E entity) {
         createDaoBasicUtil().add(entity);
     }
@@ -42,7 +42,6 @@ public abstract class BasicRepository<E> {
     public void batAdd(List<E> entities) {
         createDaoBasicUtil().batAdd(entities);
     }
-
 
 
     public int edit(E entity) {
@@ -53,85 +52,80 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().editByUnique(entity, uniqueName);
     }
 
-    public int editByAttr(E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().editByAttr(entity, attrName , more );
+    public int editByAttr(E entity, String attrName, String... more) {
+        return createDaoBasicUtil().editByAttr(entity, attrName, more);
     }
 
-    public int editByAttr(E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().editByAttr(entity, attrNames );
+    public int editByAttr(E entity, List<String> attrNames) {
+        return createDaoBasicUtil().editByAttr(entity, attrNames);
     }
 
-    public int editWhere( E entity , String where , Object... args  ) {
-        return createDaoBasicUtil().editWhere( entity, where , args );
-    }
-
-
-    public int edit( String[] fields , E entity) {
-        return createDaoBasicUtil().edit( fields , entity );
-    }
-
-    public int editByUnique( String[] fields , E entity, String uniqueName) {
-        return createDaoBasicUtil().editByUnique(  fields ,  entity, uniqueName );
-    }
-
-    public int editByAttr( String[] fields , E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().editByAttr(  fields ,  entity, attrName , more );
-    }
-
-    public int editByAttr( String[] fields , E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().editByAttr(  fields ,  entity, attrNames );
-    }
-
-    public int editWhere( String[] fields , E entity , String where , Object... args  ) {
-        return createDaoBasicUtil().editWhere( fields ,  entity, where , args );
+    public int editWhere(E entity, String where, Object... args) {
+        return createDaoBasicUtil().editWhere(entity, where, args);
     }
 
 
+    public int edit(String[] fields, E entity) {
+        return createDaoBasicUtil().edit(fields, entity);
+    }
 
-    public int update( E entity  ) {
+    public int editByUnique(String[] fields, E entity, String uniqueName) {
+        return createDaoBasicUtil().editByUnique(fields, entity, uniqueName);
+    }
+
+    public int editByAttr(String[] fields, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().editByAttr(fields, entity, attrName, more);
+    }
+
+    public int editByAttr(String[] fields, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().editByAttr(fields, entity, attrNames);
+    }
+
+    public int editWhere(String[] fields, E entity, String where, Object... args) {
+        return createDaoBasicUtil().editWhere(fields, entity, where, args);
+    }
+
+
+    public int update(E entity) {
         return createDaoBasicUtil().update(entity);
     }
 
-    public int updateByUnique(E entity , String uniqueName) {
+    public int updateByUnique(E entity, String uniqueName) {
         return createDaoBasicUtil().updateByUnique(entity, uniqueName);
     }
 
-    public int updateByAttr(E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().updateByAttr(entity, attrName , more );
+    public int updateByAttr(E entity, String attrName, String... more) {
+        return createDaoBasicUtil().updateByAttr(entity, attrName, more);
     }
 
-    public int updateByAttr(E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().updateByAttr(entity, attrNames );
+    public int updateByAttr(E entity, List<String> attrNames) {
+        return createDaoBasicUtil().updateByAttr(entity, attrNames);
     }
 
-    public int updateWhere( E entity , String where , Object... args  ) {
-        return createDaoBasicUtil().updateWhere( entity, where , args );
-    }
-
-
-
-    public int update( String[] fields , E entity  ) {
-        return createDaoBasicUtil().update( fields , entity);
-    }
-
-    public int updateByUnique( String[] fields , E entity , String uniqueName) {
-        return createDaoBasicUtil().updateByUnique( fields , entity, uniqueName);
-    }
-
-    public int updateByAttr(String[] fields , E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().updateByAttr( fields , entity, attrName , more );
-    }
-
-    public int updateByAttr(String[] fields , E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().updateByAttr( fields , entity, attrNames );
-    }
-
-    public int updateWhere( String[] fields , E entity , String where , Object... args  ) {
-        return createDaoBasicUtil().updateWhere( fields , entity, where , args );
+    public int updateWhere(E entity, String where, Object... args) {
+        return createDaoBasicUtil().updateWhere(entity, where, args);
     }
 
 
+    public int update(String[] fields, E entity) {
+        return createDaoBasicUtil().update(fields, entity);
+    }
 
+    public int updateByUnique(String[] fields, E entity, String uniqueName) {
+        return createDaoBasicUtil().updateByUnique(fields, entity, uniqueName);
+    }
+
+    public int updateByAttr(String[] fields, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().updateByAttr(fields, entity, attrName, more);
+    }
+
+    public int updateByAttr(String[] fields, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().updateByAttr(fields, entity, attrNames);
+    }
+
+    public int updateWhere(String[] fields, E entity, String where, Object... args) {
+        return createDaoBasicUtil().updateWhere(fields, entity, where, args);
+    }
 
 
     public Val<E> get(E entity) {
@@ -150,20 +144,20 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().getAndLockByUnique(entity, uniqueName);
     }
 
-    public Val<E> getByAttr(E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().getByAttr(entity, attrName , more );
+    public Val<E> getByAttr(E entity, String attrName, String... more) {
+        return createDaoBasicUtil().getByAttr(entity, attrName, more);
     }
 
-    public Val<E> getByAttr(E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().getByAttr(entity, attrNames );
+    public Val<E> getByAttr(E entity, List<String> attrNames) {
+        return createDaoBasicUtil().getByAttr(entity, attrNames);
     }
 
-    public Val<E> getAndLockByAttr(E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().getAndLockByAttr(entity, attrName , more );
+    public Val<E> getAndLockByAttr(E entity, String attrName, String... more) {
+        return createDaoBasicUtil().getAndLockByAttr(entity, attrName, more);
     }
 
-    public Val<E> getAndLockByAttr(E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().getAndLockByAttr(entity, attrNames );
+    public Val<E> getAndLockByAttr(E entity, List<String> attrNames) {
+        return createDaoBasicUtil().getAndLockByAttr(entity, attrNames);
     }
 
     public Val<E> selectOne(String[] fields, E entity) {
@@ -182,52 +176,52 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().selectOneAndLockByUnique(fields, entity, uniqueName);
     }
 
-    public Val<E> selectOneByAttr(String[] fields, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().selectOneByAttr(fields, entity, attrName , more );
+    public Val<E> selectOneByAttr(String[] fields, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().selectOneByAttr(fields, entity, attrName, more);
     }
 
-    public Val<E> selectOneByAttr(String[] fields, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().selectOneByAttr(fields, entity, attrNames );
+    public Val<E> selectOneByAttr(String[] fields, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().selectOneByAttr(fields, entity, attrNames);
     }
 
-    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrName , more );
+    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrName, more);
     }
 
-    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrNames );
+    public Val<E> selectOneAndLockByAttr(String[] fields, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().selectOneAndLockByAttr(fields, entity, attrNames);
     }
 
-    public List<E> loadByAttr(E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().loadByAttr(entity, attrName , more );
+    public List<E> loadByAttr(E entity, String attrName, String... more) {
+        return createDaoBasicUtil().loadByAttr(entity, attrName, more);
     }
 
-    public List<E> loadByAttr(E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().loadByAttr(entity, attrNames );
+    public List<E> loadByAttr(E entity, List<String> attrNames) {
+        return createDaoBasicUtil().loadByAttr(entity, attrNames);
     }
 
-    public List<E> selectByAttr(String[] fields, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().selectByAttr(fields, entity, attrName , more );
+    public List<E> selectByAttr(String[] fields, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().selectByAttr(fields, entity, attrName, more);
     }
 
-    public List<E> selectByAttr(String[] fields, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().selectByAttr(fields, entity, attrNames );
+    public List<E> selectByAttr(String[] fields, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().selectByAttr(fields, entity, attrNames);
     }
 
-    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrName, more );
+    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrName, more);
     }
 
-    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrNames );
+    public List<E> loadByAttr(SortInfo[] sortInfos, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().loadByAttr(sortInfos, entity, attrNames);
     }
 
-    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrName , more );
+    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrName, more);
     }
 
-    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrNames );
+    public List<E> selectByAttr(String[] fields, SortInfo[] sortInfos, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().selectByAttr(fields, sortInfos, entity, attrNames);
     }
 
     public List<E> loadAll(SortInfo... sortInfos) {
@@ -238,20 +232,20 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().selectAll(fields, sortInfos);
     }
 
-    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrName , more );
+    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrName, more);
     }
 
-    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrNames );
+    public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrNames);
     }
 
-    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().pagingSelectByAttr(fields, pageRequest, entity, attrName , more );
+    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().pagingSelectByAttr(fields, pageRequest, entity, attrName, more);
     }
 
-    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().pagingSelectByAttr(fields, pageRequest, entity, attrNames );
+    public Page<E> pagingSelectByAttr(String[] fields, PageRequest pageRequest, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().pagingSelectByAttr(fields, pageRequest, entity, attrNames);
     }
 
     public Page<E> pagingLoad(PageRequest pageRequest) {
@@ -270,19 +264,18 @@ public abstract class BasicRepository<E> {
         return createDaoBasicUtil().delByUnique(entity, uniqueName);
     }
 
-    public int delByAttr(E entity, String attrName , String... more ) {
-        return createDaoBasicUtil().delByAttr(entity, attrName , more );
+    public int delByAttr(E entity, String attrName, String... more) {
+        return createDaoBasicUtil().delByAttr(entity, attrName, more);
     }
 
-    public int delByAttr(E entity, List<String> attrNames ) {
-        return createDaoBasicUtil().delByAttr(entity, attrNames );
+    public int delByAttr(E entity, List<String> attrNames) {
+        return createDaoBasicUtil().delByAttr(entity, attrNames);
     }
 
 
-    public int delWhere( E entity , String where , Object... args  ) {
-        return createDaoBasicUtil().delWhere( entity , where , args );
+    public int delWhere(E entity, String where, Object... args) {
+        return createDaoBasicUtil().delWhere(entity, where, args);
     }
-
 
 
     private final Class<E> entityClazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
@@ -291,31 +284,28 @@ public abstract class BasicRepository<E> {
         return this.entityClazz;
     }
 
-    private final EntityParser entityParser = new EntityParser( this.getEntityClass() );
+    private final TableStruct tableStruct = TableStructParser.parse(this.getEntityClass());
 
-    protected EntityParser getEntityParser() {
-        return this.entityParser;
+    protected TableStruct getTableStruct() {
+        return this.tableStruct;
     }
 
     protected Dao getDao() {
-        return dao == null ? DbUtil.getDao( this.dataSourceName) : dao;
+        return dao == null ? DbUtil.getDao(this.dataSourceName) : dao;
     }
 
 
-    protected DaoBasicUtil<E> createDaoBasicUtil() {
-        return new DaoBasicUtil<E>( this.getEntityClass(), this.getEntityParser() , this.getDao() );
+    protected BasicUtil<E> createDaoBasicUtil() {
+        return new BasicUtil<E>(this.getDao(), this.getEntityClass(), this.getTableStruct());
     }
 
 
     public String tableName() {
-        return this.getEntityParser().getTableName();
+        return this.getTableStruct().tableName();
     }
 
-    public String column( String attrName ) {
-        ColumnMeta columnMeta = this.getEntityParser().getColumn(attrName);
-        if ( columnMeta == null ) {
-            throw new IllegalArgumentException(attrName);
-        }
+    public String column(String attrName) {
+        ColumnMeta columnMeta = this.getTableStruct().getColumn(attrName);
         return columnMeta.colName;
     }
 

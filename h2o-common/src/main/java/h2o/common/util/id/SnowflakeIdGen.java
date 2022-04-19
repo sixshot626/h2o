@@ -96,21 +96,22 @@ public class SnowflakeIdGen {
 
 
     public SnowflakeIdGen(long workerId) {
-        this( 1500000000000L , workerId , 0L );
+        this(1500000000000L, workerId, 0L);
     }
 
-    public SnowflakeIdGen( long workerId, long timerId) {
-        this( 1500000000000L , workerId , timerId );
+    public SnowflakeIdGen(long workerId, long timerId) {
+        this(1500000000000L, workerId, timerId);
     }
 
 
     /**
      * 构造函数
-     * @param twepoch      开始时间戳
-     * @param workerId     工作ID (0~127)
-     * @param timerId      时钟ID (0~7)
+     *
+     * @param twepoch  开始时间戳
+     * @param workerId 工作ID (0~127)
+     * @param timerId  时钟ID (0~7)
      */
-    public SnowflakeIdGen( long twepoch , long workerId, long timerId) {
+    public SnowflakeIdGen(long twepoch, long workerId, long timerId) {
 
         this.twepoch = twepoch;
 
@@ -131,8 +132,8 @@ public class SnowflakeIdGen {
         return nextKey(19);
     }
 
-    public String nextKey( int n ) {
-        return StringUtils.leftPad( Long.toString( nextId() ) ,  n , '0' );
+    public String nextKey(int n) {
+        return StringUtils.leftPad(Long.toString(nextId()), n, '0');
     }
 
 

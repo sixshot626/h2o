@@ -14,7 +14,7 @@ public class SnowGarlandIdGen {
 
     private final long workerId;
 
-    public SnowGarlandIdGen( long workerId) {
+    public SnowGarlandIdGen(long workerId) {
         this.workerId = workerId;
 
         if (workerId > 1023 || workerId < 0) {
@@ -23,21 +23,21 @@ public class SnowGarlandIdGen {
     }
 
 
-    public String nextKey( SDate cyclicSpace ) {
-        return nextKey(cyclicSpace , 19);
+    public String nextKey(SDate cyclicSpace) {
+        return nextKey(cyclicSpace, 19);
     }
 
-    public String nextKey( SDate cyclicSpace ,  int n ) {
-        return StringUtils.leftPad( Long.toString( nextId(cyclicSpace) ) ,  n , '0' );
+    public String nextKey(SDate cyclicSpace, int n) {
+        return StringUtils.leftPad(Long.toString(nextId(cyclicSpace)), n, '0');
     }
 
-    public synchronized long nextId( SDate cyclicSpace ) {
+    public synchronized long nextId(SDate cyclicSpace) {
 
-        if ( idGen == null || !cyclicSpace.equals( this.cyclicSpace ) ) {
+        if (idGen == null || !cyclicSpace.equals(this.cyclicSpace)) {
             this.cyclicSpace = cyclicSpace;
 
-            long twepoch = DateUtil.toDate( cyclicSpace.get() ).getTime() -  ( 1000L * 24 * 60 * 60 * 397  );
-            this.idGen = new MiniSnowflakeIdGen( twepoch , this.workerId );
+            long twepoch = DateUtil.toDate(cyclicSpace.get()).getTime() - (1000L * 24 * 60 * 60 * 397);
+            this.idGen = new MiniSnowflakeIdGen(twepoch, this.workerId);
         }
 
         return this.idGen.nextId();

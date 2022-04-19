@@ -21,18 +21,18 @@ import java.util.Map;
 
 public class HttpClient {
 
-    private static final Logger log = LoggerFactory.getLogger( HttpClient.class.getName() );
+    private static final Logger log = LoggerFactory.getLogger(HttpClient.class.getName());
 
     private final CloseableHttpClient client;
 
 
-	private volatile String contentType;
+    private volatile String contentType;
 
     private volatile CharsetWrapper sendCharset = new CharsetWrapper("UTF-8");
-	
-	private volatile CharsetWrapper charset = new CharsetWrapper("UTF-8");
 
-	private volatile HttpEchoCallback callback = null;
+    private volatile CharsetWrapper charset = new CharsetWrapper("UTF-8");
+
+    private volatile HttpEchoCallback callback = null;
 
 
     public HttpClient setContentType(String contentType) {
@@ -61,80 +61,72 @@ public class HttpClient {
     }
 
 
-    public HttpClient( CloseableHttpClient client ) {
+    public HttpClient(CloseableHttpClient client) {
         this.client = client;
     }
 
 
-
-
-
-
-    public  String get(URI uri) {
+    public String get(URI uri) {
 
         HttpGet httpget = new HttpGet(uri);
 
-        return echo( httpget );
+        return echo(httpget);
 
     }
 
-    public  String get(String url) {
+    public String get(String url) {
 
         HttpGet httpget = new HttpGet(url);
 
-        return echo( httpget );
+        return echo(httpget);
 
     }
-
 
 
     public String post(URI uri) {
 
-        return post( uri , (Map<String,String>)null  );
+        return post(uri, (Map<String, String>) null);
     }
 
     public String post(String url) {
 
-        return post( url , (Map<String,String>)null );
+        return post(url, (Map<String, String>) null);
 
     }
 
 
-
-    public  String post(URI uri , Map<String,String> para ) {
+    public String post(URI uri, Map<String, String> para) {
 
         HttpPost httppost = new HttpPost(uri);
 
-        return post(httppost , para );
+        return post(httppost, para);
 
     }
 
-    public  String post(String url , Map<String,String> para ) {
+    public String post(String url, Map<String, String> para) {
 
         HttpPost httppost = new HttpPost(url);
 
-        return post(httppost , para );
+        return post(httppost, para);
 
     }
 
 
-
-
-    public String post(HttpPost httppost , Map<String,String> para ) {
+    public String post(HttpPost httppost, Map<String, String> para) {
 
         try {
 
             HttpEntity entity = null;
 
-            if(para != null && !para.isEmpty()) {
-                entity = new UrlEncodedFormEntity(HttpClientUtil.para2nvList(para) , sendCharset.charset );
+            if (para != null && !para.isEmpty()) {
+                entity = new UrlEncodedFormEntity(HttpClientUtil.para2nvList(para), sendCharset.charset);
             }
 
-            return post( httppost , entity );
+            return post(httppost, entity);
 
-        } catch( Exception e ) {
+        } catch (Exception e) {
 
-            log.debug("echoPost",e);
+            log.debug("echoPost", e);
             throw ExceptionUtil.toRuntimeException(e);
 
         }
@@ -143,47 +135,41 @@ public class HttpClient {
     }
 
 
+    public String post(URI uri, String data) {
 
+        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data, charset.charset) : new StringEntity(data, ContentType.create(contentType, charset.charset));
 
-
-    public String post(URI uri , String data ) {
-
-        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset.charset) : new StringEntity(data , ContentType.create(contentType, charset.charset));
-
-        return post(uri , entity);
+        return post(uri, entity);
 
     }
 
-    public String post(String url , String data ) {
+    public String post(String url, String data) {
 
-        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data , charset.charset) : new StringEntity(data , ContentType.create(contentType, charset.charset));
+        HttpEntity entity = StringUtils.isBlank(contentType) ? new StringEntity(data, charset.charset) : new StringEntity(data, ContentType.create(contentType, charset.charset));
 
-        return post(url , entity);
+        return post(url, entity);
 
     }
 
 
-
-    public String post(URI uri , HttpEntity entity ) {
+    public String post(URI uri, HttpEntity entity) {
 
         HttpPost httppost = new HttpPost(uri);
 
-        return post(httppost , entity);
+        return post(httppost, entity);
 
     }
 
-    public String post(String url , HttpEntity entity) {
+    public String post(String url, HttpEntity entity) {
 
         HttpPost httppost = new HttpPost(url);
 
-        return post(httppost , entity);
+        return post(httppost, entity);
 
     }
 
 
-
-
-    public String post(HttpPost httppost, HttpEntity entity ) {
+    public String post(HttpPost httppost, HttpEntity entity) {
 
         if (entity != null) {
             httppost.setEntity(entity);
@@ -193,25 +179,23 @@ public class HttpClient {
     }
 
 
-
-
     public String echo(HttpUriRequest request) {
 
-        return HttpClientUtil.echo( client , false , request , charset , callback );
+        return HttpClientUtil.echo(client, false, request, charset, callback);
 
     }
 
 
     public void close() {
 
-        if ( client != null ) try {
+        if (client != null) try {
 
             client.close();
 
         } catch (IOException e) {
-            log.debug( "", e );
+            log.debug("", e);
         }
     }
-	
+
 
 }

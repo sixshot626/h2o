@@ -26,27 +26,27 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
         this.value = null;
     }
 
-    public LTime(long timestamp ) {
+    public LTime(long timestamp) {
         this.value = Long.valueOf(timestamp);
     }
 
-    public LTime(Long timestamp ) {
+    public LTime(Long timestamp) {
         this.value = timestamp;
     }
 
-    public LTime(SNumber timestamp ) {
+    public LTime(SNumber timestamp) {
         this.value = timestamp.toLong();
     }
 
-    public LTime(Instant instant ) {
+    public LTime(Instant instant) {
         this.value = instant == null ? null : instant.toEpochMilli();
     }
 
-    public LTime(Date date ) {
+    public LTime(Date date) {
         this.value = date == null ? null : date.getTime();
     }
 
-    public LTime(LTime ltimestamp ) {
+    public LTime(LTime ltimestamp) {
         this.value = ltimestamp.value;
     }
 
@@ -57,15 +57,15 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
 
 
     public String getTimestampString() {
-        return DateUtil.toString( new Date(this.get()) , DATE_FMT );
+        return DateUtil.toString(new Date(this.get()), DATE_FMT);
     }
 
-    public String orElseString(String other ) {
+    public String orElseString(String other) {
         return this.isPresent() ? this.getTimestampString() : other;
     }
 
     public <X extends Throwable> String orElseStringThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        if ( this.isPresent() ) {
+        if (this.isPresent()) {
             return this.getTimestampString();
         } else {
             throw exceptionSupplier.get();
@@ -73,9 +73,9 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
 
-    public String fmt( String fmt ) {
+    public String fmt(String fmt) {
 
-        if ( DATE_FMT.equals( fmt ) ) {
+        if (DATE_FMT.equals(fmt)) {
             return this.getTimestampString();
         } else {
             return DateUtil.str2Str(this.getTimestampString(), DATE_FMT, fmt);
@@ -83,14 +83,14 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
 
     }
 
-    public String fmt( String fmt , String def ) {
-        return this.isPresent() ? this.fmt( fmt ) : def;
+    public String fmt(String fmt, String def) {
+        return this.isPresent() ? this.fmt(fmt) : def;
     }
 
 
     public Date toDate() {
 
-        if ( this.isPresent() ) {
+        if (this.isPresent()) {
             return new Date(this.value);
         } else {
             throw new NoSuchElementException("No value present");
@@ -99,7 +99,7 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
 
     public Instant toInstant() {
 
-        if ( this.isPresent() ) {
+        if (this.isPresent()) {
             return Instant.ofEpochMilli(this.value);
         } else {
             throw new NoSuchElementException("No value present");
@@ -107,13 +107,13 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
     public LocalDateTime toLocalDateTime() {
-         return LocalDateTime.ofInstant( toInstant(), ZoneId.systemDefault());
+        return LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault());
     }
 
     public SDateTime toSDateTime() {
 
-        if ( this.isPresent() ) {
-            return new SDateTime( new Date( this.value) );
+        if (this.isPresent()) {
+            return new SDateTime(new Date(this.value));
         } else {
             return new SDateTime();
         }
@@ -121,17 +121,16 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
     public SNumber toSNumber() {
-        if ( this.isPresent() ) {
-            return new SNumber( this.value);
+        if (this.isPresent()) {
+            return new SNumber(this.value);
         } else {
             return new SNumber();
         }
     }
 
 
-
     @Override
-    public int compareTo( LTime other ) {
+    public int compareTo(LTime other) {
 
         Long l = this.isPresent() ? this.value : new Long(0);
         Long r = this.isPresent() ? other.value : new Long(0);

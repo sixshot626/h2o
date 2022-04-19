@@ -3,7 +3,7 @@ package h2o.common.util.security;
 public class HexUtil {
 
 
-	public static String byteArrayToHexString(byte[] bs) {
+    public static String byteArrayToHexString(byte[] bs) {
 
         StringBuilder stringBuilder = new StringBuilder("");
         if (bs == null || bs.length <= 0) {
@@ -19,8 +19,6 @@ public class HexUtil {
         }
         return stringBuilder.toString();
     }
-
-
 
 
     public static byte[] hexStringToByteArray(String hexString) {
@@ -41,7 +39,6 @@ public class HexUtil {
     private static byte charToByte(char c) {
         return (byte) "0123456789ABCDEF".indexOf(c);
     }
-
 
 
 }

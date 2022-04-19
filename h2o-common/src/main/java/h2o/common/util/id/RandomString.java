@@ -10,11 +10,11 @@ public class RandomString {
         this.rand = new DefaultRandIntImpl(new Random());
     }
 
-    public RandomString( long seed ) {
-        this.rand = new DefaultRandIntImpl( new Random( seed ) );
+    public RandomString(long seed) {
+        this.rand = new DefaultRandIntImpl(new Random(seed));
     }
 
-    public RandomString( RandInt rand ) {
+    public RandomString(RandInt rand) {
         this.rand = rand;
     }
 
@@ -53,8 +53,6 @@ public class RandomString {
     }
 
 
-
-
     public interface RandInt {
         int nextInt(int n);
     }
@@ -73,7 +71,6 @@ public class RandomString {
         }
 
     }
-
 
 
 }

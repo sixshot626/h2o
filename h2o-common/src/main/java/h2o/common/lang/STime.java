@@ -28,50 +28,50 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
         this.value = null;
     }
 
-    public STime( String time ) {
-        this( time,false );
+    public STime(String time) {
+        this(time, false);
     }
 
-    public STime( String timeStr ,  boolean direct ) {
-        if ( direct ) {
+    public STime(String timeStr, boolean direct) {
+        if (direct) {
             this.value = timeStr;
         } else {
-            this.value = timeStr == null ? null : DateUtil.toString( toDate( timeStr , DATE_FMT ) , DATE_FMT );
+            this.value = timeStr == null ? null : DateUtil.toString(toDate(timeStr, DATE_FMT), DATE_FMT);
         }
     }
 
-    public STime( int hour, int minute, int second ) {
-        this( StringUtil.build(StringUtils.leftPad( Integer.toString(hour) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(minute) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(second) , 2 , '0') ) );
+    public STime(int hour, int minute, int second) {
+        this(StringUtil.build(StringUtils.leftPad(Integer.toString(hour), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(minute), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(second), 2, '0')));
     }
 
-    public STime( LocalTime localTime ) {
+    public STime(LocalTime localTime) {
         this.value = localTime == null ? null : StringUtil.build(
-                StringUtils.leftPad( Integer.toString(localTime.getHour()) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(localTime.getMinute()) , 2 , '0') , ":" ,
-                StringUtils.leftPad( Integer.toString(localTime.getSecond()) , 2 , '0') );
+                StringUtils.leftPad(Integer.toString(localTime.getHour()), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(localTime.getMinute()), 2, '0'), ":",
+                StringUtils.leftPad(Integer.toString(localTime.getSecond()), 2, '0'));
     }
 
-    public STime( Instant instant ) {
-        this.value = instant == null ?  null : DateUtil.toString( new Date( instant.toEpochMilli() ) , DATE_FMT );
+    public STime(Instant instant) {
+        this.value = instant == null ? null : DateUtil.toString(new Date(instant.toEpochMilli()), DATE_FMT);
     }
 
-    public STime( Date d ) {
-        this.value = d == null ? null : DateUtil.toString( d , DATE_FMT );
+    public STime(Date d) {
+        this.value = d == null ? null : DateUtil.toString(d, DATE_FMT);
     }
 
-    public STime( STime stime ) {
+    public STime(STime stime) {
         this.value = stime.value;
     }
 
 
-    private static Date toDate( String date , String fmt ) {
-        return SDate.toDate( date, fmt );
+    private static Date toDate(String date, String fmt) {
+        return SDate.toDate(date, fmt);
     }
 
-    public static STime from(String time , String fmt ) {
-        return new STime( toDate( time , fmt ) );
+    public static STime from(String time, String fmt) {
+        return new STime(toDate(time, fmt));
     }
 
 
@@ -80,9 +80,9 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
         return this.value;
     }
 
-    public String fmt( String fmt ) {
+    public String fmt(String fmt) {
 
-        if ( DATE_FMT.equals( fmt ) ) {
+        if (DATE_FMT.equals(fmt)) {
             return this.get();
         } else {
             return DateUtil.str2Str(this.get(), DATE_FMT, fmt);
@@ -90,33 +90,31 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
 
     }
 
-    public String fmt( String fmt , String def ) {
-        return this.isPresent() ? this.fmt( fmt ) : def;
+    public String fmt(String fmt, String def) {
+        return this.isPresent() ? this.fmt(fmt) : def;
     }
 
 
     public LocalTime toLocalTime() {
-        return LocalTime.of( this.getHour() , this.getMinute() , this.getSecond() );
+        return LocalTime.of(this.getHour(), this.getMinute(), this.getSecond());
     }
 
 
     public int getHour() {
-        return Integer.parseInt(StringUtils.substringBefore( this.get() , ":" ) );
+        return Integer.parseInt(StringUtils.substringBefore(this.get(), ":"));
     }
 
     public int getMinute() {
-        return Integer.parseInt(StringUtils.substringBetween( this.get() , ":" ) );
+        return Integer.parseInt(StringUtils.substringBetween(this.get(), ":"));
     }
 
     public int getSecond() {
-        return Integer.parseInt(StringUtils.substringAfterLast( this.get() , ":" ) );
+        return Integer.parseInt(StringUtils.substringAfterLast(this.get(), ":"));
     }
 
 
-
-
     @Override
-    public int compareTo( STime other ) {
+    public int compareTo(STime other) {
 
         String l = this.orElse("");
         String r = other.orElse("");

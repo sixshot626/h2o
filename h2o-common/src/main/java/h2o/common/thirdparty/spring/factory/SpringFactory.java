@@ -11,25 +11,25 @@ import java.util.concurrent.locks.Lock;
 
 @Component
 public class SpringFactory implements BeanFactoryAware {
-	
-	private static final Lock lock = new java.util.concurrent.locks.ReentrantLock();
 
-	private static volatile BeanFactory beanFactory;
+    private static final Lock lock = new java.util.concurrent.locks.ReentrantLock();
 
-	public  static void setStaticConfigPath(String... path) {
-		lock.lock();
-		try {
-			beanFactory = new ClassPathXmlApplicationContext(path);
-		} finally {
-			lock.unlock();
-		}	
-	}
-	
-	public void setConfigPath(String... path) {
-		setStaticConfigPath(path);
-	}
+    private static volatile BeanFactory beanFactory;
 
-	@Override
+    public static void setStaticConfigPath(String... path) {
+        lock.lock();
+        try {
+            beanFactory = new ClassPathXmlApplicationContext(path);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setConfigPath(String... path) {
+        setStaticConfigPath(path);
+    }
+
+    @Override
     public void setBeanFactory(BeanFactory bf) throws BeansException {
         lock.lock();
         try {
@@ -39,23 +39,23 @@ public class SpringFactory implements BeanFactoryAware {
         }
     }
 
-    public static BeanFactory getBeanFactory()  {
+    public static BeanFactory getBeanFactory() {
         BeanFactory bf = beanFactory;
-        if ( bf == null ) {
+        if (bf == null) {
             throw new IllegalStateException("BeanFactory not initialized");
         }
         return bf;
     }
 
 
-	@SuppressWarnings("unchecked")
-	public static <T> T getObject(String beanId) {
-		
-		return (T) getBeanFactory().getBean(beanId);
-	}
+    @SuppressWarnings("unchecked")
+    public static <T> T getObject(String beanId) {
+
+        return (T) getBeanFactory().getBean(beanId);
+    }
 
 
-	/*====== delegate =====*/
+    /*====== delegate =====*/
 
 
     public static Object getBean(String name) throws BeansException {
@@ -98,7 +98,6 @@ public class SpringFactory implements BeanFactoryAware {
     public static String[] getAliases(String name) {
         return getBeanFactory().getAliases(name);
     }
-
 
 
 }

@@ -8,7 +8,7 @@ import h2o.common.util.json.JsonUtil;
 public class Tools {
 
 
-	public static final BeanUtil b = BeanUtil.build().setProcNull(false).setIgnoreCase(false).setCover(false).get();
+    public static final BeanUtil b = BeanUtil.build().setProcNull(false).setIgnoreCase(false).setCover(false).get();
 
     public static final BeanUtil bn = b.procNull(true);
 
@@ -34,6 +34,6 @@ public class Tools {
     }
 
 
-	public static final Logger log = new Logger();
+    public static final Logger log = new Logger();
 
 }

@@ -10,68 +10,69 @@ import java.util.Map;
 
 public class GsonUtil {
 
-	private final GsonCreater creater;
+    private final GsonCreater creater;
 
-	public GsonUtil() {
+    public GsonUtil() {
 
-		this.creater = new GsonCreater() {
+        this.creater = new GsonCreater() {
 
-			private final Gson _gson = new GsonBuilder().disableHtmlEscaping().create();
+            private final Gson _gson = new GsonBuilder().disableHtmlEscaping().create();
 
-			@Override
-			public Gson create() {
-				return _gson;
-			}
-		};
+            @Override
+            public Gson create() {
+                return _gson;
+            }
+        };
 
-	}
+    }
 
-	public GsonUtil( GsonCreater creater ) {
-		this.creater = creater;
-	}
+    public GsonUtil(GsonCreater creater) {
+        this.creater = creater;
+    }
 
 
-	public String toJson( Object obj ) {
-		return this.creater.create().toJson( obj );
-	}
+    public String toJson(Object obj) {
+        return this.creater.create().toJson(obj);
+    }
 
-	@SuppressWarnings("rawtypes")
-	public Map json2Map(String json) {
+    @SuppressWarnings("rawtypes")
+    public Map json2Map(String json) {
 
-	    if( StringUtils.isBlank( json ) ) return null;
+        if (StringUtils.isBlank(json)) return null;
 
-		return this.creater.create().fromJson( json , new TypeToken<Map>() {}.getType()  );
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public List json2List(String json) {
+        return this.creater.create().fromJson(json, new TypeToken<Map>() {
+        }.getType());
+    }
 
-        if( StringUtils.isBlank( json ) ) return null;
+    @SuppressWarnings("rawtypes")
+    public List json2List(String json) {
 
-		return this.creater.create().fromJson( json , new TypeToken<List>() {}.getType() );
+        if (StringUtils.isBlank(json)) return null;
 
-	}
-	
+        return this.creater.create().fromJson(json, new TypeToken<List>() {
+        }.getType());
 
-	public Object json2Object( String json ) {
+    }
 
-        if( StringUtils.isBlank( json ) ) return null;
 
-		if( json.trim().startsWith("[") ) {
-			return json2List(json);
-		} else {
-			return json2Map(json);
-		}
-	}
+    public Object json2Object(String json) {
 
-	public <T> T json2Object( String json , Class<T> clazz ) {
+        if (StringUtils.isBlank(json)) return null;
 
-		if( StringUtils.isBlank( json ) ) return null;
+        if (json.trim().startsWith("[")) {
+            return json2List(json);
+        } else {
+            return json2Map(json);
+        }
+    }
 
-		return this.creater.create().fromJson( json , clazz );
+    public <T> T json2Object(String json, Class<T> clazz) {
 
-	}
+        if (StringUtils.isBlank(json)) return null;
 
+        return this.creater.create().fromJson(json, clazz);
+
+    }
 
 
 }
