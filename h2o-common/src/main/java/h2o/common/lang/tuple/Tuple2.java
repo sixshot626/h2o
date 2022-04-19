@@ -1,7 +1,6 @@
 package h2o.common.lang.tuple;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import java.util.Objects;
 
 public class Tuple2<A, B> implements Tuple {
 
@@ -38,23 +37,14 @@ public class Tuple2<A, B> implements Tuple {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         Tuple2<?, ?> tuple2 = (Tuple2<?, ?>) o;
-
-        return new EqualsBuilder()
-                .append(e0, tuple2.e0)
-                .append(e1, tuple2.e1)
-                .isEquals();
+        return Objects.equals(e0, tuple2.e0) && Objects.equals(e1, tuple2.e1);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(e0)
-                .append(e1)
-                .toHashCode();
+        return Objects.hash(e0, e1);
     }
 
     @Override

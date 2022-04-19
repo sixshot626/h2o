@@ -1,7 +1,7 @@
 package h2o.common.io;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.util.Objects;
 
 public class CharsetWrapper {
 
@@ -21,21 +21,18 @@ public class CharsetWrapper {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         CharsetWrapper that = (CharsetWrapper) o;
-
-        return new EqualsBuilder()
-                .append(charset, that.charset)
-                .isEquals();
+        return Objects.equals(charset, that.charset);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(charset)
-                .toHashCode();
+        return Objects.hash(charset);
     }
 
+    @Override
+    public String toString() {
+        return charset;
+    }
 }

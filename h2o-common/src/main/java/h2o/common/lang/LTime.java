@@ -1,14 +1,13 @@
 package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java.io.Serializable {
@@ -139,27 +138,19 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
 
     }
 
+
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
-
-        if (o == null || !(o instanceof LTime)) return false;
-
-        LTime that = (LTime) o;
-
-        return new EqualsBuilder()
-                .append(value, that.value)
-                .isEquals();
+        if (o == null || getClass() != o.getClass()) return false;
+        LTime lTime = (LTime) o;
+        return Objects.equals(value, lTime.value);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(value)
-                .toHashCode();
+        return Objects.hash(value);
     }
-
 
     @Override
     public String toString() {

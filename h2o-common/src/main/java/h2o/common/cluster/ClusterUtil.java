@@ -4,7 +4,7 @@ package h2o.common.cluster;
 import h2o.common.Tools;
 import h2o.common.lang.SDate;
 import h2o.common.util.id.SnowGarlandIdGen;
-import org.apache.commons.lang.StringUtils;
+import h2o.apache.commons.lang.StringUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;

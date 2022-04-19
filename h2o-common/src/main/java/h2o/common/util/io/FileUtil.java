@@ -1,6 +1,6 @@
 package h2o.common.util.io;
 
-import org.apache.commons.configuration.ConfigurationUtils;
+import h2o.apache.commons.configuration.ConfigurationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

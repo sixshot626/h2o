@@ -6,7 +6,7 @@ import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.dao.DbUtil;
-import org.apache.commons.lang.StringUtils;
+import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 package h2o.common.util.id;
 
 import h2o.common.util.security.RadixConvertUtil;
-import org.apache.commons.lang.StringUtils;
+import h2o.apache.commons.lang.StringUtils;
 
 
 public class UuidUtil {

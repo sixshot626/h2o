@@ -6,7 +6,7 @@ import h2o.dao.annotation.PK;
 import h2o.dao.annotation.Table;
 import h2o.dao.annotation.Unique;
 import h2o.dao.exception.DaoException;
-import org.apache.commons.lang.StringUtils;
+import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

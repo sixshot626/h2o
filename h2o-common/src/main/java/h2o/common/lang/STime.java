@@ -2,13 +2,13 @@ package h2o.common.lang;
 
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.lang.StringUtil;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import h2o.apache.commons.lang.StringUtils;
+
 
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.Objects;
 
 public final class STime implements OptionalValue<String>, Comparable<STime>, java.io.Serializable {
 
@@ -125,23 +125,15 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
-
-        if (o == null || !(o instanceof STime)) return false;
-
-        STime sDate = (STime) o;
-
-        return new EqualsBuilder()
-                .append(this.value, sDate.value)
-                .isEquals();
+        if (o == null || getClass() != o.getClass()) return false;
+        STime sTime = (STime) o;
+        return Objects.equals(value, sTime.value);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(this.value)
-                .toHashCode();
+        return Objects.hash(value);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package h2o.common.lang;
 
 
-import org.apache.commons.lang.StringUtils;
+import h2o.apache.commons.lang.StringUtils;
 
 import java.util.Objects;
 

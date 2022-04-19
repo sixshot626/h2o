@@ -1,6 +1,7 @@
 package h2o.common.util.id;
 
-import org.apache.commons.lang.StringUtils;
+
+import h2o.apache.commons.lang.StringUtils;
 
 /**
  * Twitter_Snowflake<br>

@@ -1,7 +1,7 @@
 package h2o.common.lang.tuple;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.util.Objects;
 
 public final class Tuple6<A, B, C, D, E, F> implements Tuple {
 
@@ -83,31 +83,14 @@ public final class Tuple6<A, B, C, D, E, F> implements Tuple {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         Tuple6<?, ?, ?, ?, ?, ?> tuple6 = (Tuple6<?, ?, ?, ?, ?, ?>) o;
-
-        return new EqualsBuilder()
-                .append(e0, tuple6.e0)
-                .append(e1, tuple6.e1)
-                .append(e2, tuple6.e2)
-                .append(e3, tuple6.e3)
-                .append(e4, tuple6.e4)
-                .append(e5, tuple6.e5)
-                .isEquals();
+        return Objects.equals(e0, tuple6.e0) && Objects.equals(e1, tuple6.e1) && Objects.equals(e2, tuple6.e2) && Objects.equals(e3, tuple6.e3) && Objects.equals(e4, tuple6.e4) && Objects.equals(e5, tuple6.e5);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(e0)
-                .append(e1)
-                .append(e2)
-                .append(e3)
-                .append(e4)
-                .append(e5)
-                .toHashCode();
+        return Objects.hash(e0, e1, e2, e3, e4, e5);
     }
 
     @Override
