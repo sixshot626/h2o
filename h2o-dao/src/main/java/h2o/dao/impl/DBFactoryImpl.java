@@ -1,8 +1,10 @@
 package h2o.dao.impl;
 
+import h2o.common.concurrent.factory.CachedCreator;
 import h2o.common.concurrent.factory.InstanceFactory;
 import h2o.common.concurrent.factory.InstanceTable;
 import h2o.common.ioc.Factory;
+import h2o.common.lang.Val;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.DBFactory;
@@ -34,6 +36,10 @@ public class DBFactoryImpl implements DBFactory {
 
     protected final Factory factory;
 
+    private <T> T factoryGet(String id) {
+        return factory.get(id);
+    };
+
     public DBFactoryImpl(Factory factory) {
         this.factory = factory;
     }
@@ -53,19 +59,48 @@ public class DBFactoryImpl implements DBFactory {
         return factory.get(SQLBUILDER_BEANID);
     }
 
+
+    private final CachedCreator<ArgProcessor> argProcessorCache
+            = new CachedCreator<>(()->factoryGet(ARGPROCESSOR_BEANID));
     @Override
     public ArgProcessor getArgProcessor() {
-        return factory.get(ARGPROCESSOR_BEANID);
+        return argProcessorCache.get(true);
     }
 
+
+    private final CachedCreator<OrmProcessor> ormProcessorCache
+            = new CachedCreator<>(()->factoryGet(ORMPROCESSOR_BEANID));
     @Override
     public OrmProcessor getOrmProcessor() {
-        return factory.get(ORMPROCESSOR_BEANID);
+        return ormProcessorCache.get(true);
     }
+
+
+    private final InstanceTable<String, Val<PagingProcessor>> pagingProcessorTable
+            = new InstanceTable<>(new InstanceFactory<Val<PagingProcessor>>() {
+
+        @Override
+        public Val<PagingProcessor> create(Object name) {
+            return new Val<>( factory.silentlyGet(StringUtil.build(name, "_", PAGINGPROCESSOR_BEANID)) );
+        }
+
+        @Override
+        public void free(Object id, Val<PagingProcessor> ins) {
+        }
+
+        @Override
+        public void destroy(Val<PagingProcessor> ins) {
+        }
+    });
 
     @Override
     public Optional<PagingProcessor> getPagingProcessor(String name) {
-        return Optional.ofNullable(factory.silentlyGet(StringUtil.build(name, "_", PAGINGPROCESSOR_BEANID)));
+        Val<PagingProcessor> pagingProcessorVal = pagingProcessorTable.getAndCreateIfAbsent(name);
+        if (pagingProcessorVal.isPresent()) {
+            return Optional.of( pagingProcessorVal.get() );
+        } else {
+            return Optional.empty();
+        }
     }
 
 

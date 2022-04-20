@@ -1,6 +1,14 @@
 package h2o.common.concurrent.factory;
 
-public abstract class Singleton<T> {
+import java.util.function.Supplier;
+
+public final class Singleton<T> {
+
+    private final Supplier<T> creator;
+
+    public Singleton(Supplier<T> creator) {
+        this.creator = creator;
+    }
 
     private volatile T instance;
 
@@ -11,7 +19,7 @@ public abstract class Singleton<T> {
             synchronized (this) {
                 ins = instance;
                 if (ins == null) {
-                    ins = instance = create();
+                    ins = instance = creator.get();
                 }
             }
         }
@@ -19,6 +27,5 @@ public abstract class Singleton<T> {
         return ins;
     }
 
-    protected abstract T create();
 
 }

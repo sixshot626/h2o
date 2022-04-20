@@ -313,7 +313,7 @@ public final class CleverDao {
         } else if (whereOptions.unconditional) {
             return para;
         } else {
-            throw new DaoException("where");
+            throw new DaoException("'where' is not set");
         }
     }
 
@@ -349,14 +349,14 @@ public final class CleverDao {
             if (isSetted()) {
                 throw new DaoException("'where' is setted");
             }
-            this.wattr = toList(wattrs);
+            this.wattr = args2List(wattrs);
         }
 
         public void setWargs(Object[] wargs) {
             if (isSetted()) {
                 throw new DaoException("'where' is setted");
             }
-            this.wargs = toMap(wargs);
+            this.wargs = args2Map(wargs);
         }
 
 
@@ -371,7 +371,7 @@ public final class CleverDao {
         private List<Object> orders = Collections.EMPTY_LIST;
 
         private Query(Object[] attrs) {
-            this.attrs = toList(attrs);
+            this.attrs = args2List(attrs);
         }
 
 
@@ -397,7 +397,7 @@ public final class CleverDao {
 
 
         public Query orderBy(Object... orders) {
-            this.orders = toList(orders);
+            this.orders = args2List(orders);
             return this;
         }
 
@@ -461,7 +461,10 @@ public final class CleverDao {
 
             String sql = str(selectSql(attrs), whereSql(whereOptions), orderSql(pageOrderBy));
 
-            Page<Map<String, Object>> res = getDao().pagingLoad(sql, new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize()), margeWhereArgs(whereOptions, para));
+            Page<Map<String, Object>> res = getDao()
+                    .pagingLoad(sql,
+                            new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize()),
+                            margeWhereArgs(whereOptions, para));
 
             if (res.getContent().isEmpty()) {
                 return res;
@@ -585,7 +588,7 @@ public final class CleverDao {
         private final List<Object> attrs;
 
         private Update(Object[] attrs) {
-            this.attrs = toList(attrs);
+            this.attrs = args2List(attrs);
         }
 
         private final whereOptions whereOptions = new whereOptions();
@@ -620,7 +623,7 @@ public final class CleverDao {
 
             String sql;
             if (attrs == null || attrs.isEmpty()) {
-                sql = buildInsertSql(DbUtil.DBFACTORY.getArgProcessor().proc(para).keySet());
+                sql = buildInsertSql(args2Map(para).keySet());
             } else {
                 sql = buildInsertSql(attrs);
             }
@@ -637,7 +640,7 @@ public final class CleverDao {
 
             Map paraMap = new HashMap<>();
             if (para != null && para.length > 0 && para[0] != null) {
-                paraMap = DbUtil.DBFACTORY.getArgProcessor().proc(para);
+                paraMap = args2Map(para);
             }
 
             String sql;
@@ -670,7 +673,7 @@ public final class CleverDao {
                 if (para == null || para.length == 0 || para[0] == null) {
                     throw new IllegalArgumentException("data is empty");
                 }
-                updSql = buildUpdateSql1(DbUtil.DBFACTORY.getArgProcessor().proc(para).keySet());
+                updSql = buildUpdateSql1(args2Map(para).keySet());
             } else {
                 updSql = buildUpdateSql1(attrs);
             }
@@ -869,27 +872,21 @@ public final class CleverDao {
     // util
 
 
-    private static List toList(Object[] args) {
+    private static Map args2Map( Object[] args ) {
+        if (args == null) {
+            return null;
+        }
+       return Collections.unmodifiableMap(DbUtil.DBFACTORY.getArgProcessor().proc(args));
+    }
+
+
+    private static List args2List(Object[] args) {
         if (args == null) {
             return null;
         }
         return Collections.unmodifiableList(Arrays.asList(args));
     }
 
-    private static Map toMap(Object[] args) {
-        if (args == null) {
-            return null;
-        }
-
-        if (args.length % 2 != 0) {
-            throw new DaoException("an even number of args");
-        }
-        Map m = new HashMap<>();
-        for (int i = 0, len = args.length; i < len; i += 2) {
-            m.put(args[i], args[i + 1]);
-        }
-        return Collections.unmodifiableMap(m);
-    }
 
 
     private String str(Object... strs) {
