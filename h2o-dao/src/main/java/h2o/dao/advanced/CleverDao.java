@@ -9,6 +9,7 @@ import h2o.common.lang.Val;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
+import h2o.dao.exception.DaoException;
 import h2o.dao.jdbc.row.RowData;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.TableStruct;
@@ -18,14 +19,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CleverDao {
+public final class CleverDao {
 
     private final String dataSourceName;
-
     private final Dao dao;
-
     private final Class<?> entityClazz;
-
     private final TableStruct tableStruct;
 
     public CleverDao(Class<?> entityClazz) {
@@ -50,39 +48,18 @@ public class CleverDao {
     }
 
 
-    public static final K ALL = new K("all");
-    public static final K AUTO = new K("auto");
 
-    public static final String ASC = "asc";
+    public static final String ASC  = "asc";
     public static final String DESC = "desc";
 
 
-    private List<ColumnMeta> filterCols(Object ks) {
-
-        if (ks == null) {
-            throw new IllegalArgumentException(String.valueOf(ks));
-        }
-
-        if (ALL.equals(ks)) {
-            return this.getTableStruct().columns();
-        }
-
-        if (ks instanceof Collection) {
-            return this.getTableStruct().filterColumns( (Collection<Object>) ks);
-        }
-
-        throw new IllegalArgumentException(String.valueOf(ks));
-
-    }
-
-
-    protected String buildInsertSql(Object ks) {
+    private String buildInsertSql(Collection<?> ks) {
 
         StringBuilder sqlInsert = new StringBuilder("insert into ").append(tableName()).append(" ( ");
         StringBuilder sqlValues = new StringBuilder(" ) \n        values ( ");
 
         int i = 0;
-        for (ColumnMeta col : filterCols(ks)) {
+        for (ColumnMeta col : this.getTableStruct().filterColumns(ks)) {
             if (i++ > 0) {
                 sqlInsert.append(" , ");
                 sqlValues.append(" , ");
@@ -96,17 +73,17 @@ public class CleverDao {
     }
 
 
-    protected String buildDelSql1() {
+    private String buildDelSql1() {
         return str("delete from ", this.tableName());
     }
 
 
-    protected String buildUpdateSql1(Collection<?> ks) {
+    private String buildUpdateSql1(Collection<?> ks) {
 
         StringBuilder sqlUpdate = new StringBuilder("update ").append(tableName()).append(" set ");
 
         int i = 0;
-        for (ColumnMeta col : filterCols(ks)) {
+        for (ColumnMeta col : this.getTableStruct().filterColumns(ks)) {
             if (i++ > 0) {
                 sqlUpdate.append(" , ");
             }
@@ -121,38 +98,18 @@ public class CleverDao {
     }
 
 
-    protected String buildSelectSql1(Object ks) {
+    private String buildSelectSql1AllAttrs() {
 
         StringBuilder sqlSelect = new StringBuilder("select  ");
 
         List<ColumnMeta> cols = this.getTableStruct().columns();
 
-        if (ks == null || ALL.equals(ks)) {
-            int i = 0;
-            for (ColumnMeta col : cols) {
-                if (i++ > 0) {
-                    sqlSelect.append(" ,\n        ");
-                }
-                sqlSelect.append(col.colName);
+        int i = 0;
+        for (ColumnMeta col : cols) {
+            if (i++ > 0) {
+                sqlSelect.append(" ,\n        ");
             }
-
-        } else if (ks instanceof Collection) {
-
-            int i = 0;
-            for (Object k : (Collection) ks) {
-                if (i++ > 0) {
-                    sqlSelect.append(" ,\n        ");
-                }
-                if (k instanceof C) {
-                    sqlSelect.append(((C) k).value);
-                } else {
-                    sqlSelect.append(column(k));
-                }
-
-            }
-
-        } else {
-            throw new IllegalArgumentException(String.valueOf(ks));
+            sqlSelect.append(col.colName);
         }
 
         return sqlSelect.append("\nfrom ").append(this.tableName()).toString();
@@ -160,11 +117,32 @@ public class CleverDao {
     }
 
 
-    protected String buildOrderSql(List<?> oks) {
+    private String buildSelectSql1(Collection<?> ks) {
 
-        if (oks == null || oks.isEmpty()) {
-            return "";
+        StringBuilder sqlSelect = new StringBuilder("select  ");
+
+        List<ColumnMeta> cols = this.getTableStruct().columns();
+
+
+        int i = 0;
+        for (Object k : ks) {
+            if (i++ > 0) {
+                sqlSelect.append(" ,\n        ");
+            }
+            if (k instanceof C) {
+                sqlSelect.append(((C) k).value);
+            } else {
+                sqlSelect.append(column(k));
+            }
+
         }
+
+        return sqlSelect.append("\nfrom ").append(this.tableName()).toString();
+
+    }
+
+
+    private String buildOrderSql(List<?> oks) {
 
         StringBuilder sqlOrder = new StringBuilder("order by ");
 
@@ -193,10 +171,10 @@ public class CleverDao {
     }
 
 
-    protected String buildWhereF(Function<?, String> f, Collection<?> ws) {
+    private String buildWhereF(Function<?, String> f, Collection<?> ws) {
 
         if (ws == null || ws.isEmpty()) {
-            throw new IllegalArgumentException(String.valueOf(ws));
+            throw new DaoException(String.valueOf(ws));
         }
 
         StringBuilder sqlWhere = new StringBuilder("where   ");
@@ -218,15 +196,15 @@ public class CleverDao {
 
     }
 
-    protected String buildWhere(Collection<?> ws) {
+    private String buildWhere(Collection<?> ws) {
         return buildWhereF(k -> str(":", name(k)), ws);
     }
 
-    protected String buildWhereW(Collection<?> ws) {
+    private String buildWhereW(Collection<?> ws) {
         return buildWhereF(k -> str(":w__", name(k)), ws);
     }
 
-    protected Map<String, Object> convWArgs(Map<?, Object> wargs) {
+    private Map<String, Object> convWArgs(Map<?, Object> wargs) {
         Map<String, Object> nmap = new HashMap<>();
         for (Map.Entry<?, Object> entry : wargs.entrySet()) {
             nmap.put(str("w__", name(entry.getKey())), entry.getValue());
@@ -234,7 +212,7 @@ public class CleverDao {
         return nmap;
     }
 
-    protected Object[] merge(Object[] a, Object... b) {
+    private Object[] merge(Object[] a, Object... b) {
         Object[] c = new Object[a.length + b.length];
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);
@@ -244,7 +222,9 @@ public class CleverDao {
 
     private Map<String, String> colAttrMap;
 
-    public Map<String, String> getColAttrMap() {
+
+    private Map<String, Object> orm(Map<String, Object> row) {
+
         if (this.colAttrMap == null) {
             Map<String, String> caMap = new IgnoreCaseMap<>(new HashMap<>(), IgnoreCaseMap.LOWER);
             for (ColumnMeta col : this.tableStruct.columns()) {
@@ -252,16 +232,10 @@ public class CleverDao {
             }
             this.colAttrMap = Collections.unmodifiableMap(caMap);
         }
-        return colAttrMap;
-    }
-
-    protected Map<String, Object> orm(Map<String, Object> row) {
-
-        Map<String, String> caMap = getColAttrMap();
 
         Map<String, Object> nRow = new RowData(new HashMap<>());
         for (Map.Entry<String, Object> re : row.entrySet()) {
-            String key = caMap.get(re.getKey());
+            String key = this.colAttrMap.get(re.getKey());
             if (key != null) {
                 nRow.put(key, re.getValue());
             } else {
@@ -272,195 +246,182 @@ public class CleverDao {
         return nRow;
     }
 
+
     //////////////////////////////////////////////////
 
-    protected String selectSql(Options options) {
-        return buildSelectSql1(options.attr);
+
+    private String selectSql(Collection<?> attr) {
+        if (attr == null || attr.isEmpty()) {
+            return buildSelectSql1AllAttrs();
+        }
+        return buildSelectSql1(attr);
     }
 
 
-    protected String lockSql(Options options) {
-        if (options.lock == null) {
+    private String lockSql(Object lock) {
+        if (lock == null) {
             return null;
-        } else if (options.lock instanceof String) {
-            return str(" \n", options.lock);
-        } else if (options.lock instanceof Boolean) {
-            if (((Boolean) options.lock).booleanValue()) {
+        } else if (lock instanceof String) {
+            return str(" \n", lock);
+        } else if (lock instanceof Boolean) {
+            if (((Boolean) lock).booleanValue()) {
                 return " \nfor update";
             } else {
                 return null;
             }
         } else {
-            throw new IllegalArgumentException(String.valueOf(options.lock));
+            throw new DaoException(String.valueOf(lock));
         }
 
     }
 
 
-    protected String whereSql(Options options) {
-        if (options.where != null) {
-            return str(" \nwhere   ", options.where);
-        } else if (options.wattr != null) {
-            if (ALL.equals(options.wattr)) {
-                return null;
-            } else {
-                return str(" \n", buildWhere((List<Object>) options.wattr));
-            }
-        } else if (options.wargs != null) {
-            return str(" \n", buildWhereW(((Map) options.wargs).keySet()));
+    private String whereSql(whereOptions whereOptions) {
+        if (whereOptions.where != null) {
+            return str(" \nwhere   ", whereOptions.where);
+        } else if (whereOptions.wattr != null) {
+            return str(" \n", buildWhere(whereOptions.wattr));
+        } else if (whereOptions.wargs != null) {
+            return str(" \n", buildWhereW(whereOptions.wargs.keySet()));
+        } else if (whereOptions.unconditional) {
+            return null;
         } else {
-            throw new IllegalArgumentException("where");
+            throw new DaoException("'where' is not set");
         }
     }
 
 
-    protected String orderSql(Options options) {
-        if (options.orderby == null) {
+    private String orderSql(List<?> orderby) {
+        if (orderby == null || orderby.isEmpty()) {
             return null;
         }
-        return str(" \n", buildOrderSql((List<?>) options.orderby));
+        return str(" \n", buildOrderSql(orderby));
     }
 
 
-    protected Object[] margeWhereArgs(Options options, Object[] para) {
-        if (options.where != null) {
+    private Object[] margeWhereArgs(whereOptions whereOptions, Object[] para) {
+        if (whereOptions.where != null) {
             return para;
-        } else if (options.wattr != null) {
+        } else if (whereOptions.wattr != null) {
             return para;
-        } else if (options.wargs != null) {
-            if (options.wargs instanceof Map) {
-                return merge(para, convWArgs((Map<?, Object>) options.wargs));
+        } else if (whereOptions.wargs != null) {
+            if (whereOptions.wargs.isEmpty()) {
+                return para;
             } else {
-                throw new IllegalArgumentException("wargs");
+                return merge(para, convWArgs((Map<?, Object>) whereOptions.wargs));
             }
+        } else if (whereOptions.unconditional) {
+            return para;
         } else {
-            throw new IllegalArgumentException("where");
+            throw new DaoException("where");
         }
     }
 
 
-    protected static class Options {
+    private static final class whereOptions {
 
-        public Object attr;
-        public Object wattr;
+        public boolean unconditional;
+        public List wattr;
         public String where;
-        public Object wargs;
-
-        private Object lock;
-
-        public Object orderby;
+        public Map wargs;
 
 
-        private static Object aArgs(Object[] args) {
-            if (args == null) {
-                return null;
-            }
-            if (args.length == 1 && (args[0] == null || args[0] instanceof K)) {
-                return args[0];
-            } else {
-                return Collections.unmodifiableList(Arrays.asList(args));
-            }
-        }
-
-        private static Object mArgs(Object[] args) {
-            if (args == null) {
-                return null;
-            }
-            if (args.length == 1 && (args[0] == null || args[0] instanceof K)) {
-                return args[0];
-            } else {
-                if (args.length % 2 != 0) {
-                    throw new IllegalArgumentException("an even number of args");
-                }
-                Map m = new HashMap<>();
-                for (int i = 0, len = args.length; i < len; i += 2) {
-                    m.put(args[i], args[i + 1]);
-                }
-                return Collections.unmodifiableMap(m);
-            }
+        public boolean isSetted() {
+            return this.unconditional || this.where != null || this.wattr != null || this.wargs != null;
         }
 
 
-        public void setAttr(Object[] attrs) {
-            this.attr = aArgs(attrs);
-        }
-
-        public void setWattr(Object[] wattrs) {
-            this.wattr = aArgs(wattrs);
+        public void setUnconditional(boolean unconditional) {
+            if (isSetted()) {
+                throw new DaoException("'where' is setted");
+            }
+            this.unconditional = unconditional;
         }
 
         public void setWhere(String where) {
+            if (isSetted()) {
+                throw new DaoException("'where' is setted");
+            }
             this.where = where;
         }
 
+        public void setWattr(Object[] wattrs) {
+            if (isSetted()) {
+                throw new DaoException("'where' is setted");
+            }
+            this.wattr = toList(wattrs);
+        }
+
         public void setWargs(Object[] wargs) {
-            this.wargs = mArgs(wargs);
+            if (isSetted()) {
+                throw new DaoException("'where' is setted");
+            }
+            this.wargs = toMap(wargs);
         }
 
-        public void setLock(Object lock) {
-            this.lock = lock;
-        }
-
-        public void setOrderby(Object[] orderby) {
-            this.orderby = aArgs(orderby);
-        }
 
     }
 
 
-    public class Query {
-        protected Query() {
+    private final class Query {
+
+
+        private final List<Object> attrs;
+        private final whereOptions whereOptions = new whereOptions();
+        private List<Object> orders = Collections.EMPTY_LIST;
+
+        private Query(Object[] attrs) {
+            this.attrs = toList(attrs);
         }
 
-        private final Options options = new Options();
 
-        public Query attr(Object... attrs) {
-            this.options.setAttr(attrs);
-            return this;
-        }
-
-        public Query lock() {
-            this.options.setLock(true);
-            return this;
-        }
-
-        public Query lock(boolean lock) {
-            this.options.setLock(lock);
-            return this;
-        }
-
-        public Query lock(String lock) {
-            this.options.setLock(lock);
-            return this;
-        }
-
-        public Query wattr(Object... wattrs) {
-            this.options.setWattr(wattrs);
-            return this;
-        }
-
-        public Query wargs(Object... wargs) {
-            this.options.setWargs(wargs);
+        public Query unconditional() {
+            this.whereOptions.setUnconditional(true);
             return this;
         }
 
         public Query where(String where) {
-            this.options.setWhere(where);
+            this.whereOptions.setWhere(where);
             return this;
         }
 
-        public Query orderBy(Object... orders) {
-            this.options.setOrderby(orders);
+        public Query whereAttrs(Object... wattrs) {
+            this.whereOptions.setWattr(wattrs);
             return this;
         }
+
+        public Query whereArgs(Object... wargs) {
+            this.whereOptions.setWargs(wargs);
+            return this;
+        }
+
+
+        public Query orderBy(Object... orders) {
+            this.orders = toList(orders);
+            return this;
+        }
+
+
+        public Val<Map<String, Object>> lock(Object lock, Object... para) {
+
+            String sql = str(selectSql(attrs), whereSql(whereOptions), lockSql(lock));
+
+            Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(whereOptions, para));
+
+            if (res.isPresent()) {
+                return new Val<>(orm(res.getValue()));
+            } else {
+                return res;
+            }
+
+        }
+
 
         public Val<Map<String, Object>> selectOne(Object... para) {
 
-            String sql = str(selectSql(options),
-                    whereSql(options),
-                    lockSql(options));
+            String sql = str(selectSql(attrs), whereSql(whereOptions));
 
-            Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(options, para));
+            Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(whereOptions, para));
 
             if (res.isPresent()) {
                 return new Val<>(orm(res.getValue()));
@@ -472,11 +433,9 @@ public class CleverDao {
 
         public List<Map<String, Object>> select(Object... para) {
 
-            String sql = str(selectSql(options),
-                    whereSql(options),
-                    orderSql(options));
+            String sql = str(selectSql(attrs), whereSql(whereOptions), orderSql(orders));
 
-            List<Map<String, Object>> res = getDao().load(sql, margeWhereArgs(options, para));
+            List<Map<String, Object>> res = getDao().load(sql, margeWhereArgs(whereOptions, para));
 
             if (res.isEmpty()) {
                 return res;
@@ -487,6 +446,8 @@ public class CleverDao {
 
         public Page<Map<String, Object>> pageSelect(PageRequest pageRequest, Object... para) {
 
+
+            List pageOrderBy = new ArrayList<>( orders );
             if (pageRequest.getSorts() != null) {
                 List<Object> orderBy = new ArrayList<>();
                 for (SortInfo sortInfo : pageRequest.getSorts()) {
@@ -494,15 +455,13 @@ public class CleverDao {
                     orderBy.add(sortInfo.getDirection());
                 }
                 if (!orderBy.isEmpty()) {
-                    this.orderBy(orderBy);
+                    pageOrderBy.addAll(orderBy);
                 }
             }
 
-            String sql = str(selectSql(options),
-                    whereSql(options),
-                    orderSql(options));
+            String sql = str(selectSql(attrs), whereSql(whereOptions), orderSql(pageOrderBy));
 
-            Page<Map<String, Object>> res = getDao().pagingLoad(sql, pageRequest, margeWhereArgs(options, para));
+            Page<Map<String, Object>> res = getDao().pagingLoad(sql, new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize()), margeWhereArgs(whereOptions, para));
 
             if (res.getContent().isEmpty()) {
                 return res;
@@ -518,37 +477,137 @@ public class CleverDao {
     }
 
 
-    public Query query() {
-        return new Query();
+    public final class SelectOne {
+
+        private final Query query;
+
+        private SelectOne(Object[] attrs) {
+            this.query = new Query(attrs);
+        }
+
+        public SelectOne unconditional() {
+            this.query.unconditional();
+            return this;
+        }
+
+        public SelectOne where(String where) {
+            this.query.where(where);
+            return this;
+        }
+
+        public SelectOne whereAttrs(Object... attrs) {
+            this.query.whereAttrs(attrs);
+            return this;
+        }
+
+        public SelectOne whereArgs(Object... args) {
+            this.query.whereArgs(args);
+            return this;
+        }
+
+        public Val<Map<String, Object>> lock(boolean lock, Object... para) {
+            return query.lock(lock, para);
+        }
+
+        public Val<Map<String, Object>> lock(String lock, Object... para) {
+            return query.lock(lock, para);
+        }
+
+
+        public Val<Map<String, Object>> query(Object... para) {
+            return query.selectOne(para);
+        }
+
+
     }
+
+
+    public SelectOne selectOne(Object... attrs) {
+        return new SelectOne(attrs);
+    }
+
+
+    public final class Select {
+
+        private final Query query;
+
+        private Select(Object[] attrs) {
+            this.query = new Query(attrs);
+        }
+
+        public Select unconditional() {
+            this.query.unconditional();
+            return this;
+        }
+
+        public Select where(String where) {
+            this.query.where(where);
+            return this;
+        }
+
+        public Select whereAttrs(Object... attrs) {
+            this.query.whereAttrs(attrs);
+            return this;
+        }
+
+        public Select whereArgs(Object... args) {
+            this.query.whereArgs(args);
+            return this;
+        }
+
+        public Select orderBy(Object... orders) {
+            this.query.orderBy(orders);
+            return this;
+        }
+
+
+        public List<Map<String, Object>> query(Object... para) {
+            return query.select(para);
+        }
+
+
+        public Page<Map<String, Object>> pagingQuery(PageRequest pageRequest, Object... para) {
+            return query.pageSelect(pageRequest, para);
+        }
+
+    }
+
+
+    public Select select(Object... attr) {
+        return new Select(attr);
+    }
+
 
     //////////////////////////////////////////////////
 
-    public class Update {
+    private final class Update {
 
-        protected Update() {
+        private final List<Object> attrs;
+
+        private Update(Object[] attrs) {
+            this.attrs = toList(attrs);
         }
 
-        private final Options options = new Options();
-
-        public Update attr(Object... attrs) {
-            this.options.setAttr(attrs);
-            return this;
-        }
+        private final whereOptions whereOptions = new whereOptions();
 
 
-        public Update wattr(Object... wattrs) {
-            this.options.setWattr(wattrs);
-            return this;
-        }
-
-        public Update wargs(Object... wargs) {
-            this.options.setWargs(wargs);
+        public Update unconditional() {
+            this.whereOptions.setUnconditional(true);
             return this;
         }
 
         public Update where(String where) {
-            this.options.setWhere(where);
+            this.whereOptions.setWhere(where);
+            return this;
+        }
+
+        public Update whereAttrs(Object... wattrs) {
+            this.whereOptions.setWattr(wattrs);
+            return this;
+        }
+
+        public Update whereArgs(Object... wargs) {
+            this.whereOptions.setWargs(wargs);
             return this;
         }
 
@@ -560,17 +619,17 @@ public class CleverDao {
             }
 
             String sql;
-            if (options.attr == null || AUTO.equals(options.attr)) {
+            if (attrs == null || attrs.isEmpty()) {
                 sql = buildInsertSql(DbUtil.DBFACTORY.getArgProcessor().proc(para).keySet());
             } else {
-                sql = buildInsertSql(options.attr);
+                sql = buildInsertSql(attrs);
             }
 
             return getDao().update(sql, para);
 
         }
 
-        public int[] batAdd(List<Map> cell, Object... para) {
+        public int[] batchAdd(List<Map> cell, Object... para) {
 
             if (cell == null || cell.isEmpty()) {
                 throw new IllegalArgumentException("data is empty");
@@ -582,11 +641,11 @@ public class CleverDao {
             }
 
             String sql;
-            if (options.attr == null || AUTO.equals(options.attr)) {
+            if (attrs == null || attrs.isEmpty()) {
                 Set<Object> ks = MapBuilder.start().putAll(cell.get(0)).putAll(paraMap).get().keySet();
                 sql = buildInsertSql(ks);
             } else {
-                sql = buildInsertSql(options.attr);
+                sql = buildInsertSql(attrs);
             }
 
             List data;
@@ -607,32 +666,32 @@ public class CleverDao {
         public int edit(Object... para) {
 
             String updSql;
-            if (options.attr == null || AUTO.equals(options.attr)) {
+            if (attrs == null || attrs.isEmpty()) {
                 if (para == null || para.length == 0 || para[0] == null) {
                     throw new IllegalArgumentException("data is empty");
                 }
                 updSql = buildUpdateSql1(DbUtil.DBFACTORY.getArgProcessor().proc(para).keySet());
             } else {
-                updSql = buildUpdateSql1((Collection<?>) options.attr);
+                updSql = buildUpdateSql1(attrs);
             }
 
-            String sql = str(updSql, whereSql(options));
+            String sql = str(updSql, whereSql(whereOptions));
 
-            return getDao().update(sql, para);
+            return getDao().update(sql, margeWhereArgs(whereOptions, para));
 
         }
 
-        public int[] batEdit(List<Map> cell, Object... para) {
+        public int[] batchEdit(List<Map> cell, Object... para) {
 
             if (cell == null || cell.isEmpty()) {
                 throw new IllegalArgumentException("data is empty");
             }
 
-            if (options.wargs != null) {
+            if (whereOptions.wargs != null) {
                 throw new IllegalArgumentException("batch edit not support argument: wargs");
             }
 
-            String sql = str(buildUpdateSql1((Collection<?>) options.attr), whereSql(options));
+            String sql = str(buildUpdateSql1(attrs), whereSql(whereOptions));
 
             Map paraMap = new HashMap<>();
             if (para != null && para.length > 0 && para[0] != null) {
@@ -655,20 +714,182 @@ public class CleverDao {
 
 
         public int del(Object... para) {
-            String sql = str(buildDelSql1(), whereSql(options));
-            return getDao().update(sql, para);
+            String sql = str(buildDelSql1(), whereSql(whereOptions));
+            return getDao().update(sql, margeWhereArgs(whereOptions, para));
         }
 
     }
 
 
-    public Update update() {
-        return new Update();
+    public final class Add {
+
+
+        private final Update update;
+
+        private Add(Object[] attrs) {
+            this.update = new Update(attrs);
+        }
+
+        public int exec(Object... para) {
+            return this.update.add(para);
+        }
+
+    }
+
+    public Add add(Object... attrs) {
+        return new Add(attrs);
+    }
+
+    public final class BatchAdd {
+
+        private final Update update;
+
+        public BatchAdd(Object[] attrs) {
+            this.update = new Update(attrs);
+        }
+
+        public int[] exec(List<Map> cell, Object... para) {
+            return this.update.batchAdd(cell, para);
+        }
+
+    }
+
+    public BatchAdd batchAdd(Object... attrs) {
+        return new BatchAdd(attrs);
+    }
+
+
+    public final class Edit {
+
+        private Update update;
+
+        public Edit(Object[] attrs) {
+            this.update = new Update(attrs);
+        }
+
+        public Edit unconditional() {
+            this.update.unconditional();
+            return this;
+        }
+
+        public Edit where(String where) {
+            this.update.where(where);
+            return this;
+        }
+
+        public Edit whereAttrs(Object... attrs) {
+            this.update.whereAttrs(attrs);
+            return this;
+        }
+
+        public Edit whereArgs(Object... args) {
+            this.update.whereArgs(args);
+            return this;
+        }
+
+        public int exec(Object... para) {
+            return this.update.edit(para);
+        }
+
+    }
+
+    public Edit edit(Object... attr) {
+        return new Edit(attr);
+    }
+
+
+    public final class BatchEdit {
+
+        private final Update update;
+
+        public BatchEdit(Object[] attrs) {
+            this.update = new Update(attrs);
+        }
+
+        public BatchEdit where(String where) {
+            this.update.where(where);
+            return this;
+        }
+
+        public BatchEdit whereAttrs(Object... attrs) {
+            this.update.whereAttrs(attrs);
+            return this;
+        }
+
+        public int[] exec(List<Map> cell, Object... para) {
+            return this.update.batchEdit(cell, para);
+        }
+
+    }
+
+    public BatchEdit batchEdit(Object... attrs) {
+        if (attrs == null || attrs.length == 0) {
+            throw new DaoException("'attrs' is not set");
+        }
+        return new BatchEdit(attrs);
+    }
+
+
+    public final class Del {
+
+        private final Update update = new Update((Object[]) null);
+
+        public Del unconditional() {
+            this.update.unconditional();
+            return this;
+        }
+
+        public Del where(String where) {
+            this.update.where(where);
+            return this;
+        }
+
+        public Del whereAttrs(Object... attrs) {
+            this.update.whereAttrs(attrs);
+            return this;
+        }
+
+        public Del whereArgs(Object... args) {
+            this.update.whereArgs(args);
+            return this;
+        }
+
+        public int exec(Object... para) {
+            return this.update.del(para);
+        }
+
+    }
+
+    public Del del() {
+        return new Del();
     }
 
 
     //////////////////////////////////////////////////
     // util
+
+
+    private static List toList(Object[] args) {
+        if (args == null) {
+            return null;
+        }
+        return Collections.unmodifiableList(Arrays.asList(args));
+    }
+
+    private static Map toMap(Object[] args) {
+        if (args == null) {
+            return null;
+        }
+
+        if (args.length % 2 != 0) {
+            throw new DaoException("an even number of args");
+        }
+        Map m = new HashMap<>();
+        for (int i = 0, len = args.length; i < len; i += 2) {
+            m.put(args[i], args[i + 1]);
+        }
+        return Collections.unmodifiableMap(m);
+    }
 
 
     private String str(Object... strs) {
@@ -681,7 +902,7 @@ public class CleverDao {
         return sb.toString();
     }
 
-    protected String name(Object obj) {
+    private String name(Object obj) {
         String key;
         if (obj instanceof String) {
             key = (String) obj;
@@ -695,7 +916,7 @@ public class CleverDao {
         return key;
     }
 
-    protected ColumnMeta getColumnMeta(Object k) {
+    private ColumnMeta getColumnMeta(Object k) {
         return this.tableStruct.getColumn(k);
     }
 
@@ -703,15 +924,15 @@ public class CleverDao {
     ////
 
 
-    protected Class<?> getEntityClazz() {
+    private Class<?> getEntityClazz() {
         return entityClazz;
     }
 
-    protected TableStruct getTableStruct() {
+    private TableStruct getTableStruct() {
         return this.tableStruct;
     }
 
-    protected Dao getDao() {
+    private Dao getDao() {
         return dao == null ? DbUtil.getDao(this.dataSourceName) : dao;
     }
 

@@ -1,7 +1,7 @@
 package h2o.common.util.valid.base;
 
-import h2o.common.util.valid.Validator;
 import h2o.apache.commons.lang.StringUtils;
+import h2o.common.util.valid.Validator;
 
 public class NotEmpty extends AbstractValidator implements Validator {
 

@@ -1,11 +1,11 @@
 package h2o.dao.sql;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.ColumnMetaUtil;
-import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

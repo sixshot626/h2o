@@ -1,8 +1,8 @@
 package h2o.dao.impl.sql;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.lang.RuntimeUtil;
 import h2o.dao.sql.SqlSource;
-import h2o.apache.commons.lang.StringUtils;
 
 public class PackageCfgSql extends PathCfgSql implements SqlSource {
 

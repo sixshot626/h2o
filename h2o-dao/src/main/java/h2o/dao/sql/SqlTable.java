@@ -1,9 +1,9 @@
 package h2o.dao.sql;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.common.util.io.StreamUtil;
 import h2o.common.util.lang.RuntimeUtil;
-import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

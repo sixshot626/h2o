@@ -1,9 +1,9 @@
 package h2o.common.util.id;
 
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.lang.SDate;
 import h2o.common.util.date.DateUtil;
-import h2o.apache.commons.lang.StringUtils;
 
 
 public class SnowGarlandIdGen {

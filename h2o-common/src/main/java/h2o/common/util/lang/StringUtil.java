@@ -5,9 +5,7 @@ import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.format.FormattingTuple;
 import h2o.common.util.format.MessageFormatter;
 
-
 import java.util.*;
-
 
 
 public abstract class StringUtil {
@@ -16,7 +14,6 @@ public abstract class StringUtil {
     }
 
     public static final String EMPTY = "";
-
 
 
     public static String build(Object... strs) {
@@ -64,7 +61,6 @@ public abstract class StringUtil {
             return sb;
         }
     }
-
 
 
     //---------------------------------------------------------------------

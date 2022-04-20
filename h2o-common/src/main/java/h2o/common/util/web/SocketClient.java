@@ -1,8 +1,8 @@
 package h2o.common.util.web;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.exception.ExceptionUtil;
 import h2o.jodd.io.IOUtil;
-import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

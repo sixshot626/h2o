@@ -27,7 +27,7 @@ public final class K implements Comparable<K>, java.io.Serializable {
         return value;
     }
 
-    public static K k( String str ) {
+    public static K k(String str) {
         return new K(str);
     }
 

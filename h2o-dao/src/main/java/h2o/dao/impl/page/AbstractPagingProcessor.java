@@ -1,11 +1,11 @@
 package h2o.dao.impl.page;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.dao.page.PagingProcessor;
-import h2o.apache.commons.lang.StringUtils;
 
 import java.util.List;
 

@@ -1,9 +1,8 @@
 package h2o.common.lang;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.lang.StringUtil;
-import h2o.apache.commons.lang.StringUtils;
-
 
 import java.time.Instant;
 import java.time.LocalDate;

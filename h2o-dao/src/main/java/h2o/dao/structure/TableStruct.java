@@ -99,13 +99,13 @@ public class TableStruct {
         return filterColumns(ArgsUtil.more2List(attrName, more));
     }
 
-    public List<ColumnMeta> filterColumns(Collection<Object> attrNames) {
+    public List<ColumnMeta> filterColumns(Collection<?> attrNames) {
 
         List<ColumnMeta> cis = ListBuilder.newList();
         for (Object attr : attrNames) {
             ColumnMeta cm = findColumn(attr);
-            if ( cm != null ) {
-                cis.add( cm );
+            if (cm != null) {
+                cis.add(cm);
             }
         }
 

@@ -1,7 +1,7 @@
 package h2o.common.util.lang;
 
-import h2o.common.exception.ExceptionUtil;
 import h2o.apache.commons.lang.ClassUtils;
+import h2o.common.exception.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

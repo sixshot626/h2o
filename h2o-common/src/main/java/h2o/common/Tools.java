@@ -23,7 +23,6 @@ public class Tools {
     public static final BeanUtil bnic = bni.cover(true);
 
 
-
     public static final Logger log = new Logger();
 
 }

@@ -1,12 +1,12 @@
 package h2o.dao.structure;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.dao.annotation.Column;
 import h2o.dao.annotation.PK;
 import h2o.dao.annotation.Table;
 import h2o.dao.annotation.Unique;
 import h2o.dao.exception.DaoException;
-import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

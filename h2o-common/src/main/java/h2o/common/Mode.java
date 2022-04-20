@@ -1,11 +1,8 @@
 package h2o.common;
 
-import h2o.common.lang.NBool;
-import h2o.common.util.bean.DataGetter;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.io.StreamUtil;
 import h2o.jodd.util.SystemUtil;
-//import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +46,7 @@ public class Mode {
             config.load(StreamUtil.openStream("mode.properties"));
 
             m = SystemUtil.get("H2OMode", config.getProperty("mode", PROD));
-            debug = SystemUtil.getBoolean("H2ODebug", Boolean.valueOf( config.getProperty("debug", "false").trim()) );
+            debug = SystemUtil.getBoolean("H2ODebug", Boolean.valueOf(config.getProperty("debug", "false").trim()));
             userModes = SystemUtil.get("H2OUserMode", config.getProperty("userMode", "")).trim().toUpperCase();
 
         } catch (Throwable e) {

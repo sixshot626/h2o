@@ -1,8 +1,8 @@
 package h2o.common.util.io;
 
+import h2o.apache.commons.configuration.ConfigurationUtils;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.io.CharsetWrapper;
-import h2o.apache.commons.configuration.ConfigurationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,9 +1,9 @@
 package h2o.dao.impl.sql;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.DbUtil;
 import h2o.dao.sql.SqlSource;
-import h2o.apache.commons.lang.StringUtils;
 
 import java.util.Map;
 
