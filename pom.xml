@@ -23,7 +23,7 @@
     <properties>
         <project.encoding>UTF-8</project.encoding>
         <versions.jdk>1.8</versions.jdk>
-        <versions.spring>3.2.18.RELEASE</versions.spring>
+        <versions.spring>5.3.18</versions.spring>
         <versions.h2o>6.1.0</versions.h2o>
     </properties>
 
