@@ -27,7 +27,7 @@ public class JdbcDao implements Closeable {
 
     private static final Logger log = LoggerFactory.getLogger(JdbcDao.class.getName());
 
-    private static boolean SHOWSQL = Mode.isUserMode("SHOW_BUTTERFLY_SQL");
+    private static boolean SHOWSQL = Mode.isUserMode("SHOW_JDBC_SQL");
 
 
     private LogWriter logWriter;
