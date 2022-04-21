@@ -207,6 +207,9 @@ public final class CleverDao {
     private Map<String, Object> convWArgs(Map<?, Object> wargs) {
         Map<String, Object> nmap = new HashMap<>();
         for (Map.Entry<?, Object> entry : wargs.entrySet()) {
+            if ( entry.getKey() instanceof C ) {
+                continue;
+            }
             nmap.put(str("w__", name(entry.getKey())), entry.getValue());
         }
         return nmap;
@@ -353,10 +356,25 @@ public final class CleverDao {
         }
 
         public void setWargs(Object[] wargs) {
+
             if (isSetted()) {
                 throw new DaoException("'where' is setted");
             }
-            this.wargs = args2Map(wargs);
+
+            if (wargs == null) {
+                this.wargs = Collections.EMPTY_MAP;
+            } else {
+
+                if (wargs.length % 2 != 0) {
+                    throw new DaoException("an even number of args");
+                }
+                Map m = new HashMap<>();
+                for (int i = 0, len = wargs.length; i < len; i += 2) {
+                    m.put(wargs[i], wargs[i + 1]);
+                }
+                this.wargs = Collections.unmodifiableMap(m);
+
+            }
         }
 
 
@@ -874,7 +892,7 @@ public final class CleverDao {
 
     private static Map args2Map( Object[] args ) {
         if (args == null) {
-            return null;
+            return Collections.EMPTY_MAP;
         }
        return Collections.unmodifiableMap(DbUtil.DBFACTORY.getArgProcessor().proc(args));
     }
@@ -882,7 +900,7 @@ public final class CleverDao {
 
     private static List args2List(Object[] args) {
         if (args == null) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         return Collections.unmodifiableList(Arrays.asList(args));
     }
