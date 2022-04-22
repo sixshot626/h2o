@@ -5,6 +5,7 @@ import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.K;
+import h2o.common.lang.S;
 import h2o.common.lang.Val;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.Dao;
@@ -129,8 +130,8 @@ public final class CleverDao {
             if (i++ > 0) {
                 sqlSelect.append(" ,\n        ");
             }
-            if (k instanceof C) {
-                sqlSelect.append(((C) k).value);
+            if (k instanceof S) {
+                sqlSelect.append(((S) k).getValue());
             } else {
                 sqlSelect.append(column(k));
             }
@@ -183,8 +184,8 @@ public final class CleverDao {
             if (i++ > 0) {
                 sqlWhere.append("\n    and ");
             }
-            if (k instanceof C) {
-                sqlWhere.append(((C) k).value);
+            if (k instanceof S) {
+                sqlWhere.append(((S) k).getValue());
             } else {
                 sqlWhere.append(column(k));
                 sqlWhere.append(" = ");
@@ -207,7 +208,7 @@ public final class CleverDao {
     private Map<String, Object> convWArgs(Map<?, Object> wargs) {
         Map<String, Object> nmap = new HashMap<>();
         for (Map.Entry<?, Object> entry : wargs.entrySet()) {
-            if ( entry.getKey() instanceof C ) {
+            if ( entry.getKey() instanceof S ) {
                 continue;
             }
             nmap.put(str("w__", name(entry.getKey())), entry.getValue());
@@ -365,12 +366,13 @@ public final class CleverDao {
                 this.wargs = Collections.EMPTY_MAP;
             } else {
 
-                if (wargs.length % 2 != 0) {
-                    throw new DaoException("an even number of args");
-                }
                 Map m = new HashMap<>();
-                for (int i = 0, len = wargs.length; i < len; i += 2) {
-                    m.put(wargs[i], wargs[i + 1]);
+                for (int i = 0, len = wargs.length; i < len; i++) {
+                    if (wargs[i] instanceof S && ( i + 1 == len || wargs[i + 1] != null) ) {
+                        m.put(wargs[i], null);
+                    } else {
+                        m.put(wargs[i], wargs[++i]);
+                    }
                 }
                 this.wargs = Collections.unmodifiableMap(m);
 
@@ -961,38 +963,4 @@ public final class CleverDao {
     }
 
 
-    public static final class C {
-
-        public final String value;
-
-        public C(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public static C c(String str) {
-            return new C(str);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            C c = (C) o;
-            return value.equals(c.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(value);
-        }
-
-        @Override
-        public String toString() {
-            return value;
-        }
-    }
 }
