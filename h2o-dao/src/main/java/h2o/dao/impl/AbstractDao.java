@@ -135,25 +135,39 @@ public abstract class AbstractDao implements Dao {
     @Override
     public Page<Map<String, Object>> pagingLoad(SqlSource sqlSource, PageRequest pageRequest, Object... args) {
 
-        PagingProcessor _pagingProcessor = this.getPagingProcessor();
-
-        Map<String, Object> paramMap = this.argProc(args);
-        String sql = sqlSource.getSql(paramMap);
-
-        Tuple2<String, String> t = _pagingProcessor.totalSql(sql);
-        Val<Number> count = this.getField(t.e0, t.e1, args);
-
-        PageInfo pageInfo = new PageInfo(pageRequest, count.get().longValue());
-        if (pageInfo.getTotalElements() == 0L) {
-            return new Page<Map<String, Object>>(pageInfo, ListBuilder.<Map<String, Object>>newEmptyList());
+        boolean _autoClose = this.autoClose;
+        if ( _autoClose ) {
+            this.autoClose = false;
         }
 
+        try {
 
-        Tuple2<String, Map<String, Object>> p = _pagingProcessor.pagingSql(sql, pageRequest);
-        paramMap.putAll(p.e1);
-        List<Map<String, Object>> records = this.load(p.e0, paramMap);
+            PagingProcessor _pagingProcessor = this.getPagingProcessor();
 
-        return new Page<Map<String, Object>>(pageInfo, records);
+            Map<String, Object> paramMap = this.argProc(args);
+            String sql = sqlSource.getSql(paramMap);
+
+            Tuple2<String, String> t = _pagingProcessor.totalSql(sql);
+            Val<Number> count = this.getField(t.e0, t.e1, args);
+
+            PageInfo pageInfo = new PageInfo(pageRequest, count.get().longValue());
+            if (pageInfo.getTotalElements() == 0L) {
+                return new Page<Map<String, Object>>(pageInfo, ListBuilder.<Map<String, Object>>newEmptyList());
+            }
+
+
+            Tuple2<String, Map<String, Object>> p = _pagingProcessor.pagingSql(sql, pageRequest);
+            paramMap.putAll(p.e1);
+            List<Map<String, Object>> records = this.load(p.e0, paramMap);
+
+            return new Page<Map<String, Object>>(pageInfo, records);
+
+        } finally {
+            if ( _autoClose ) {
+                this.autoClose = true;
+                this.close();
+            }
+        }
     }
 
     @Override
