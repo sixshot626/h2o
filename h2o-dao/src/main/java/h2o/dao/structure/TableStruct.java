@@ -43,6 +43,20 @@ public class TableStruct {
         }
     }
 
+
+    private TableStruct(String tableName, List<ColumnMeta> columns, List<ColumnMeta> ids,
+                        Map<String, ColumnMeta> nameMap, Map<String, ColumnMeta> attrMap) {
+        this.tableName = tableName;
+        this.columns = columns;
+        this.ids = ids;
+        this.nameMap = nameMap;
+        this.attrMap = attrMap;
+    }
+
+    public TableStruct newTableName(String tableName) {
+        return new TableStruct(tableName , this.columns , this.ids , this.nameMap , this.attrMap);
+    }
+
     public String tableName() {
         return tableName;
     }

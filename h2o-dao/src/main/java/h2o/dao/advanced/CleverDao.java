@@ -24,29 +24,47 @@ public final class CleverDao {
 
     private final String dataSourceName;
     private final Dao dao;
-    private final Class<?> entityClazz;
     private final TableStruct tableStruct;
+
 
     public CleverDao(Class<?> entityClazz) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
-        this.entityClazz = entityClazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz);
     }
 
     public CleverDao(String dataSourceName, Class<?> entityClazz) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
-        this.entityClazz = entityClazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz);
     }
 
     public CleverDao(Dao dao, Class<?> entityClazz) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = dao;
-        this.entityClazz = entityClazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz);
     }
+
+    public CleverDao(TableStruct tableStruct) {
+        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dao = null;
+        this.tableStruct = tableStruct;
+    }
+
+    public CleverDao(String dataSourceName, TableStruct tableStruct) {
+        this.dataSourceName = dataSourceName;
+        this.dao = null;
+        this.tableStruct = tableStruct;
+    }
+
+    public CleverDao(Dao dao, TableStruct tableStruct) {
+        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dao = dao;
+        this.tableStruct = tableStruct;
+    }
+
+
+
 
 
 
@@ -941,9 +959,6 @@ public final class CleverDao {
     ////
 
 
-    private Class<?> getEntityClazz() {
-        return entityClazz;
-    }
 
     private TableStruct getTableStruct() {
         return this.tableStruct;
