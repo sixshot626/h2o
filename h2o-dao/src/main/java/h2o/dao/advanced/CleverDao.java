@@ -255,7 +255,7 @@ public final class CleverDao {
             this.colAttrMap = Collections.unmodifiableMap(caMap);
         }
 
-        Map<String, Object> nRow = new RowData(new HashMap<>());
+        Map<String, Object> nRow = new HashMap<>();
         for (Map.Entry<String, Object> re : row.entrySet()) {
             String key = this.colAttrMap.get(re.getKey());
             if (key != null) {
@@ -265,7 +265,7 @@ public final class CleverDao {
             }
         }
 
-        return nRow;
+        return new RowData(nRow);
     }
 
 
