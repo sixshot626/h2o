@@ -78,7 +78,7 @@ public final class CleverDao {
         StringBuilder sqlValues = new StringBuilder(" ) \n        values ( ");
 
         int i = 0;
-        for (ColumnMeta col : this.getTableStruct().filterColumns(ks)) {
+        for (ColumnMeta col : this.getTableStruct().sort( this.getTableStruct().filterColumns(ks)) ) {
             if (i++ > 0) {
                 sqlInsert.append(" , ");
                 sqlValues.append(" , ");

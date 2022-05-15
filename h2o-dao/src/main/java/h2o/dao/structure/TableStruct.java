@@ -132,6 +132,23 @@ public class TableStruct {
     }
 
 
+    public ArrayList<ColumnMeta> sort( Collection<ColumnMeta> cols ) {
+        Map<String,ColumnMeta> argsMap = new HashMap<>();
+        for ( ColumnMeta cm : cols ) {
+            argsMap.put( cm.getName(),  cm );
+        }
+        ArrayList<ColumnMeta> sortedCols = new ArrayList<>();
+        for ( ColumnMeta cm : this.columns() ) {
+            ColumnMeta arg = argsMap.get(cm.name);
+            if ( arg != null ) {
+                sortedCols.add( arg );
+            }
+        }
+
+        return sortedCols;
+    }
+
+
     @Override
     public String toString() {
         return "TableStruct{" +
