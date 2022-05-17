@@ -34,13 +34,13 @@ public class ExceptionUtil {
 
 
     public static UncheckedException toUncheckedException(Throwable realException) {
-        UncheckedException h2oRuntimeException = new UncheckedException(realException);
-        return h2oRuntimeException;
+        UncheckedException runtimeException = new UncheckedException(realException);
+        return runtimeException;
     }
 
     public static UncheckedException toUncheckedException(String msg, Throwable realException) {
-        UncheckedException h2oRuntimeException = new UncheckedException(msg, realException);
-        return h2oRuntimeException;
+        UncheckedException runtimeException = new UncheckedException(msg, realException);
+        return runtimeException;
     }
 
 
