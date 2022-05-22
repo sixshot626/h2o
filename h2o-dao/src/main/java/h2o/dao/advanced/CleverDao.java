@@ -11,7 +11,7 @@ import h2o.common.util.collection.MapBuilder;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
 import h2o.dao.exception.DaoException;
-import h2o.dao.jdbc.row.RowData;
+import h2o.dao.result.RowData;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.TableStruct;
 import h2o.dao.structure.TableStructParser;

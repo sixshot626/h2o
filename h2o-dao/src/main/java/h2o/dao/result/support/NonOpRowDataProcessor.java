@@ -1,6 +1,6 @@
-package h2o.dao.jdbc.row.support;
+package h2o.dao.result.support;
 
-import h2o.dao.jdbc.row.RowDataProcessor;
+import h2o.dao.result.RowDataProcessor;
 
 import java.util.Map;
 

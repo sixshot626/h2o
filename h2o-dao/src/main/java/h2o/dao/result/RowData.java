@@ -1,4 +1,4 @@
-package h2o.dao.jdbc.row;
+package h2o.dao.result;
 
 import h2o.common.lang.K;
 import h2o.apache.commons.lang.StringUtils;

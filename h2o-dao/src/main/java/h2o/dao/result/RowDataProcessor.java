@@ -1,4 +1,4 @@
-package h2o.dao.jdbc.row;
+package h2o.dao.result;
 
 import java.util.Map;
 
