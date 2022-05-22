@@ -8,7 +8,7 @@ import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.exception.DaoException;
 import h2o.dao.result.RowData;
-import h2o.dao.result.RowDataProcessor;
+import h2o.dao.proc.RowProcessor;
 import h2o.dao.jdbc.sqlpara.PreparedSqlAndParameters;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
 import h2o.dao.log.LogWriter;
@@ -333,18 +333,18 @@ public class JdbcDao implements Closeable {
     // mapDao
 
 
-    private volatile RowDataProcessor rowDataProcessor;
+    private volatile RowProcessor rowDataProcessor;
 
-    public JdbcDao setRowDataProcessor(RowDataProcessor rowDataProcessor) {
+    public JdbcDao setRowDataProcessor(RowProcessor rowDataProcessor) {
         this.rowDataProcessor = rowDataProcessor;
         return this;
     }
 
     private Map<String, Object> dataProc(Map<String, Object> m) {
 
-        RowDataProcessor rdp = rowDataProcessor;
+        RowProcessor rdp = rowDataProcessor;
         if (rdp != null) {
-            return rdp.dataProc(m);
+            return rdp.proc(m);
         } else {
             return m == null ? null : new RowData(m);
         }

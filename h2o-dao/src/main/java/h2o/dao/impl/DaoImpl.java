@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,8 @@ public class DaoImpl extends AbstractDao implements Dao {
             if (fieldName == null) {
                 return jdbcDao.readObject(sql, paramMap);
             } else {
-                Map<String, Object> data = jdbcDao.readMap(sql, paramMap);
+                Map<String, Object> row = jdbcDao.readMap(sql, paramMap);
+                Map<String, Object> data = this.rowProc(row);
                 return data == null ? Val.empty() : new Val<>((T) data.get(fieldName));
             }
 
@@ -143,7 +145,9 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
             }
 
-            Map<String, Object> r = jdbcDao.readMap(sql, paramMap);
+            Map<String, Object> row = jdbcDao.readMap(sql, paramMap);
+            Map<String, Object> r = this.rowProc(row);
+
             return r == null ? Val.empty() : new Val<>(r);
 
         } catch (Exception e) {
@@ -169,7 +173,14 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
             }
 
-            return jdbcDao.readMapList(sql, paramMap);
+            List<Map<String, Object>> rows = jdbcDao.readMapList(sql, paramMap);
+            List<Map<String, Object>> rs = new ArrayList<>(rows.size());
+
+            for ( Map<String, Object> row : rows ) {
+                rs.add( this.rowProc(row) );
+            }
+
+            return rs;
 
         } catch (Exception e) {
             throw new DaoException(e);

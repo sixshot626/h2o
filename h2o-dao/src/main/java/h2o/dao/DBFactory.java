@@ -1,9 +1,10 @@
 package h2o.dao;
 
 import h2o.common.thirdparty.freemarker.TemplateUtil;
-import h2o.dao.orm.ArgProcessor;
-import h2o.dao.orm.OrmProcessor;
+import h2o.dao.proc.ArgProcessor;
+import h2o.dao.proc.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.proc.RowProcessor;
 import h2o.dao.sql.SqlBuilder;
 import h2o.dao.sql.SqlTable;
 
@@ -18,6 +19,8 @@ public interface DBFactory {
     SqlBuilder getSqlBuilder();
 
     ArgProcessor getArgProcessor();
+
+    RowProcessor getRowProcessor();
 
     OrmProcessor getOrmProcessor();
 

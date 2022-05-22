@@ -1,8 +1,8 @@
-package h2o.dao.impl.orm;
+package h2o.dao.impl.proc;
 
 import h2o.common.util.lang.InstanceUtil;
 import h2o.dao.exception.DaoException;
-import h2o.dao.orm.OrmProcessor;
+import h2o.dao.proc.OrmProcessor;
 
 import java.util.Map;
 

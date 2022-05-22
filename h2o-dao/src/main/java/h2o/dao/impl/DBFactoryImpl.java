@@ -10,9 +10,10 @@ import h2o.common.util.lang.StringUtil;
 import h2o.dao.DBFactory;
 import h2o.dao.Db;
 import h2o.dao.DbUtil;
-import h2o.dao.orm.ArgProcessor;
-import h2o.dao.orm.OrmProcessor;
+import h2o.dao.proc.ArgProcessor;
+import h2o.dao.proc.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.proc.RowProcessor;
 import h2o.dao.sql.SqlBuilder;
 import h2o.dao.sql.SqlTable;
 
@@ -30,6 +31,8 @@ public class DBFactoryImpl implements DBFactory {
 
 
     protected static final String ARGPROCESSOR_BEANID = "argProcessor";
+
+    protected static final String ROWPROCESSOR_BEANID = "rowProcessor";
     protected static final String ORMPROCESSOR_BEANID = "ormProcessor";
     protected static final String PAGINGPROCESSOR_BEANID = "pagingProcessor";
 
@@ -65,6 +68,14 @@ public class DBFactoryImpl implements DBFactory {
     @Override
     public ArgProcessor getArgProcessor() {
         return argProcessorCache.get(true);
+    }
+
+
+    private final CachedCreator<RowProcessor> rowProcessorCache
+            = new CachedCreator<>(()->factoryGet(ROWPROCESSOR_BEANID));
+    @Override
+    public RowProcessor getRowProcessor() {
+        return rowProcessorCache.get(true);
     }
 
 

@@ -5,8 +5,8 @@ sqlTable 		= 1 h2o.dao.sql.SqlTable();
 sqlBuilder 		= 1	h2o.dao.sql.SqlBuilder();
 
 
-argProcessor    = 1 h2o.dao.impl.orm.DefaultArgProcessor();
-ormProcessor    = 1 h2o.dao.impl.orm.DefaultOrmProcessor();
+argProcessor    = 1 h2o.dao.impl.proc.DefaultArgProcessor();
+ormProcessor    = 1 h2o.dao.impl.proc.DefaultOrmProcessor();
 ds2_pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
 
 

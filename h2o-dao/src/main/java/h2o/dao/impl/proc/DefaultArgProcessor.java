@@ -1,10 +1,10 @@
-package h2o.dao.impl.orm;
+package h2o.dao.impl.proc;
 
 
 import h2o.common.Tools;
 import h2o.common.util.bean.BeanUtil;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
-import h2o.dao.orm.ArgProcessor;
+import h2o.dao.proc.ArgProcessor;
 
 import java.util.Map;
 

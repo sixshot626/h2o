@@ -40,6 +40,7 @@ public class DbImpl implements Db {
         DaoImpl daoImpl = new DaoImpl(connection);
 
         daoImpl.setArgProcessor(DbUtil.DBFACTORY.getArgProcessor());
+        daoImpl.setRowProcessor(DbUtil.DBFACTORY.getRowProcessor());
         daoImpl.setOrmProcessor(DbUtil.DBFACTORY.getOrmProcessor());
 
         Optional<PagingProcessor> pagingProcessor = DbUtil.DBFACTORY.getPagingProcessor(this.getName());

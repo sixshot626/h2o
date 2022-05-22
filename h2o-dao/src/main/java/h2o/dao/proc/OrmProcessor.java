@@ -1,4 +1,4 @@
-package h2o.dao.orm;
+package h2o.dao.proc;
 
 import h2o.dao.exception.DaoException;
 

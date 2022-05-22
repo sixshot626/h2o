@@ -1,4 +1,4 @@
-package h2o.dao.impl.orm;
+package h2o.dao.impl.proc;
 
 import h2o.common.Tools;
 import h2o.common.util.bean.BeanUtil;

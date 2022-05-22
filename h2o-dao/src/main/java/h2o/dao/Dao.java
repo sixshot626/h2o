@@ -5,9 +5,10 @@ import h2o.common.data.domain.PageRequest;
 import h2o.common.lang.Val;
 import h2o.dao.exception.DaoException;
 import h2o.dao.log.LogWriter;
-import h2o.dao.orm.ArgProcessor;
-import h2o.dao.orm.OrmProcessor;
+import h2o.dao.proc.ArgProcessor;
+import h2o.dao.proc.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.proc.RowProcessor;
 import h2o.dao.sql.SqlSource;
 
 import java.io.Closeable;
@@ -23,6 +24,8 @@ public interface Dao extends Closeable {
     boolean isAutoClose();
 
     void setArgProcessor(ArgProcessor argProcessor);
+
+    void setRowProcessor(RowProcessor rowDataProcessor);
 
     void setOrmProcessor(OrmProcessor ormProcessor);
 

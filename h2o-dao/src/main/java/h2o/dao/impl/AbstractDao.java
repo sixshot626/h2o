@@ -11,9 +11,10 @@ import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 import h2o.dao.log.LogWriter;
-import h2o.dao.orm.ArgProcessor;
-import h2o.dao.orm.OrmProcessor;
+import h2o.dao.proc.ArgProcessor;
+import h2o.dao.proc.OrmProcessor;
 import h2o.dao.page.PagingProcessor;
+import h2o.dao.proc.RowProcessor;
 import h2o.dao.sql.SqlSource;
 
 import java.sql.Connection;
@@ -31,6 +32,8 @@ public abstract class AbstractDao implements Dao {
     }
 
     private ArgProcessor argProcessor;
+
+    private RowProcessor rowProcessor;
 
     private OrmProcessor ormProcessor;
 
@@ -57,6 +60,11 @@ public abstract class AbstractDao implements Dao {
     }
 
     @Override
+    public void setRowProcessor(RowProcessor rowProcessor) {
+        this.rowProcessor = rowProcessor;
+    }
+
+    @Override
     public void setOrmProcessor(OrmProcessor ormProcessor) {
         this.ormProcessor = ormProcessor;
     }
@@ -76,6 +84,10 @@ public abstract class AbstractDao implements Dao {
         return argProcessor;
     }
 
+    protected RowProcessor getRowProcessor() {
+        return rowProcessor;
+    }
+
     protected OrmProcessor getOrmProcessor() {
         return ormProcessor;
     }
@@ -91,6 +103,11 @@ public abstract class AbstractDao implements Dao {
     protected Map<String, Object> argProc(Object... args) {
         ArgProcessor _argProcessor = this.getArgProcessor();
         return _argProcessor.proc(args);
+    }
+
+    protected Map<String, Object> rowProc(Map<String, Object> row) {
+        RowProcessor _rowProcessor = this.getRowProcessor();
+        return _rowProcessor.proc(row);
     }
 
     protected <T> T ormProc(Map<String, Object> row, Class<T> clazz) {
