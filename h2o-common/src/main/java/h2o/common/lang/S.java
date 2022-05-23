@@ -1,5 +1,7 @@
 package h2o.common.lang;
 
+import h2o.common.util.lang.StringUtil;
+
 import java.util.Objects;
 
 public final class S implements Comparable<S>, java.io.Serializable {
@@ -22,6 +24,10 @@ public final class S implements Comparable<S>, java.io.Serializable {
 
     public static S s(String str) {
         return new S(str);
+    }
+
+    public static S str(Object... strs) {
+        return new S(StringUtil.build(strs));
     }
 
     @Override
