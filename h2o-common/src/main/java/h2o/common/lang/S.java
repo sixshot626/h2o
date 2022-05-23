@@ -1,7 +1,5 @@
 package h2o.common.lang;
 
-import h2o.common.util.lang.StringUtil;
-
 import java.util.Objects;
 
 public final class S implements Comparable<S>, java.io.Serializable {
@@ -27,8 +25,29 @@ public final class S implements Comparable<S>, java.io.Serializable {
     }
 
     public static S str(Object... strs) {
-        return new S(StringUtil.build(strs));
+
+        StringBuilder sb = new StringBuilder();
+
+        if (strs != null || strs.length > 0 ) {
+            for (Object str : strs) {
+                if ( str != null ) {
+                    if (str instanceof OptionalValue) {
+                        if (((OptionalValue<?>) str).isPresent()) {
+                            sb.append(str);
+                        }
+                    } else if (str instanceof CharSequence) {
+                        sb.append((CharSequence) str);
+                    } else {
+                        sb.append(str);
+                    }
+                }
+            }
+        }
+
+        return new S(sb.toString());
+
     }
+
 
     @Override
     public int compareTo(S o) {
