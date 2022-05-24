@@ -1,6 +1,7 @@
 package h2o.common.util.lang;
 
 
+import h2o.common.lang.OptionalValue;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.format.FormattingTuple;
 import h2o.common.util.format.MessageFormatter;
@@ -14,6 +15,30 @@ public abstract class StringUtil {
     }
 
     public static final String EMPTY = "";
+
+
+    public static String str(Object... strs) {
+
+        StringBuilder sb = new StringBuilder();
+
+        if (strs != null || strs.length > 0 ) {
+            for (Object str : strs) {
+                if ( str != null ) {
+                    if (str instanceof OptionalValue) {
+                        if (((OptionalValue<?>) str).isPresent()) {
+                            sb.append(str);
+                        }
+                    } else if (str instanceof CharSequence) {
+                        sb.append((CharSequence) str);
+                    } else {
+                        sb.append(str);
+                    }
+                }
+            }
+        }
+
+        return sb.toString();
+    }
 
 
     public static String build(Object... strs) {
