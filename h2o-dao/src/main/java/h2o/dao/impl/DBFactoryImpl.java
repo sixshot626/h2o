@@ -31,7 +31,6 @@ public class DBFactoryImpl implements DBFactory {
 
 
     protected static final String ARGPROCESSOR_BEANID = "argProcessor";
-
     protected static final String ROWPROCESSOR_BEANID = "rowProcessor";
     protected static final String ORMPROCESSOR_BEANID = "ormProcessor";
     protected static final String PAGINGPROCESSOR_BEANID = "pagingProcessor";
