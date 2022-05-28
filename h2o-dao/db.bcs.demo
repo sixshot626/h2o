@@ -1,5 +1,4 @@
 
-
 sqlTemplateUtil = 1 h2o.common.thirdparty.freemarker.TemplateUtil();
 sqlTable 		= 1 h2o.dao.sql.SqlTable();
 sqlBuilder 		= 1	h2o.dao.sql.SqlBuilder();
@@ -8,15 +7,17 @@ sqlBuilder 		= 1	h2o.dao.sql.SqlBuilder();
 argProcessor    = 1 h2o.dao.impl.proc.DefaultArgProcessor();
 rowProcessor    = 1 h2o.dao.impl.proc.DefaultRowProcessor();
 ormProcessor    = 1 h2o.dao.impl.proc.DefaultOrmProcessor();
+
+ds1_pagingProcessor = 1 h2o.dao.impl.page.MySQLPagingProcessor();
 ds2_pagingProcessor = 1 h2o.dao.impl.page.OraclePagingProcessor();
 
 
 
-db 	= * h2o.dao.impl.DbImpl( h2o.dao.connection.JdbcConnectionManager($0) );
+db 	= * h2o.dao.impl.DbImpl( $0 , h2o.dao.connection.JdbcConnectionManager($0) );
 
 
 /*
-ds = 1 com.zaxxer.hikari.HikariDataSource()
+ds1 = 1 com.zaxxer.hikari.HikariDataSource()
 					.setDriverClassName("com.mysql.jdbc.Driver")
 					.setJdbcUrl("jdbc:mysql://host:3306/db?useUnicode=true&amp;characterEncoding=utf-8")
 					.setUsername("user")
@@ -39,7 +40,7 @@ ds2 = 1 org.springframework.jdbc.datasource.DriverManagerDataSource()
                     .setPassword("pwd");
 
 
-dss = 1 <'default':ds , 'common':ds , 'db2':ds2>;
+dss = 1 <'default':ds1 , 'common':ds1 , 'db2':ds2>;
 
 */
 
