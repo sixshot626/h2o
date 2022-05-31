@@ -670,7 +670,7 @@ public final class CleverDao {
 
         }
 
-        public int[] batchAdd(List<Map> cell, Object... para) {
+        public int[] batchAdd(Collection<?> cell, Object... para) {
 
             if (cell == null || cell.isEmpty()) {
                 throw new IllegalArgumentException("data is empty");
@@ -683,19 +683,19 @@ public final class CleverDao {
 
             String sql;
             if (attrs == null || attrs.isEmpty()) {
-                Set<Object> ks = MapBuilder.start().putAll(cell.get(0)).putAll(paraMap).get().keySet();
+                Set<Object> ks = MapBuilder.start().putAll((Map) cell.iterator().next()).putAll(paraMap).get().keySet();
                 sql = buildInsertSql(ks);
             } else {
                 sql = buildInsertSql(attrs);
             }
 
-            List data;
+            Collection data;
             if (paraMap.isEmpty()) {
                 data = cell;
             } else {
                 data = new ArrayList<>(cell.size());
-                for (Map row : cell) {
-                    data.add(MapBuilder.start().putAll(row).putAll(paraMap).get());
+                for ( Object row : cell) {
+                    data.add(MapBuilder.start().putAll((Map)row).putAll(paraMap).get());
                 }
             }
 
@@ -722,7 +722,8 @@ public final class CleverDao {
 
         }
 
-        public int[] batchEdit(List<Map> cell, Object... para) {
+        @SuppressWarnings("rawtypes")
+        public int[] batchEdit(Collection<?> cell, Object... para) {
 
             if (cell == null || cell.isEmpty()) {
                 throw new IllegalArgumentException("data is empty");
@@ -739,13 +740,13 @@ public final class CleverDao {
                 paraMap = DbUtil.DBFACTORY.getArgProcessor().proc(para);
             }
 
-            List data;
+            Collection data;
             if (paraMap.isEmpty()) {
                 data = cell;
             } else {
                 data = new ArrayList<>(cell.size());
-                for (Map row : cell) {
-                    data.add(MapBuilder.start().putAll(row).putAll(paraMap).get());
+                for (Object row : cell) {
+                    data.add(MapBuilder.start().putAll( (Map) row).putAll(paraMap).get());
                 }
             }
 
@@ -785,11 +786,13 @@ public final class CleverDao {
 
         private final Update update;
 
-        public BatchAdd(Object[] attrs) {
+        private BatchAdd(Object[] attrs) {
             this.update = new Update(attrs);
         }
 
-        public int[] exec(List<Map> cell, Object... para) {
+
+
+        public int[] exec(Collection<?> cell, Object... para) {
             return this.update.batchAdd(cell, para);
         }
 
@@ -804,7 +807,7 @@ public final class CleverDao {
 
         private Update update;
 
-        public Edit(Object[] attrs) {
+        private Edit(Object[] attrs) {
             this.update = new Update(attrs);
         }
 
@@ -843,7 +846,7 @@ public final class CleverDao {
 
         private final Update update;
 
-        public BatchEdit(Object[] attrs) {
+        private BatchEdit(Object[] attrs) {
             this.update = new Update(attrs);
         }
 
@@ -857,7 +860,8 @@ public final class CleverDao {
             return this;
         }
 
-        public int[] exec(List<Map> cell, Object... para) {
+
+        public int[] exec(Collection<?> cell, Object... para) {
             return this.update.batchEdit(cell, para);
         }
 
@@ -872,6 +876,8 @@ public final class CleverDao {
 
 
     public final class Del {
+
+        private Del() {}
 
         private final Update update = new Update((Object[]) null);
 
