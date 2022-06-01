@@ -518,32 +518,13 @@ public final class CleverDao {
     }
 
 
-    public final class SelectOne {
+
+    public final class SelectOneExecutor {
 
         private final Query query;
 
-        private SelectOne(Object[] attrs) {
-            this.query = new Query(attrs);
-        }
-
-        public SelectOne unconditional() {
-            this.query.unconditional();
-            return this;
-        }
-
-        public SelectOne where(String where) {
-            this.query.where(where);
-            return this;
-        }
-
-        public SelectOne whereAttrs(Object... attrs) {
-            this.query.whereAttrs(attrs);
-            return this;
-        }
-
-        public SelectOne whereArgs(Object... args) {
-            this.query.whereArgs(args);
-            return this;
+        public SelectOneExecutor(Query query) {
+            this.query = query;
         }
 
         public Val<Map<String, Object>> lock(boolean lock, Object... para) {
@@ -554,9 +535,35 @@ public final class CleverDao {
             return query.lock(lock, para);
         }
 
-
         public Val<Map<String, Object>> query(Object... para) {
             return query.selectOne(para);
+        }
+
+    }
+
+
+    public final class SelectOne {
+
+        private final Object[] attrs;
+
+        private SelectOne(Object[] attrs) {
+            this.attrs = attrs;
+        }
+
+        public SelectOneExecutor unconditional() {
+            return new SelectOneExecutor( new Query(this.attrs).unconditional() );
+        }
+
+        public SelectOneExecutor where(String where) {
+            return new SelectOneExecutor( new Query(this.attrs).where(where) );
+        }
+
+        public SelectOneExecutor whereAttrs(Object... attrs) {
+            return new SelectOneExecutor( new Query(this.attrs).whereAttrs(attrs) );
+        }
+
+        public SelectOneExecutor whereArgs(Object... args) {
+            return new SelectOneExecutor( new Query(this.attrs).whereArgs(args) );
         }
 
 
@@ -568,35 +575,18 @@ public final class CleverDao {
     }
 
 
-    public final class Select {
+
+
+
+    public final class SelectExecutor {
 
         private final Query query;
 
-        private Select(Object[] attrs) {
-            this.query = new Query(attrs);
+        public SelectExecutor(Query query) {
+            this.query = query;
         }
 
-        public Select unconditional() {
-            this.query.unconditional();
-            return this;
-        }
-
-        public Select where(String where) {
-            this.query.where(where);
-            return this;
-        }
-
-        public Select whereAttrs(Object... attrs) {
-            this.query.whereAttrs(attrs);
-            return this;
-        }
-
-        public Select whereArgs(Object... args) {
-            this.query.whereArgs(args);
-            return this;
-        }
-
-        public Select orderBy(Object... orders) {
+        public SelectExecutor orderBy(Object... orders) {
             this.query.orderBy(orders);
             return this;
         }
@@ -610,6 +600,34 @@ public final class CleverDao {
         public Page<Map<String, Object>> pagingQuery(PageRequest pageRequest, Object... para) {
             return query.pageSelect(pageRequest, para);
         }
+
+    }
+
+
+    public final class Select {
+
+        private final Object[] attrs;
+
+        private Select(Object[] attrs) {
+            this.attrs = attrs;
+        }
+
+        public SelectExecutor unconditional() {
+           return new SelectExecutor( new Query( this.attrs ).unconditional() );
+        }
+
+        public SelectExecutor where(String where) {
+            return new SelectExecutor( new Query( this.attrs ).where(where) );
+        }
+
+        public SelectExecutor whereAttrs(Object... attrs) {
+            return new SelectExecutor( new Query( this.attrs ).whereAttrs(attrs) );
+        }
+
+        public SelectExecutor whereArgs(Object... args) {
+            return new SelectExecutor( new Query( this.attrs ).whereArgs(args) );
+        }
+
 
     }
 
@@ -765,7 +783,6 @@ public final class CleverDao {
 
     public final class Add {
 
-
         private final Update update;
 
         private Add(Object[] attrs) {
@@ -803,32 +820,12 @@ public final class CleverDao {
     }
 
 
-    public final class Edit {
+    public final class EditExecutor {
 
-        private Update update;
+        private final Update update;
 
-        private Edit(Object[] attrs) {
-            this.update = new Update(attrs);
-        }
-
-        public Edit unconditional() {
-            this.update.unconditional();
-            return this;
-        }
-
-        public Edit where(String where) {
-            this.update.where(where);
-            return this;
-        }
-
-        public Edit whereAttrs(Object... attrs) {
-            this.update.whereAttrs(attrs);
-            return this;
-        }
-
-        public Edit whereArgs(Object... args) {
-            this.update.whereArgs(args);
-            return this;
+        private EditExecutor(Update update) {
+            this.update = update;
         }
 
         public int exec(Object... para) {
@@ -837,33 +834,72 @@ public final class CleverDao {
 
     }
 
+    public final class Edit {
+
+        private Object[] attrs;
+
+        private Edit(Object[] attrs) {
+            this.attrs = attrs;
+        }
+
+        public EditExecutor unconditional() {
+            return new EditExecutor( new Update(attrs).unconditional() );
+        }
+
+        public EditExecutor where(String where) {
+            return new EditExecutor( new Update(attrs).where(where) );
+        }
+
+        public EditExecutor whereAttrs(Object... attrs) {
+            return new EditExecutor( new Update(attrs).whereAttrs(attrs) );
+        }
+
+        public EditExecutor whereArgs(Object... args) {
+            return new EditExecutor( new Update(attrs).whereArgs(args));
+        }
+
+
+
+    }
+
     public Edit edit(Object... attr) {
         return new Edit(attr);
     }
 
 
-    public final class BatchEdit {
+
+
+    public final class BatchEditExecutor {
 
         private final Update update;
 
-        private BatchEdit(Object[] attrs) {
-            this.update = new Update(attrs);
+        private BatchEditExecutor(Update update) {
+            this.update = update;
         }
-
-        public BatchEdit where(String where) {
-            this.update.where(where);
-            return this;
-        }
-
-        public BatchEdit whereAttrs(Object... attrs) {
-            this.update.whereAttrs(attrs);
-            return this;
-        }
-
 
         public int[] exec(Collection<?> cell, Object... para) {
             return this.update.batchEdit(cell, para);
         }
+    }
+
+
+
+    public final class BatchEdit {
+
+        private final Object[] attrs;
+
+        private BatchEdit(Object[] attrs) {
+            this.attrs = attrs;
+        }
+
+        public BatchEditExecutor where(String where) {
+            return new BatchEditExecutor( new Update(attrs).where(where) );
+        }
+
+        public BatchEditExecutor whereAttrs(Object... attrs) {
+            return new BatchEditExecutor( new Update(attrs).whereAttrs(attrs) );
+        }
+
 
     }
 
@@ -875,35 +911,50 @@ public final class CleverDao {
     }
 
 
+
+
+
+
+
+    public final class DelExecutor {
+
+        private final Update update;
+
+        private DelExecutor(Update update) {
+            this.update = update;
+        }
+
+
+        public int exec(Object... para) {
+            return this.update.del(para);
+        }
+
+
+    }
+
+
     public final class Del {
 
         private Del() {}
 
         private final Update update = new Update((Object[]) null);
 
-        public Del unconditional() {
-            this.update.unconditional();
-            return this;
+        public DelExecutor unconditional() {
+            return new DelExecutor( new Update((Object[]) null).unconditional() );
         }
 
-        public Del where(String where) {
-            this.update.where(where);
-            return this;
+        public DelExecutor where(String where) {
+            return new DelExecutor( new Update((Object[]) null).where(where) );
         }
 
-        public Del whereAttrs(Object... attrs) {
-            this.update.whereAttrs(attrs);
-            return this;
+        public DelExecutor whereAttrs(Object... attrs) {
+            return new DelExecutor( new Update((Object[]) null).whereAttrs(attrs));
         }
 
-        public Del whereArgs(Object... args) {
-            this.update.whereArgs(args);
-            return this;
+        public DelExecutor whereArgs(Object... args) {
+            return new DelExecutor( new Update((Object[]) null).whereArgs(args) );
         }
 
-        public int exec(Object... para) {
-            return this.update.del(para);
-        }
 
     }
 
