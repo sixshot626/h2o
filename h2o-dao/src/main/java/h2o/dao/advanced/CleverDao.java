@@ -1,6 +1,5 @@
 package h2o.dao.advanced;
 
-import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.SortInfo;
@@ -78,7 +77,7 @@ public final class CleverDao {
         StringBuilder sqlValues = new StringBuilder(" ) \n        values ( ");
 
         int i = 0;
-        for (ColumnMeta col : this.getTableStruct().sort( this.getTableStruct().filterColumns(ks)) ) {
+        for (ColumnMeta col : this.tableStruct.sort( this.tableStruct.filterColumns(ks)) ) {
             if (i++ > 0) {
                 sqlInsert.append(" , ");
                 sqlValues.append(" , ");
@@ -102,7 +101,7 @@ public final class CleverDao {
         StringBuilder sqlUpdate = new StringBuilder("update ").append(tableName()).append(" set ");
 
         int i = 0;
-        for (ColumnMeta col : this.getTableStruct().filterColumns(ks)) {
+        for (ColumnMeta col : this.tableStruct.filterColumns(ks)) {
             if (i++ > 0) {
                 sqlUpdate.append(" , ");
             }
@@ -121,7 +120,7 @@ public final class CleverDao {
 
         StringBuilder sqlSelect = new StringBuilder("select  ");
 
-        List<ColumnMeta> cols = this.getTableStruct().columns();
+        List<ColumnMeta> cols = this.tableStruct.columns();
 
         int i = 0;
         for (ColumnMeta col : cols) {
@@ -140,7 +139,7 @@ public final class CleverDao {
 
         StringBuilder sqlSelect = new StringBuilder("select  ");
 
-        List<ColumnMeta> cols = this.getTableStruct().columns();
+        List<ColumnMeta> cols = this.tableStruct.columns();
 
 
         int i = 0;
@@ -242,30 +241,22 @@ public final class CleverDao {
     }
 
 
-    private Map<String, String> colAttrMap;
-
 
     private Map<String, Object> orm(Map<String, Object> row) {
 
-        if (this.colAttrMap == null) {
-            Map<String, String> caMap = new IgnoreCaseMap<>(new HashMap<>(), IgnoreCaseMap.LOWER);
-            for (ColumnMeta col : this.tableStruct.columns()) {
-                caMap.put(col.colName, col.attrName);
-            }
-            this.colAttrMap = Collections.unmodifiableMap(caMap);
-        }
-
         Map<String, Object> nRow = new HashMap<>();
+
         for (Map.Entry<String, Object> re : row.entrySet()) {
-            String key = this.colAttrMap.get(re.getKey());
-            if (key != null) {
-                nRow.put(key, re.getValue());
+            ColumnMeta column = this.tableStruct.findColumn(re.getKey());
+            if (column != null) {
+                nRow.put(column.attrName, re.getValue());
             } else {
                 nRow.put(re.getKey(), re.getValue());
             }
         }
 
         return new RowData(nRow);
+
     }
 
 
@@ -1008,30 +999,18 @@ public final class CleverDao {
         return key;
     }
 
-    private ColumnMeta getColumnMeta(Object k) {
-        return this.tableStruct.getColumn(k);
-    }
 
 
-    ////
-
-
-
-    private TableStruct getTableStruct() {
-        return this.tableStruct;
-    }
-
-    private Dao getDao() {
+    public Dao getDao() {
         return dao == null ? DbUtil.getDao(this.dataSourceName) : dao;
     }
 
-
     public String tableName() {
-        return this.getTableStruct().tableName();
+        return this.tableStruct.tableName();
     }
 
     public String column(Object attr) {
-        return this.getColumnMeta(attr).colName;
+        return this.tableStruct.getColumn(attr).colName;
     }
 
 
