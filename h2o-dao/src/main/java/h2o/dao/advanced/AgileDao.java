@@ -19,44 +19,44 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class CleverDao {
+public final class AgileDao {
 
     private final String dataSourceName;
     private final Dao dao;
     private final TableStruct tableStruct;
 
 
-    public CleverDao(Class<?> entityClazz) {
+    public AgileDao(Class<?> entityClazz) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
         this.tableStruct = TableStructParser.parse(entityClazz);
     }
 
-    public CleverDao(String dataSourceName, Class<?> entityClazz) {
+    public AgileDao(String dataSourceName, Class<?> entityClazz) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
         this.tableStruct = TableStructParser.parse(entityClazz);
     }
 
-    public CleverDao(Dao dao, Class<?> entityClazz) {
+    public AgileDao(Dao dao, Class<?> entityClazz) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = dao;
         this.tableStruct = TableStructParser.parse(entityClazz);
     }
 
-    public CleverDao(TableStruct tableStruct) {
+    public AgileDao(TableStruct tableStruct) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
         this.tableStruct = tableStruct;
     }
 
-    public CleverDao(String dataSourceName, TableStruct tableStruct) {
+    public AgileDao(String dataSourceName, TableStruct tableStruct) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
         this.tableStruct = tableStruct;
     }
 
-    public CleverDao(Dao dao, TableStruct tableStruct) {
+    public AgileDao(Dao dao, TableStruct tableStruct) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = dao;
         this.tableStruct = tableStruct;
