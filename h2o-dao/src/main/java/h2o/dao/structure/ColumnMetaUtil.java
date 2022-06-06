@@ -52,7 +52,7 @@ public class ColumnMetaUtil {
         if (tableAnn != null && !StringUtils.isBlank(tableAnn.value())) {
             return tableAnn.value();
         } else {
-            return bean.getClass().getSimpleName();
+            return beanClass.getSimpleName();
         }
 
     }
