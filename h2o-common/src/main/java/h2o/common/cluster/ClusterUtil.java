@@ -23,7 +23,15 @@ public abstract class ClusterUtil {
 
     public static class IdGenerator {
 
-        private final SnowGarlandIdGen idGen = new SnowGarlandIdGen(ClusterUtil.getWorkerId());
+        private final SnowGarlandIdGen idGen;
+
+        public IdGenerator() {
+            this(ClusterUtil.getWorkerId());
+        }
+
+        public IdGenerator(long workId) {
+            this.idGen = new SnowGarlandIdGen(workId);
+        }
 
         public synchronized String makeId() {
             LocalDate localDate = LocalDate.now(ZoneOffset.UTC);
