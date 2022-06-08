@@ -376,9 +376,11 @@ public final class AgileDao {
             } else {
 
                 Map m = new HashMap<>();
-                for (int i = 0, len = wargs.length; i < len; i++) {
-                    if (wargs[i] instanceof S && ( i + 1 == len || wargs[i + 1] != null) ) {
+                for ( int i = 0, len = wargs.length; i < len; i++) {
+                    if (wargs[i] instanceof S && ( i + 1 == len || wargs[i + 1] != null ) ) {
                         m.put(wargs[i], null);
+                    } else if (wargs[i] instanceof Map) {
+                        m.putAll( (Map)wargs[i] );
                     } else {
                         m.put(wargs[i], wargs[++i]);
                     }
@@ -387,7 +389,6 @@ public final class AgileDao {
 
             }
         }
-
 
     }
 
