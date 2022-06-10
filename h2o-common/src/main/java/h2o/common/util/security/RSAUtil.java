@@ -4,16 +4,15 @@ package h2o.common.util.security;
 import h2o.common.exception.ExceptionUtil;
 
 import javax.crypto.Cipher;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 public class RSAUtil {
 
     public static final String KEY_ALGORITHM = "RSA";
+
+    public static final String SIGN_ALGORITHM = "SHA256withRSA";
 
 
     private static byte[] decryptBASE64(String key) {
@@ -24,10 +23,6 @@ public class RSAUtil {
     /**
      * 解密<br>
      * 用私钥解密
-     *
-     * @param data
-     * @param key
-     * @return
      */
     public static byte[] decryptByPrivateKey(byte[] data, String key) {
 
@@ -53,11 +48,6 @@ public class RSAUtil {
     /**
      * 加密<br>
      * 用公钥加密
-     *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
      */
     public static byte[] encryptByPublicKey(byte[] data, String key) {
 
@@ -80,12 +70,70 @@ public class RSAUtil {
     }
 
 
-    public static KeyPair makeKey() {
+
+
+
+
+
+
+
+    public static byte[] signBySHA256WithRSA(  byte[] content,  String privateKey) {
+
+        try {
+
+            byte[] keyBytes = decryptBASE64(privateKey);
+
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(keyBytes);
+            PrivateKey priKey = KeyFactory.getInstance(KEY_ALGORITHM).generatePrivate(priPKCS8);
+
+            Signature signature = Signature.getInstance(SIGN_ALGORITHM);
+            signature.initSign(priKey);
+            signature.update(content);
+
+            return signature.sign();
+
+        } catch (Exception e) {
+            //签名失败
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
+
+
+    public boolean verifyBySHA256WithRSA( byte[] content, String publicKey , byte[] sign  ) {
+
+        try {
+
+            byte[] keyBytes = decryptBASE64(publicKey);
+
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            PublicKey pubKey = KeyFactory.getInstance(KEY_ALGORITHM).generatePublic(keySpec);
+
+            Signature signature = Signature.getInstance(SIGN_ALGORITHM);
+            signature.initVerify(pubKey);
+            signature.update(content);
+
+            return signature.verify(sign);
+
+        } catch (Exception e) {
+            //验签失败
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
+
+
+
+
+
+
+
+
+
+    public static KeyPair makeKey(int keysize) {
 
         try {
 
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-            keyPairGen.initialize(1024);
+            keyPairGen.initialize(keysize);
             KeyPair keyPair = keyPairGen.generateKeyPair();
 
             // String pubkey =  new Base64Util().encode(  keyPair.getPublic().getEncoded() );// 公钥
