@@ -289,12 +289,19 @@ public final class AgileDao {
     }
 
 
-    private String whereSql(whereOptions whereOptions) {
+    private String whereSql(whereOptions whereOptions , boolean isQuery ) {
         if (whereOptions.where != null) {
             return str(" \nwhere   ", whereOptions.where);
         } else if (whereOptions.wattr != null) {
             return str(" \n", buildWhere(whereOptions.wattr));
         } else if (whereOptions.wargs != null) {
+            if ( whereOptions.wargs.isEmpty() ) {
+                if ( isQuery ) {
+                    return null;
+                } else {
+                    throw new DaoException("'where' is not set");
+                }
+            }
             return str(" \n", buildWhereW(whereOptions.wargs.keySet()));
         } else if (whereOptions.unconditional) {
             return null;
@@ -434,7 +441,7 @@ public final class AgileDao {
 
         public Val<Map<String, Object>> lock(Object lock, Object... para) {
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions), lockSql(lock));
+            String sql = str(selectSql(attrs), whereSql(whereOptions,false), lockSql(lock));
 
             Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(whereOptions, para));
 
@@ -449,7 +456,7 @@ public final class AgileDao {
 
         public Val<Map<String, Object>> selectOne(Object... para) {
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions));
+            String sql = str(selectSql(attrs), whereSql(whereOptions , true));
 
             Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(whereOptions, para));
 
@@ -463,7 +470,7 @@ public final class AgileDao {
 
         public List<Map<String, Object>> select(Object... para) {
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions), orderSql(orders));
+            String sql = str(selectSql(attrs), whereSql(whereOptions , true), orderSql(orders));
 
             List<Map<String, Object>> res = getDao().load(sql, margeWhereArgs(whereOptions, para));
 
@@ -489,7 +496,7 @@ public final class AgileDao {
                 }
             }
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions), orderSql(pageOrderBy));
+            String sql = str(selectSql(attrs), whereSql(whereOptions,true), orderSql(pageOrderBy));
 
             Page<Map<String, Object>> res = getDao()
                     .pagingLoad(sql,
@@ -726,7 +733,7 @@ public final class AgileDao {
                 updSql = buildUpdateSql1(attrs);
             }
 
-            String sql = str(updSql, whereSql(whereOptions));
+            String sql = str(updSql, whereSql(whereOptions , false));
 
             return getDao().update(sql, margeWhereArgs(whereOptions, para));
 
@@ -743,7 +750,7 @@ public final class AgileDao {
                 throw new IllegalArgumentException("batch edit not support argument: wargs");
             }
 
-            String sql = str(buildUpdateSql1(attrs), whereSql(whereOptions));
+            String sql = str(buildUpdateSql1(attrs), whereSql(whereOptions , false));
 
             Map paraMap = new HashMap<>();
             if (para != null && para.length > 0 && para[0] != null) {
@@ -766,7 +773,7 @@ public final class AgileDao {
 
 
         public int del(Object... para) {
-            String sql = str(buildDelSql1(), whereSql(whereOptions));
+            String sql = str(buildDelSql1(), whereSql(whereOptions , false));
             return getDao().update(sql, margeWhereArgs(whereOptions, para));
         }
 
