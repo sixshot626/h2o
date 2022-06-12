@@ -99,7 +99,7 @@ public class RSAUtil {
     }
 
 
-    public boolean verifyBySHA256WithRSA( byte[] content, String publicKey , byte[] sign  ) {
+    public static boolean verifyBySHA256WithRSA( byte[] content, String publicKey , byte[] sign  ) {
 
         try {
 
