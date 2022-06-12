@@ -10,9 +10,9 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class RSAUtil {
 
-    public static final String KEY_ALGORITHM = "RSA";
+    private static final String KEY_ALGORITHM = "RSA";
 
-    public static final String SIGN_ALGORITHM = "SHA256withRSA";
+    private static final String SIGN_ALGORITHM = "SHA256withRSA";
 
 
     private static byte[] decryptBASE64(String key) {
