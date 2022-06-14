@@ -2,6 +2,7 @@ package h2o.dao.advanced;
 
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.data.domain.ResultInfo;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.Val;
 import h2o.common.util.lang.GenericsUtil;
@@ -231,6 +232,38 @@ public abstract class BasicRepository<E> {
     public List<E> selectAll(String[] fields, SortInfo... sortInfos) {
         return createDaoBasicUtil().selectAll(fields, sortInfos);
     }
+
+
+
+
+
+    public List<E> fetchByAttr( ResultInfo fetchRequest, E entity, String attrName, String... more) {
+        return createDaoBasicUtil().fetchByAttr( fetchRequest, entity, attrName, more);
+    }
+
+    public List<E> fetchByAttr( ResultInfo fetchRequest, E entity, List<String> attrNames) {
+        return createDaoBasicUtil().fetchByAttr( fetchRequest, entity, attrNames);
+    }
+
+    public List<E> fetchSelectByAttr(String[] fields, ResultInfo fetchRequest , E entity, String attrName, String... more) {
+        return createDaoBasicUtil().fetchSelectByAttr(fields, fetchRequest, entity, attrName, more);
+    }
+
+    public List<E> fetchSelectByAttr(String[] fields,  ResultInfo fetchRequest , E entity, List<String> attrNames) {
+        return createDaoBasicUtil().fetchSelectByAttr(fields, fetchRequest, entity, attrNames);
+    }
+
+    public List<E> fetch( ResultInfo fetchRequest ) {
+        return createDaoBasicUtil().fetch( fetchRequest );
+    }
+
+    public List<E> fetchSelect(String[] fields, ResultInfo fetchRequest) {
+        return createDaoBasicUtil().fetchSelect(fields, fetchRequest);
+    }
+
+
+
+
 
     public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String attrName, String... more) {
         return createDaoBasicUtil().pagingLoadByAttr(pageRequest, entity, attrName, more);

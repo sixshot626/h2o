@@ -2,6 +2,7 @@ package h2o.dao.advanced;
 
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.data.domain.ResultInfo;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.Val;
 import h2o.common.util.Assert;
@@ -359,6 +360,58 @@ public final class BasicUtil<E> {
         return orderSql.toString();
 
     }
+
+
+
+
+    public List<E> fetchByAttr( ResultInfo fetchRequest , E entity, String attrName, String... more) {
+        return fetchSelectByAttr(null, fetchRequest, entity, attrName, more);
+    }
+
+    public List<E> fetchByAttr( ResultInfo fetchRequest, E entity, List<String> attrNames) {
+        return fetchSelectByAttr(null, fetchRequest, entity, attrNames);
+    }
+
+
+    public List<E> fetchSelectByAttr(String[] fields,  ResultInfo fetchRequest, E entity, String attrName, String... more) {
+        return fetchSelectByAttr( fields, fetchRequest, entity, ArgsUtil.more2List(attrName, more) );
+    }
+
+    public List<E> fetchSelectByAttr(String[] fields, ResultInfo fetchRequest, E entity, List<String> attrNames) {
+
+        List<ColumnMeta> cis = checkAndGetAttrs(attrNames);
+
+        StringBuilder sql = new StringBuilder();
+
+        StringUtil.append(sql, "select ", this.connectSelectFileds(fields),
+                " from ", this.tableStruct.tableName(), " where ", buildWhereStr(cis));
+
+        return (List<E>) dao.fetch( entity.getClass(), sql.toString(),
+                new ResultInfo( fetchRequest.getStart(), fetchRequest.getSize(),
+                        convertSorts( fetchRequest.getSorts() ) ), entity);
+
+    }
+
+
+    public List<E> fetch( ResultInfo fetchRequest ) {
+        return fetchSelect(null, fetchRequest);
+    }
+
+    public List<E> fetchSelect( String[] fields, ResultInfo fetchRequest ) {
+
+        StringBuilder sql = new StringBuilder();
+
+        StringUtil.append(sql, "select ", this.connectSelectFileds(fields),
+                " from ", this.tableStruct.tableName());
+
+        return dao.fetch(this.entityClazz, sql.toString(),
+                new ResultInfo(fetchRequest.getStart(), fetchRequest.getSize(),
+                        convertSorts(fetchRequest.getSorts())));
+
+    }
+
+
+
 
 
     public Page<E> pagingLoadByAttr(PageRequest pageRequest, E entity, String attrName, String... more) {

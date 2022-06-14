@@ -1,6 +1,5 @@
 package h2o.dao.impl.page;
 
-import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
 import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
@@ -16,9 +15,7 @@ public class PostgreSQLPagingProcessor extends AbstractPagingProcessor implement
     private static final String P2 = "page_row_size";
 
     @Override
-    public Tuple2<String, Map<String, Object>> pagingSql(String sql, PageRequest pageRequest) {
-
-        ResultInfo resultInfo = new ResultInfo(pageRequest);
+    public Tuple2<String, Map<String, Object>> pagingSql(String sql, ResultInfo resultInfo) {
 
         Long pageRowStart = resultInfo.getStart();
         Long pageRowSize = resultInfo.getSize();
@@ -29,7 +26,7 @@ public class PostgreSQLPagingProcessor extends AbstractPagingProcessor implement
 
         StringBuilder pageSql = new StringBuilder();
         pageSql.append("select * from (\n");
-        pageSql.append(this.orderProc(sql, pageRequest.getSorts()));
+        pageSql.append(this.orderProc(sql, resultInfo.getSorts()));
         StringUtil.append(pageSql, "\n) page_query limit :", P2, " offset :", P1);
 
         return Tuple.t(pageSql.toString(), args);

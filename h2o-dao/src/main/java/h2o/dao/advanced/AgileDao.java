@@ -2,6 +2,7 @@ package h2o.dao.advanced;
 
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.data.domain.ResultInfo;
 import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.K;
 import h2o.common.lang.S;
@@ -481,6 +482,41 @@ public final class AgileDao {
             }
         }
 
+
+        public List<Map<String, Object>> fetch( ResultInfo fetchRequest , Object... para) {
+
+            List fetchOrderBy = new ArrayList<>( orders );
+            if ( fetchRequest.getSorts() != null) {
+                List<Object> orderBy = new ArrayList<>();
+                for (SortInfo sortInfo : fetchRequest.getSorts()) {
+                    orderBy.add(sortInfo.getName());
+                    orderBy.add(sortInfo.getDirection());
+                }
+                if (!orderBy.isEmpty()) {
+                    fetchOrderBy.addAll(orderBy);
+                }
+            }
+
+            String sql = str(selectSql(attrs), whereSql(whereOptions,true), orderSql(fetchOrderBy));
+
+            List<Map<String, Object>> res = getDao()
+                    .fetch( sql,
+                            new ResultInfo(fetchRequest.getStart(), fetchRequest.getSize()),
+                            margeWhereArgs(whereOptions, para));
+
+            if (res.isEmpty()) {
+                return res;
+            } else {
+                List<Map<String, Object>> data = new ArrayList<>(res.size());
+                for ( Map<String, Object> row : res ) {
+                    data.add(orm(row));
+                }
+                return data;
+            }
+
+        }
+
+
         public Page<Map<String, Object>> pageSelect(PageRequest pageRequest, Object... para) {
 
 
@@ -581,23 +617,29 @@ public final class AgileDao {
 
         private final Query query;
 
-        public SelectExecutor(Query query) {
+        public SelectExecutor( Query query ) {
             this.query = query;
         }
 
-        public SelectExecutor orderBy(Object... orders) {
-            this.query.orderBy(orders);
+        public SelectExecutor orderBy( Object... orders ) {
+            this.query.orderBy( orders );
             return this;
         }
 
 
-        public List<Map<String, Object>> query(Object... para) {
-            return query.select(para);
+        public List<Map<String, Object>> query( Object... para) {
+            return query.select( para );
         }
 
 
-        public Page<Map<String, Object>> pagingQuery(PageRequest pageRequest, Object... para) {
-            return query.pageSelect(pageRequest, para);
+        public List<Map<String, Object>> fetch( ResultInfo fetchRequest , Object... para ) {
+            return query.fetch( fetchRequest , para );
+        }
+
+
+
+        public Page<Map<String, Object>> pagingQuery( PageRequest pageRequest , Object... para ) {
+            return query.pageSelect( pageRequest, para );
         }
 
     }

@@ -3,6 +3,8 @@ package h2o.common.data.domain;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class PageRequest implements java.io.Serializable {
@@ -26,13 +28,14 @@ public class PageRequest implements java.io.Serializable {
     public PageRequest(long pageNo, long pageSize, SortInfo... sorts) {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
-        this.sorts = CollectionUtil.argsIsBlank(sorts) ? null : ListBuilder.newList(sorts);
+        this.sorts = CollectionUtil.argsIsBlank(sorts) ? null :
+                Collections.unmodifiableList(ListBuilder.newList(sorts));
     }
 
     public PageRequest(long pageNo, long pageSize, List<SortInfo> sorts) {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
-        this.sorts = sorts;
+        this.sorts = Collections.unmodifiableList(sorts);
     }
 
     public long getPageNo() {
