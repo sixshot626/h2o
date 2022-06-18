@@ -67,13 +67,6 @@ public final class AgileDao {
     }
 
 
-    public WhereBuilder createWhereBuilder() {
-        return new WhereBuilder( tableStruct ).unconditional(false);
-    }
-
-
-
-
 
 
     public static final String ASC  = "asc";
@@ -254,6 +247,18 @@ public final class AgileDao {
         }
         return str(" \n", buildOrderSql(orderby));
     }
+
+
+
+
+
+
+
+
+    public WhereBuilder whereBuilder() {
+        return new WhereBuilder( tableStruct ).unconditional(false);
+    }
+
 
 
     private final class Query {
