@@ -416,8 +416,10 @@ public final class WhereBuilder implements WhereConditions {
     }
 
 
-
-
+    @Override
+    public String toString() {
+        return this.whereSql();
+    }
 
     private String buildString(Object... strs) {
         StringBuilder sb = new StringBuilder();
