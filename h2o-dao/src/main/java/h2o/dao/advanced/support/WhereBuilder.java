@@ -9,6 +9,7 @@ import h2o.dao.structure.TableStruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class WhereBuilder implements WhereConditions {
 
@@ -68,7 +69,7 @@ public final class WhereBuilder implements WhereConditions {
             sqlBuilder.append(p);
             sqlBuilder.append(" ) ");
 
-            this.para.put( p , val );
+            this.para.put( p , val instanceof Supplier ? ((Supplier<?>) val).get() : val );
 
         }
 
@@ -97,7 +98,7 @@ public final class WhereBuilder implements WhereConditions {
             sqlBuilder.append(p);
             sqlBuilder.append(" ");
 
-            this.para.put( p , val );
+            this.para.put( p , val instanceof Supplier ? ((Supplier<?>) val).get() : val );
 
         }
 
