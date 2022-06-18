@@ -376,12 +376,12 @@ public final class AgileDao {
                 }
             }
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions,true), orderSql(fetchOrderBy));
+            String sql = str(selectSql(attrs), this.whereConditions.whereSql(), orderSql(fetchOrderBy));
+
+            Map<Object,Object> wherePara = this.whereConditions.params();
 
             List<Map<String, Object>> res = getDao()
-                    .fetch( sql,
-                            new ResultInfo(fetchRequest.getStart(), fetchRequest.getSize()),
-                            margeWhereArgs(whereOptions, para));
+                    .fetch( sql, new ResultInfo(fetchRequest.getStart(), fetchRequest.getSize()), para ,wherePara);
 
             if (res.isEmpty()) {
                 return res;
@@ -539,19 +539,19 @@ public final class AgileDao {
         }
 
         public SelectExecutor unconditional() {
-           return new SelectExecutor( new Query( this.attrs ).unconditional() );
+           return new SelectExecutor( new Query(attrs).unconditional() );
         }
 
         public SelectExecutor where(String where) {
-            return new SelectExecutor( new Query( this.attrs ).where(where) );
+            return new SelectExecutor( new Query(attrs).where(where) );
         }
 
         public SelectExecutor whereAttrs(Object... attrs) {
-            return new SelectExecutor( new Query(attrs ).whereAttrs(attrs) );
+            return new SelectExecutor( new Query(attrs).whereAttrs(attrs) );
         }
 
         public SelectExecutor whereArgs(Object... args) {
-            return new SelectExecutor( new Query(attrs ).whereArgs(args) );
+            return new SelectExecutor( new Query(attrs).whereArgs(args) );
         }
 
         public SelectExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
@@ -581,7 +581,7 @@ public final class AgileDao {
 
 
         public Update unconditional() {
-            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            WhereOptions whereOptions = new WhereOptions( tableStruct , false );
             whereOptions.setUnconditional(true);
 
             this.whereConditions = whereOptions;
@@ -589,7 +589,7 @@ public final class AgileDao {
         }
 
         public Update where(String where) {
-            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            WhereOptions whereOptions = new WhereOptions( tableStruct , false );
             whereOptions.setWhere(where);
 
             this.whereConditions = whereOptions;
@@ -597,7 +597,7 @@ public final class AgileDao {
         }
 
         public Update whereAttrs(Object... wattrs) {
-            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            WhereOptions whereOptions = new WhereOptions( tableStruct , false );
             whereOptions.setWattr(wattrs);
 
             this.whereConditions = whereOptions;
@@ -605,7 +605,7 @@ public final class AgileDao {
         }
 
         public Update whereArgs(Object... wargs) {
-            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            WhereOptions whereOptions = new WhereOptions( tableStruct , false );
             whereOptions.setWargs(wargs);
 
             this.whereConditions = whereOptions;
@@ -613,7 +613,7 @@ public final class AgileDao {
         }
 
         public Update buildWhere( Consumer<WhereBuilder> consumer ) {
-            WhereBuilder whereBuilder = new WhereBuilder(tableStruct);
+            WhereBuilder whereBuilder = new WhereBuilder(tableStruct , false );
             consumer.accept(whereBuilder);
 
             this.whereConditions = whereBuilder;

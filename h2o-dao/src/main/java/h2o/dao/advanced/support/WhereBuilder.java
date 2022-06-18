@@ -16,7 +16,7 @@ public class WhereBuilder implements WhereConditions {
 
     private boolean conjunction;
 
-    private final boolean allowUnconditional;
+    private boolean allowUnconditional;
 
 
     private final StringBuilder sqlBuilder = new StringBuilder();
@@ -39,6 +39,12 @@ public class WhereBuilder implements WhereConditions {
         this.tableStruct = tableStruct;
         this.i = startParaIndex;
         this.allowUnconditional = true;
+    }
+
+
+    public WhereBuilder unconditional(boolean unconditional) {
+        this.allowUnconditional = true;
+        return this;
     }
 
 
