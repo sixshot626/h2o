@@ -187,7 +187,9 @@ public final class WhereBuilder implements WhereConditions {
 
         this.i = whereBuilder.i;
 
-        if ( condition ) {
+        String sql = whereBuilder.whereSql();
+
+        if ( condition && StringUtils.isNotBlank( sql ) ) {
             if (!conjunction) {
                 conjunction = true;
             } else {
@@ -195,7 +197,7 @@ public final class WhereBuilder implements WhereConditions {
             }
 
             sqlBuilder.append(" ( ");
-            sqlBuilder.append( whereBuilder.whereSql() );
+            sqlBuilder.append( sql );
             sqlBuilder.append(" ) ");
 
             this.para.putAll( whereBuilder.params() );
@@ -212,7 +214,9 @@ public final class WhereBuilder implements WhereConditions {
 
         this.i = whereBuilder.i;
 
-        if ( condition ) {
+        String sql = whereBuilder.whereSql();
+
+        if ( condition && StringUtils.isNotBlank( sql ) ) {
             if (!conjunction) {
                 conjunction = true;
             } else {
@@ -220,7 +224,7 @@ public final class WhereBuilder implements WhereConditions {
             }
 
             sqlBuilder.append(" ( ");
-            sqlBuilder.append( whereBuilder.whereSql() );
+            sqlBuilder.append( sql );
             sqlBuilder.append(" ) ");
 
             this.para.putAll( whereBuilder.params() );
