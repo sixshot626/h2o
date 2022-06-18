@@ -299,7 +299,7 @@ public final class AgileDao {
 
 
         public Query buildWhere( Consumer<WhereBuilder> consumer ) {
-            WhereBuilder whereBuilder = new WhereBuilder( tableStruct , true );
+            WhereBuilder whereBuilder = new WhereBuilder( tableStruct );
             consumer.accept( whereBuilder );
 
             this.whereConditions = whereBuilder;
@@ -613,7 +613,7 @@ public final class AgileDao {
         }
 
         public Update buildWhere( Consumer<WhereBuilder> consumer ) {
-            WhereBuilder whereBuilder = new WhereBuilder(tableStruct , false );
+            WhereBuilder whereBuilder = new WhereBuilder(tableStruct).unconditional(false);
             consumer.accept(whereBuilder);
 
             this.whereConditions = whereBuilder;

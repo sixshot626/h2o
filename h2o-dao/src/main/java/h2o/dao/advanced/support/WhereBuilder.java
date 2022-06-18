@@ -18,6 +18,8 @@ public class WhereBuilder implements WhereConditions {
 
     private boolean allowUnconditional;
 
+    private final boolean sub;
+
 
     private final StringBuilder sqlBuilder = new StringBuilder();
 
@@ -28,22 +30,19 @@ public class WhereBuilder implements WhereConditions {
     public WhereBuilder(TableStruct tableStruct) {
         this.tableStruct = tableStruct;
         this.allowUnconditional = true;
-    }
-
-    public WhereBuilder(TableStruct tableStruct , boolean allowUnconditional) {
-        this.tableStruct = tableStruct;
-        this.allowUnconditional = allowUnconditional;
+        this.sub = false;
     }
 
     public WhereBuilder(TableStruct tableStruct , int startParaIndex ) {
         this.tableStruct = tableStruct;
         this.i = startParaIndex;
         this.allowUnconditional = true;
+        this.sub = true;
     }
 
 
     public WhereBuilder unconditional(boolean unconditional) {
-        this.allowUnconditional = true;
+        this.allowUnconditional = unconditional;
         return this;
     }
 
@@ -51,6 +50,7 @@ public class WhereBuilder implements WhereConditions {
     private void addCondition( boolean condition, String op , Object col, Object val ) {
 
         i++;
+
         if ( condition ) {
             if (!conjunction) {
                 conjunction = true;
@@ -58,7 +58,7 @@ public class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(col) );
+            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
 
             sqlBuilder.append(column(col));
             sqlBuilder.append(" ");
@@ -75,6 +75,8 @@ public class WhereBuilder implements WhereConditions {
 
 
     private void addCondition( boolean condition, String op , Object col  ) {
+
+        i++;
 
         if ( condition ) {
             if (!conjunction) {
@@ -134,7 +136,9 @@ public class WhereBuilder implements WhereConditions {
     }
 
     public WhereBuilder in(boolean condition, Object column, Object val) {
+
         i++;
+
         if ( condition ) {
             if (!conjunction) {
                 conjunction = true;
@@ -142,10 +146,10 @@ public class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( ":w_" , i , "_" , column );
+            String p = StringUtil.build( "w_" , i , "_" , name(column).toLowerCase() );
 
             sqlBuilder.append(column(column));
-            sqlBuilder.append(" in ( ");
+            sqlBuilder.append(" in ( :");
 
             sqlBuilder.append(p);
             sqlBuilder.append(" ) ");
@@ -157,7 +161,9 @@ public class WhereBuilder implements WhereConditions {
     }
 
     public WhereBuilder notIn(boolean condition, Object column, Object val) {
+
         i++;
+
         if ( condition ) {
             if (!conjunction) {
                 conjunction = true;
@@ -165,10 +171,10 @@ public class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( ":w_" , i , "_" , column );
+            String p = StringUtil.build( "w_" , i , "_" , name(column).toLowerCase() );
 
             sqlBuilder.append(column(column));
-            sqlBuilder.append(" not in ( ");
+            sqlBuilder.append(" not in ( :");
             sqlBuilder.append(p);
             sqlBuilder.append(" ) ");
 
@@ -230,7 +236,7 @@ public class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    and ");
+                sqlBuilder.append("\n    or  ");
             }
 
             sqlBuilder.append(" ( ");
@@ -250,7 +256,7 @@ public class WhereBuilder implements WhereConditions {
 
         if ( condition ) {
             if (conjunction) {
-                sqlBuilder.append("\n    or ");
+                sqlBuilder.append("\n    or  ");
                 conjunction = false;
             }
         }
@@ -293,7 +299,13 @@ public class WhereBuilder implements WhereConditions {
             }
         }
 
-        return str(" \nwhere   ",  sql);
+        if ( sub ) {
+            return str(" \n        ",  sql);
+        } else {
+            return str(" \nwhere   ",  sql);
+        }
+
+
     }
 
     @Override

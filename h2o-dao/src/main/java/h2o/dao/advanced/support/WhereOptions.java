@@ -170,11 +170,11 @@ public class WhereOptions implements WhereConditions {
     }
 
     private String buildWhere(Collection<?> ws) {
-        return buildWhereF(k -> str(":", name(k)), ws);
+        return buildWhereF(k -> str(":", name(k).toLowerCase()), ws);
     }
 
     private String buildWhereW(Collection<?> ws) {
-        return buildWhereF(k -> str(":w__", name(k)), ws);
+        return buildWhereF(k -> str(":w__", name(k).toLowerCase()), ws);
     }
 
 
