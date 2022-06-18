@@ -47,7 +47,37 @@ public final class WhereBuilder implements WhereConditions {
     }
 
 
-    private void addCondition( boolean condition, String op , Object col, Object val ) {
+
+    private WhereBuilder addBracketsCondition( boolean condition, String op , Object col, Object val ) {
+
+        i++;
+
+        if ( condition ) {
+            if (!conjunction) {
+                conjunction = true;
+            } else {
+                sqlBuilder.append("\n    and ");
+            }
+
+            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
+
+            sqlBuilder.append(column(col));
+            sqlBuilder.append(" ");
+            sqlBuilder.append(op);
+            sqlBuilder.append(" ( :");
+            sqlBuilder.append(p);
+            sqlBuilder.append(" ) ");
+
+            this.para.put( p , val );
+
+        }
+
+        return this;
+
+    }
+
+
+    private WhereBuilder addCondition( boolean condition, String op , Object col, Object val ) {
 
         i++;
 
@@ -71,10 +101,12 @@ public final class WhereBuilder implements WhereConditions {
 
         }
 
+        return this;
+
     }
 
 
-    private void addCondition( boolean condition, String op , Object col  ) {
+    private WhereBuilder addCondition( boolean condition, String op , Object col  ) {
 
         i++;
 
@@ -92,111 +124,63 @@ public final class WhereBuilder implements WhereConditions {
 
         }
 
+        return this;
+
     }
 
 
     public WhereBuilder eq(boolean condition, Object col, Object val) {
-        addCondition(condition , "=" , col , val );
-        return this;
+        return addCondition(condition , "=" , col , val );
     }
 
     public WhereBuilder neq(boolean condition, Object col, Object val) {
-        addCondition(condition , "<>" , col , val );
-        return this;
+        return addCondition(condition , "<>" , col , val );
     }
 
     public WhereBuilder gt(boolean condition, Object col, Object val) {
-        addCondition(condition , ">" , col , val );
-        return this;
+        return addCondition(condition , ">" , col , val );
     }
 
     public WhereBuilder gte(boolean condition, Object col, Object val) {
-        addCondition(condition , ">=" , col , val );
-        return this;
+        return addCondition(condition , ">=" , col , val );
     }
 
     public WhereBuilder lt(boolean condition, Object col, Object val) {
-        addCondition(condition , "<" , col , val );
-        return this;
+        return addCondition(condition , "<" , col , val );
     }
 
     public WhereBuilder lte(boolean condition, Object col, Object val) {
-        addCondition(condition , "<=" , col , val );
-        return this;
+        return addCondition(condition , "<=" , col , val );
     }
 
     public WhereBuilder like(boolean condition, Object col, Object val) {
-        addCondition(condition , "like" , col , val );
-        return this;
+        return addCondition(condition , "like" , col , val );
     }
 
     public WhereBuilder notLike(boolean condition, Object col, Object val) {
-        addCondition(condition , "not like" , col , val );
-        return this;
-    }
-
-    public WhereBuilder in(boolean condition, Object col, Object val) {
-
-        i++;
-
-        if ( condition ) {
-            if (!conjunction) {
-                conjunction = true;
-            } else {
-                sqlBuilder.append("\n    and ");
-            }
-
-            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
-
-            sqlBuilder.append(column(col));
-            sqlBuilder.append(" in ( :");
-
-            sqlBuilder.append(p);
-            sqlBuilder.append(" ) ");
-
-            this.para.put( p , val );
-
-        }
-        return this;
-    }
-
-    public WhereBuilder notIn(boolean condition, Object col, Object val) {
-
-        i++;
-
-        if ( condition ) {
-            if (!conjunction) {
-                conjunction = true;
-            } else {
-                sqlBuilder.append("\n    and ");
-            }
-
-            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
-
-            sqlBuilder.append(column(col));
-            sqlBuilder.append(" not in ( :");
-            sqlBuilder.append(p);
-            sqlBuilder.append(" ) ");
-
-            this.para.put( p , val );
-
-        }
-        return this;
+        return addCondition(condition , "not like" , col , val );
     }
 
 
     public WhereBuilder isNull(boolean condition, Object col) {
-        addCondition(condition , "is null" , col );
-        return this;
+        return addCondition(condition , "is null" , col );
     }
 
     public WhereBuilder isNotNull(boolean condition, Object col) {
-        addCondition(condition , "is not null" , col );
-        return this;
+        return addCondition(condition , "is not null" , col );
     }
 
 
-    public WhereBuilder and (boolean condition, Consumer<WhereBuilder> consumer) {
+    public WhereBuilder in(boolean condition, Object col, Object val) {
+        return addBracketsCondition(condition , "in" , col , val );
+    }
+
+    public WhereBuilder notIn(boolean condition, Object col, Object val) {
+        return addBracketsCondition(condition , "not in" , col , val );
+    }
+
+
+    public WhereBuilder and(boolean condition, Consumer<WhereBuilder> consumer) {
 
         WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct , this.i );
         consumer.accept( whereBuilder );
@@ -221,7 +205,7 @@ public final class WhereBuilder implements WhereConditions {
         return this;
     }
 
-    public WhereBuilder or (boolean condition, Consumer<WhereBuilder> consumer) {
+    public WhereBuilder or(boolean condition, Consumer<WhereBuilder> consumer) {
 
         WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct , this.i );
         consumer.accept( whereBuilder );
