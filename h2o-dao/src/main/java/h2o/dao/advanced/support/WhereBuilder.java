@@ -270,6 +270,75 @@ public final class WhereBuilder implements WhereConditions {
 
 
 
+    public WhereBuilder eq(Object col, Object val) {
+        return this.eq(true,col,val);
+    }
+
+    public WhereBuilder neq(Object col, Object val) {
+        return this.neq(true,col,val);
+    }
+
+    public WhereBuilder gt(Object col, Object val) {
+        return this.gt(true,col,val);
+    }
+
+    public WhereBuilder gte(Object col, Object val) {
+        return this.gte(true,col,val);
+    }
+
+    public WhereBuilder lt(Object col, Object val) {
+        return this.lt(true,col,val);
+    }
+
+    public WhereBuilder lte(Object col, Object val) {
+        return this.lte(true,col,val);
+    }
+
+    public WhereBuilder like(Object col, Object val) {
+        return this.like(true,col,val);
+    }
+
+    public WhereBuilder notLike(Object col, Object val) {
+        return this.notLike(true,col,val);
+    }
+
+
+    public WhereBuilder isNull(Object col) {
+        return this.isNull(true,col);
+    }
+
+    public WhereBuilder isNotNull(Object col) {
+        return this.isNotNull(true,col);
+    }
+
+
+    public WhereBuilder in(Object col, Object val) {
+        return this.in(true,col,val);
+    }
+
+    public WhereBuilder notIn(Object col, Object val) {
+        return this.notIn(true,col,val);
+    }
+
+
+    public WhereBuilder and(Consumer<WhereBuilder> consumer) {
+        return this.and(true , consumer );
+    }
+
+    public WhereBuilder or(Consumer<WhereBuilder> consumer) {
+        return this.or(true , consumer);
+    }
+
+    public WhereBuilder or() {
+        return this.or(true);
+    }
+
+
+
+
+
+
+
     @Override
     public String whereSql() {
 
