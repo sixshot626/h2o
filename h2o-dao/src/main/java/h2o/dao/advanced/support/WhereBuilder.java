@@ -33,7 +33,7 @@ public class WhereBuilder implements WhereConditions {
         this.sub = false;
     }
 
-    public WhereBuilder(TableStruct tableStruct , int startParaIndex ) {
+    private WhereBuilder(TableStruct tableStruct , int startParaIndex ) {
         this.tableStruct = tableStruct;
         this.i = startParaIndex;
         this.allowUnconditional = true;
