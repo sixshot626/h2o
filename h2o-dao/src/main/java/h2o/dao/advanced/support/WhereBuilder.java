@@ -95,47 +95,47 @@ public final class WhereBuilder implements WhereConditions {
     }
 
 
-    public WhereBuilder eq(boolean condition, Object column, Object val) {
-        addCondition(condition , "=" , column , val );
+    public WhereBuilder eq(boolean condition, Object col, Object val) {
+        addCondition(condition , "=" , col , val );
         return this;
     }
 
-    public WhereBuilder ne(boolean condition, Object column, Object val) {
-        addCondition(condition , "<>" , column , val );
+    public WhereBuilder neq(boolean condition, Object col, Object val) {
+        addCondition(condition , "<>" , col , val );
         return this;
     }
 
-    public WhereBuilder gt(boolean condition, Object column, Object val) {
-        addCondition(condition , ">" , column , val );
+    public WhereBuilder gt(boolean condition, Object col, Object val) {
+        addCondition(condition , ">" , col , val );
         return this;
     }
 
-    public WhereBuilder gteq(boolean condition, Object column, Object val) {
-        addCondition(condition , ">=" , column , val );
+    public WhereBuilder gte(boolean condition, Object col, Object val) {
+        addCondition(condition , ">=" , col , val );
         return this;
     }
 
-    public WhereBuilder lt(boolean condition, Object column, Object val) {
-        addCondition(condition , "<" , column , val );
+    public WhereBuilder lt(boolean condition, Object col, Object val) {
+        addCondition(condition , "<" , col , val );
         return this;
     }
 
-    public WhereBuilder lteq(boolean condition, Object column, Object val) {
-        addCondition(condition , "<=" , column , val );
+    public WhereBuilder lte(boolean condition, Object col, Object val) {
+        addCondition(condition , "<=" , col , val );
         return this;
     }
 
-    public WhereBuilder like(boolean condition, Object column, Object val) {
-        addCondition(condition , "like" , column , val );
+    public WhereBuilder like(boolean condition, Object col, Object val) {
+        addCondition(condition , "like" , col , val );
         return this;
     }
 
-    public WhereBuilder notLike(boolean condition, Object column, Object val) {
-        addCondition(condition , "not like" , column , val );
+    public WhereBuilder notLike(boolean condition, Object col, Object val) {
+        addCondition(condition , "not like" , col , val );
         return this;
     }
 
-    public WhereBuilder in(boolean condition, Object column, Object val) {
+    public WhereBuilder in(boolean condition, Object col, Object val) {
 
         i++;
 
@@ -146,9 +146,9 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(column).toLowerCase() );
+            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
 
-            sqlBuilder.append(column(column));
+            sqlBuilder.append(column(col));
             sqlBuilder.append(" in ( :");
 
             sqlBuilder.append(p);
@@ -160,7 +160,7 @@ public final class WhereBuilder implements WhereConditions {
         return this;
     }
 
-    public WhereBuilder notIn(boolean condition, Object column, Object val) {
+    public WhereBuilder notIn(boolean condition, Object col, Object val) {
 
         i++;
 
@@ -171,9 +171,9 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(column).toLowerCase() );
+            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
 
-            sqlBuilder.append(column(column));
+            sqlBuilder.append(column(col));
             sqlBuilder.append(" not in ( :");
             sqlBuilder.append(p);
             sqlBuilder.append(" ) ");
@@ -185,13 +185,13 @@ public final class WhereBuilder implements WhereConditions {
     }
 
 
-    public WhereBuilder isNull(boolean condition, Object column) {
-        addCondition(condition , "is null" , column );
+    public WhereBuilder isNull(boolean condition, Object col) {
+        addCondition(condition , "is null" , col );
         return this;
     }
 
-    public WhereBuilder isNotNull(boolean condition, Object column) {
-        addCondition(condition , "is not null" , column );
+    public WhereBuilder isNotNull(boolean condition, Object col) {
+        addCondition(condition , "is not null" , col );
         return this;
     }
 
@@ -200,8 +200,6 @@ public final class WhereBuilder implements WhereConditions {
 
         WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct , this.i );
         consumer.accept( whereBuilder );
-
-        String sql = whereBuilder.whereSql();
 
         this.i = whereBuilder.i;
 
@@ -213,7 +211,7 @@ public final class WhereBuilder implements WhereConditions {
             }
 
             sqlBuilder.append(" ( ");
-            sqlBuilder.append( sql );
+            sqlBuilder.append( whereBuilder.whereSql() );
             sqlBuilder.append(" ) ");
 
             this.para.putAll( whereBuilder.params() );
@@ -228,8 +226,6 @@ public final class WhereBuilder implements WhereConditions {
         WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct , this.i );
         consumer.accept( whereBuilder );
 
-        String sql = whereBuilder.whereSql();
-
         this.i = whereBuilder.i;
 
         if ( condition ) {
@@ -240,7 +236,7 @@ public final class WhereBuilder implements WhereConditions {
             }
 
             sqlBuilder.append(" ( ");
-            sqlBuilder.append( sql );
+            sqlBuilder.append( whereBuilder.whereSql() );
             sqlBuilder.append(" ) ");
 
             this.para.putAll( whereBuilder.params() );
@@ -275,7 +271,7 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            sqlBuilder.append( str( strs ) );
+            sqlBuilder.append( buildString( strs ) );
 
         }
 
@@ -300,9 +296,9 @@ public final class WhereBuilder implements WhereConditions {
         }
 
         if ( sub ) {
-            return str(" \n        ",  sql);
+            return buildString(" \n        ",  sql);
         } else {
-            return str(" \nwhere   ",  sql);
+            return buildString(" \nwhere   ",  sql);
         }
 
 
@@ -317,7 +313,7 @@ public final class WhereBuilder implements WhereConditions {
 
 
 
-    private String str(Object... strs) {
+    private String buildString(Object... strs) {
         StringBuilder sb = new StringBuilder();
         for (Object s : strs) {
             if (s != null) {
