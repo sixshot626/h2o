@@ -4,23 +4,23 @@ import h2o.common.util.bean.PreOperate;
 
 public abstract class AbstractPreOperate<T> implements PreOperate<T> {
 
-    private volatile PreOperate<T> ppreOp;
+    private volatile PreOperate<T> preOp;
 
-    public void setPpreOp(PreOperate<T> ppreOp) {
-        this.ppreOp = ppreOp;
+    public void setPreOp(PreOperate<T> preOp) {
+        this.preOp = preOp;
     }
 
     public AbstractPreOperate() {
     }
 
-    public AbstractPreOperate(PreOperate<T> ppreOp) {
-        this.setPpreOp(ppreOp);
+    public AbstractPreOperate(PreOperate<T> preOp) {
+        this.setPreOp(preOp);
     }
 
     public final T doOperate(T o) {
 
-        if (this.ppreOp != null) {
-            o = this.ppreOp.doOperate(o);
+        if (this.preOp != null) {
+            o = this.preOp.doOperate(o);
         }
 
         return this.doOperateImpl(o);

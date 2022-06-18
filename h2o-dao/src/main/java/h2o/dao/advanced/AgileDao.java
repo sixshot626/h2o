@@ -9,6 +9,9 @@ import h2o.common.lang.Val;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
+import h2o.dao.advanced.support.WhereBuilder;
+import h2o.dao.advanced.support.WhereConditions;
+import h2o.dao.advanced.support.WhereOptions;
 import h2o.dao.exception.DaoException;
 import h2o.dao.result.RowData;
 import h2o.dao.structure.ColumnMeta;
@@ -16,7 +19,7 @@ import h2o.dao.structure.TableStruct;
 import h2o.dao.structure.TableStructParser;
 
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public final class AgileDao {
@@ -189,58 +192,6 @@ public final class AgileDao {
     }
 
 
-    private String buildWhereF(Function<?, String> f, Collection<?> ws) {
-
-        if (ws == null || ws.isEmpty()) {
-            throw new DaoException(String.valueOf(ws));
-        }
-
-        StringBuilder sqlWhere = new StringBuilder("where   ");
-        int i = 0;
-        for (Object k : ws) {
-            if (i++ > 0) {
-                sqlWhere.append("\n    and ");
-            }
-            if (k instanceof S) {
-                sqlWhere.append(((S) k).getValue());
-            } else {
-                sqlWhere.append(column(k));
-                sqlWhere.append(" = ");
-                sqlWhere.append(((Function<Object, String>) f).apply(k));
-            }
-        }
-
-        return sqlWhere.toString();
-
-    }
-
-    private String buildWhere(Collection<?> ws) {
-        return buildWhereF(k -> str(":", name(k)), ws);
-    }
-
-    private String buildWhereW(Collection<?> ws) {
-        return buildWhereF(k -> str(":w__", name(k)), ws);
-    }
-
-    private Map<String, Object> convWArgs(Map<?, Object> wargs) {
-        Map<String, Object> nmap = new HashMap<>();
-        for (Map.Entry<?, Object> entry : wargs.entrySet()) {
-            if ( entry.getKey() instanceof S ) {
-                continue;
-            }
-            nmap.put(str("w__", name(entry.getKey())), entry.getValue());
-        }
-        return nmap;
-    }
-
-    private Object[] merge(Object[] a, Object... b) {
-        Object[] c = new Object[a.length + b.length];
-        System.arraycopy(a, 0, c, 0, a.length);
-        System.arraycopy(b, 0, c, a.length, b.length);
-        return c;
-    }
-
-
 
     private Map<String, Object> orm(Map<String, Object> row) {
 
@@ -289,26 +240,6 @@ public final class AgileDao {
     }
 
 
-    private String whereSql(whereOptions whereOptions , boolean isQuery ) {
-        if (whereOptions.where != null) {
-            return str(" \nwhere   ", whereOptions.where);
-        } else if (whereOptions.wattr != null) {
-            return str(" \n", buildWhere(whereOptions.wattr));
-        } else if (whereOptions.wargs != null) {
-            if ( whereOptions.wargs.isEmpty() ) {
-                if ( isQuery ) {
-                    return null;
-                } else {
-                    throw new DaoException("'where' is not set");
-                }
-            }
-            return str(" \n", buildWhereW(whereOptions.wargs.keySet()));
-        } else if (whereOptions.unconditional) {
-            return null;
-        } else {
-            throw new DaoException("'where' is not set");
-        }
-    }
 
 
     private String orderSql(List<?> orderby) {
@@ -319,92 +250,11 @@ public final class AgileDao {
     }
 
 
-    private Object[] margeWhereArgs(whereOptions whereOptions, Object[] para) {
-        if (whereOptions.where != null) {
-            return para;
-        } else if (whereOptions.wattr != null) {
-            return para;
-        } else if (whereOptions.wargs != null) {
-            if (whereOptions.wargs.isEmpty()) {
-                return para;
-            } else {
-                return merge(para, convWArgs((Map<?, Object>) whereOptions.wargs));
-            }
-        } else if (whereOptions.unconditional) {
-            return para;
-        } else {
-            throw new DaoException("'where' is not set");
-        }
-    }
-
-
-    private static final class whereOptions {
-
-        public boolean unconditional;
-        public List wattr;
-        public String where;
-        public Map wargs;
-
-
-        public boolean isSetted() {
-            return this.unconditional || this.where != null || this.wattr != null || this.wargs != null;
-        }
-
-
-        public void setUnconditional(boolean unconditional) {
-            if (isSetted()) {
-                throw new DaoException("'where' is setted");
-            }
-            this.unconditional = unconditional;
-        }
-
-        public void setWhere(String where) {
-            if (isSetted()) {
-                throw new DaoException("'where' is setted");
-            }
-            this.where = where;
-        }
-
-        public void setWattr(Object[] wattrs) {
-            if (isSetted()) {
-                throw new DaoException("'where' is setted");
-            }
-            this.wattr = args2List(wattrs);
-        }
-
-        public void setWargs(Object[] wargs) {
-
-            if (isSetted()) {
-                throw new DaoException("'where' is setted");
-            }
-
-            if (wargs == null) {
-                this.wargs = Collections.EMPTY_MAP;
-            } else {
-
-                Map m = new HashMap<>();
-                for ( int i = 0, len = wargs.length; i < len; i++) {
-                    if (wargs[i] instanceof S && ( i + 1 == len || wargs[i + 1] != null ) ) {
-                        m.put(wargs[i], null);
-                    } else if (wargs[i] instanceof Map) {
-                        m.putAll( (Map)wargs[i] );
-                    } else {
-                        m.put(wargs[i], wargs[++i]);
-                    }
-                }
-                this.wargs = Collections.unmodifiableMap(m);
-
-            }
-        }
-
-    }
-
-
     private final class Query {
 
 
         private final List<Object> attrs;
-        private final whereOptions whereOptions = new whereOptions();
+        private WhereConditions whereConditions;
         private List<Object> orders = Collections.EMPTY_LIST;
 
         private Query(Object[] attrs) {
@@ -413,22 +263,45 @@ public final class AgileDao {
 
 
         public Query unconditional() {
-            this.whereOptions.setUnconditional(true);
+
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setUnconditional(true);
+
+            this.whereConditions = whereOptions;
             return this;
         }
 
         public Query where(String where) {
-            this.whereOptions.setWhere(where);
+
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setWhere(where);
+
+            this.whereConditions = whereOptions;
             return this;
         }
 
         public Query whereAttrs(Object... wattrs) {
-            this.whereOptions.setWattr(wattrs);
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setWattr(wattrs);
+
+            this.whereConditions = whereOptions;
             return this;
         }
 
         public Query whereArgs(Object... wargs) {
-            this.whereOptions.setWargs(wargs);
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setWargs(wargs);
+
+            this.whereConditions = whereOptions;
+            return this;
+        }
+
+
+        public Query buildWhere( Consumer<WhereBuilder> consumer ) {
+            WhereBuilder whereBuilder = new WhereBuilder( tableStruct , true );
+            consumer.accept( whereBuilder );
+
+            this.whereConditions = whereBuilder;
             return this;
         }
 
@@ -441,9 +314,11 @@ public final class AgileDao {
 
         public Val<Map<String, Object>> lock(Object lock, Object... para) {
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions,false), lockSql(lock));
+            String sql = str(selectSql(attrs), this.whereConditions.whereSql() , lockSql(lock));
 
-            Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(whereOptions, para));
+            Map<Object,Object> wherePara = this.whereConditions.params();
+
+            Val<Map<String, Object>> res = getDao().get(sql, para , wherePara);
 
             if (res.isPresent()) {
                 return new Val<>(orm(res.getValue()));
@@ -456,9 +331,11 @@ public final class AgileDao {
 
         public Val<Map<String, Object>> selectOne(Object... para) {
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions , true));
+            String sql = str(selectSql(attrs), this.whereConditions.whereSql());
 
-            Val<Map<String, Object>> res = getDao().get(sql, margeWhereArgs(whereOptions, para));
+            Map<Object,Object> wherePara = this.whereConditions.params();
+
+            Val<Map<String, Object>> res = getDao().get(sql,  para , wherePara);
 
             if (res.isPresent()) {
                 return new Val<>(orm(res.getValue()));
@@ -470,9 +347,11 @@ public final class AgileDao {
 
         public List<Map<String, Object>> select(Object... para) {
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions , true), orderSql(orders));
+            String sql = str(selectSql(attrs), this.whereConditions.whereSql(), orderSql(orders));
 
-            List<Map<String, Object>> res = getDao().load(sql, margeWhereArgs(whereOptions, para));
+            Map<Object,Object> wherePara = this.whereConditions.params();
+
+            List<Map<String, Object>> res = getDao().load(sql, para , wherePara);
 
             if (res.isEmpty()) {
                 return res;
@@ -496,12 +375,14 @@ public final class AgileDao {
                 }
             }
 
-            String sql = str(selectSql(attrs), whereSql(whereOptions,true), orderSql(pageOrderBy));
+            String sql = str(selectSql(attrs), this.whereConditions.whereSql(), orderSql(pageOrderBy));
+
+            Map<Object,Object> wherePara = this.whereConditions.params();
 
             Page<Map<String, Object>> res = getDao()
                     .pagingLoad(sql,
                             new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize()),
-                            margeWhereArgs(whereOptions, para));
+                            para , wherePara);
 
             if (res.getContent().isEmpty()) {
                 return res;
@@ -550,19 +431,25 @@ public final class AgileDao {
         }
 
         public SelectOneExecutor unconditional() {
-            return new SelectOneExecutor( new Query(this.attrs).unconditional() );
+            return new SelectOneExecutor( new Query(attrs).unconditional() );
         }
 
         public SelectOneExecutor where(String where) {
-            return new SelectOneExecutor( new Query(this.attrs).where(where) );
+            return new SelectOneExecutor( new Query(attrs).where(where) );
         }
 
         public SelectOneExecutor whereAttrs(Object... attrs) {
-            return new SelectOneExecutor( new Query(this.attrs).whereAttrs(attrs) );
+            return new SelectOneExecutor( new Query(attrs).whereAttrs(attrs) );
         }
 
         public SelectOneExecutor whereArgs(Object... args) {
-            return new SelectOneExecutor( new Query(this.attrs).whereArgs(args) );
+            return new SelectOneExecutor( new Query(attrs).whereArgs(args) );
+        }
+
+
+
+        public SelectOneExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
+            return new SelectOneExecutor( new Query(attrs).buildWhere(  consumer ) );
         }
 
 
@@ -572,8 +459,6 @@ public final class AgileDao {
     public SelectOne selectOne(Object... attrs) {
         return new SelectOne(attrs);
     }
-
-
 
 
 
@@ -620,11 +505,15 @@ public final class AgileDao {
         }
 
         public SelectExecutor whereAttrs(Object... attrs) {
-            return new SelectExecutor( new Query( this.attrs ).whereAttrs(attrs) );
+            return new SelectExecutor( new Query(attrs ).whereAttrs(attrs) );
         }
 
         public SelectExecutor whereArgs(Object... args) {
-            return new SelectExecutor( new Query( this.attrs ).whereArgs(args) );
+            return new SelectExecutor( new Query(attrs ).whereArgs(args) );
+        }
+
+        public SelectExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
+            return new SelectExecutor( new Query(attrs).buildWhere(  consumer ) );
         }
 
 
@@ -646,26 +535,46 @@ public final class AgileDao {
             this.attrs = args2List(attrs);
         }
 
-        private final whereOptions whereOptions = new whereOptions();
+        private WhereConditions whereConditions;
 
 
         public Update unconditional() {
-            this.whereOptions.setUnconditional(true);
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setUnconditional(true);
+
+            this.whereConditions = whereOptions;
             return this;
         }
 
         public Update where(String where) {
-            this.whereOptions.setWhere(where);
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setWhere(where);
+
+            this.whereConditions = whereOptions;
             return this;
         }
 
         public Update whereAttrs(Object... wattrs) {
-            this.whereOptions.setWattr(wattrs);
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setWattr(wattrs);
+
+            this.whereConditions = whereOptions;
             return this;
         }
 
         public Update whereArgs(Object... wargs) {
-            this.whereOptions.setWargs(wargs);
+            WhereOptions whereOptions = new WhereOptions( tableStruct , true );
+            whereOptions.setWargs(wargs);
+
+            this.whereConditions = whereOptions;
+            return this;
+        }
+
+        public Update buildWhere( Consumer<WhereBuilder> consumer ) {
+            WhereBuilder whereBuilder = new WhereBuilder(tableStruct);
+            consumer.accept(whereBuilder);
+
+            this.whereConditions = whereBuilder;
             return this;
         }
 
@@ -733,9 +642,11 @@ public final class AgileDao {
                 updSql = buildUpdateSql1(attrs);
             }
 
-            String sql = str(updSql, whereSql(whereOptions , false));
+            String sql = str(updSql, this.whereConditions.whereSql());
 
-            return getDao().update(sql, margeWhereArgs(whereOptions, para));
+            Map<Object,Object> wherePara = this.whereConditions.params();
+
+            return getDao().update( sql, para , wherePara );
 
         }
 
@@ -746,16 +657,14 @@ public final class AgileDao {
                 throw new IllegalArgumentException("data is empty");
             }
 
-            if (whereOptions.wargs != null) {
-                throw new IllegalArgumentException("batch edit not support argument: wargs");
-            }
-
-            String sql = str(buildUpdateSql1(attrs), whereSql(whereOptions , false));
+            String sql = str(buildUpdateSql1(attrs), this.whereConditions.whereSql());
 
             Map paraMap = new HashMap<>();
             if (para != null && para.length > 0 && para[0] != null) {
                 paraMap = DbUtil.DBFACTORY.getArgProcessor().proc(para);
             }
+
+            paraMap.putAll( this.whereConditions.params() );
 
             Collection data;
             if (paraMap.isEmpty()) {
@@ -773,8 +682,12 @@ public final class AgileDao {
 
 
         public int del(Object... para) {
-            String sql = str(buildDelSql1(), whereSql(whereOptions , false));
-            return getDao().update(sql, margeWhereArgs(whereOptions, para));
+
+            String sql = str(buildDelSql1(), this.whereConditions.whereSql());
+
+            Map<Object,Object> wherePara = this.whereConditions.params();
+
+            return getDao().update(sql, para , wherePara );
         }
 
     }
@@ -805,7 +718,6 @@ public final class AgileDao {
         private BatchAdd(Object[] attrs) {
             this.update = new Update(attrs);
         }
-
 
 
         public int[] exec(Collection<?> cell, Object... para) {
@@ -858,6 +770,9 @@ public final class AgileDao {
         }
 
 
+        public EditExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
+            return new EditExecutor( new Update(attrs).buildWhere(  consumer ) );
+        }
 
     }
 
@@ -876,7 +791,7 @@ public final class AgileDao {
             this.update = update;
         }
 
-        public int[] exec(Collection<?> cell, Object... para) {
+        public int[] exec( Collection<?> cell, Object... para) {
             return this.update.batchEdit(cell, para);
         }
     }
@@ -952,6 +867,10 @@ public final class AgileDao {
 
         public DelExecutor whereArgs(Object... args) {
             return new DelExecutor( new Update((Object[]) null).whereArgs(args) );
+        }
+
+        public DelExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
+            return new DelExecutor( new Update((Object[]) null).buildWhere(  consumer ) );
         }
 
 
