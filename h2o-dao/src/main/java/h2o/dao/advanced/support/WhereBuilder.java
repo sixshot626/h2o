@@ -69,7 +69,7 @@ public final class WhereBuilder implements WhereConditions {
             sqlBuilder.append(p);
             sqlBuilder.append(" ) ");
 
-            this.para.put( p , val instanceof Supplier ? ((Supplier<?>) val).get() : val );
+            this.para.put( p , val );
 
         }
 
@@ -98,7 +98,7 @@ public final class WhereBuilder implements WhereConditions {
             sqlBuilder.append(p);
             sqlBuilder.append(" ");
 
-            this.para.put( p , val instanceof Supplier ? ((Supplier<?>) val).get() : val );
+            this.para.put( p , val );
 
         }
 
@@ -179,6 +179,54 @@ public final class WhereBuilder implements WhereConditions {
     public WhereBuilder notIn(boolean condition, Object col, Object val) {
         return addBracketsCondition(condition , "not in" , col , val );
     }
+
+
+
+
+
+    public WhereBuilder eq(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.eq( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder neq(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.neq( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder gt(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.gt( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder gte(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.gte( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder lt(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.lt( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder lte(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.lte( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder like(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.like( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder notLike(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.notLike( condition , col , condition ? supplier.get() : null );
+    }
+
+
+
+    public WhereBuilder in(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.in( condition , col , condition ? supplier.get() : null );
+    }
+
+    public WhereBuilder notIn(boolean condition, Object col, Supplier<Object> supplier) {
+        return this.notIn( condition , col , condition ? supplier.get() : null );
+    }
+
+
 
 
     public WhereBuilder and(boolean condition, Consumer<WhereBuilder> consumer) {
