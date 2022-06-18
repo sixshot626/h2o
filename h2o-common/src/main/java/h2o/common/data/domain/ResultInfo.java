@@ -1,5 +1,9 @@
 package h2o.common.data.domain;
 
+import h2o.common.util.collection.CollectionUtil;
+import h2o.common.util.collection.ListBuilder;
+
+import java.util.Collections;
 import java.util.List;
 
 public class ResultInfo implements java.io.Serializable {
@@ -22,6 +26,19 @@ public class ResultInfo implements java.io.Serializable {
     public ResultInfo(long start, long size) {
         this.setSize(size);
         this.setStart(start);
+    }
+
+    public ResultInfo(long start, long size, SortInfo... sorts) {
+        this.start = start;
+        this.size = size;
+        this.sorts = CollectionUtil.argsIsBlank(sorts) ? null :
+                Collections.unmodifiableList(ListBuilder.newList(sorts));
+    }
+
+    public ResultInfo(long start, long size, List<SortInfo> sorts) {
+        this.start = start;
+        this.size = size;
+        this.sorts = Collections.unmodifiableList(sorts);
     }
 
     public ResultInfo(Pageable pageInfo) {

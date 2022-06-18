@@ -3,6 +3,7 @@ package h2o.dao.impl;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageInfo;
 import h2o.common.data.domain.PageRequest;
+import h2o.common.data.domain.ResultInfo;
 import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.ListBuilder;
@@ -117,13 +118,16 @@ public abstract class AbstractDao implements Dao {
 
 
     @Override
-    public <T> Val<T> get(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
+    public <T> Val<T> get( Class<T> clazz, SqlSource sqlSource, Object... args ) throws DaoException {
+
         try {
 
-            Val<Map<String, Object>> row = this.get(sqlSource, args);
+            Val<Map<String, Object>> row = this.get( sqlSource, args );
 
-            return row.isPresent() ? new Val<>(this.ormProc(row.getValue(), clazz)) : Val.empty();
+            return row.isPresent() ? new Val<>( this.ormProc(row.getValue(), clazz) ) : Val.empty();
 
+        } catch ( DaoException e ) {
+            throw e;
         } catch (Exception e) {
             throw new DaoException(e);
         }
@@ -131,9 +135,10 @@ public abstract class AbstractDao implements Dao {
 
 
     @Override
-    public <T> List<T> load(Class<T> clazz, SqlSource sqlSource, Object... args) throws DaoException {
+    public <T> List<T> load( Class<T> clazz, SqlSource sqlSource, Object... args ) throws DaoException {
+
         try {
-            List<Map<String, Object>> rows = this.load(sqlSource, args);
+            List<Map<String, Object>> rows = this.load( sqlSource, args );
 
             List<T> objs = new ArrayList<T>(rows.size());
 
@@ -143,10 +148,64 @@ public abstract class AbstractDao implements Dao {
 
             return objs;
 
+        } catch ( DaoException e ) {
+            throw e;
         } catch (Exception e) {
             throw new DaoException(e);
         }
     }
+
+
+
+
+    @Override
+    public List<Map<String, Object>> fetch( SqlSource sqlSource, ResultInfo fetchRequest, Object... args ) throws DaoException {
+
+        try {
+
+            PagingProcessor _pagingProcessor = this.getPagingProcessor();
+
+            Map<String, Object> paramMap = this.argProc(args);
+            String sql = sqlSource.getSql(paramMap);
+
+
+            Tuple2<String, Map<String, Object>> p = _pagingProcessor.pagingSql(sql, fetchRequest);
+            paramMap.putAll(p.e1);
+
+            return this.load(p.e0, paramMap);
+
+        } catch ( DaoException e ) {
+            throw e;
+        } catch (Exception e) {
+            throw new DaoException(e);
+        }
+
+    }
+
+    @Override
+    public <T> List<T> fetch( Class<T> clazz, SqlSource sqlSource, ResultInfo fetchRequest, Object... args ) throws DaoException {
+
+        try {
+
+            List<Map<String, Object>> rows = this.fetch(sqlSource, fetchRequest, args);
+
+            List<T> objs = new ArrayList<T>(rows.size());
+
+            for (Map<String, Object> row : rows) {
+                objs.add(this.ormProc(row, clazz));
+            }
+
+            return objs;
+
+        } catch ( DaoException e ) {
+            throw e;
+        } catch (Exception e) {
+            throw new DaoException(e);
+        }
+    }
+
+
+
 
 
     @Override
@@ -172,13 +231,16 @@ public abstract class AbstractDao implements Dao {
                 return new Page<Map<String, Object>>(pageInfo, ListBuilder.<Map<String, Object>>newEmptyList());
             }
 
-
-            Tuple2<String, Map<String, Object>> p = _pagingProcessor.pagingSql(sql, pageRequest);
+            Tuple2<String, Map<String, Object>> p = _pagingProcessor.pagingSql( sql, new ResultInfo(pageRequest) );
             paramMap.putAll(p.e1);
             List<Map<String, Object>> records = this.load(p.e0, paramMap);
 
             return new Page<Map<String, Object>>(pageInfo, records);
 
+        } catch ( DaoException e ) {
+            throw e;
+        } catch (Exception e) {
+            throw new DaoException(e);
         } finally {
             if ( _autoClose ) {
                 this.autoClose = true;
@@ -190,17 +252,25 @@ public abstract class AbstractDao implements Dao {
     @Override
     public <T> Page<T> pagingLoad(Class<T> clazz, SqlSource sqlSource, PageRequest pageRequest, Object... args) throws DaoException {
 
-        Page<Map<String, Object>> pageMap = this.pagingLoad(sqlSource, pageRequest, args);
+        try {
 
-        List<Map<String, Object>> rows = pageMap.getContent();
+            Page<Map<String, Object>> pageMap = this.pagingLoad(sqlSource, pageRequest, args);
 
-        List<T> objs = new ArrayList<T>(rows.size());
+            List<Map<String, Object>> rows = pageMap.getContent();
 
-        for (Map<String, Object> row : rows) {
-            objs.add(this.ormProc(row, clazz));
+            List<T> objs = new ArrayList<T>(rows.size());
+
+            for (Map<String, Object> row : rows) {
+                objs.add(this.ormProc(row, clazz));
+            }
+
+            return new Page<T>(pageMap, objs);
+
+        } catch ( DaoException e ) {
+            throw e;
+        } catch (Exception e) {
+            throw new DaoException(e);
         }
-
-        return new Page<T>(pageMap, objs);
 
     }
 
@@ -239,6 +309,19 @@ public abstract class AbstractDao implements Dao {
     public <T> Val<T> load(ResultSetCallback<T> rsCallback, String sql, Object... args) throws DaoException {
         return this.load(rsCallback, new TSql(sql), args);
     }
+
+
+
+    @Override
+    public List<Map<String, Object>> fetch(String sql, ResultInfo fetchRequest, Object... args) throws DaoException {
+        return this.fetch( new TSql(sql) , fetchRequest , args );
+    }
+
+    @Override
+    public <T> List<T> fetch(Class<T> clazz, String sql, ResultInfo fetchRequest, Object... args) throws DaoException {
+        return this.fetch( clazz , new TSql(sql) , fetchRequest , args );
+    }
+
 
 
     @Override
