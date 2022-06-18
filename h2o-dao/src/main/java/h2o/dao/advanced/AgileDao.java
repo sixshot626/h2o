@@ -67,6 +67,11 @@ public final class AgileDao {
     }
 
 
+    public WhereBuilder createWhereBuilder() {
+        return new WhereBuilder( tableStruct ).unconditional(false);
+    }
+
+
 
 
 
@@ -306,6 +311,11 @@ public final class AgileDao {
             return this;
         }
 
+        public Query where( WhereBuilder whereBuilder ) {
+            this.whereConditions = whereBuilder;
+            return this;
+        }
+
 
         public Query orderBy(Object... orders) {
             this.orders = args2List(orders);
@@ -488,6 +498,10 @@ public final class AgileDao {
             return new SelectOneExecutor( new Query(attrs).buildWhere(  consumer ) );
         }
 
+        public SelectOneExecutor where( WhereBuilder whereBuilder ) {
+            return new SelectOneExecutor( new Query(attrs).where(  whereBuilder ) );
+        }
+
 
     }
 
@@ -558,6 +572,10 @@ public final class AgileDao {
             return new SelectExecutor( new Query(attrs).buildWhere(  consumer ) );
         }
 
+        public SelectExecutor where( WhereBuilder whereBuilder ) {
+            return new SelectExecutor( new Query(attrs).where(  whereBuilder ) );
+        }
+
 
     }
 
@@ -616,6 +634,11 @@ public final class AgileDao {
             WhereBuilder whereBuilder = new WhereBuilder(tableStruct).unconditional(false);
             consumer.accept(whereBuilder);
 
+            this.whereConditions = whereBuilder;
+            return this;
+        }
+
+        public Update buildWhere( WhereBuilder whereBuilder ) {
             this.whereConditions = whereBuilder;
             return this;
         }
@@ -816,6 +839,10 @@ public final class AgileDao {
             return new EditExecutor( new Update(attrs).buildWhere(  consumer ) );
         }
 
+        public EditExecutor buildWhere( WhereBuilder whereBuilder ) {
+            return new EditExecutor( new Update(attrs).buildWhere(  whereBuilder ) );
+        }
+
     }
 
     public Edit edit(Object... attr) {
@@ -913,6 +940,10 @@ public final class AgileDao {
 
         public DelExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
             return new DelExecutor( new Update((Object[]) null).buildWhere(  consumer ) );
+        }
+
+        public DelExecutor buildWhere( WhereBuilder whereBuilder ) {
+            return new DelExecutor( new Update((Object[]) null).buildWhere(  whereBuilder ) );
         }
 
 

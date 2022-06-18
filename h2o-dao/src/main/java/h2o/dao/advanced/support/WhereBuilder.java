@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class WhereBuilder implements WhereConditions {
+public final class WhereBuilder implements WhereConditions {
 
     private int i;
 

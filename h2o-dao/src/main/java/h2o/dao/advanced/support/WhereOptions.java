@@ -8,7 +8,7 @@ import h2o.dao.structure.TableStruct;
 import java.util.*;
 import java.util.function.Function;
 
-public class WhereOptions implements WhereConditions {
+public final class WhereOptions implements WhereConditions {
 
 
     private final TableStruct tableStruct;
