@@ -21,6 +21,8 @@ public final class WhereBuilder implements WhereConditions {
 
     private final boolean sub;
 
+    private final String prefix;
+
 
     private final StringBuilder sqlBuilder = new StringBuilder();
 
@@ -28,14 +30,23 @@ public final class WhereBuilder implements WhereConditions {
 
     private final TableStruct tableStruct;
 
+
     public WhereBuilder(TableStruct tableStruct) {
+        this(tableStruct,"w");
+    }
+
+    public WhereBuilder(TableStruct tableStruct , String prefix) {
         this.tableStruct = tableStruct;
+        this.prefix = prefix;
+        this.i = 0;
+
         this.allowUnconditional = true;
         this.sub = false;
     }
 
-    private WhereBuilder(TableStruct tableStruct , int startParaIndex) {
+    private WhereBuilder(TableStruct tableStruct , String prefix , int startParaIndex ) {
         this.tableStruct = tableStruct;
+        this.prefix = prefix;
         this.i = startParaIndex;
         this.allowUnconditional = true;
         this.sub = true;
@@ -60,7 +71,7 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(col) );
+            String p = StringUtil.build( prefix , "_" , i , "_" , name(col) );
 
             sqlBuilder.append(column(col));
             sqlBuilder.append(" ");
@@ -89,7 +100,7 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(col) );
+            String p = StringUtil.build( prefix , "_" , i , "_" , name(col) );
 
             sqlBuilder.append(column(col));
             sqlBuilder.append(" ");
@@ -231,7 +242,7 @@ public final class WhereBuilder implements WhereConditions {
 
     public WhereBuilder and(boolean condition, Consumer<WhereBuilder> consumer) {
 
-        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct , this.i );
+        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i );
         consumer.accept( whereBuilder );
 
         this.i = whereBuilder.i;
@@ -258,7 +269,7 @@ public final class WhereBuilder implements WhereConditions {
 
     public WhereBuilder or(boolean condition, Consumer<WhereBuilder> consumer) {
 
-        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct , this.i );
+        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i );
         consumer.accept( whereBuilder );
 
         this.i = whereBuilder.i;

@@ -259,6 +259,10 @@ public final class AgileDao {
         return new WhereBuilder( tableStruct ).unconditional(false);
     }
 
+    public WhereBuilder whereBuilder( String prefix ) {
+        return new WhereBuilder( tableStruct , prefix ).unconditional(false);
+    }
+
 
 
     private final class Query {
@@ -334,7 +338,7 @@ public final class AgileDao {
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
-            Val<Map<String, Object>> res = getDao().get(sql, para , wherePara);
+            Val<Map<String, Object>> res = getDao().get(sql, merge( para , wherePara ) );
 
             if (res.isPresent()) {
                 return new Val<>(orm(res.getValue()));
@@ -351,7 +355,7 @@ public final class AgileDao {
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
-            Val<Map<String, Object>> res = getDao().get(sql,  para , wherePara);
+            Val<Map<String, Object>> res = getDao().get(sql, merge( para , wherePara ) );
 
             if (res.isPresent()) {
                 return new Val<>(orm(res.getValue()));
@@ -367,7 +371,7 @@ public final class AgileDao {
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
-            List<Map<String, Object>> res = getDao().load(sql, para , wherePara);
+            List<Map<String, Object>> res = getDao().load(sql, merge( para , wherePara ) );
 
             if (res.isEmpty()) {
                 return res;
@@ -396,7 +400,9 @@ public final class AgileDao {
             Map<Object,Object> wherePara = this.whereConditions.params();
 
             List<Map<String, Object>> res = getDao()
-                    .fetch( sql, new ResultInfo(fetchRequest.getStart(), fetchRequest.getSize()), para ,wherePara);
+                    .fetch( sql,
+                            new ResultInfo(fetchRequest.getStart(), fetchRequest.getSize()),
+                            merge( para , wherePara ) );
 
             if (res.isEmpty()) {
                 return res;
@@ -433,7 +439,7 @@ public final class AgileDao {
             Page<Map<String, Object>> res = getDao()
                     .pagingLoad(sql,
                             new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize()),
-                            para , wherePara);
+                            merge( para , wherePara ) );
 
             if (res.getContent().isEmpty()) {
                 return res;
@@ -716,7 +722,7 @@ public final class AgileDao {
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
-            return getDao().update( sql, para , wherePara );
+            return getDao().update( sql,  merge( para , wherePara ) );
 
         }
 
@@ -757,7 +763,7 @@ public final class AgileDao {
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
-            return getDao().update(sql, para , wherePara );
+            return getDao().update(sql, merge( para , wherePara ) );
         }
 
     }
@@ -961,6 +967,14 @@ public final class AgileDao {
 
     //////////////////////////////////////////////////
     // util
+
+
+    private Object[] merge(Object[] a, Object... b) {
+        Object[] c = new Object[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
 
 
     private static Map args2Map( Object[] args ) {
