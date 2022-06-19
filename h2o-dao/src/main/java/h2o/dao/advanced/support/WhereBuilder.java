@@ -60,7 +60,7 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
+            String p = StringUtil.build( "w_" , i , "_" , name(col) );
 
             sqlBuilder.append(column(col));
             sqlBuilder.append(" ");
@@ -89,7 +89,7 @@ public final class WhereBuilder implements WhereConditions {
                 sqlBuilder.append("\n    and ");
             }
 
-            String p = StringUtil.build( "w_" , i , "_" , name(col).toLowerCase() );
+            String p = StringUtil.build( "w_" , i , "_" , name(col) );
 
             sqlBuilder.append(column(col));
             sqlBuilder.append(" ");
