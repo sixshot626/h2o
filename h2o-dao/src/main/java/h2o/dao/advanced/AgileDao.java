@@ -103,14 +103,27 @@ public final class AgileDao {
         StringBuilder sqlUpdate = new StringBuilder("update ").append(tableName()).append(" set ");
 
         int i = 0;
-        for (ColumnMeta col : this.tableStruct.filterColumns(ks)) {
+
+
+        for ( Object o : ks ) {
+
             if (i++ > 0) {
                 sqlUpdate.append(" , ");
             }
             sqlUpdate.append("\n        ");
-            sqlUpdate.append(col.colName);
-            sqlUpdate.append(" = ");
-            sqlUpdate.append(col.value());
+
+            if ( o instanceof S ) {
+
+                sqlUpdate.append( ((S) o).getValue() );
+
+            } else {
+
+                ColumnMeta col = this.tableStruct.getColumn(o);
+
+                sqlUpdate.append(col.colName);
+                sqlUpdate.append(" = ");
+                sqlUpdate.append(col.value());
+            }
         }
 
         return sqlUpdate.toString();
@@ -140,9 +153,6 @@ public final class AgileDao {
     private String buildSelectSql1(Collection<?> ks) {
 
         StringBuilder sqlSelect = new StringBuilder("select  ");
-
-        List<ColumnMeta> cols = this.tableStruct.columns();
-
 
         int i = 0;
         for (Object k : ks) {
