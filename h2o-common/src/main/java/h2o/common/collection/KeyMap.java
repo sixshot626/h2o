@@ -1,4 +1,4 @@
-package h2o.dao.result;
+package h2o.common.collection;
 
 import h2o.common.lang.K;
 import h2o.apache.commons.lang.StringUtils;
@@ -9,7 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class RowData extends AbstractMap<String, Object> implements Serializable {
+public class KeyMap extends AbstractMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 803500399510042017L;
 
@@ -18,26 +18,22 @@ public class RowData extends AbstractMap<String, Object> implements Serializable
     private final Map<String,String> keyMapping;
 
 
-    public RowData(Map<String, ?> m) {
+    public KeyMap(Map<String, ?> map) {
 
-        if ( m == null || m.isEmpty() ) {
+        if ( map == null || map.isEmpty() ) {
 
             this.realMap    = Collections.EMPTY_MAP;
             this.keyMapping = Collections.EMPTY_MAP;
 
         } else {
 
-            Map<String, Object> map = new HashMap<>();
             Map<String, String> km  = new HashMap<>();
 
-            for (Map.Entry<String, ?> entry : m.entrySet()) {
+            for (Map.Entry<String, ?> entry : map.entrySet()) {
 
-                String _key = proc(entry.getKey());
-                map.put( _key, entry.getValue());
+                String _key = entry.getKey();
 
-                if ( _key.indexOf('_') > -1 ) {
-                    km.put( proc2(_key) , _key );
-                }
+                km.put( proc2(_key) , _key );
 
             }
 
@@ -49,7 +45,7 @@ public class RowData extends AbstractMap<String, Object> implements Serializable
     }
 
 
-    private String proc(Object obj) {
+    protected String proc(Object obj) {
 
         if (obj == null) {
             throw new IllegalArgumentException();
@@ -66,23 +62,21 @@ public class RowData extends AbstractMap<String, Object> implements Serializable
             throw new IllegalArgumentException();
         }
 
-        return key == null ? null : key.toLowerCase();
+        return key == null ? null : key;
     }
 
 
-    private String proc2( String key ) {
-        return StringUtils.remove(StringUtils.deleteWhitespace(key) , "_");
+    protected String proc2( String key ) {
+        return StringUtils.remove(StringUtils.deleteWhitespace(key.toLowerCase()) , "_");
     }
 
 
 
-    private String procKey( Object obj ) {
+    protected String procKey( Object obj ) {
 
         String key = proc( obj );
 
-        String mKey = keyMapping.get( proc2(key) );
-
-        return mKey == null ? key : mKey;
+        return keyMapping.get( proc2(key) );
 
     }
 

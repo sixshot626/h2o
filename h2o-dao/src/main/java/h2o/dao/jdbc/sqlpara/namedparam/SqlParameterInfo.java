@@ -6,7 +6,6 @@ public class SqlParameterInfo {
 
     private Object[] params;
 
-    private int[] paramTypes;
 
     public String getSql() {
         return sql;
@@ -22,13 +21,5 @@ public class SqlParameterInfo {
 
     public void setParams(Object[] params) {
         this.params = params;
-    }
-
-    public int[] getParamTypes() {
-        return paramTypes;
-    }
-
-    public void setParamTypes(int[] paramTypes) {
-        this.paramTypes = paramTypes;
     }
 }

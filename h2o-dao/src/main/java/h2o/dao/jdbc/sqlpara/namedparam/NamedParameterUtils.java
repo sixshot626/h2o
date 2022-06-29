@@ -245,7 +245,7 @@ public abstract class NamedParameterUtils {
      * @return the SQL statement with substituted parameters
      * @see #parseSqlStatement
      */
-    private static String substituteNamedParameters(ParsedSql parsedSql, SqlParameterSource paramSource) {
+    private static String substituteNamedParameters(ParsedSql parsedSql, MapSqlParameterSource paramSource) {
         String originalSql = parsedSql.getOriginalSql();
         List<String> paramNames = parsedSql.getParameterNames();
         if (paramNames.isEmpty()) {
@@ -304,7 +304,7 @@ public abstract class NamedParameterUtils {
      * @return the array of values
      */
     private static Object[] buildValueArray(
-            ParsedSql parsedSql, SqlParameterSource paramSource) {
+            ParsedSql parsedSql, MapSqlParameterSource paramSource) {
 
         Object[] paramArray = new Object[parsedSql.getTotalParameterCount()];
         if (parsedSql.getNamedParameterCount() > 0 && parsedSql.getUnnamedParameterCount() > 0) {
@@ -339,24 +339,7 @@ public abstract class NamedParameterUtils {
         return false;
     }
 
-    /**
-     * Convert parameter types from an SqlParameterSource into a corresponding int array.
-     * This is necessary in order to reuse existing methods on JdbcTemplate.
-     * Any named parameter types are placed in the correct position in the
-     * Object array based on the parsed SQL statement info.
-     *
-     * @param parsedSql   the parsed SQL statement
-     * @param paramSource the source for named parameters
-     */
-    private static int[] buildSqlTypeArray(ParsedSql parsedSql, SqlParameterSource paramSource) {
-        int[] sqlTypes = new int[parsedSql.getTotalParameterCount()];
-        List<String> paramNames = parsedSql.getParameterNames();
-        for (int i = 0; i < paramNames.size(); i++) {
-            String paramName = paramNames.get(i);
-            sqlTypes[i] = paramSource.getSqlType(paramName);
-        }
-        return sqlTypes;
-    }
+
 
 
     private static class ParameterHolder {
@@ -396,7 +379,6 @@ public abstract class NamedParameterUtils {
 
         sqlParameterInfo.setSql(substituteNamedParameters(parsedSql, paramSource));
         sqlParameterInfo.setParams(buildValueArray(parsedSql, paramSource));
-        sqlParameterInfo.setParamTypes(buildSqlTypeArray(parsedSql, paramSource));
 
         return sqlParameterInfo;
 

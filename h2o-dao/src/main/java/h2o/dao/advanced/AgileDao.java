@@ -14,7 +14,7 @@ import h2o.dao.advanced.support.WhereBuilder;
 import h2o.dao.advanced.support.WhereConditions;
 import h2o.dao.advanced.support.WhereOptions;
 import h2o.dao.exception.DaoException;
-import h2o.dao.result.RowData;
+import h2o.common.collection.KeyMap;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.TableStruct;
 import h2o.dao.structure.TableStructParser;
@@ -215,7 +215,7 @@ public final class AgileDao {
             }
         }
 
-        return new RowData(nRow);
+        return new KeyMap(nRow);
 
     }
 

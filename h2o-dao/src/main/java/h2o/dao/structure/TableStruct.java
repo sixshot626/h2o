@@ -3,7 +3,7 @@ package h2o.dao.structure;
 import h2o.common.lang.K;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.lang.ArgsUtil;
-import h2o.dao.result.RowData;
+import h2o.common.collection.KeyMap;
 
 import java.util.*;
 
@@ -14,8 +14,8 @@ public class TableStruct {
     private final List<ColumnMeta> ids;
 
 
-    private final RowData nameMap;
-    private final RowData attrMap;
+    private final KeyMap nameMap;
+    private final KeyMap attrMap;
 
 
     TableStruct(String tableName, List<ColumnMeta> columns, List<ColumnMeta> ids) {
@@ -38,14 +38,14 @@ public class TableStruct {
                 nMap.put(col.name, col);
                 aMap.put(col.attrName, col);
             }
-            this.nameMap = new RowData(nMap);
-            this.attrMap = new RowData(aMap);
+            this.nameMap = new KeyMap(nMap);
+            this.attrMap = new KeyMap(aMap);
         }
     }
 
 
     private TableStruct(String tableName, List<ColumnMeta> columns, List<ColumnMeta> ids,
-                        RowData nameMap, RowData attrMap) {
+                        KeyMap nameMap, KeyMap attrMap) {
         this.tableName = tableName;
         this.columns = columns;
         this.ids = ids;

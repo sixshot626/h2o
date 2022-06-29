@@ -7,7 +7,7 @@ import h2o.common.Mode;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.exception.DaoException;
-import h2o.dao.result.RowData;
+import h2o.common.collection.KeyMap;
 import h2o.dao.proc.RowProcessor;
 import h2o.dao.jdbc.sqlpara.PreparedSqlAndParameters;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
@@ -346,7 +346,7 @@ public class JdbcDao implements Closeable {
         if (rdp != null) {
             return rdp.proc(m);
         } else {
-            return m == null ? null : new RowData(m);
+            return m == null ? null : new KeyMap(m);
         }
 
     }
