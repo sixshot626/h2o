@@ -36,7 +36,14 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
         if (direct) {
             this.value = dateStr;
         } else {
-            this.value = dateStr == null ? null : DateUtil.toString(toDate(dateStr, DATE_FMT), DATE_FMT);
+           Date date = null;
+            if ( dateStr != null ) {
+                date = toDate(dateStr, "yyyy-MM-dd HH:mm:ss");
+                if ( date == null ) {
+                    date = toDate(dateStr, DATE_FMT);
+                }
+            }
+            this.value = date == null ? null : DateUtil.toString(date, DATE_FMT);
         }
     }
 
