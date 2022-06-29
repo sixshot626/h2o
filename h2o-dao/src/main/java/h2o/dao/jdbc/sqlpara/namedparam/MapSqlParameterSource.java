@@ -16,6 +16,7 @@
 
 package h2o.dao.jdbc.sqlpara.namedparam;
 
+import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.util.Assert;
 
 import java.util.Collections;
@@ -43,7 +44,7 @@ import java.util.Map;
  */
 class MapSqlParameterSource extends AbstractSqlParameterSource {
 
-    private final Map<String, Object> values = new LinkedHashMap<String, Object>();
+    private final Map<String, Object> values = new IgnoreCaseMap<>( new LinkedHashMap<>() , IgnoreCaseMap.LOWER );
 
 
     /**
@@ -161,5 +162,8 @@ class MapSqlParameterSource extends AbstractSqlParameterSource {
         }
         return this.values.get(paramName);
     }
+
+
+
 
 }

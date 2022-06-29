@@ -1,9 +1,9 @@
 package h2o.dao.structure;
 
-import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.lang.K;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.lang.ArgsUtil;
+import h2o.dao.result.RowData;
 
 import java.util.*;
 
@@ -14,8 +14,8 @@ public class TableStruct {
     private final List<ColumnMeta> ids;
 
 
-    private final Map<String, ColumnMeta> nameMap;
-    private final Map<String, ColumnMeta> attrMap;
+    private final RowData nameMap;
+    private final RowData attrMap;
 
 
     TableStruct(String tableName, List<ColumnMeta> columns, List<ColumnMeta> ids) {
@@ -32,20 +32,20 @@ public class TableStruct {
         }
 
         {
-            Map<String, ColumnMeta> nMap = new IgnoreCaseMap<>(new HashMap<>(), IgnoreCaseMap.LOWER);
-            Map<String, ColumnMeta> aMap = new IgnoreCaseMap<>(new HashMap<>(), IgnoreCaseMap.LOWER);
+            Map<String, ColumnMeta> nMap = new HashMap<>();
+            Map<String, ColumnMeta> aMap = new HashMap<>();
             for (ColumnMeta col : this.columns()) {
                 nMap.put(col.name, col);
                 aMap.put(col.attrName, col);
             }
-            this.nameMap = Collections.unmodifiableMap(nMap);
-            this.attrMap = Collections.unmodifiableMap(aMap);
+            this.nameMap = new RowData(nMap);
+            this.attrMap = new RowData(aMap);
         }
     }
 
 
     private TableStruct(String tableName, List<ColumnMeta> columns, List<ColumnMeta> ids,
-                        Map<String, ColumnMeta> nameMap, Map<String, ColumnMeta> attrMap) {
+                        RowData nameMap, RowData attrMap) {
         this.tableName = tableName;
         this.columns = columns;
         this.ids = ids;
@@ -86,11 +86,11 @@ public class TableStruct {
 
         ColumnMeta col;
         if (k instanceof Enum) {
-            col = nameMap.get(((Enum<?>) k).name());
+            col = (ColumnMeta)nameMap.get(((Enum<?>) k).name());
         } else if (k instanceof K) {
-            col = attrMap.get(((K) k).name());
+            col = (ColumnMeta)attrMap.get(((K) k).name());
         } else if (k instanceof String) {
-            col = attrMap.get(k);
+            col = (ColumnMeta)attrMap.get(k);
         } else {
             throw new IllegalArgumentException(String.valueOf(k));
         }
