@@ -392,8 +392,16 @@ public final class BeanUtil {
         Assert.notNull(srcBean, "srcBean == null");
         Assert.notNull(bean, "bean == null");
 
-        String[] srcPrepNames = srcBean instanceof Map ? mapKeys((Map) srcBean) : this.analysePrepNames(srcBean);
-        String[] targetPrepNames = bean instanceof Map ? srcPrepNames : this.analysePrepNames(bean);
+        boolean srcIsMap    = srcBean instanceof Map;
+        boolean targetIsMap = bean instanceof Map;
+
+
+        String[] srcPrepNames = srcIsMap ?
+                ( targetIsMap ? mapKeys((Map) bean) : this.analysePrepNames(bean) )
+                 : this.analysePrepNames(srcBean);
+
+
+        String[] targetPrepNames = targetIsMap ? srcPrepNames : this.analysePrepNames(bean);
 
         PrepName pn = new PrepName(srcPrepNames, targetPrepNames).skip(skipKeys).map(srcKeys, targetKeys);
 
