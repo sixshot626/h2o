@@ -17,7 +17,7 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
 
     public static final SDateTime NULL = new SDateTime();
 
-    private static final String DATE_FMT = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String DATE_FMT = "yyyy-MM-dd HH:mm:ss";
 
 
     /**
@@ -34,31 +34,10 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
     }
 
     public SDateTime(String dateStr, boolean direct) {
-
         if (direct) {
-
             this.value = dateStr;
-
         } else {
-
-            if ( dateStr == null ) {
-
-                this.value = null;
-
-            } else {
-
-                DateTime dateTime = new DateTime(true);
-                Date date = dateTime.toDate(dateStr, "yyyy-MM-dd HH:mm:ss");
-                if (date == null) {
-                    date = dateTime.toDate(dateStr, DATE_FMT);
-                }
-                if ( date == null ) {
-                    throw new IllegalArgumentException();
-                }
-
-                this.value =  DateUtil.toString(date, DATE_FMT);
-
-            }
+            this.value = dateStr == null ? null : DateUtil.toString(toDate(dateStr, DATE_FMT), DATE_FMT);
         }
     }
 
@@ -67,7 +46,7 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
         this(StringUtil.build(
                 StringUtils.leftPad(Integer.toString(year), 4, '0'), "-",
                 StringUtils.leftPad(Integer.toString(month), 2, '0'), "-",
-                StringUtils.leftPad(Integer.toString(day), 2, '0'), "T",
+                StringUtils.leftPad(Integer.toString(day), 2, '0'), " ",
                 StringUtils.leftPad(Integer.toString(hour), 2, '0'), ":",
                 StringUtils.leftPad(Integer.toString(minute), 2, '0'), ":",
                 StringUtils.leftPad(Integer.toString(second), 2, '0')));
@@ -78,7 +57,7 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
         this.value = localDateTime == null ? null : StringUtil.build(
                 StringUtils.leftPad(Integer.toString(localDateTime.getYear()), 4, '0'), "-",
                 StringUtils.leftPad(Integer.toString(localDateTime.getMonthValue()), 2, '0'), "-",
-                StringUtils.leftPad(Integer.toString(localDateTime.getDayOfMonth()), 2, '0'), "T",
+                StringUtils.leftPad(Integer.toString(localDateTime.getDayOfMonth()), 2, '0'), " ",
                 StringUtils.leftPad(Integer.toString(localDateTime.getHour()), 2, '0'), ":",
                 StringUtils.leftPad(Integer.toString(localDateTime.getMinute()), 2, '0'), ":",
                 StringUtils.leftPad(Integer.toString(localDateTime.getSecond()), 2, '0'));
