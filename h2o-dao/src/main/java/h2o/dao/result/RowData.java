@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class RowData extends KeyMap<Object> implements Map<String,Object>, Serializable {
 
+    private static final long serialVersionUID = 7087116274734135207L;
+
     public RowData(Map<String, Object> map) {
         super(toLowerCaseKey(map));
     }

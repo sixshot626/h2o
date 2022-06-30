@@ -1,6 +1,7 @@
 package h2o.common.lang;
 
 import h2o.apache.commons.lang.StringUtils;
+import h2o.common.util.date.DateTime;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.lang.StringUtil;
 
@@ -33,17 +34,31 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
     }
 
     public SDateTime(String dateStr, boolean direct) {
+
         if (direct) {
+
             this.value = dateStr;
+
         } else {
-           Date date = null;
-            if ( dateStr != null ) {
-                date = toDate(dateStr, "yyyy-MM-dd HH:mm:ss");
-                if ( date == null ) {
-                    date = toDate(dateStr, DATE_FMT);
+
+            if ( dateStr == null ) {
+
+                this.value = null;
+
+            } else {
+
+                DateTime dateTime = new DateTime(true);
+                Date date = dateTime.toDate(dateStr, "yyyy-MM-dd HH:mm:ss");
+                if (date == null) {
+                    date = dateTime.toDate(dateStr, DATE_FMT);
                 }
+                if ( date == null ) {
+                    throw new IllegalArgumentException();
+                }
+
+                this.value =  DateUtil.toString(date, DATE_FMT);
+
             }
-            this.value = date == null ? null : DateUtil.toString(date, DATE_FMT);
         }
     }
 
