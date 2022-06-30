@@ -397,7 +397,7 @@ public final class BeanUtil {
 
 
         String[] srcPrepNames = srcIsMap ?
-                ( targetIsMap ? mapKeys((Map) bean) : this.analysePrepNames(bean) )
+                ( targetIsMap ? mapKeys((Map) srcBean) : this.analysePrepNames(bean) )
                  : this.analysePrepNames(srcBean);
 
 
