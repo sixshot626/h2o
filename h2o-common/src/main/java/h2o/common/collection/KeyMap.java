@@ -9,16 +9,16 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class KeyMap extends AbstractMap<String, Object> implements Serializable {
+public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,Serializable {
 
     private static final long serialVersionUID = 803500399510042017L;
 
 
-    private final Map<String,Object> realMap;
+    private final Map<String,V> realMap;
     private final Map<String,String> keyMapping;
 
 
-    public KeyMap(Map<String, ?> map) {
+    public KeyMap(Map<String, V> map) {
 
         if ( map == null || map.isEmpty() ) {
 
@@ -29,7 +29,7 @@ public class KeyMap extends AbstractMap<String, Object> implements Serializable 
 
             Map<String, String> km  = new HashMap<>();
 
-            for (Map.Entry<String, ?> entry : map.entrySet()) {
+            for (Map.Entry<String, V> entry : map.entrySet()) {
 
                 String _key = entry.getKey();
 
@@ -86,17 +86,20 @@ public class KeyMap extends AbstractMap<String, Object> implements Serializable 
     public boolean containsKey(Object key)   {return realMap.containsKey( procKey(key) );}
     public boolean containsValue(Object val) {return realMap.containsValue(val);}
 
-    public Object get(Object key)                 {return realMap.get( procKey(key) );}
+    public V get(Object key)                 {return realMap.get( procKey(key) );}
 
-    public Object put(String key, Object value) {
+    public V put(String key, Object value) {
         throw new UnsupportedOperationException();
     }
-    public Object remove(Object key) {
+    public V remove(Object key) {
         throw new UnsupportedOperationException();
     }
-    public void putAll(Map<? extends String, ?> m) {
+
+    @Override
+    public void putAll(Map<? extends String, ? extends V> m) {
         throw new UnsupportedOperationException();
     }
+
     public void clear() {
         throw new UnsupportedOperationException();
     }
@@ -107,38 +110,48 @@ public class KeyMap extends AbstractMap<String, Object> implements Serializable 
     }
 
     @Override
-    public Collection<Object> values() {
+    public Collection<V> values() {
         return realMap.values();
     }
 
     @Override
-    public Set<Entry<String, Object>> entrySet() {
+    public Set<Entry<String, V>> entrySet() {
         return realMap.entrySet();
     }
 
-    public boolean equals(Object o) {return o == this || realMap.equals(o);}
+
+    @Override
+    public boolean equals(Object o) {
+        return realMap.equals(o);
+    }
+
     public int hashCode()           {return realMap.hashCode();}
     public String toString()        {return realMap.toString();}
 
+
+
+
+
     // Override default methods in Map
     @Override
-    public Object getOrDefault(Object k, Object defaultValue) {
+    public V getOrDefault(Object k, V defaultValue) {
         // Safe cast as we don't change the value
         return (realMap).getOrDefault( procKey(k), defaultValue);
     }
 
     @Override
-    public void forEach(BiConsumer<? super String, ? super Object> action) {
+    public void forEach(BiConsumer<? super String, ? super V> action) {
         realMap.forEach(action);
     }
 
     @Override
-    public void replaceAll(BiFunction<? super String, ? super Object, ?> function) {
+    public void replaceAll(BiFunction<? super String, ? super V, ? extends V> function) {
         throw new UnsupportedOperationException();
     }
 
+
     @Override
-    public Object putIfAbsent(String key, Object value) {
+    public V putIfAbsent(String key, Object value) {
         throw new UnsupportedOperationException();
     }
 
@@ -153,30 +166,31 @@ public class KeyMap extends AbstractMap<String, Object> implements Serializable 
     }
 
     @Override
-    public Object replace(String key, Object value) {
+    public V replace(String key, Object value) {
         throw new UnsupportedOperationException();
     }
 
+
     @Override
-    public Object computeIfAbsent(String key, Function<? super String, ?> mappingFunction) {
+    public V computeIfAbsent(String key, Function<? super String, ? extends V> mappingFunction) {
         throw new UnsupportedOperationException();
     }
 
+
     @Override
-    public Object computeIfPresent(String key,
-                                   BiFunction<? super String, ? super Object, ?> remappingFunction) {
+    public V computeIfPresent(String key, BiFunction<? super String, ? super V, ? extends V> remappingFunction) {
         throw new UnsupportedOperationException();
     }
 
+
     @Override
-    public Object compute(String key,
-                          BiFunction<? super String, ? super Object, ?> remappingFunction) {
+    public V compute(String key, BiFunction<? super String, ? super V, ? extends V> remappingFunction) {
         throw new UnsupportedOperationException();
     }
 
+
     @Override
-    public Object merge(String key, Object value,
-                        BiFunction<? super Object, ? super Object, ? extends Object> remappingFunction) {
+    public V merge(String key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         throw new UnsupportedOperationException();
     }
 }

@@ -12,6 +12,7 @@ import h2o.dao.proc.RowProcessor;
 import h2o.dao.jdbc.sqlpara.PreparedSqlAndParameters;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
 import h2o.dao.log.LogWriter;
+import h2o.dao.result.RowData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -346,7 +347,7 @@ public class JdbcDao implements Closeable {
         if (rdp != null) {
             return rdp.proc(m);
         } else {
-            return m == null ? null : new KeyMap(m);
+            return m == null ? null : new RowData(m);
         }
 
     }
