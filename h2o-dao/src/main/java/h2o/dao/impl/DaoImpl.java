@@ -295,7 +295,7 @@ public class DaoImpl extends AbstractDao implements Dao {
     public int[] batchUpdate(SqlSource sqlSource, Collection<?> args) throws DaoException {
         try {
 
-            String sql = sqlSource.getSql();
+
 
             List<Object[]> nArgs = ListBuilder.newList();
             String nSql = null;
@@ -316,9 +316,18 @@ public class DaoImpl extends AbstractDao implements Dao {
 
                 Map<String, Object> paramMap = this.argProc(aa);
 
+                String sql = sqlSource.getSql(paramMap);
+
                 PreparedSqlAndParameters sqlAndPara = SqlParameterUtil.toPreparedSqlAndPara(sql, paramMap);
                 nArgs.add(sqlAndPara.paras);
-                nSql = sqlAndPara.sql;
+
+                if ( nSql == null ) {
+                    nSql = sqlAndPara.sql;
+                } else {
+                    if ( !nSql.equals( sqlAndPara.sql ) ) {
+                        throw new DaoException("Batch SQL is different");
+                    }
+                }
 
             }
 
@@ -328,7 +337,7 @@ public class DaoImpl extends AbstractDao implements Dao {
             {
                 LogWriter writer = this.getLogWriter();
                 if (writer != null && writer.isOn()) {
-                    writer.write("batchUpdate", sql, null);
+                    writer.write("batchUpdate", nSql, null);
                 }
             }
 
