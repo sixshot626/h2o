@@ -498,29 +498,29 @@ public final class AgileDao {
         }
 
         public SelectOneExecutor unconditional() {
-            return new SelectOneExecutor( new Query(attrs).unconditional() );
+            return new SelectOneExecutor( new Query(this.attrs).unconditional() );
         }
 
         public SelectOneExecutor where(String where) {
-            return new SelectOneExecutor( new Query(attrs).where(where) );
+            return new SelectOneExecutor( new Query(this.attrs).where(where) );
         }
 
-        public SelectOneExecutor whereAttrs(Object... attrs) {
-            return new SelectOneExecutor( new Query(attrs).whereAttrs(attrs) );
+        public SelectOneExecutor whereAttrs(Object... wattrs) {
+            return new SelectOneExecutor( new Query(this.attrs).whereAttrs(wattrs) );
         }
 
         public SelectOneExecutor whereArgs(Object... args) {
-            return new SelectOneExecutor( new Query(attrs).whereArgs(args) );
+            return new SelectOneExecutor( new Query(this.attrs).whereArgs(args) );
         }
 
 
 
         public SelectOneExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
-            return new SelectOneExecutor( new Query(attrs).buildWhere(  consumer ) );
+            return new SelectOneExecutor( new Query(this.attrs).buildWhere(  consumer ) );
         }
 
         public SelectOneExecutor where( WhereBuilder whereBuilder ) {
-            return new SelectOneExecutor( new Query(attrs).where(  whereBuilder ) );
+            return new SelectOneExecutor( new Query(this.attrs).where(  whereBuilder ) );
         }
 
 
@@ -574,27 +574,27 @@ public final class AgileDao {
         }
 
         public SelectExecutor unconditional() {
-           return new SelectExecutor( new Query(attrs).unconditional() );
+           return new SelectExecutor( new Query(this.attrs).unconditional() );
         }
 
         public SelectExecutor where(String where) {
-            return new SelectExecutor( new Query(attrs).where(where) );
+            return new SelectExecutor( new Query(this.attrs).where(where) );
         }
 
-        public SelectExecutor whereAttrs(Object... attrs) {
-            return new SelectExecutor( new Query(attrs).whereAttrs(attrs) );
+        public SelectExecutor whereAttrs(Object... wattrs) {
+            return new SelectExecutor( new Query(this.attrs).whereAttrs(wattrs) );
         }
 
         public SelectExecutor whereArgs(Object... args) {
-            return new SelectExecutor( new Query(attrs).whereArgs(args) );
+            return new SelectExecutor( new Query(this.attrs).whereArgs(args) );
         }
 
         public SelectExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
-            return new SelectExecutor( new Query(attrs).buildWhere(  consumer ) );
+            return new SelectExecutor( new Query(this.attrs).buildWhere(  consumer ) );
         }
 
         public SelectExecutor where( WhereBuilder whereBuilder ) {
-            return new SelectExecutor( new Query(attrs).where(  whereBuilder ) );
+            return new SelectExecutor( new Query(this.attrs).where(  whereBuilder ) );
         }
 
 
@@ -840,28 +840,28 @@ public final class AgileDao {
         }
 
         public EditExecutor unconditional() {
-            return new EditExecutor( new Update(attrs).unconditional() );
+            return new EditExecutor( new Update(this.attrs).unconditional() );
         }
 
         public EditExecutor where(String where) {
-            return new EditExecutor( new Update(attrs).where(where) );
+            return new EditExecutor( new Update(this.attrs).where(where) );
         }
 
-        public EditExecutor whereAttrs(Object... attrs) {
-            return new EditExecutor( new Update(attrs).whereAttrs(attrs) );
+        public EditExecutor whereAttrs(Object... wattrs) {
+            return new EditExecutor( new Update(this.attrs).whereAttrs(wattrs) );
         }
 
         public EditExecutor whereArgs(Object... args) {
-            return new EditExecutor( new Update(attrs).whereArgs(args));
+            return new EditExecutor( new Update(this.attrs).whereArgs(args));
         }
 
 
         public EditExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
-            return new EditExecutor( new Update(attrs).buildWhere(  consumer ) );
+            return new EditExecutor( new Update(this.attrs).buildWhere(  consumer ) );
         }
 
         public EditExecutor buildWhere( WhereBuilder whereBuilder ) {
-            return new EditExecutor( new Update(attrs).buildWhere(  whereBuilder ) );
+            return new EditExecutor( new Update(this.attrs).buildWhere(  whereBuilder ) );
         }
 
     }
@@ -897,11 +897,11 @@ public final class AgileDao {
         }
 
         public BatchEditExecutor where(String where) {
-            return new BatchEditExecutor( new Update(attrs).where(where) );
+            return new BatchEditExecutor( new Update(this.attrs).where(where) );
         }
 
-        public BatchEditExecutor whereAttrs(Object... attrs) {
-            return new BatchEditExecutor( new Update(attrs).whereAttrs(attrs) );
+        public BatchEditExecutor whereAttrs(Object... wattrs) {
+            return new BatchEditExecutor( new Update(this.attrs).whereAttrs(wattrs) );
         }
 
 
