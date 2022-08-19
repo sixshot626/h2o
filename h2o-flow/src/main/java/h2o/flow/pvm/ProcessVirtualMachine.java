@@ -235,13 +235,13 @@ public final class ProcessVirtualMachine {
 
 					RunContext nextRunContext = n > 1 ? runContext.copy() : runContext;
 
-					RuntimeScopeObject lineRunScoeObject = new RuntimeScopeObject();
+					RuntimeScopeObject lineRunScopeObject = new RuntimeScopeObject();
 
-					fireEnterLineEvent(lineRunScoeObject , nextRunContext , line , args );
+					fireEnterLineEvent(lineRunScopeObject , nextRunContext , line , args );
 
 					Node nextNode = line.pass( nextRunContext , args );
 
-					fireLeaveLineEvent(lineRunScoeObject , nextRunContext , line , nextNode );
+					fireLeaveLineEvent(lineRunScopeObject , nextRunContext , line , nextNode );
 
 					runNode( nextRunContext , nextNode , false , args );
 
