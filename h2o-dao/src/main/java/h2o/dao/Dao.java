@@ -35,6 +35,11 @@ public interface Dao extends Closeable {
     void setLogWriter(LogWriter logWriter);
 
 
+    List<String> columnLabels( String sql, Object... args ) throws DaoException;;
+
+    List<String> columnLabels( SqlSource sqlSource, Object... args ) throws DaoException;;
+
+
     <T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException;
 
     <T> Val<T> getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException;

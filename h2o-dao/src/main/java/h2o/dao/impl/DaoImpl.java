@@ -1,5 +1,6 @@
 package h2o.dao.impl;
 
+import com.jenkov.db.impl.ResultSetProcessorBase;
 import com.jenkov.db.itf.IDaos;
 import com.jenkov.db.itf.IResultSetProcessor;
 import com.jenkov.db.itf.PersistenceException;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +46,49 @@ public class DaoImpl extends AbstractDao implements Dao {
         this.jdbcDao.setAutoClose(false);
     }
 
+
+    @Override
+    public List<String> columnLabels(SqlSource sqlSource, Object... args) throws DaoException {
+        try {
+
+            Map<String, Object> paramMap = this.argProc(args);
+            String sql = sqlSource.getSql(paramMap);
+
+            if (SHOWSQL) {
+                log.info("SQL:get#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
+            }
+            {
+                LogWriter writer = this.getLogWriter();
+                if (writer != null && writer.isOn()) {
+                    writer.write("get", sql, paramMap);
+                }
+            }
+
+            return jdbcDao.read( sql , new ResultSetProcessorBase() {
+
+                public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+
+                    ResultSetMetaData metaData = result.getMetaData();
+
+                    List<String> labels = new ArrayList<>( metaData.getColumnCount() );
+                    for(int i=1, n=metaData.getColumnCount(); i<=n; i++){
+                        labels.add(metaData.getColumnLabel(i));
+                    }
+
+                    this.setResult( labels );
+
+                }
+
+
+            } , paramMap );
+
+
+        } catch (Exception e) {
+            throw new DaoException(e);
+        } finally {
+            autoCloseDao();
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Override

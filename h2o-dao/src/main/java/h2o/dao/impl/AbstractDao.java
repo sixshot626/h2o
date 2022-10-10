@@ -275,6 +275,13 @@ public abstract class AbstractDao implements Dao {
     }
 
 
+
+    @Override
+    public List<String> columnLabels(String sql, Object... args) throws DaoException {
+        return this.columnLabels(new TSql(sql), args);
+    }
+
+
     @Override
     public <T> Val<T> getField(String sql, String fieldName, Object... args) throws DaoException {
         return this.getField(new TSql(sql), fieldName, args);
