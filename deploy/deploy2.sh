@@ -3,7 +3,7 @@
 path="`pwd`"
 repositoryId=smarthome-releases
 url="https://packages.aliyun.com/maven/repository/2100913-release-ySXZ77/"
-ver=6.1.0
+ver=6.2.0
 
 
 mvn -s settings.xml   deploy:deploy-file -DgroupId=h2o -DartifactId=butterfly-container   -Dversion=${ver} -Dpackaging=jar -Dfile=../butterfly-container/target/butterfly-container-${ver}.jar     -Durl=$url -DrepositoryId=${repositoryId}

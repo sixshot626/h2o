@@ -13,7 +13,7 @@
 
     <groupId>h2o</groupId>
     <artifactId>h2o-utils</artifactId>
-    <version>6.1.0</version>
+    <version>6.2.0</version>
 
 
     <dependencies>

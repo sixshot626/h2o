@@ -43,13 +43,14 @@ public class JdbcDao implements IJdbcDao {
         return (Long) read(sql, new ResultSetProcessorBase(){
             private Long theLong = null;
 
-            public void process(ResultSet result, IDaos daos) throws SQLException {
+            public boolean process(ResultSet result, IDaos daos) throws SQLException {
                 this.theLong = new Long(result.getLong(1));
+                return false;
             }
-
             public Object getResult() {
                 return this.theLong;
             }
+
         }, parameters);
     }
 
@@ -63,13 +64,15 @@ public class JdbcDao implements IJdbcDao {
 
     public String readIdString(String sql, IPreparedStatementManager manager) throws PersistenceException {
         return (String) read(sql, manager, new ResultSetProcessorBase(){
-            public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+            public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                 setResult(new StringBuffer("("));
+                return true;
             }
 
-            public void process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+            public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                 ((StringBuffer) this.result).append(result.getString(1));
                 ((StringBuffer) this.result).append(",");
+                return true;
             }
 
             public Object getResult() throws PersistenceException {
@@ -109,15 +112,22 @@ public class JdbcDao implements IJdbcDao {
 
             result = (ResultSet) statementManager.execute(statement);
 
-            processor.init(result, this.daos);
+            if ( processor.init(result, this.daos) ) {
 
-            while(result.next()){
-                processor.process(result, this.daos);
+                while (result.next()) {
+                    if ( ! processor.process(result, this.daos) ) {
+                        break;
+                    }
+                }
+
             }
+
             statementManager.postProcess(statement);
 
             return processor.getResult();
+
         } catch(SQLException e){
+
             exception = e;
             return null; // won't happen. exception will be rethrown from finally clause.
         }

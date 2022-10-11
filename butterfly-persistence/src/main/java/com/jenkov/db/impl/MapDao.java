@@ -55,12 +55,14 @@ public class MapDao implements IMapDao {
 
             ResultSetMetaData metaData = null;
 
-            public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+            public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                 this.metaData = result.getMetaData();
+                return true;
             }
 
-            public void process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+            public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                 setResult(readRecordIntoMap(result, this.metaData, (Map) getResult()));
+                return false;
             }
 
         });
@@ -86,13 +88,15 @@ public class MapDao implements IMapDao {
         return (List) this.daos.getJdbcDao().read(sql, statementManager,  new ResultSetProcessorBase(){
             ResultSetMetaData metaData = null;
 
-            public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+            public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                 setResult(new ArrayList());
                 this.metaData = result.getMetaData();
+                return true;
             }
 
-            public void process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+            public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                 ((List) getResult()).add(readRecordIntoMap(result, this.metaData, null));
+                return true;
             }
 
         });

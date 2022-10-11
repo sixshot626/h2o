@@ -42,7 +42,7 @@ public interface IResultSetProcessor {
      * @throws SQLException  If the intialization fails.
      * @throws PersistenceException If something else fails during initialization.
      */
-    public void   init(ResultSet result, IDaos daos)    throws SQLException, PersistenceException;
+    public  boolean  init(ResultSet result, IDaos daos)    throws SQLException, PersistenceException;
 
     /**
      * Processes a record in the ResultSet. For instance reads the column values into a
@@ -56,7 +56,7 @@ public interface IResultSetProcessor {
      * @throws SQLException If something fails in the driver during the processing of the current record.
      * @throws PersistenceException If something else fails during the processing.
      */
-    public void   process(ResultSet result, IDaos daos) throws SQLException, PersistenceException;
+    public boolean  process(ResultSet result, IDaos daos) throws SQLException, PersistenceException;
 
     /**
      * Returns the result of the total processing. For instance, if the process method reads records into

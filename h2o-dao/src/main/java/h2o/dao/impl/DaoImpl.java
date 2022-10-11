@@ -55,18 +55,18 @@ public class DaoImpl extends AbstractDao implements Dao {
             String sql = sqlSource.getSql(paramMap);
 
             if (SHOWSQL) {
-                log.info("SQL:get#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
+                log.info("SQL:columnLabels#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
             }
             {
                 LogWriter writer = this.getLogWriter();
                 if (writer != null && writer.isOn()) {
-                    writer.write("get", sql, paramMap);
+                    writer.write("columnLabels", sql, paramMap);
                 }
             }
 
             return jdbcDao.read( sql , new ResultSetProcessorBase() {
 
-                public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+                public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
 
                     ResultSetMetaData metaData = result.getMetaData();
 
@@ -77,6 +77,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
                     this.setResult( labels );
 
+                    return false;
                 }
 
 
@@ -148,14 +149,16 @@ public class DaoImpl extends AbstractDao implements Dao {
                 private final List<T> r = ListBuilder.newList();
 
                 @Override
-                public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+                public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+                    return true;
                 }
 
                 @SuppressWarnings("unchecked")
                 @Override
-                public void process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+                public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
                     Object f = fieldName == null ? result.getObject(1) : result.getObject(fieldName);
                     r.add((T) f);
+                    return true;
                 }
 
                 @Override
@@ -256,11 +259,11 @@ public class DaoImpl extends AbstractDao implements Dao {
             T r = (T) jdbcDao.read(sql, new IResultSetProcessor() {
 
                 @Override
-                public void init(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {
+                public boolean init(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {
 
                     try {
 
-                        rsCallback.init(rs, DaoImpl.this);
+                        return rsCallback.init(rs, DaoImpl.this);
 
                     } catch (SQLException e) {
                         throw e;
@@ -271,11 +274,11 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
 
                 @Override
-                public void process(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {
+                public boolean process(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {
 
                     try {
 
-                        rsCallback.process(rs, DaoImpl.this);
+                        return rsCallback.process(rs, DaoImpl.this);
 
                     } catch (SQLException e) {
                         throw e;

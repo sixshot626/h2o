@@ -32,10 +32,12 @@ public class ResultSetProcessorBase implements IResultSetProcessor {
 
     protected Object result = null;
 
-    public void init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+    public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+        return true;
     }
 
-    public void process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+    public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
+        return true;
     }
 
     protected void setResult(Object object){
