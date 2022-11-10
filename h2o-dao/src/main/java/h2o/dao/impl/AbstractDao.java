@@ -12,9 +12,9 @@ import h2o.dao.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 import h2o.dao.log.LogWriter;
+import h2o.dao.page.PagingProcessor;
 import h2o.dao.proc.ArgProcessor;
 import h2o.dao.proc.OrmProcessor;
-import h2o.dao.page.PagingProcessor;
 import h2o.dao.proc.RowProcessor;
 import h2o.dao.sql.SqlSource;
 

@@ -6,6 +6,7 @@ import com.jenkov.db.itf.IResultSetProcessor;
 import com.jenkov.db.itf.PersistenceException;
 import h2o.common.Mode;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.SNumber;
 import h2o.common.lang.Val;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
@@ -64,7 +65,7 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
             }
 
-            return jdbcDao.read( sql , new ResultSetProcessorBase() {
+            return jdbcDao.read( sql , SNumber.ZERO , new ResultSetProcessorBase() {
 
                 public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
 
@@ -144,7 +145,7 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
             }
 
-            return jdbcDao.read(sql, new IResultSetProcessor() {
+            return jdbcDao.read(sql, SNumber.NULL, new IResultSetProcessor() {
 
                 private final List<T> r = ListBuilder.newList();
 
@@ -221,7 +222,7 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
             }
 
-            List<Map<String, Object>> rows = jdbcDao.readMapList(sql, paramMap);
+            List<Map<String, Object>> rows = jdbcDao.readMapList(sql,SNumber.NULL, paramMap);
             List<Map<String, Object>> rs = new ArrayList<>(rows.size());
 
             for ( Map<String, Object> row : rows ) {
@@ -256,7 +257,7 @@ public class DaoImpl extends AbstractDao implements Dao {
                 }
             }
 
-            T r = (T) jdbcDao.read(sql, new IResultSetProcessor() {
+            T r = (T) jdbcDao.read(sql, SNumber.NULL, new IResultSetProcessor() {
 
                 @Override
                 public boolean init(ResultSet rs, IDaos idao) throws SQLException, PersistenceException {

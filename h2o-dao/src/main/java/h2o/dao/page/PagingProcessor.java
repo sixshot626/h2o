@@ -1,6 +1,5 @@
 package h2o.dao.page;
 
-import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
 import h2o.common.lang.tuple.Tuple2;
 

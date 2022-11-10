@@ -4,14 +4,14 @@ package h2o.dao.jdbc;
 import com.jenkov.db.impl.Daos;
 import com.jenkov.db.itf.*;
 import h2o.common.Mode;
+import h2o.common.lang.SNumber;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.exception.DaoException;
-import h2o.common.collection.KeyMap;
-import h2o.dao.proc.RowProcessor;
 import h2o.dao.jdbc.sqlpara.PreparedSqlAndParameters;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
 import h2o.dao.log.LogWriter;
+import h2o.dao.proc.RowProcessor;
 import h2o.dao.result.RowData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,155 +55,10 @@ public class JdbcDao implements Closeable {
         this.logWriter = logWriter;
     }
 
-    public Long readLong(String sql) {
-
-        if (SHOWSQL) {
-            log.info("readLong(sql):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readLong", sql, null);
-        }
-
-        try {
-            return jdbcDao.readLong(sql);
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
-    public Long readLong(String sql, Object... parameters) {
-
-        if (SHOWSQL) {
-            log.info("readLong(sql, Object...):{}, para:{}", sql, Arrays.asList(parameters));
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readLong", sql, Arrays.asList(parameters));
-        }
-
-        try {
-            return jdbcDao.readLong(sql, parameters);
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
 
 
-    public Long readLong(String sql, Map paramMap) {
 
-        if (SHOWSQL) {
-            log.info("readLong(sql, Map):{}, para:{}", sql, paramMap);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readLong", sql, paramMap);
-        }
-
-        PreparedSqlAndParameters sqlAndPara = toPreparedSqlAndPara(sql, paramMap);
-
-        return readLong(sqlAndPara.sql, sqlAndPara.paras);
-
-    }
-
-
-    public String readIdString(String sql) {
-
-        if (SHOWSQL) {
-            log.info("readIdString(sql]):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readIdString", sql, null);
-        }
-
-        try {
-            return jdbcDao.readIdString(sql);
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
-    public String readIdString(String sql, Object... parameters) {
-
-        if (SHOWSQL) {
-            log.info("readIdString(sql, Object...):{}, para:{}", sql, Arrays.asList(parameters));
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readIdString", sql, Arrays.asList(parameters));
-        }
-
-        try {
-            return jdbcDao.readIdString(sql, parameters);
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
-
-    public String readIdString(String sql, Map paramMap) {
-
-        if (SHOWSQL) {
-            log.info("readIdString(sql, Map):{}, para:{}", sql, paramMap);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readIdString", sql, paramMap);
-        }
-
-        PreparedSqlAndParameters sqlAndPara = toPreparedSqlAndPara(sql, paramMap);
-
-        return readIdString(sqlAndPara.sql, sqlAndPara.paras);
-
-    }
-
-
-    public String readIdString(String sql, IPreparedStatementManager statementManager) {
-
-        if (SHOWSQL) {
-            log.info("readIdString(sql,IPreparedStatementManager):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readIdString", sql, null);
-        }
-
-        try {
-            return jdbcDao.readIdString(sql, statementManager);
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
-    public <T> T read(String sql, IResultSetProcessor processor) {
-
-        if (SHOWSQL) {
-            log.info("read(sql,IResultSetProcessor):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("read", sql, null);
-        }
-
-        try {
-            return (T) jdbcDao.read(sql, processor);
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
-    public <T> T read(String sql, IResultSetProcessor processor, Object... parameters) {
+    public <T> T read(String sql, SNumber fetchSize, IResultSetProcessor processor, Object... parameters) {
 
         if (SHOWSQL) {
             log.info("read(sql,IResultSetProcessor,Object...):{}, para:{}", sql, Arrays.asList(parameters));
@@ -213,7 +68,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return (T) jdbcDao.read(sql, processor, parameters);
+            return (T) jdbcDao.read(sql,  new BasePreparedStatementManager(fetchSize,parameters) , processor);
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {
@@ -223,7 +78,7 @@ public class JdbcDao implements Closeable {
     }
 
 
-    public <T> T read(String sql, IResultSetProcessor processor, Map paramMap) {
+    public <T> T read(String sql, SNumber fetchSize, IResultSetProcessor processor, Map paramMap) {
 
         if (SHOWSQL) {
             log.info("read(sql,IResultSetProcessor,Map):{}, para:{}", sql, paramMap);
@@ -234,7 +89,7 @@ public class JdbcDao implements Closeable {
 
         PreparedSqlAndParameters sqlAndPara = toPreparedSqlAndPara(sql, paramMap);
 
-        return read(sqlAndPara.sql, processor, sqlAndPara.paras);
+        return read(sqlAndPara.sql, fetchSize, processor, sqlAndPara.paras);
 
     }
 
@@ -248,7 +103,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return (T) jdbcDao.read(sql, statementManager, processor);
+            return (T) jdbcDao.read(sql, (IPreparedStatementManager)statementManager, processor);
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {
@@ -320,7 +175,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return jdbcDao.update(sql, statementManager);
+            return jdbcDao.update(sql, (IPreparedStatementManager)statementManager);
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {
@@ -363,28 +218,6 @@ public class JdbcDao implements Closeable {
     }
 
 
-    public <T> T readObject(String sql) {
-
-        if (SHOWSQL) {
-            log.info("readObject(sql):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readObject", sql, null);
-        }
-
-        try {
-
-            Map data = mapDao.readMap(sql);
-            return CollectionUtil.isEmpty(data) ? null : (T) data.values().iterator().next();
-
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
     public <T> T readObject(String sql, Object... parameters) {
 
         if (SHOWSQL) {
@@ -396,7 +229,7 @@ public class JdbcDao implements Closeable {
 
         try {
 
-            Map data = mapDao.readMap(sql, parameters);
+            Map data = mapDao.readMap(sql, (IPreparedStatementManager)new BasePreparedStatementManager( SNumber.ONE , parameters ));
             return CollectionUtil.isEmpty(data) ? null : (T) data.values().iterator().next();
 
         } catch (PersistenceException e) {
@@ -422,24 +255,6 @@ public class JdbcDao implements Closeable {
     }
 
 
-    public Map<String, Object> readMap(String sql) {
-
-        if (SHOWSQL) {
-            log.info("readMap(sql):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readMap", sql, null);
-        }
-
-        try {
-            return dataProc(mapDao.readMap(sql));
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
 
 
     public Map<String, Object> readMap(String sql, Object... parameters) {
@@ -452,7 +267,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return dataProc(mapDao.readMap(sql, parameters));
+            return dataProc(mapDao.readMap(sql, (IPreparedStatementManager)new BasePreparedStatementManager(SNumber.ONE, parameters)));
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {
@@ -487,7 +302,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return dataProc(mapDao.readMap(sql, statementManager));
+            return dataProc(mapDao.readMap(sql, (IPreparedStatementManager)statementManager));
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {
@@ -497,27 +312,8 @@ public class JdbcDao implements Closeable {
     }
 
 
-    public List<Map<String, Object>> readMapList(String sql) {
 
-        if (SHOWSQL) {
-            log.info("readMapList(sql):{}", sql);
-        }
-        if (logWriter != null && logWriter.isOn()) {
-            logWriter.write("readMapList", sql, null);
-        }
-
-        try {
-            return listProc(mapDao.readMapList(sql));
-        } catch (PersistenceException e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseConnection();
-        }
-
-    }
-
-
-    public List<Map<String, Object>> readMapList(String sql, Object... parameters) {
+    public List<Map<String, Object>> readMapList(String sql, SNumber fetchSize, Object... parameters) {
 
         if (SHOWSQL) {
             log.info("readMapList(sql, Object...):{}, para:{}", sql, Arrays.asList(parameters));
@@ -527,7 +323,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return listProc(mapDao.readMapList(sql, parameters));
+            return listProc(mapDao.readMapList(sql, (IPreparedStatementManager)new BasePreparedStatementManager(fetchSize, parameters)));
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {
@@ -536,7 +332,7 @@ public class JdbcDao implements Closeable {
 
     }
 
-    public List<Map<String, Object>> readMapList(String sql, Map paramMap) {
+    public List<Map<String, Object>> readMapList(String sql, SNumber fetchSize, Map paramMap) {
 
         if (SHOWSQL) {
             log.info("readMapList(sql, Map):{}, para:{}", sql, paramMap);
@@ -547,7 +343,7 @@ public class JdbcDao implements Closeable {
 
         PreparedSqlAndParameters sqlAndPara = toPreparedSqlAndPara(sql, paramMap);
 
-        return readMapList(sqlAndPara.sql, sqlAndPara.paras);
+        return readMapList(sqlAndPara.sql, fetchSize, sqlAndPara.paras);
 
     }
 
@@ -562,7 +358,7 @@ public class JdbcDao implements Closeable {
         }
 
         try {
-            return listProc(mapDao.readMapList(sql, statementManager));
+            return listProc(mapDao.readMapList(sql, (IPreparedStatementManager)statementManager));
         } catch (PersistenceException e) {
             throw new DaoException(e);
         } finally {

@@ -1,9 +1,9 @@
 package h2o.dao.structure;
 
+import h2o.common.collection.KeyMap;
 import h2o.common.lang.K;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.lang.ArgsUtil;
-import h2o.common.collection.KeyMap;
 
 import java.util.*;
 
