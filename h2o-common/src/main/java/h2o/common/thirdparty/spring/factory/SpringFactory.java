@@ -19,7 +19,11 @@ public class SpringFactory implements BeanFactoryAware {
     public static void setStaticConfigPath(String... path) {
         lock.lock();
         try {
-            beanFactory = new ClassPathXmlApplicationContext(path);
+            if ( beanFactory == null ) {
+                beanFactory = new ClassPathXmlApplicationContext(path);
+            } else {
+                throw new IllegalStateException("BeanFactory initialized multiple times");
+            }
         } finally {
             lock.unlock();
         }
@@ -33,7 +37,11 @@ public class SpringFactory implements BeanFactoryAware {
     public void setBeanFactory(BeanFactory bf) throws BeansException {
         lock.lock();
         try {
-            beanFactory = bf;
+            if ( beanFactory == null ) {
+                beanFactory = bf;
+            } else {
+                throw new IllegalStateException("BeanFactory initialized multiple times");
+            }
         } finally {
             lock.unlock();
         }
