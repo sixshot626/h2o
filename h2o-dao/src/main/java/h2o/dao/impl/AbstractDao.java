@@ -6,6 +6,7 @@ import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
 import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple2;
+import h2o.common.util.Assert;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
 import h2o.dao.ResultSetCallback;
@@ -82,18 +83,22 @@ public abstract class AbstractDao implements Dao {
 
 
     protected ArgProcessor getArgProcessor() {
+        Assert.notNull(argProcessor , "ArgProcessor must not be null");
         return argProcessor;
     }
 
     protected RowProcessor getRowProcessor() {
+        Assert.notNull(rowProcessor , "RowProcessor must not be null");
         return rowProcessor;
     }
 
     protected OrmProcessor getOrmProcessor() {
+        Assert.notNull(ormProcessor , "OrmProcessor must not be null");
         return ormProcessor;
     }
 
     protected PagingProcessor getPagingProcessor() {
+        Assert.notNull(pagingProcessor , "PagingProcessor must not be null");
         return pagingProcessor;
     }
 
