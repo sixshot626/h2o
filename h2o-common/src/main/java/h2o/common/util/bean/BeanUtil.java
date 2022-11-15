@@ -205,8 +205,6 @@ public final class BeanUtil {
 
         private String[] targetPrepNames;
 
-        private String[] skipPrepNames;
-
         private List<Entry> mapPrepNames;
 
 
@@ -215,10 +213,6 @@ public final class BeanUtil {
             this.targetPrepNames = targetPrepNames;
         }
 
-        public PrepName skip(String[] skipKeys) {
-            this.skipPrepNames = skipKeys;
-            return this;
-        }
 
         public PrepName map(String[] srcKeys, String[] targetKeys) {
 
@@ -249,39 +243,23 @@ public final class BeanUtil {
             Map<String, String> srcKeyMap = ppMap(srcPrepNames, ignoreCase);
             Map<String, String> targetKeyMap = ppMap(targetPrepNames, ignoreCase);
 
-            Map<String, String> skipKeyMap = ppMap(skipPrepNames, ignoreCase);
-
             List<Entry<String, String>> result = ListBuilder.newList();
 
             if (mapPrepNames != null) {
 
                 for (Entry m : mapPrepNames) {
-
-                    if (!skipKeyMap.containsKey(m.key)) {
-
-                        String src = srcKeyMap.get(m.getKey());
-                        String target = targetKeyMap.get(m.value);
-                        if (src != null && target != null) {
-                            result.add(new Entry(src, target));
-                        }
-
+                    String src = srcKeyMap.get(m.key);
+                    String target = targetKeyMap.get(m.value);
+                    if (target != null) {
+                        result.add(new Entry(src == null ? m.key : src , target));
                     }
-
                 }
 
             } else {
 
                 for (String target : targetPrepNames) {
-
-                    if (!skipKeyMap.containsKey(target)) {
-
-                        String src = srcKeyMap.get(target);
-                        if (src != null) {
-                            result.add(new Entry(src, target));
-                        }
-
-                    }
-
+                    String src = srcKeyMap.get(target);
+                    result.add(new Entry(src == null ? target : src, target));
                 }
 
             }
@@ -345,19 +323,15 @@ public final class BeanUtil {
 
 
     public <T> T beanCopy(Object srcBean, Class<T> beanClazz) {
-        return this.beanCopy3(srcBean, createBean(beanClazz), null, null, null);
+        return this.beanCopy0(srcBean, createBean(beanClazz), null, null);
     }
 
     public <T> T beanCopy(Object srcBean, Class<T> beanClazz, String... prepNames) {
-        return this.beanCopy3(srcBean, createBean(beanClazz), null, prepNames, prepNames);
+        return this.beanCopy0(srcBean, createBean(beanClazz),  prepNames, prepNames);
     }
 
     public <T> T beanCopy(Object srcBean, Class<T> beanClazz, String[] srcPrepNames, String[] prepNames) {
-        return this.beanCopy3(srcBean, createBean(beanClazz), null, srcPrepNames, prepNames);
-    }
-
-    public <T> T beanCopySkip(Object srcBean, Class<T> beanClazz, String[] skipPrepNames) {
-        return this.beanCopy3(srcBean, createBean(beanClazz), skipPrepNames, null, null);
+        return this.beanCopy0(srcBean, createBean(beanClazz),  srcPrepNames, prepNames);
     }
 
 
@@ -371,23 +345,20 @@ public final class BeanUtil {
 
 
     public <T> T beanCopy(Object srcBean, T bean) {
-        return this.beanCopy3(srcBean, bean, null, null, null);
+        return this.beanCopy0(srcBean, bean,  null, null);
     }
 
     public <T> T beanCopy(Object srcBean, T bean, String... prepNames) {
-        return this.beanCopy3(srcBean, bean, null, prepNames, prepNames);
+        return this.beanCopy0(srcBean, bean,  prepNames, prepNames);
     }
 
     public <T> T beanCopy(Object srcBean, T bean, String[] srcPrepNames, String[] prepNames) {
-        return this.beanCopy3(srcBean, bean, null, srcPrepNames, prepNames);
-    }
-
-    public <T> T beanCopySkip(Object srcBean, T bean, String[] skipPrepNames) {
-        return this.beanCopy3(srcBean, bean, skipPrepNames, null, null);
+        return this.beanCopy0(srcBean, bean,  srcPrepNames, prepNames);
     }
 
 
-    private <T> T beanCopy3(Object srcBean, T bean, String[] skipKeys, String[] srcKeys, String[] targetKeys) {
+
+    private <T> T beanCopy0(Object srcBean, T bean, String[] srcKeys, String[] targetKeys) {
 
         Assert.notNull(srcBean, "srcBean == null");
         Assert.notNull(bean, "bean == null");
@@ -396,14 +367,11 @@ public final class BeanUtil {
         boolean targetIsMap = bean instanceof Map;
 
 
-        String[] srcPrepNames = srcIsMap ?
-                ( targetIsMap ? mapKeys((Map) srcBean) : this.analysePrepNames(bean) )
-                 : this.analysePrepNames(srcBean);
-
+        String[] srcPrepNames = srcIsMap ? mapKeys((Map) srcBean) : this.analysePrepNames(srcBean);
 
         String[] targetPrepNames = targetIsMap ? srcPrepNames : this.analysePrepNames(bean);
 
-        PrepName pn = new PrepName(srcPrepNames, targetPrepNames).skip(skipKeys).map(srcKeys, targetKeys);
+        PrepName pn = new PrepName(srcPrepNames, targetPrepNames).map(srcKeys, targetKeys);
 
         return this.beanCopy(srcBean, bean, pn.proc(this.ignoreCase));
 
@@ -417,20 +385,17 @@ public final class BeanUtil {
 
 
     public Map<String, Object> bean2Map(Object bean) {
-        return this.beanCopy3(bean, new HashMap<String, Object>(), null, null, null);
+        return this.beanCopy0(bean, new HashMap<>(),  null, null);
     }
 
     public Map<String, Object> bean2Map(Object bean, String... prepNames) {
-        return this.beanCopy3(bean, new HashMap<String, Object>(), null, prepNames, prepNames);
+        return this.beanCopy0(bean, new HashMap<>(),  prepNames, prepNames);
     }
 
     public Map<String, Object> bean2Map(Object bean, String[] srcPrepNames, String[] prepNames) {
-        return this.beanCopy3(bean, new HashMap<String, Object>(), null, srcPrepNames, prepNames);
+        return this.beanCopy0(bean, new HashMap<>(),  srcPrepNames, prepNames);
     }
 
-    public Map<String, Object> bean2MapSkip(Object bean, String[] skipPrepNames) {
-        return this.beanCopy3(bean, new HashMap<String, Object>(), skipPrepNames, null, null);
-    }
 
 
 }
