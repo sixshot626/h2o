@@ -79,15 +79,10 @@
 
 
         <dependency>
-            <groupId>jenkov</groupId>
-            <artifactId>butterfly-persistence</artifactId>
-            <version>5.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jenkov</groupId>
-            <artifactId>butterfly-container</artifactId>
-            <version>3.2.0</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
         </dependency>
 
 

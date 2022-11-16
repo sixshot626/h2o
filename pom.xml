@@ -11,8 +11,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>butterfly-container</module>
-        <module>butterfly-persistence</module>
+<!--        <module>butterfly-container</module>-->
+<!--        <module>butterfly-persistence</module>-->
         <module>h2o-common</module>
         <module>h2o-dao</module>
         <module>h2o-flow</module>
