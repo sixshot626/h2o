@@ -91,7 +91,7 @@ public class Butterfly {
 
 
             } catch (Exception e) {
-                log.error("Butterfly::load()", e);
+                log.error("Butterfly::load():{}", e.getMessage());
             } finally {
                 lock.unlock();
             }
