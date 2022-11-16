@@ -139,8 +139,13 @@ public class DBFactoryImpl implements DBFactory {
         return factory.get(DB_BEANID, name);
     }
 
+
+
+    private final CachedCreator<DbUtil> dbUtilCache
+            = new CachedCreator<>(()->factoryGet(DBUTIL_BEANID));
+
     @Override
     public DbUtil getDbUtil() {
-        return factory.get(DBUTIL_BEANID);
+        return dbUtilCache.get(true);
     }
 }

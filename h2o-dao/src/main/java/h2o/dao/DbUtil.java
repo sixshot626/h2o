@@ -35,11 +35,6 @@ public final class DbUtil {
     public static final TemplateUtil sqlTemplateUtil = DBFACTORY.getSqlTemplateUtil();
 
 
-    private static class S {
-        public static final DbUtil dbUtil = DBFACTORY.getDbUtil();
-    }
-
-
     private final Map<String, DataSource> dsMap = MapBuilder.newConcurrentHashMap();
 
     public void setDataSources(Map<String, DataSource> dataSources) {
@@ -59,7 +54,7 @@ public final class DbUtil {
 
         log.debug(" getDataSource('{}') ... ", name);
 
-        DataSource ds = S.dbUtil.dsMap.get(name);
+        DataSource ds = DBFACTORY.getDbUtil().dsMap.get(name);
         if (ds == null) {
             throw new DaoException("DataSource [" + name + "] undefined.");
         }
