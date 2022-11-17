@@ -5,18 +5,23 @@ import h2o.apache.commons.lang.StringUtils;
 import h2o.common.Tools;
 import h2o.common.lang.SDate;
 import h2o.common.util.id.SnowGarlandIdGen;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
 public abstract class ClusterUtil {
 
+
+    private static final Logger LOG = LoggerFactory.getLogger(ClusterUtil.class);
+
     private ClusterUtil() {
     }
 
     public static long getWorkerId() {
         long workerId = Long.parseLong(h2o.jodd.util.SystemUtil.get("H2OWorkerId", "0"));
-        Tools.log.info("SYS PARA - workerId : {}", workerId);
+        LOG.info("SYS PARA - workerId : {}", workerId);
         return workerId;
     }
 

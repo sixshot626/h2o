@@ -1,18 +1,19 @@
 package h2o.utils.store.impl;
 
 
-import h2o.common.Tools;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.result.Response;
 import h2o.common.result.TransResponse;
-import h2o.common.result.TransResult;
 import h2o.common.result.TransReturn;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.io.StreamUtil;
+import h2o.common.util.lang.StringUtil;
 import h2o.utils.store.*;
 import io.minio.*;
 import io.minio.errors.ErrorResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -20,6 +21,8 @@ import java.util.Date;
 
 
 public class FileServiceMinIOImpl implements FileService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FileServiceMinIOImpl.class);
 
     private final MinioClient mc;
 
@@ -57,7 +60,7 @@ public class FileServiceMinIOImpl implements FileService {
                 mc.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
             }
         } catch ( Exception e ) {
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn().ok(false).exception(e);
         }
 
@@ -83,7 +86,7 @@ public class FileServiceMinIOImpl implements FileService {
             return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn().exception(e);
         }
 
@@ -99,7 +102,7 @@ public class FileServiceMinIOImpl implements FileService {
                 mc.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
             }
         } catch ( Exception e ) {
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn().ok(false).exception(e);
         }
 
@@ -124,7 +127,7 @@ public class FileServiceMinIOImpl implements FileService {
             return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn().exception(e);
 
         } /* finally {
@@ -148,7 +151,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( ErrorResponseException e ) {
 
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
                 return new TransReturn<GetFileStatus,FileMeta>()
@@ -160,7 +163,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
 
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn<GetFileStatus,FileMeta>()
                     .setStatus(GetFileStatus.FAIL).exception(e);
 
@@ -188,7 +191,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( ErrorResponseException e ) {
 
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
                 return new TransReturn<GetFileStatus,FileObject>()
@@ -200,7 +203,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
 
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn<GetFileStatus,FileObject>()
                     .setStatus(GetFileStatus.FAIL).exception(e);
 
@@ -229,6 +232,7 @@ public class FileServiceMinIOImpl implements FileService {
             consumer.accept( source );
 
         } catch ( Exception e ) {
+            LOG.error(StringUtil.EMPTY , e);
             throw ExceptionUtil.toRuntimeException( e );
         } finally {
             StreamUtil.close( source );
@@ -248,18 +252,10 @@ public class FileServiceMinIOImpl implements FileService {
             return new TransReturn().ok(true);
 
         } catch ( Exception e ) {
-            Tools.log.error(e);
+            LOG.error(StringUtil.EMPTY , e);
             return new TransReturn().ok(false).exception(e);
         }
 
     }
 
-
-    public static void main(String[] args) {
-
-        FileService fs = new FileServiceMinIOImpl("http://127.0.0.1:9000" , "admin" , "admin123");
-        TransResult<FileMeta> r = fs.getFileMeta("test", "ttttttttt.txt");
-        System.out.println( r );
-
-    }
 }

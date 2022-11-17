@@ -7,6 +7,7 @@ import h2o.common.thirdparty.redis.Redis;
 import h2o.common.thirdparty.redis.RedisProvider;
 import h2o.common.util.id.RandomString;
 import h2o.common.util.id.UuidUtil;
+import h2o.common.util.lang.StringUtil;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.SetArgs;
 import org.slf4j.Logger;
@@ -191,8 +192,10 @@ public class ClusterLock {
     }
 
 
-    private static synchronized String uuid() {
-        return UuidUtil.getUuid() + "-" + new RandomString().makeNumberCode(10);
+    private static final ClusterUtil.IdGenerator ID_GENERATOR = new ClusterUtil.IdGenerator();
+
+    private static String uuid() {
+        return StringUtil.build(ID_GENERATOR.makeId()  , "-" , new RandomString().makeNumberCode(10));
     }
 
 }
