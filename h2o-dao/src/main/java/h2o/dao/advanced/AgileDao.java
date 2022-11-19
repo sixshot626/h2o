@@ -5,8 +5,8 @@ import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
 import h2o.common.data.domain.SortInfo;
-import h2o.common.lang.K;
-import h2o.common.lang.S;
+import h2o.common.lang.Key;
+import h2o.common.lang.Special;
 import h2o.common.lang.Val;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.Dao;
@@ -112,9 +112,9 @@ public final class AgileDao {
             }
             sqlUpdate.append("\n        ");
 
-            if ( o instanceof S ) {
+            if ( o instanceof Special) {
 
-                sqlUpdate.append( ((S) o).getValue() );
+                sqlUpdate.append( ((Special) o).getValue() );
 
             } else {
 
@@ -159,8 +159,8 @@ public final class AgileDao {
             if (i++ > 0) {
                 sqlSelect.append(" ,\n        ");
             }
-            if (k instanceof S) {
-                sqlSelect.append(((S) k).getValue());
+            if (k instanceof Special) {
+                sqlSelect.append(((Special) k).getValue());
             } else {
                 sqlSelect.append(column(k));
             }
@@ -1018,8 +1018,8 @@ public final class AgileDao {
         String key;
         if (obj instanceof String) {
             key = (String) obj;
-        } else if (obj instanceof K) {
-            key = ((K) obj).name();
+        } else if (obj instanceof Key) {
+            key = ((Key) obj).name();
         } else if (obj instanceof Enum) {
             key = ((Enum) obj).name();
         } else {

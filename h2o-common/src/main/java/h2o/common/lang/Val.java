@@ -1,5 +1,10 @@
 package h2o.common.lang;
 
+import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
@@ -30,6 +35,65 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
         this.value = value;
         this.setted = true;
         this.stamp = stamp;
+    }
+
+
+
+
+    public <R> Val<R> get(Object key) {
+
+        if (this.isPresent()) {
+            if ( value instanceof Map) {
+                return of(((Map<?, ?>) value).get(key) );
+            } else if ( key instanceof String ) {
+                return of( new JoddBeanUtilVOImpl(true, false).get( value , (String) key ));
+            }
+        }
+
+        return empty();
+    }
+
+    public <R> Val<R> idx(Number i) {
+        return this.idx( i.intValue() );
+    }
+
+    public <R> Val<R> idx(int i) {
+
+        if (this.isPresent()) {
+            if ( value instanceof List) {
+                return of(((List<?>) value).get(i));
+            } else if ( value instanceof Iterator) {
+                return iteratorGetI( (Iterator<?>) value , i );
+            } else if ( value instanceof Iterable ) {
+                return iteratorGetI(((Iterable<?>) value).iterator(), i);
+            }
+        }
+
+        return empty();
+    }
+
+    private static <R> Val<R> iteratorGetI(Iterator<?> iterator , int i ) {
+        for ( int j = 0 ; j < i ; j++ ) {
+            iterator.next();
+        }
+        return of(iterator.next() );
+    }
+
+
+    private static <R> Val<R> of( Object value ) {
+        @SuppressWarnings("unchecked")
+        Val<R> t = (Val<R>) (value == null ? EMPTY : new Val<>(value));
+        return t;
+    }
+
+
+
+    public static <R> Val<R> valueOf( R value ) {
+        if ( value == null ) {
+            return empty();
+        } else {
+            return new Val<>( value);
+        }
     }
 
 

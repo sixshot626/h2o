@@ -5,13 +5,13 @@ import h2o.apache.commons.lang.StringUtils;
 
 import java.util.Objects;
 
-public final class K implements Comparable<K>, java.io.Serializable {
+public final class Key implements Comparable<Key>, java.io.Serializable {
 
     private static final long serialVersionUID = 2360167979097124087L;
 
     private final String value;
 
-    public K(String value) {
+    public Key(String value) {
         if (StringUtils.isBlank(value)) {
             throw new IllegalArgumentException();
         }
@@ -27,12 +27,12 @@ public final class K implements Comparable<K>, java.io.Serializable {
         return value;
     }
 
-    public static K k(String str) {
-        return new K(str);
+    public static Key k(String str) {
+        return new Key(str);
     }
 
     @Override
-    public int compareTo(K o) {
+    public int compareTo(Key o) {
         return this.value.compareTo(o.value);
     }
 
@@ -40,7 +40,7 @@ public final class K implements Comparable<K>, java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        K k = (K) o;
+        Key k = (Key) o;
         return value.equals(k.value);
     }
 

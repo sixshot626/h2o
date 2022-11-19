@@ -4,13 +4,13 @@ import h2o.common.util.lang.StringUtil;
 
 import java.util.Objects;
 
-public final class S implements Comparable<S>, java.io.Serializable {
+public final class Special implements Comparable<Special>, java.io.Serializable {
 
 
     private static final long serialVersionUID = 4003380362220439161L;
     private final String value;
 
-    public S(String value) {
+    public Special(String value) {
         if (value == null) {
             throw new IllegalArgumentException();
         }
@@ -22,16 +22,16 @@ public final class S implements Comparable<S>, java.io.Serializable {
         return value;
     }
 
-    public static S s(String str) {
-        return new S(str);
+    public static Special s(String str) {
+        return new Special(str);
     }
 
-    public static S str(Object... strs) {
-        return new S(StringUtil.str( strs) );
+    public static Special str(Object... strs) {
+        return new Special(StringUtil.str( strs) );
     }
 
     @Override
-    public int compareTo(S o) {
+    public int compareTo(Special o) {
         return this.value.compareTo(o.value);
     }
 
@@ -39,7 +39,7 @@ public final class S implements Comparable<S>, java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        S s = (S) o;
+        Special s = (Special) o;
         return value.equals(s.value);
     }
 

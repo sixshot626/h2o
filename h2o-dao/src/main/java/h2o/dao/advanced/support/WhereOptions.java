@@ -1,7 +1,7 @@
 package h2o.dao.advanced.support;
 
-import h2o.common.lang.K;
-import h2o.common.lang.S;
+import h2o.common.lang.Key;
+import h2o.common.lang.Special;
 import h2o.dao.exception.DaoException;
 import h2o.dao.structure.TableStruct;
 
@@ -63,7 +63,7 @@ public final class WhereOptions implements WhereConditions {
 
             Map m = new HashMap<>();
             for ( int i = 0, len = wargs.length; i < len; i++) {
-                if (wargs[i] instanceof S && ( i + 1 == len || wargs[i + 1] != null ) ) {
+                if (wargs[i] instanceof Special && ( i + 1 == len || wargs[i + 1] != null ) ) {
                     m.put(wargs[i], null);
                 } else if (wargs[i] instanceof Map) {
                     m.putAll( (Map)wargs[i] );
@@ -131,7 +131,7 @@ public final class WhereOptions implements WhereConditions {
     private Map<Object, Object> convWArgs(Map<?, Object> wargs) {
         Map<Object, Object> nmap = new HashMap<>();
         for (Map.Entry<?, Object> entry : wargs.entrySet()) {
-            if ( entry.getKey() instanceof S ) {
+            if ( entry.getKey() instanceof Special) {
                 continue;
             }
             nmap.put(str("w__", name(entry.getKey())), entry.getValue());
@@ -156,8 +156,8 @@ public final class WhereOptions implements WhereConditions {
             if (i++ > 0) {
                 sqlWhere.append("\n    and ");
             }
-            if (k instanceof S) {
-                sqlWhere.append(((S) k).getValue());
+            if (k instanceof Special) {
+                sqlWhere.append(((Special) k).getValue());
             } else {
                 sqlWhere.append(column(k));
                 sqlWhere.append(" = ");
@@ -202,8 +202,8 @@ public final class WhereOptions implements WhereConditions {
         String key;
         if (obj instanceof String) {
             key = (String) obj;
-        } else if (obj instanceof K) {
-            key = ((K) obj).name();
+        } else if (obj instanceof Key) {
+            key = ((Key) obj).name();
         } else if (obj instanceof Enum) {
             key = ((Enum) obj).name();
         } else {

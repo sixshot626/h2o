@@ -1,7 +1,7 @@
 package h2o.dao.advanced.support;
 
 import h2o.apache.commons.lang.StringUtils;
-import h2o.common.lang.K;
+import h2o.common.lang.Key;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.exception.DaoException;
 import h2o.dao.structure.TableStruct;
@@ -446,8 +446,8 @@ public final class WhereBuilder implements WhereConditions {
         String key;
         if (obj instanceof String) {
             key = (String) obj;
-        } else if (obj instanceof K) {
-            key = ((K) obj).name();
+        } else if (obj instanceof Key) {
+            key = ((Key) obj).name();
         } else if (obj instanceof Enum) {
             key = ((Enum) obj).name();
         } else {

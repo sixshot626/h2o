@@ -1,7 +1,7 @@
 package h2o.dao.structure;
 
 import h2o.common.collection.KeyMap;
-import h2o.common.lang.K;
+import h2o.common.lang.Key;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.lang.ArgsUtil;
 
@@ -87,8 +87,8 @@ public class TableStruct {
         ColumnMeta col;
         if (k instanceof Enum) {
             col = (ColumnMeta)nameMap.get(((Enum<?>) k).name());
-        } else if (k instanceof K) {
-            col = (ColumnMeta)attrMap.get(((K) k).name());
+        } else if (k instanceof Key) {
+            col = (ColumnMeta)attrMap.get(((Key) k).name());
         } else if (k instanceof String) {
             col = (ColumnMeta)attrMap.get(k);
         } else {

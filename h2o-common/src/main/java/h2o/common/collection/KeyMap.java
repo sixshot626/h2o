@@ -1,6 +1,6 @@
 package h2o.common.collection;
 
-import h2o.common.lang.K;
+import h2o.common.lang.Key;
 import h2o.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -54,8 +54,8 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
         String key;
         if (obj instanceof String) {
             key = ((String) obj).trim();
-        } else if (obj instanceof K) {
-            key = ((K) obj).getValue();
+        } else if (obj instanceof Key) {
+            key = ((Key) obj).getValue();
         } else if (obj instanceof Enum) {
             key = ((Enum) obj).name();
         } else {

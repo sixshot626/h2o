@@ -1,7 +1,7 @@
 package h2o.dao.jdbc.sqlpara;
 
 import h2o.common.Tools;
-import h2o.common.lang.K;
+import h2o.common.lang.Key;
 import h2o.common.util.bean.BeanUtil;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
@@ -57,10 +57,10 @@ public class SqlParameterUtil {
                 Object val = args[++i];
                 m.put(((Enum) a).name(), valConvert(val));
 
-            } else if (a instanceof K) {
+            } else if (a instanceof Key) {
 
                 Object val = args[++i];
-                m.put(((K) a).name(), valConvert(val));
+                m.put(((Key) a).name(), valConvert(val));
 
             } else {
 
@@ -87,9 +87,9 @@ public class SqlParameterUtil {
 
             return ((Enum) val).name();
 
-        } else if (val instanceof K) {
+        } else if (val instanceof Key) {
 
-            return ((K) val).name();
+            return ((Key) val).name();
 
         } else if (val instanceof Collection) {
 
