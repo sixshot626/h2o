@@ -1,9 +1,9 @@
 package h2o.dao.impl;
 
-import com.jenkov.db.impl.ResultSetProcessorBase;
-import com.jenkov.db.itf.IDaos;
-import com.jenkov.db.itf.IResultSetProcessor;
-import com.jenkov.db.itf.PersistenceException;
+import h2o.jenkov.db.impl.ResultSetProcessorBase;
+import h2o.jenkov.db.itf.IDaos;
+import h2o.jenkov.db.itf.IResultSetProcessor;
+import h2o.jenkov.db.itf.PersistenceException;
 import h2o.common.Mode;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.SNumber;

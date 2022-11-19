@@ -1,8 +1,7 @@
 package h2o.dao.jdbc;
 
 
-import com.jenkov.db.impl.Daos;
-import com.jenkov.db.itf.*;
+import h2o.jenkov.db.impl.Daos;
 import h2o.common.Mode;
 import h2o.common.lang.SNumber;
 import h2o.common.util.collection.CollectionUtil;
@@ -13,6 +12,7 @@ import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
 import h2o.dao.log.LogWriter;
 import h2o.dao.proc.RowProcessor;
 import h2o.dao.result.RowData;
+import h2o.jenkov.db.itf.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

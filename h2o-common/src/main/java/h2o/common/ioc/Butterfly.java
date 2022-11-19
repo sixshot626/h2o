@@ -1,8 +1,8 @@
 package h2o.common.ioc;
 
-import com.jenkov.container.Container;
-import com.jenkov.container.IContainer;
-import com.jenkov.container.script.ScriptFactoryBuilder;
+import h2o.jenkov.container.Container;
+import h2o.jenkov.container.IContainer;
+import h2o.jenkov.container.script.ScriptFactoryBuilder;
 import h2o.common.util.io.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +91,7 @@ public class Butterfly {
 
 
             } catch (Exception e) {
+                log.debug("Butterfly::load():",e);
                 log.error("Butterfly::load():{}", e.getMessage());
             } finally {
                 lock.unlock();

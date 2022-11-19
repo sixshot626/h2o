@@ -1,24 +1,24 @@
 
-bean1 = * com.jenkov.container.TestProduct();
+bean1 = * h2o.jenkov.container.TestProduct();
 
-bean2 = * com.jenkov.container.script.SomeFactoryProduct("test");
+bean2 = * h2o.jenkov.container.script.SomeFactoryProduct("test");
 
 bean3 = bean1.setValue1("bean3Value");
 
 bean4 = bean1.setIntValue("beanValue".length());
 
-bean5 = bean1.setValue1(com.jenkov.container.TestProduct.FIELD_VALUE);
+bean5 = bean1.setValue1(h2o.jenkov.container.TestProduct.FIELD_VALUE);
 
 
 
-/* bean5 = * com.jenkov.NonExistingClass(); */
+/* bean5 = * h2o.jenkov.NonExistingClass(); */
 
 
 
 
 
 /*
-bean10 = * com.jenkov.NonExistingClass();
+bean10 = * h2o.jenkov.NonExistingClass();
     config{
             local1 = bean10.get();
             local2 = bean10.getOther();
@@ -37,20 +37,20 @@ bean10 = * com.jenkov.NonExistingClass();
     }
 
 
-bean20 = 1 com.jenkov.NonExisitingClass();
-bean21 = T com.jenkov.NonExisitingClass();
-bean22 = F com.jenkov.NonExisitingClass();
-bean22 = S com.jenkov.NonExisitingClass();
-bean22 = R com.jenkov.NonExisitingClass();
+bean20 = 1 h2o.jenkov.NonExisitingClass();
+bean21 = T h2o.jenkov.NonExisitingClass();
+bean22 = F h2o.jenkov.NonExisitingClass();
+bean22 = S h2o.jenkov.NonExisitingClass();
+bean22 = R h2o.jenkov.NonExisitingClass();
 
-bean20 = 1 com.jenkov.NonExisitingClass();
-bean21 = 1T com.jenkov.NonExisitingClass();
-bean22 = 1F com.jenkov.NonExisitingClass();
-bean22 = 1S com.jenkov.NonExisitingClass();
-bean22 = 1R com.jenkov.NonExisitingClass();
+bean20 = 1 h2o.jenkov.NonExisitingClass();
+bean21 = 1T h2o.jenkov.NonExisitingClass();
+bean22 = 1F h2o.jenkov.NonExisitingClass();
+bean22 = 1S h2o.jenkov.NonExisitingClass();
+bean22 = 1R h2o.jenkov.NonExisitingClass();
 
-bean22 = 5 com.jenkov.NonExisitingClass();
-bean22 = 5,10 com.jenkov.NonExisitingClass();
+bean22 = 5 h2o.jenkov.NonExisitingClass();
+bean22 = 5,10 h2o.jenkov.NonExisitingClass();
 
 
 
