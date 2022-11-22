@@ -24,6 +24,12 @@ public interface Dao extends Closeable {
 
     boolean isAutoClose();
 
+    void setQueryTimeout(Integer queryTimeout);
+
+    void setUpdateTimeout(Integer updateTimeout);
+
+
+
     void setArgProcessor(ArgProcessor argProcessor);
 
     void setRowProcessor(RowProcessor rowDataProcessor);

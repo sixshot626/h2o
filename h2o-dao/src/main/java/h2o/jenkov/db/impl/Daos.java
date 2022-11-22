@@ -32,7 +32,7 @@ import java.sql.SQLException;
 public class Daos implements IDaos {
 
     private final Connection                connection;
-    private final IJdbcDao jdbcDao;
+    private final IJdbcDao                  jdbcDao;
     private final IMapDao                   mapDao;
 
 

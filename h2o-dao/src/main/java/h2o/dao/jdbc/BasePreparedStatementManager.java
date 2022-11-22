@@ -12,22 +12,31 @@ public class BasePreparedStatementManager extends PreparedStatementManagerBase i
 
     private final SNumber fetchSize;
 
+    private final SNumber timeout;
 
-    public BasePreparedStatementManager(SNumber fetchSize) {
+
+    public BasePreparedStatementManager(SNumber fetchSize , SNumber timeout) {
         this.fetchSize = fetchSize;
+        this.timeout = timeout;
     }
 
-    public BasePreparedStatementManager(SNumber fetchSize , Object[] parameters) {
+    public BasePreparedStatementManager(SNumber fetchSize , SNumber timeout , Object[] parameters) {
         super(parameters);
         this.fetchSize = fetchSize;
+        this.timeout = timeout;
     }
 
     @Override
-    public Object execute(PreparedStatement statement) throws SQLException, PersistenceException {
-
-        if ( fetchSize.isPresent() ) {
+    public void init(PreparedStatement statement) throws SQLException, PersistenceException {
+        super.init(statement);
+        if ( this.isQuery && fetchSize.isPresent() ) {
             statement.setFetchSize( fetchSize.intValue() );
         }
-        return super.execute(statement);
+        if ( timeout.isPresent() ) {
+            statement.setQueryTimeout( timeout.intValue() );
+        }
+
     }
+
+
 }

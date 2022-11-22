@@ -26,10 +26,7 @@ import h2o.jenkov.db.itf.PersistenceException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Jakob Jenkov - Copyright 2005 Jenkov Development
@@ -40,14 +37,6 @@ public class MapDao implements IMapDao {
 
     public MapDao(IDaos daos) {
         this.daos = daos;
-    }
-
-    public Map readMap(String sql) throws PersistenceException {
-        return readMap(sql, new PreparedStatementManagerBase());
-    }
-
-    public Map readMap(String sql, final Object ... parameters) throws PersistenceException{
-        return readMap(sql, new PreparedStatementManagerBase(parameters));
     }
 
     public Map readMap(String sql, IPreparedStatementManager statementManager) throws PersistenceException {
@@ -69,19 +58,11 @@ public class MapDao implements IMapDao {
     }
 
     private Map readRecordIntoMap(ResultSet result, ResultSetMetaData metaData, Map map) throws SQLException {
-        if(map == null) map = new HashMap();
+        if(map == null) map = new LinkedHashMap();
         for(int i=1, n=metaData.getColumnCount(); i<=n; i++){
             map.put(metaData.getColumnLabel(i), result.getObject(i));
         }
         return map;
-    }
-
-    public List readMapList(String sql) throws PersistenceException {
-        return readMapList(sql, new PreparedStatementManagerBase());
-    }
-
-    public List readMapList(String sql, final Object ... parameters) throws PersistenceException {
-        return readMapList(sql, new PreparedStatementManagerBase(parameters));
     }
 
     public List readMapList(String sql, IPreparedStatementManager statementManager) throws PersistenceException{

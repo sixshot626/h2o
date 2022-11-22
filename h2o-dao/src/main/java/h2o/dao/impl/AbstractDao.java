@@ -123,6 +123,49 @@ public abstract class AbstractDao implements Dao {
 
 
     @Override
+    public <T> Val<T> getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException {
+
+        Val<Map<String, Object>> row = this.get( sqlSource, args );
+        if ( row.isPresent() ) {
+
+            if ( fieldName == null ) {
+                @SuppressWarnings("unchecked")
+                Val<T> r = (Val<T>)new Val<>(row.get().values().iterator().next());
+                return r;
+            } else {
+                @SuppressWarnings("unchecked")
+                Val<T> r = (Val<T>)new Val<>(row.get().get(fieldName));
+                return r;
+            }
+
+        }
+
+        return Val.empty();
+    }
+
+    @Override
+    public <T> List<T> loadFields(SqlSource sqlSource, String fieldName, Object... args) throws DaoException {
+
+        List<T> fields = new ArrayList<>();
+
+        List<Map<String, Object>> rows = this.load(sqlSource, args);
+        for ( Map<String,Object> row : rows ) {
+
+            if ( fieldName == null ) {
+                @SuppressWarnings("unchecked")
+                T f = (T)row.values().iterator().next();
+                fields.add( f );
+            } else {
+                @SuppressWarnings("unchecked")
+                T f = (T)row.get(fieldName);
+                fields.add( f );
+            }
+
+        }
+        return fields;
+    }
+
+    @Override
     public <T> Val<T> get( Class<T> clazz, SqlSource sqlSource, Object... args ) throws DaoException {
 
         try {

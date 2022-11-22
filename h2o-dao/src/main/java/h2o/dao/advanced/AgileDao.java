@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public final class AgileDao {
+public class AgileDao {
 
     private final String dataSourceName;
     private final Dao dao;

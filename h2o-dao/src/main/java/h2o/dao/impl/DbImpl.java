@@ -13,20 +13,38 @@ import java.util.Optional;
 public class DbImpl implements Db {
 
 
-    private String name;
+    private final String name;
 
     private final ConnectionManager connectionManager;
+
+
+    private Integer queryTimeout;
+
+    private Integer updateTimeout;
 
     public DbImpl(String name, ConnectionManager connectionManager) {
         this.name = name;
         this.connectionManager = connectionManager;
     }
 
+
+
+
     @Override
     public String getName() {
         return name;
     }
 
+
+    @Override
+    public void setQueryTimeout(Integer queryTimeout) {
+        this.queryTimeout = queryTimeout;
+    }
+
+    @Override
+    public void setUpdateTimeout(Integer updateTimeout) {
+        this.updateTimeout = updateTimeout;
+    }
 
     @Override
     public Dao getDao() {
@@ -38,6 +56,8 @@ public class DbImpl implements Db {
     public Dao createDao(Connection connection) {
 
         DaoImpl daoImpl = new DaoImpl(connection);
+        daoImpl.setQueryTimeout(this.queryTimeout);
+        daoImpl.setUpdateTimeout(this.updateTimeout);
 
         daoImpl.setArgProcessor(DbUtil.DBFACTORY.getArgProcessor());
         daoImpl.setRowProcessor(DbUtil.DBFACTORY.getRowProcessor());

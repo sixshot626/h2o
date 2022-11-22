@@ -36,7 +36,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
     private static final Logger log = LoggerFactory.getLogger(Dao.class.getName());
 
-    private static boolean SHOWSQL = !Mode.isUserMode("DONT_SHOW_SQL");
+    private static boolean SHOW_SQL = !Mode.isUserMode("DONT_SHOW_SQL");
 
 
     private final JdbcDao jdbcDao;
@@ -49,13 +49,31 @@ public class DaoImpl extends AbstractDao implements Dao {
 
 
     @Override
+    public void setQueryTimeout(Integer queryTimeout) {
+        if (queryTimeout == null || queryTimeout <= 0 ) {
+            this.jdbcDao.setQueryTimeout(SNumber.NULL);
+        } else {
+            this.jdbcDao.setQueryTimeout( new SNumber(queryTimeout) );
+        }
+    }
+
+    @Override
+    public void setUpdateTimeout(Integer updateTimeout) {
+        if (updateTimeout == null || updateTimeout <= 0 ) {
+            this.jdbcDao.setUpdateTimeout(SNumber.NULL);
+        } else {
+            this.jdbcDao.setUpdateTimeout( new SNumber(updateTimeout) );
+        }
+    }
+
+    @Override
     public List<String> columnLabels(SqlSource sqlSource, Object... args) throws DaoException {
         try {
 
             Map<String, Object> paramMap = this.argProc(args);
             String sql = sqlSource.getSql(paramMap);
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.info("SQL:columnLabels#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
             }
             {
@@ -92,89 +110,7 @@ public class DaoImpl extends AbstractDao implements Dao {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> Val<T> getField(SqlSource sqlSource, String fieldName, Object... args) throws DaoException {
 
-        try {
-
-            Map<String, Object> paramMap = this.argProc(args);
-            String sql = sqlSource.getSql(paramMap);
-
-            if (SHOWSQL) {
-                log.info("SQL:getField({})#\r\n{}\r\nPARA:{}\r\n", fieldName, sql, paramMap);
-            }
-            {
-                LogWriter writer = this.getLogWriter();
-                if (writer != null && writer.isOn()) {
-                    writer.write("getField(" + fieldName + ")", sql, paramMap);
-                }
-            }
-
-
-            if (fieldName == null) {
-                return jdbcDao.readObject(sql, paramMap);
-            } else {
-                Map<String, Object> row = jdbcDao.readMap(sql, paramMap);
-                Map<String, Object> data = this.rowProc(row);
-                return data == null ? Val.empty() : new Val<>((T) data.get(fieldName));
-            }
-
-        } catch (Exception e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseDao();
-        }
-
-    }
-
-    @Override
-    public <T> List<T> loadFields(SqlSource sqlSource, final String fieldName, Object... args) throws DaoException {
-        try {
-
-            Map<String, Object> paramMap = this.argProc(args);
-            String sql = sqlSource.getSql(paramMap);
-
-            if (SHOWSQL) {
-                log.info("SQL:loadFields({})#\r\n{}\r\nPARA:{}\r\n", fieldName, sql, paramMap);
-            }
-            {
-                LogWriter writer = this.getLogWriter();
-                if (writer != null && writer.isOn()) {
-                    writer.write("loadFields(" + fieldName + ")", sql, paramMap);
-                }
-            }
-
-            return jdbcDao.read(sql, SNumber.NULL, new IResultSetProcessor() {
-
-                private final List<T> r = ListBuilder.newList();
-
-                @Override
-                public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
-                    return true;
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
-                    Object f = fieldName == null ? result.getObject(1) : result.getObject(fieldName);
-                    r.add((T) f);
-                    return true;
-                }
-
-                @Override
-                public Object getResult() throws PersistenceException {
-                    return r;
-                }
-
-            }, paramMap);
-
-        } catch (Exception e) {
-            throw new DaoException(e);
-        } finally {
-            autoCloseDao();
-        }
-    }
 
     @Override
     public Val<Map<String, Object>> get(SqlSource sqlSource, Object... args) throws DaoException {
@@ -184,7 +120,7 @@ public class DaoImpl extends AbstractDao implements Dao {
             Map<String, Object> paramMap = this.argProc(args);
             String sql = sqlSource.getSql(paramMap);
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.info("SQL:get#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
             }
             {
@@ -206,13 +142,14 @@ public class DaoImpl extends AbstractDao implements Dao {
         }
     }
 
+
     @Override
     public List<Map<String, Object>> load(SqlSource sqlSource, Object... args) throws DaoException {
         try {
             Map<String, Object> paramMap = this.argProc(args);
             String sql = sqlSource.getSql(paramMap);
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.info("SQL:load#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
             }
             {
@@ -247,7 +184,7 @@ public class DaoImpl extends AbstractDao implements Dao {
             Map<String, Object> paramMap = this.argProc(args);
             String sql = sqlSource.getSql(paramMap);
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.info("SQL:load(ResultSetCallback)#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
             }
             {
@@ -320,7 +257,7 @@ public class DaoImpl extends AbstractDao implements Dao {
             Map<String, Object> paramMap = this.argProc(args);
             String sql = sqlSource.getSql(paramMap);
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.info("SQL:update#\r\n{}\r\nPARA:{}\r\n", sql, paramMap);
             }
             {
@@ -380,7 +317,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
             }
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.info("SQL:batchUpdate#\r\n{}\r\n", nSql);
             }
             {

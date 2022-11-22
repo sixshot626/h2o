@@ -21,7 +21,8 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
 
     private static final Logger log = LoggerFactory.getLogger(BatchPreparedStatementManager.class.getName());
 
-    private static boolean SHOWSQL = Mode.isUserMode("SHOW_BUTTERFLY_SQL");
+    private static boolean SHOW_SQL = Mode.isUserMode("SHOW_JDBC_SQL");
+
 
     private final Collection<?> batch_parameters;
 
@@ -69,7 +70,7 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
             }
         }
 
-        if (SHOWSQL) {
+        if (SHOW_SQL) {
             log.info("updateBatch--sql:{}", sql);
         }
 
@@ -93,7 +94,7 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
                 para = (Object[]) parameters;
             }
 
-            if (SHOWSQL) {
+            if (SHOW_SQL) {
                 log.debug("updateBatch--para:{}", Arrays.asList(para));
             }
 
