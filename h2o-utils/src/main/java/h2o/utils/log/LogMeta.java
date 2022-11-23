@@ -17,6 +17,11 @@ public class LogMeta implements java.io.Serializable {
     public LogMeta() {
     }
 
+    public LogMeta(String[] path, String id) {
+        this.path = path;
+        this.id = id;
+    }
+
     public LogMeta(String module, String[] path, String id) {
         this.module = module;
         this.path = path;

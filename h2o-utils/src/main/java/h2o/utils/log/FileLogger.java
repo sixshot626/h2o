@@ -1,6 +1,7 @@
 package h2o.utils.log;
 
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.io.StreamUtil;
 import h2o.jodd.io.FileUtil;
 import org.slf4j.LoggerFactory;
@@ -30,9 +31,18 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
     public void log(LogLevel level, String[] tags , String prompt, Object log ) {
 
         StringBuilder sb = new StringBuilder( baseDir );
+        if ( !baseDir.endsWith("/") ) {
+            sb.append('/');
+        }
+
+        if (StringUtils.isNotBlank(this.logMeta.getModule())) {
+            sb.append(this.logMeta.getModule());
+            sb.append('/');
+        }
+
         for( String p : logMeta.getPath() ) {
-            sb.append("/");
             sb.append(p);
+            sb.append('/');
         }
 
         String path = sb.toString();
@@ -42,8 +52,9 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
             FileUtil.mkdirs(path);
 
-            w = StreamUtil.writeFile( path + "/" + logMeta.getId() + ".txt" , true );
+            w = StreamUtil.writeFile( path + logMeta.getId() + ".log" , true );
             w.write( formatLog( level , tags , prompt , log ) );
+            w.write('\n');
             w.flush();
 
         } catch (IOException e) {
@@ -53,6 +64,13 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
         } finally {
             StreamUtil.close(w);
         }
+    }
+
+
+    public static void main(String[] args) {
+        new FileLogger( new LogMeta( "ttt" , new String[] {"aaa","bbb"} , "1234567" ) ,
+                "/Users/zhangjianwei" )
+                .fmtLog(LogLevel.INFO,new String[] {"sss","bbbb"} , "提示--","hhhh:{},ttt:{}" ,  "您好" , System.currentTimeMillis() );
     }
 
 
