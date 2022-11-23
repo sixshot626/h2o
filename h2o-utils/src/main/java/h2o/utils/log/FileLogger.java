@@ -2,10 +2,13 @@ package h2o.utils.log;
 
 
 import h2o.apache.commons.lang.StringUtils;
+import h2o.common.exception.ExceptionUtil;
 import h2o.common.util.io.StreamUtil;
+import h2o.common.util.lang.StringUtil;
 import h2o.jodd.io.FileUtil;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -47,19 +50,27 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
         String path = sb.toString();
 
+        try {
+            FileUtil.mkdirs(path);
+        } catch (Exception e) {
+            if ( !FileUtil.isExistingFolder(FileUtil.file(path))) {
+                LOG.debug(StringUtil.EMPTY ,  e );
+                throw ExceptionUtil.toRuntimeException(e);
+            }
+        }
+
+
         Writer w = null;
         try {
 
-            FileUtil.mkdirs(path);
-
-            w = StreamUtil.writeFile( path + logMeta.getId() + ".log" , true );
+            w = StreamUtil.writeFile( FileUtil.file(path + logMeta.getId() + ".log" ), true );
             w.write( formatLog( level , tags , prompt , log ) );
             w.write('\n');
             w.flush();
 
         } catch (IOException e) {
 
-            LOG.error("" , e);
+            LOG.error(StringUtil.EMPTY , e);
 
         } finally {
             StreamUtil.close(w);
