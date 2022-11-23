@@ -17,26 +17,26 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( FileLogger.class.getName() );
 
-    private final String baseDir;
+    private final String basePath;
 
     private final LogMeta logMeta;
 
-    public FileLogger(LogMeta logMeta , String baseDir) {
+    public FileLogger(LogMeta logMeta , String basePath) {
         this.logMeta = logMeta;
-        this.baseDir = baseDir;
+        this.basePath = basePath;
     }
 
 
     @Override
     public void log(LogLevel level, String[] tags , String prompt, Object log ) {
 
-        StringBuilder sb = new StringBuilder( baseDir );
-        if ( !baseDir.endsWith("/") ) {
+        StringBuilder sb = new StringBuilder(basePath);
+        if ( !basePath.endsWith("/") ) {
             sb.append('/');
         }
 
-        if (StringUtils.isNotBlank(this.logMeta.getModule())) {
-            sb.append(this.logMeta.getModule());
+        if (StringUtils.isNotBlank(logMeta.getModule())) {
+            sb.append(logMeta.getModule());
             sb.append('/');
         }
 
