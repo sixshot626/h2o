@@ -1,8 +1,8 @@
 package h2o.utils.log;
 
 
-import h2o.common.util.io.FileUtil;
 import h2o.common.util.io.StreamUtil;
+import h2o.jodd.io.FileUtil;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
     private final LogMeta logMeta;
 
-    public FileLogger(LogMeta logMeta , String baseDir ) {
+    public FileLogger(LogMeta logMeta , String baseDir) {
         this.logMeta = logMeta;
         this.baseDir = baseDir;
     }
@@ -37,10 +37,11 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
         String path = sb.toString();
 
-        FileUtil.mkdirs(path);
-
         Writer w = null;
         try {
+
+            FileUtil.mkdirs(path);
+
             w = StreamUtil.writeFile( path + "/" + logMeta.getId() + ".txt" , true );
             w.write( formatLog( level , tags , prompt , log ) );
             w.flush();
