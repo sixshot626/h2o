@@ -15,7 +15,7 @@ import java.io.Writer;
  */
 public class FileLogger extends AbstractTagLogger implements TagLogger , Serializable {
 
-    private static final org.slf4j.Logger slfLog = LoggerFactory.getLogger( FileLogger.class.getName() );
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( FileLogger.class.getName() );
 
     private final String baseDir;
 
@@ -59,21 +59,12 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
         } catch (IOException e) {
 
-            slfLog.error("" , e);
+            LOG.error("" , e);
 
         } finally {
             StreamUtil.close(w);
         }
     }
-
-
-    public static void main(String[] args) {
-        new FileLogger( new LogMeta( "ttt" , new String[] {"aaa","bbb"} , "1234567" ) ,
-                "/Users/zhangjianwei" )
-                .fmtLog(LogLevel.INFO,new String[] {"sss","bbbb"} , "提示--","hhhh:{},ttt:{}" ,  "您好" , System.currentTimeMillis() );
-    }
-
-
 
 
 }
