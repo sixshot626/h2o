@@ -35,65 +35,7 @@ public class JdbcDao implements IJdbcDao {
         this.daos = daos;
     }
 
-    public Long readLong(String sql) throws PersistenceException {
-        return (Long) readLong(sql, (Object[])null);
-    }
 
-    public Long readLong(String sql, Object ... parameters) throws PersistenceException {
-        return (Long) read(sql, new ResultSetProcessorBase(){
-            private Long theLong = null;
-
-            public boolean process(ResultSet result, IDaos daos) throws SQLException {
-                this.theLong = new Long(result.getLong(1));
-                return false;
-            }
-            public Object getResult() {
-                return this.theLong;
-            }
-
-        }, parameters);
-    }
-
-    public String readIdString(String sql) throws PersistenceException {
-        return readIdString(sql, (Object[]) null);
-    }
-
-    public String readIdString(String sql, Object ... parameters) throws PersistenceException {
-        return readIdString(sql, new PreparedStatementManagerBase(parameters));
-    }
-
-    public String readIdString(String sql, IPreparedStatementManager manager) throws PersistenceException {
-        return (String) read(sql, manager, new ResultSetProcessorBase(){
-            public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
-                setResult(new StringBuffer("("));
-                return true;
-            }
-
-            public boolean process(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
-                ((StringBuffer) this.result).append(result.getString(1));
-                ((StringBuffer) this.result).append(",");
-                return true;
-            }
-
-            public Object getResult() throws PersistenceException {
-                StringBuffer buffer = (StringBuffer) this.result;
-                if(buffer.length() <= 1) return "";
-                buffer.delete(buffer.length()-1, buffer.length());
-                buffer.append(")");
-                return buffer.toString();
-            }
-        });
-    }
-
-
-
-    public Object read(String sql, IResultSetProcessor processor) throws PersistenceException{
-        return read(sql, new PreparedStatementManagerBase(), processor);
-    }
-
-    public Object read(String sql, IResultSetProcessor processor, Object ... parameters) throws PersistenceException{
-        return read(sql, new PreparedStatementManagerBase(parameters), processor);
-    }
 
     public Object read(String sql, IPreparedStatementManager statementManager, IResultSetProcessor processor) throws PersistenceException {
         PreparedStatement statement = null;
@@ -157,13 +99,6 @@ public class JdbcDao implements IJdbcDao {
     }
 
 
-    public int update(String sql) throws PersistenceException{
-        return update(sql, new PreparedStatementManagerBase());
-    }
-
-    public int update(String sql, final Object ... parameters) throws PersistenceException{
-        return update(sql, new PreparedStatementManagerBase(parameters));
-    }
 
     public int update(String sql, IPreparedStatementManager statementManager) throws PersistenceException{
         PreparedStatement statement = null;
