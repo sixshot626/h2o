@@ -27,12 +27,18 @@ public final class Rtn<T> implements java.io.Serializable {
     public static <R> Rtn<R> ok() {
         return new Rtn<>(true, NString.NULL, Val.empty());
     }
+
     public static <R> Rtn<R> msg(String msg) {
         return new Rtn<>(true, new NString(msg), Val.empty());
     }
 
     public static <R> Rtn<R> ok(R value) {
         return new Rtn<>(true, NString.NULL, new Val<>(value));
+    }
+
+
+    public static <R> Rtn<R> err() {
+        return new Rtn<>(false, NString.NULL, Val.empty());
     }
 
     public static <R> Rtn<R> err(String msg) {
