@@ -165,4 +165,9 @@ public class IgnoreCaseMap<V> implements Map<String, V>, java.io.Serializable {
     public V merge(String key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         return realMap.merge( ignoreCaseKey(key) , value, remappingFunction);
     }
+
+    @Override
+    public String toString() {
+       return realMap.toString();
+    }
 }

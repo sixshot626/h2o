@@ -36,11 +36,12 @@ public class AB<X,Y> implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "AB{" +
-                "ok=" + ok +
-                ", msg=" + msg +
-                ", a=" + a +
-                ", b=" + b +
-                '}';
+        final StringBuilder sb = new StringBuilder("AB{");
+        sb.append("ok=").append(ok);
+        sb.append(", msg=").append(msg);
+        sb.append(", a=").append(a);
+        sb.append(", b=").append(b);
+        sb.append('}');
+        return sb.toString();
     }
 }

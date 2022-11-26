@@ -46,11 +46,12 @@ public final class Rtn<T> implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "Rtn{" +
-                "ok=" + ok +
-                ", code=" + code +
-                ", msg=" + msg +
-                ", value=" + value +
-                '}';
+        final StringBuilder sb = new StringBuilder("Rtn{");
+        sb.append("ok=").append(ok);
+        sb.append(", code=").append(code);
+        sb.append(", msg=").append(msg);
+        sb.append(", value=").append(value);
+        sb.append('}');
+        return sb.toString();
     }
 }
