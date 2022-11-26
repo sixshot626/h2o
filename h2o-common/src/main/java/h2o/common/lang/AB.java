@@ -25,12 +25,12 @@ public class AB<X,Y> implements java.io.Serializable {
     }
 
 
-    public static <R,S>  AB<R,S> b( Val<R> a ) {
-        return new AB<>(false , NString.NULL , a , Val.empty() );
+    public static <R,S>  AB<R,S> b( Val<S> b ) {
+        return new AB<>(false , NString.NULL , Val.empty() , b );
     }
 
-    public static <R,S>  AB<R,S> b( Val<R> a , String msg ) {
-        return new AB<>(false , new NString(msg) , a , Val.empty() );
+    public static <R,S>  AB<R,S> b( Val<S> b , String msg ) {
+        return new AB<>(false , new NString(msg) , Val.empty() , b );
     }
 
 
