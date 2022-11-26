@@ -15,22 +15,19 @@ public final class Rtn<T> implements java.io.Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Rtn{");
-        sb.append("ok=").append(ok);
-        sb.append(", msg=").append(msg);
-        sb.append(", value=").append(value);
-        sb.append('}');
-        return sb.toString();
-    }
-
     public static <R> Rtn<R> ok() {
         return new Rtn<>(true, NString.NULL, Val.empty());
+    }
+    public static <R> Rtn<R> msg(String msg) {
+        return new Rtn<>(true, new NString(msg), Val.empty());
     }
 
     public static <R> Rtn<R> ok(R value) {
         return new Rtn<>(true, NString.NULL, new Val<>(value));
+    }
+
+    public static <R> Rtn<R> ok(String msg, R value) {
+        return new Rtn<>(true, new NString(msg), new Val<>(value));
     }
 
     public static <R> Rtn<R> err(String msg) {
@@ -39,6 +36,18 @@ public final class Rtn<T> implements java.io.Serializable {
 
     public static <R> Rtn<R> err(String msg, R value) {
         return new Rtn<>(false, new NString(msg), new Val<>(value));
+    }
+
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Rtn{");
+        sb.append("ok=").append(ok);
+        sb.append(", msg=").append(msg);
+        sb.append(", value=").append(value);
+        sb.append('}');
+        return sb.toString();
     }
 
 }
