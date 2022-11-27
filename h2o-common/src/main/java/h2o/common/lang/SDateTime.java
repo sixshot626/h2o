@@ -1,7 +1,6 @@
 package h2o.common.lang;
 
 import h2o.apache.commons.lang.StringUtils;
-import h2o.common.util.date.DateTime;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.lang.StringUtil;
 
@@ -84,6 +83,12 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
     public static SDateTime from(String dateTime, String fmt) {
         return new SDateTime(toDate(dateTime, fmt));
     }
+
+
+    public static SDateTime now() {
+        return new SDateTime( new Date() );
+    }
+
 
 
     @Override

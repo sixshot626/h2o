@@ -74,6 +74,11 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
     }
 
 
+    public static STime now() {
+        return new STime( new Date() );
+    }
+
+
     @Override
     public String getValue() {
         return this.value;

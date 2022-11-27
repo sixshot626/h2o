@@ -49,6 +49,12 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
         this.value = ltimestamp.value;
     }
 
+
+    public static LTime now() {
+        return new LTime( System.currentTimeMillis() );
+    }
+
+
     @Override
     public Long getValue() {
         return this.value;

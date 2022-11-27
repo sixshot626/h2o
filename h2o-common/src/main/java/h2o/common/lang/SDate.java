@@ -86,6 +86,18 @@ public final class SDate implements OptionalValue<String>, Comparable<SDate>, ja
     }
 
 
+    public static SDate today() {
+        return now();
+    }
+
+    public static SDate now() {
+        return new SDate( new Date() );
+    }
+
+
+
+
+
     @Override
     public String getValue() {
         return this.value;
