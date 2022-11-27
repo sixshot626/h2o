@@ -97,6 +97,26 @@ public class Mode {
     }
 
 
+
+
+    public static boolean isProdMode() {
+        return prodMode;
+    }
+
+    public static boolean isTestMode() {
+        return testMode;
+    }
+
+    public static boolean isDevMode() {
+        return devMode;
+    }
+
+    public static boolean isDebugMode() {
+        return debugMode;
+    }
+
+
+
     public static boolean isMode(String m) {
 
         if (m == null) {
@@ -106,9 +126,6 @@ public class Mode {
         return m.trim().toUpperCase().equals(mode);
     }
 
-    public static boolean isDebugMode() {
-        return debugMode;
-    }
 
     public static boolean isUserMode(String m) {
 
