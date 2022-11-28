@@ -30,8 +30,6 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
     }
 
     public TransReturn(Response response) {
-
-
         this.ok = response.ok();
         this.finalState = response.finalState();
         this.code = response.getCode();
@@ -40,12 +38,12 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
         this.exception = response.getException();
 
         if (response instanceof TransStatus) {
-            this.status = ((TransStatus) response).getStatus();
+            this.status = ((TransStatus<?>) response).getStatus();
         }
 
         if (response instanceof TransResult) {
-            this.hasResult = ((TransResult) response).hasResult();
-            this.result = ((TransResult) response).getResult();
+            this.hasResult = ((TransResult<?>) response).hasResult();
+            this.result = ((TransResult<?>) response).getResult();
         }
 
     }
@@ -188,6 +186,7 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
         return msg;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public S getStatus() {
         return (S) status;
@@ -208,6 +207,7 @@ public class TransReturn<S, R> implements TransResponse<S, R>, TransStatus<S>, T
         return result != null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public R getResult() {
         return (R) result;

@@ -48,13 +48,13 @@ public final class ProcessVirtualMachine {
 	
 	public ProcessVirtualMachine( FlowTransactionManager transactionManager , ProcessRunListener... processRunListeners  ) {
 		this.transactionManager = transactionManager;
-		this.processRunListeners = CollectionUtil.argsIsBlank( processRunListeners ) ? Collections.EMPTY_LIST :
+		this.processRunListeners = CollectionUtil.argsIsBlank( processRunListeners ) ? Collections.emptyList() :
 						Collections.unmodifiableList( Arrays.asList( processRunListeners ) );
 	}
 	
 	public ProcessVirtualMachine( FlowTransactionManager transactionManager , Collection<? extends ProcessRunListener> processRunListeners  ) {
 		this.transactionManager = transactionManager;
-		this.processRunListeners = CollectionUtil.isEmpty( processRunListeners ) ? Collections.EMPTY_LIST :
+		this.processRunListeners = CollectionUtil.isEmpty( processRunListeners ) ? Collections.emptyList() :
 				Collections.unmodifiableList( ListBuilder.newListAndAddAll( processRunListeners ) );
 
 	}

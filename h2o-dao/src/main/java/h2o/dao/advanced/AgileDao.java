@@ -43,7 +43,7 @@ public class AgileDao {
     }
 
     public AgileDao(Dao dao, Class<?> entityClazz) {
-        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dataSourceName = null;
         this.dao = dao;
         this.tableStruct = TableStructParser.parse(entityClazz);
     }
@@ -61,7 +61,7 @@ public class AgileDao {
     }
 
     public AgileDao(Dao dao, TableStruct tableStruct) {
-        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dataSourceName = null;
         this.dao = dao;
         this.tableStruct = tableStruct;
     }

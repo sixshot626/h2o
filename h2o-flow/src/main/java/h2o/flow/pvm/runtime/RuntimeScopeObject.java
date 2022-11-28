@@ -55,7 +55,7 @@ public class RuntimeScopeObject implements java.io.Serializable {
     public Set<String> keySet() {
 
         if ( this.data == null ) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         return data.keySet();
@@ -64,7 +64,7 @@ public class RuntimeScopeObject implements java.io.Serializable {
     public Collection<Object> values() {
 
         if ( this.data == null ) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         return data.values();
@@ -73,7 +73,7 @@ public class RuntimeScopeObject implements java.io.Serializable {
     public Set<Map.Entry<String, Object>> entrySet() {
 
         if ( this.data == null ) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         return data.entrySet();
@@ -91,7 +91,7 @@ public class RuntimeScopeObject implements java.io.Serializable {
     public Map<String,Object> toMap() {
 
         if ( this.data == null ) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
 
         return Collections.unmodifiableMap( this.data );

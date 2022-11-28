@@ -36,8 +36,9 @@ public final class BasicUtil<E> {
     }
 
     public BasicUtil(Dao dao, Class<?> entityClazz) {
-
-        this.entityClazz = (Class<E>) entityClazz;
+        @SuppressWarnings("unchecked")
+        Class<E> clazz = (Class<E>) entityClazz;
+        this.entityClazz = clazz;
         this.dao = dao;
         this.tableStruct = TableStructParser.parse(entityClazz);
     }
@@ -170,7 +171,7 @@ public final class BasicUtil<E> {
         }
 
         return dao.update(DbUtil.sqlBuilder.buildUpdateSql(includeNull, false,
-                entity, buildWhereStr(cis), fields, (String[]) ks.toArray(new String[ks.size()])
+                entity, buildWhereStr(cis), fields, (String[]) ks.toArray(new String[0])
         ), entity);
     }
 
@@ -275,7 +276,9 @@ public final class BasicUtil<E> {
             sql.append(" for update ");
         }
 
-        return (Val<E>) dao.get(entity.getClass(), sql.toString(), entity);
+        @SuppressWarnings("unchecked")
+        Val<E> r = (Val<E>) dao.get(entity.getClass(), sql.toString(), entity);
+        return r;
 
     }
 
@@ -318,7 +321,9 @@ public final class BasicUtil<E> {
         StringUtil.append(sql, "select ", this.connectSelectFileds(fields),
                 " from ", this.tableStruct.tableName(), " where ", buildWhereStr(cis));
 
-        return (List<E>) dao.load(entity.getClass(), orderProc(sql.toString(), sortInfos), entity);
+        @SuppressWarnings("unchecked")
+        List<E> r = (List<E>) dao.load(entity.getClass(), orderProc(sql.toString(), sortInfos), entity);
+        return r;
 
     }
 
@@ -386,9 +391,11 @@ public final class BasicUtil<E> {
         StringUtil.append(sql, "select ", this.connectSelectFileds(fields),
                 " from ", this.tableStruct.tableName(), " where ", buildWhereStr(cis));
 
-        return (List<E>) dao.fetch( entity.getClass(), sql.toString(),
+        @SuppressWarnings("unchecked")
+        List<E> r = (List<E>) dao.fetch( entity.getClass(), sql.toString(),
                 new ResultInfo( fetchRequest.getStart(), fetchRequest.getSize(),
                         convertSorts( fetchRequest.getSorts() ) ), entity);
+        return r;
 
     }
 
@@ -436,9 +443,12 @@ public final class BasicUtil<E> {
         StringUtil.append(sql, "select ", this.connectSelectFileds(fields),
                 " from ", this.tableStruct.tableName(), " where ", buildWhereStr(cis));
 
-        return (Page<E>) dao.pagingLoad(entity.getClass(), sql.toString(),
+        @SuppressWarnings("unchecked")
+        Page<E> r = (Page<E>) dao.pagingLoad(entity.getClass(), sql.toString(),
                 new PageRequest(pageRequest.getPageNo(), pageRequest.getPageSize(),
                         convertSorts(pageRequest.getSorts())), entity);
+
+        return r;
 
     }
 

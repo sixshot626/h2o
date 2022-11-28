@@ -20,20 +20,67 @@ public abstract class BasicRepository<E> {
 
     private final Dao dao;
 
+    private final Class<E> entityClazz;
+
+    private final TableStruct tableStruct;
+
+
     protected BasicRepository() {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
+        @SuppressWarnings("unchecked")
+        Class<E> clazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
+        this.entityClazz = clazz;
+        this.tableStruct = TableStructParser.parse(this.entityClazz);
     }
 
     protected BasicRepository(String dataSourceName) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
+        @SuppressWarnings("unchecked")
+        Class<E> clazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
+        this.entityClazz = clazz;
+        this.tableStruct = TableStructParser.parse(this.entityClazz);
     }
 
     protected BasicRepository(Dao dao) {
-        this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
+        this.dataSourceName = null;
         this.dao = dao;
+        @SuppressWarnings("unchecked")
+        Class<E> clazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
+        this.entityClazz = clazz;
+        this.tableStruct = TableStructParser.parse(this.entityClazz);
     }
+
+    protected BasicRepository(String dataSourceName , Class<E> entityClazz) {
+        this.dataSourceName = dataSourceName;
+        this.dao = null;
+        this.entityClazz = entityClazz;
+        this.tableStruct = TableStructParser.parse(this.entityClazz);
+    }
+
+    protected BasicRepository(Dao dao , Class<E> entityClazz) {
+        this.dataSourceName = null;
+        this.dao = dao;
+        this.entityClazz = entityClazz;
+        this.tableStruct = TableStructParser.parse(this.entityClazz);
+    }
+
+    protected BasicRepository(String dataSourceName , Class<E> entityClazz , TableStruct tableStruct) {
+        this.dataSourceName = dataSourceName;
+        this.dao = null;
+        this.entityClazz = entityClazz;
+        this.tableStruct = tableStruct;
+    }
+
+    protected BasicRepository(Dao dao , Class<E> entityClazz , TableStruct tableStruct) {
+        this.dataSourceName = null;
+        this.dao = dao;
+        this.entityClazz = entityClazz;
+        this.tableStruct = tableStruct;
+    }
+
+
 
 
     public void add(E entity) {
@@ -311,13 +358,11 @@ public abstract class BasicRepository<E> {
     }
 
 
-    private final Class<E> entityClazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
+
 
     protected Class<E> getEntityClass() {
         return this.entityClazz;
     }
-
-    private final TableStruct tableStruct = TableStructParser.parse(this.getEntityClass());
 
     protected TableStruct getTableStruct() {
         return this.tableStruct;
