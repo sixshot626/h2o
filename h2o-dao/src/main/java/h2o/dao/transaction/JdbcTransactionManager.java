@@ -28,8 +28,13 @@ public class JdbcTransactionManager implements TransactionManager, Closeable {
     private static final Logger log = LoggerFactory.getLogger(JdbcTransactionManager.class.getName());
 
     private String name;
-    private Connection connection;
+
     private int isolationLevel;
+
+
+    private Connection connection;
+
+    private boolean originalAutoCommit;
 
     public JdbcTransactionManager(String name) {
         this.name = name;
@@ -46,6 +51,7 @@ public class JdbcTransactionManager implements TransactionManager, Closeable {
         if (this.connection == null) {
             try {
                 this.connection = DbUtil.getDataSource(this.name).getConnection();
+                this.originalAutoCommit = this.connection.getAutoCommit();
                 if (isolationLevel > -1) {
                     connection.setTransactionIsolation(isolationLevel);
                 }
@@ -97,11 +103,14 @@ public class JdbcTransactionManager implements TransactionManager, Closeable {
     public void close() {
         try {
             if (this.connection != null) {
+                if ( this.originalAutoCommit ) {
+                    this.connection.setAutoCommit( this.originalAutoCommit );
+                }
                 this.connection.close();
                 this.connection = null;
             }
         } catch (SQLException e) {
-            log.warn("close", e);
+            log.error("close", e);
         }
     }
 }
