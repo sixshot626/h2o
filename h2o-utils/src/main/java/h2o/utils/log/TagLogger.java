@@ -5,8 +5,8 @@ package h2o.utils.log;
  */
 public interface TagLogger {
 
-    void log( LogLevel level,  String[] tags,  String prompt, Object log );
+    boolean log( LogLevel level,  String[] tags,  String prompt, Object log );
 
-    void fmtLog( LogLevel level,  String[] tags,  String prompt,  String fmt , Object... args );
+    boolean fmtLog( LogLevel level,  String[] tags,  String prompt,  String fmt , Object... args );
 
 }

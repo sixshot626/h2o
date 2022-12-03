@@ -12,11 +12,16 @@ public class MultiLogger extends AbstractTagLogger implements TagLogger , Serial
     }
 
     @Override
-    public void log(LogLevel level, String[] tags , String prompt, Object log) {
+    public boolean log(LogLevel level, String[] tags , String prompt, Object log) {
 
+        boolean success = true;
         for ( TagLogger logger : loggers  ) {
-            logger.log( level , tags , prompt , log );
+            if ( ! logger.log( level , tags , prompt , log ) ) {
+                success = false;
+            }
         }
+
+        return success;
 
     }
 

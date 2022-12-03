@@ -11,17 +11,15 @@ import java.util.Date;
 public abstract class AbstractTagLogger implements  TagLogger {
 
 
-    @Override
-    public abstract void log(LogLevel level, String[] tags, String prompt, Object log);
 
     @Override
-    public void fmtLog(LogLevel level, String[] tags, String prompt, String fmt, Object... args ) {
+    public boolean fmtLog(LogLevel level, String[] tags, String prompt, String fmt, Object... args ) {
 
         FormattingTuple tp = MessageFormatter.arrayFormat( fmt , args);
         if ( tp.getThrowable() != null ) {
-            this.log( level , tags , prompt , tp.getThrowable() );
+            return this.log( level , tags , prompt , tp.getThrowable() );
         } else {
-            this.log( level , tags , prompt , tp.getMessage() );
+            return this.log( level , tags , prompt , tp.getMessage() );
         }
 
     }
