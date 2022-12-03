@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 public final class DbUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(DbUtil.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(DbUtil.class.getName());
 
     public static final String DEFAULT_DATASOURCE_NAME = "default";
 
@@ -31,7 +31,9 @@ public final class DbUtil {
     }
 
 
-    public static final SqlBuilder sqlBuilder = DBFACTORY.getSqlBuilder();
+   public static final SqlBuilder sqlBuilder() {
+        return DBFACTORY.getSqlBuilder();
+   }
     public static final TemplateUtil sqlTemplateUtil = DBFACTORY.getSqlTemplateUtil();
 
 
@@ -52,7 +54,7 @@ public final class DbUtil {
 
     public static DataSource getDataSource(String name) {
 
-        log.debug(" getDataSource('{}') ... ", name);
+        LOG.debug(" getDataSource('{}') ... ", name);
 
         DataSource ds = DBFACTORY.getDbUtil().dsMap.get(name);
         if (ds == null) {
@@ -91,7 +93,7 @@ public final class DbUtil {
 
         } catch (Exception e) {
 
-            log.debug("doCallback", e);
+            LOG.debug("doCallback", e);
             throw ExceptionUtil.toRuntimeException(e);
 
         } finally {
@@ -125,7 +127,7 @@ public final class DbUtil {
 
         } catch (Exception e) {
 
-            log.debug("doCallback", e);
+            LOG.debug("doCallback", e);
 
             txManager.rollback();
 

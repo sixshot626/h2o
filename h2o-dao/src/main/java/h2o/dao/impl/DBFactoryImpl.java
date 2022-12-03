@@ -51,14 +51,18 @@ public class DBFactoryImpl implements DBFactory {
         return factory.get(SQLTABLE_BEANID);
     }
 
+
     @Override
     public TemplateUtil getSqlTemplateUtil() {
         return factory.get(SQLTEMPLATEUTIL_BEANID);
     }
 
+    private final CachedCreator<SqlBuilder> sqlBuilderCache
+            = new CachedCreator<>(()->factoryGet(SQLBUILDER_BEANID));
+
     @Override
     public SqlBuilder getSqlBuilder() {
-        return factory.get(SQLBUILDER_BEANID);
+        return sqlBuilderCache.get(true);
     }
 
 

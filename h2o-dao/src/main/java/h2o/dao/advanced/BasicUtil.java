@@ -13,6 +13,7 @@ import h2o.common.util.lang.ArgsUtil;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
+import h2o.dao.sql.SqlBuilder;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.TableStruct;
 import h2o.dao.structure.TableStructParser;
@@ -25,11 +26,16 @@ import java.util.Map;
  */
 public final class BasicUtil<E> {
 
+    private static class SqlUtil {
+        public static final SqlBuilder sqlBuilder = DbUtil.sqlBuilder();
+    }
+
 
     private final Dao dao;
     private final TableStruct tableStruct;
 
     private final Class<E> entityClazz;
+
 
     public BasicUtil(Class<?> entityClazz) {
         this(DbUtil.getDao(), entityClazz);
@@ -68,11 +74,11 @@ public final class BasicUtil<E> {
 
 
     public void add(E entity) {
-        dao.update(DbUtil.sqlBuilder.buildInsertSql(entity, null, null), entity);
+        dao.update(SqlUtil.sqlBuilder.buildInsertSql(entity, null, null), entity);
     }
 
     public void batAdd(List<E> entities) {
-        dao.batchUpdate(DbUtil.sqlBuilder.buildInsertSqlIncludeNull(entities.get(0), null, null), entities);
+        dao.batchUpdate(SqlUtil.sqlBuilder.buildInsertSqlIncludeNull(entities.get(0), null, null), entities);
     }
 
 
@@ -170,7 +176,7 @@ public final class BasicUtil<E> {
             ks.add(ci.attrName);
         }
 
-        return dao.update(DbUtil.sqlBuilder.buildUpdateSql(includeNull, false,
+        return dao.update(SqlUtil.sqlBuilder.buildUpdateSql(includeNull, false,
                 entity, buildWhereStr(cis), fields, (String[]) ks.toArray(new String[0])
         ), entity);
     }
@@ -188,7 +194,7 @@ public final class BasicUtil<E> {
             System.arraycopy(args, 0, sqlArgs, 1, args.length);
         }
 
-        return dao.update(DbUtil.sqlBuilder.buildUpdateSql(includeNull, false, entity, where, fields, null), sqlArgs);
+        return dao.update(SqlUtil.sqlBuilder.buildUpdateSql(includeNull, false, entity, where, fields, null), sqlArgs);
 
     }
 
