@@ -36,7 +36,7 @@ public class JdbcConnectionManager implements ConnectionManager {
         this.autoCommit = null;
     }
 
-    public JdbcConnectionManager(String dataSourceName, int isolationLevel, Boolean autoCommit) {
+    public JdbcConnectionManager(String dataSourceName, int isolationLevel, boolean autoCommit) {
         this.dataSourceName = dataSourceName;
         this.isolationLevel = isolationLevel;
         this.autoCommit = autoCommit;
