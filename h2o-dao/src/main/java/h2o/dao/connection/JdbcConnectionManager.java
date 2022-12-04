@@ -14,16 +14,32 @@ public class JdbcConnectionManager implements ConnectionManager {
 
     private final int isolationLevel;
 
+    private final Boolean autoCommit;
+
     private final AtomicReference<DataSource> dataSourceRef = new AtomicReference<>();
 
     public JdbcConnectionManager(String dataSourceName) {
         this.dataSourceName = dataSourceName;
         this.isolationLevel = -1;
+        this.autoCommit = null;
+    }
+
+    public JdbcConnectionManager(String dataSourceName , boolean autoCommit) {
+        this.dataSourceName = dataSourceName;
+        this.isolationLevel = -1;
+        this.autoCommit = autoCommit;
     }
 
     public JdbcConnectionManager(String dataSourceName, int isolationLevel) {
         this.dataSourceName = dataSourceName;
         this.isolationLevel = isolationLevel;
+        this.autoCommit = null;
+    }
+
+    public JdbcConnectionManager(String dataSourceName, int isolationLevel, Boolean autoCommit) {
+        this.dataSourceName = dataSourceName;
+        this.isolationLevel = isolationLevel;
+        this.autoCommit = autoCommit;
     }
 
     @Override
@@ -43,6 +59,9 @@ public class JdbcConnectionManager implements ConnectionManager {
             Connection connection = ds.getConnection();
             if (isolationLevel > -1) {
                 connection.setTransactionIsolation(isolationLevel);
+            }
+            if ( this.autoCommit != null ) {
+                connection.setAutoCommit( this.autoCommit );
             }
             return connection;
         } catch (SQLException e) {
