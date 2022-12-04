@@ -12,10 +12,18 @@ public class JdbcConnectionManager implements ConnectionManager {
 
     private final String dataSourceName;
 
+    private final int isolationLevel;
+
     private final AtomicReference<DataSource> dataSourceRef = new AtomicReference<>();
 
     public JdbcConnectionManager(String dataSourceName) {
         this.dataSourceName = dataSourceName;
+        this.isolationLevel = -1;
+    }
+
+    public JdbcConnectionManager(String dataSourceName, int isolationLevel) {
+        this.dataSourceName = dataSourceName;
+        this.isolationLevel = isolationLevel;
     }
 
     @Override
@@ -32,7 +40,11 @@ public class JdbcConnectionManager implements ConnectionManager {
         }
 
         try {
-            return ds.getConnection();
+            Connection connection = ds.getConnection();
+            if (isolationLevel > -1) {
+                connection.setTransactionIsolation(isolationLevel);
+            }
+            return connection;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
