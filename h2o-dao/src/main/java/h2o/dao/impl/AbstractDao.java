@@ -57,6 +57,12 @@ public abstract class AbstractDao implements Dao {
     }
 
     @Override
+    public void setTimeout(Integer timeout) {
+        this.setQueryTimeout( timeout );
+        this.setUpdateTimeout( timeout );
+    }
+
+    @Override
     public void setArgProcessor(ArgProcessor argProcessor) {
         this.argProcessor = argProcessor;
     }

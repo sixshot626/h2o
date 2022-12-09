@@ -28,7 +28,7 @@ public interface Dao extends Closeable {
 
     void setUpdateTimeout(Integer updateTimeout);
 
-
+    void setTimeout(Integer timeout);
 
     void setArgProcessor(ArgProcessor argProcessor);
 
