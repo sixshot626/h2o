@@ -1,8 +1,9 @@
 package h2o.common.concurrent;
 
+import h2o.common.concurrent.executor.Executors;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,15 +13,15 @@ public class RunUtil {
     private final AtomicInteger count;
     private final boolean autoShutdown;
 
-    public RunUtil() {
+    public RunUtil( String name ) {
 
         count = null;
         autoShutdown = false;
 
-        this.executorService = Executors.newSingleThreadExecutor();
+        this.executorService = Executors.newSingleThreadExecutor(name);
     }
 
-    public RunUtil(int n, boolean autoShutdown) {
+    public RunUtil( int n, boolean autoShutdown ,  String name ) {
 
         this.autoShutdown = autoShutdown;
         if (autoShutdown) {
@@ -29,7 +30,7 @@ public class RunUtil {
             count = null;
         }
 
-        this.executorService = Executors.newFixedThreadPool(n);
+        this.executorService = Executors.newFixedThreadPool(n,name);
     }
 
 
@@ -41,7 +42,7 @@ public class RunUtil {
 
         Future<T> f = executorService.submit(task);
 
-        this.ShutdownAuto();
+        this.shutdownAuto();
 
         return f;
 
@@ -51,13 +52,13 @@ public class RunUtil {
 
         Future<?> f = executorService.submit(task);
 
-        this.ShutdownAuto();
+        this.shutdownAuto();
 
         return f;
     }
 
 
-    private void ShutdownAuto() {
+    private void shutdownAuto() {
         if (this.autoShutdown) {
             if (count.decrementAndGet() == 0) {
                 executorService.shutdown();
@@ -71,9 +72,9 @@ public class RunUtil {
     }
 
 
-    public static <T> Future<T> call(Callable<T> task) {
+    public static <T> Future<T> call(Callable<T> task, String name ) {
 
-        RunUtil runUtil = new RunUtil();
+        RunUtil runUtil = new RunUtil(name);
 
         Future<T> f = runUtil.submit(task);
         runUtil.shutdown();
@@ -82,15 +83,15 @@ public class RunUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Future<T>[] call(Callable<T> task, int n) {
+    public static <T> Future<T>[] call(Callable<T> task, int n, String name) {
 
         if (n < 1) {
             return null;
         } else if (n == 1) {
-            return new Future[]{call(task)};
+            return new Future[]{call(task,name)};
         }
 
-        RunUtil runUtil = new RunUtil(n, true);
+        RunUtil runUtil = new RunUtil(n, true , name);
 
         Future<T>[] fs = new Future[n];
 
@@ -102,9 +103,9 @@ public class RunUtil {
     }
 
 
-    public static Future<?> run(Runnable task) {
+    public static Future<?> run(Runnable task, String name) {
 
-        RunUtil runUtil = new RunUtil();
+        RunUtil runUtil = new RunUtil(name);
 
         Future<?> f = runUtil.submit(task);
         runUtil.shutdown();
@@ -113,15 +114,15 @@ public class RunUtil {
     }
 
 
-    public static Future<?>[] run(Runnable task, int n) {
+    public static Future<?>[] run(Runnable task, int n, String name) {
 
         if (n < 1) {
             return null;
         } else if (n == 1) {
-            return new Future[]{run(task)};
+            return new Future[]{run(task , name)};
         }
 
-        RunUtil runUtil = new RunUtil(n, true);
+        RunUtil runUtil = new RunUtil( n, true , name );
 
         Future<?>[] fs = new Future[n];
 

@@ -12,6 +12,8 @@ public class Dispatcher {
 
     private static final Logger log = LoggerFactory.getLogger(Dispatcher.class.getName());
 
+    private final String name;
+
     private final long firstDelay;
     private final long okSleepTime;
     private final long freeSleepTime;
@@ -26,14 +28,16 @@ public class Dispatcher {
         this.task = task;
     }
 
-    public Dispatcher(long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+    public Dispatcher(String name , long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+        this.name = name;
         this.firstDelay = firstDelay;
         this.okSleepTime = okSleepTime;
         this.freeSleepTime = freeSleepTime;
         this.errSleepTime = errSleepTime;
     }
 
-    public Dispatcher(RepetitiveTask task, long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+    public Dispatcher(String name , RepetitiveTask task, long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+        this.name = name;
         this.task = task;
         this.firstDelay = firstDelay;
         this.okSleepTime = okSleepTime;
@@ -130,7 +134,7 @@ public class Dispatcher {
 
             }
 
-        });
+        } , name );
 
     }
 
