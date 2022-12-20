@@ -30,19 +30,13 @@ public class Butterfly {
     public Butterfly() {
     }
 
-    ;
-
     public Butterfly(boolean isLoad) {
         this.isLoad = isLoad;
     }
 
-    ;
-
     public Butterfly(String path) {
         this.setBCSPath(path);
     }
-
-    ;
 
 
     public Butterfly setCharacterEncoding(String characterEncoding) {
