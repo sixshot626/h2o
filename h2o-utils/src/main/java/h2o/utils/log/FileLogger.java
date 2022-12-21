@@ -9,7 +9,6 @@ import h2o.common.util.lang.StringUtil;
 import h2o.jodd.io.FileUtil;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 

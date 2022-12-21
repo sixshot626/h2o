@@ -1,12 +1,12 @@
 package h2o.utils.key;
 
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.concurrent.LockMap;
 import h2o.common.lang.Val;
 import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.dao.DbUtil;
-import h2o.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
