@@ -1,20 +1,20 @@
 package h2o.common.result;
 
-public class ExceptionMsg extends ErrorMsg {
+public class ExceptionMessage extends ErrorMessage {
 
     private final Throwable e;
 
-    public ExceptionMsg(Throwable e) {
+    public ExceptionMessage(Throwable e) {
         super(e.getMessage());
         this.e = e;
     }
 
-    public ExceptionMsg(Throwable e , String msg) {
+    public ExceptionMessage(Throwable e , String msg) {
         super(msg);
         this.e = e;
     }
 
-    public ExceptionMsg(Throwable e , String code, String msg) {
+    public ExceptionMessage(Throwable e , String code, String msg) {
         super(code, msg);
         this.e = e;
     }
@@ -26,9 +26,9 @@ public class ExceptionMsg extends ErrorMsg {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ExceptionMsg{");
+        final StringBuilder sb = new StringBuilder("ExceptionMessage{");
         sb.append("code='").append(this.getCode()).append('\'');
-        sb.append(", msg='").append(this.getMsg()).append('\'');
+        sb.append(", message='").append(this.getMessage()).append('\'');
         sb.append(", e=").append(e);
         sb.append('}');
         return sb.toString();

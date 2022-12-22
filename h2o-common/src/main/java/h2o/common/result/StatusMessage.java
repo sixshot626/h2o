@@ -1,15 +1,15 @@
 package h2o.common.result;
 
-public class StatusMsg<S> extends ErrorMsg {
+public class StatusMessage<S> extends ErrorMessage {
 
     private final S status;
 
-    public StatusMsg(S status , String msg) {
+    public StatusMessage(S status , String msg) {
         super(msg);
         this.status = status;
     }
 
-    public StatusMsg(S status , String code, String msg) {
+    public StatusMessage(S status , String code, String msg) {
         super(code, msg);
         this.status = status;
     }
@@ -21,10 +21,10 @@ public class StatusMsg<S> extends ErrorMsg {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatusMsg{");
+        final StringBuilder sb = new StringBuilder("StatusMessage{");
         sb.append("status=").append(status);
         sb.append(", code='").append(this.getCode()).append('\'');
-        sb.append(", msg='").append(this.getMsg()).append('\'');
+        sb.append(", message='").append(this.getMessage()).append('\'');
         sb.append('}');
         return sb.toString();
     }

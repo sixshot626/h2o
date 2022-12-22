@@ -4,9 +4,9 @@ package h2o.utils.store.impl;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.result.CallResult;
-import h2o.common.result.ErrorMsg;
-import h2o.common.result.ExceptionMsg;
-import h2o.common.result.StatusMsg;
+import h2o.common.result.ErrorMessage;
+import h2o.common.result.ExceptionMessage;
+import h2o.common.result.StatusMessage;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.io.StreamUtil;
 import h2o.common.util.lang.StringUtil;
@@ -53,7 +53,7 @@ public class FileServiceMinIOImpl implements FileService {
     }
 
     @Override
-    public CallResult<ErrorMsg,Void> putFile(String bucket , String fileId , FileObject file  ) {
+    public CallResult<ErrorMessage,Void> putFile(String bucket , String fileId , FileObject file  ) {
 
         try {
 
@@ -62,7 +62,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
         }
 
         try {
@@ -88,14 +88,14 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
         }
 
 
     }
 
     @Override
-    public CallResult<ErrorMsg,Void> putFile(String bucket, String fileId, FileSource source ) {
+    public CallResult<ErrorMessage,Void> putFile(String bucket, String fileId, FileSource source ) {
 
         try {
 
@@ -104,7 +104,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
         }
 
         try {
@@ -129,7 +129,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
 
         } /* finally {
             StreamUtil.close( source );
@@ -139,7 +139,7 @@ public class FileServiceMinIOImpl implements FileService {
 
 
     @Override
-    public CallResult<ErrorMsg,FileMeta> getFileMeta(String bucket, String fileId) {
+    public CallResult<ErrorMessage,FileMeta> getFileMeta(String bucket, String fileId) {
 
 
         try {
@@ -156,11 +156,11 @@ public class FileServiceMinIOImpl implements FileService {
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
 
-                return CallResult.error( new StatusMsg<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.error( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
 
             } else {
 
-                return CallResult.error( new StatusMsg<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.error( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
 
             }
 
@@ -168,14 +168,14 @@ public class FileServiceMinIOImpl implements FileService {
 
             LOG.error(StringUtil.EMPTY , e);
 
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
 
         }
 
     }
 
     @Override
-    public CallResult<ErrorMsg,FileObject> getFile(String bucket , String fileId ) {
+    public CallResult<ErrorMessage,FileObject> getFile(String bucket , String fileId ) {
 
         BufferedInputStream fileIn = null;
         try {
@@ -198,11 +198,11 @@ public class FileServiceMinIOImpl implements FileService {
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
 
-                return CallResult.error( new StatusMsg<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.error( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
 
             } else {
 
-                return CallResult.error( new StatusMsg<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.error( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
 
             }
 
@@ -210,7 +210,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             LOG.error(StringUtil.EMPTY , e);
 
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
 
         } finally {
             StreamUtil.close( fileIn );
@@ -248,7 +248,7 @@ public class FileServiceMinIOImpl implements FileService {
 
 
     @Override
-    public CallResult<ErrorMsg,Void> delFile(String bucket, String fileId) {
+    public CallResult<ErrorMessage,Void> delFile(String bucket, String fileId) {
 
         try {
 
@@ -258,7 +258,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMsg( e ) );
+            return CallResult.error( new ExceptionMessage( e ) );
         }
 
     }

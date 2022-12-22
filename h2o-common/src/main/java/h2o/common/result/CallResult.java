@@ -12,7 +12,7 @@ public class CallResult<E,R> implements java.io.Serializable {
 
     public CallResult(boolean success, E error, R content) {
         this.success = success;
-        this.error = error;
+        this.error   = error;
         this.content = content;
     }
 
@@ -20,7 +20,7 @@ public class CallResult<E,R> implements java.io.Serializable {
         return new CallResult<>( true , null , null );
     }
 
-    public static <E,R> CallResult<E,R> success(R content ) {
+    public static <E,R> CallResult<E,R> success(R content) {
         return new CallResult<>( true , null , content );
     }
 
