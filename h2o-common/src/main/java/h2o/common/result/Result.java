@@ -31,6 +31,10 @@ public class Result<E,R> implements java.io.Serializable {
         return new Result<>( false , error , null );
     }
 
+    public static <E,R> Result<E,R> fail(E error , R content) {
+        return new Result<>( false , error , content );
+    }
+
 
 
     public boolean isSuccess() {
