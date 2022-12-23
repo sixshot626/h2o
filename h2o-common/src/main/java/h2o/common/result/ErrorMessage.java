@@ -6,9 +6,9 @@ public class ErrorMessage implements ErrorInfo, java.io.Serializable {
 
     private final String message;
 
-    public ErrorMessage(String msg) {
+    public ErrorMessage(String message) {
         this.code = null;
-        this.message = msg;
+        this.message = message;
     }
 
     public ErrorMessage(String code, String message) {
