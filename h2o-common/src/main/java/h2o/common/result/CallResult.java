@@ -1,7 +1,5 @@
 package h2o.common.result;
 
-import h2o.common.lang.NString;
-
 public class CallResult<E,R> implements java.io.Serializable {
 
     private final boolean success;
@@ -25,11 +23,11 @@ public class CallResult<E,R> implements java.io.Serializable {
     }
 
 
-    public static <E,R> CallResult<E,R> error() {
+    public static <E,R> CallResult<E,R> fail() {
         return new CallResult<>( false , null , null );
     }
 
-    public static <E,R> CallResult<E,R> error(E error) {
+    public static <E,R> CallResult<E,R> fail(E error) {
         return new CallResult<>( false , error , null );
     }
 

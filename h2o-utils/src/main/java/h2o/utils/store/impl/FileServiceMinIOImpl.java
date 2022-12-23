@@ -62,7 +62,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
         }
 
         try {
@@ -88,7 +88,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
         }
 
 
@@ -104,7 +104,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
         }
 
         try {
@@ -129,7 +129,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
 
         } /* finally {
             StreamUtil.close( source );
@@ -156,11 +156,11 @@ public class FileServiceMinIOImpl implements FileService {
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
 
-                return CallResult.error( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.fail( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
 
             } else {
 
-                return CallResult.error( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.fail( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
 
             }
 
@@ -168,7 +168,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             LOG.error(StringUtil.EMPTY , e);
 
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
 
         }
 
@@ -198,11 +198,11 @@ public class FileServiceMinIOImpl implements FileService {
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
 
-                return CallResult.error( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.fail( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
 
             } else {
 
-                return CallResult.error( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
+                return CallResult.fail( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
 
             }
 
@@ -210,7 +210,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             LOG.error(StringUtil.EMPTY , e);
 
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
 
         } finally {
             StreamUtil.close( fileIn );
@@ -258,7 +258,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return CallResult.error( new ExceptionMessage( e ) );
+            return CallResult.fail( new ExceptionMessage( e ) );
         }
 
     }
