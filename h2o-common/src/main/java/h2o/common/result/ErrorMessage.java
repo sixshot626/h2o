@@ -1,6 +1,6 @@
 package h2o.common.result;
 
-public class ErrorMessage implements ErrorInfo, java.io.Serializable {
+public class ErrorMessage implements java.io.Serializable {
 
     private final String code;
 
@@ -24,16 +24,6 @@ public class ErrorMessage implements ErrorInfo, java.io.Serializable {
         return message;
     }
 
-
-    @Override
-    public String errorCode() {
-        return code;
-    }
-
-    @Override
-    public String errorMsg() {
-        return message;
-    }
 
     @Override
     public String toString() {
