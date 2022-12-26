@@ -6,7 +6,6 @@ import h2o.common.lang.NString;
 import h2o.common.thirdparty.redis.Redis;
 import h2o.common.thirdparty.redis.RedisProvider;
 import h2o.common.util.id.RandomString;
-import h2o.common.util.id.UuidUtil;
 import h2o.common.util.lang.StringUtil;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.SetArgs;
@@ -33,8 +32,16 @@ public class ClusterLock {
     private final RedisProvider redisClient;
 
 
+    public ClusterLock(RedisProvider redisClient, String key, Duration expire) {
+        this.id = createUID();
+        this.redisClient = redisClient;
+        this.key = "H2OClusterLock_" + key;
+        this.expire = expire.get(ChronoUnit.SECONDS);
+    }
+
+
     public ClusterLock(RedisProvider redisClient, NString id, String key, Duration expire) {
-        this.id = id.orElse(uuid());
+        this.id = id.orElse(createUID());
         this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
         this.expire = expire.get(ChronoUnit.SECONDS);
@@ -194,7 +201,7 @@ public class ClusterLock {
 
     private static final ClusterUtil.IdGenerator ID_GENERATOR = new ClusterUtil.IdGenerator();
 
-    private static String uuid() {
+    private static String createUID() {
         return StringUtil.build(ID_GENERATOR.makeId()  , "-" , new RandomString().makeNumberCode(10));
     }
 
