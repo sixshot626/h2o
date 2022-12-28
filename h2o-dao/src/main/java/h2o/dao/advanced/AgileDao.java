@@ -29,43 +29,62 @@ public class AgileDao {
     private final Dao dao;
     private final TableStruct tableStruct;
 
+    private final Consumer<Dao> afterDaoSetter;
+
 
     public AgileDao(Class<?> entityClazz) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
         this.tableStruct = TableStructParser.parse(entityClazz);
+        this.afterDaoSetter = null;
     }
 
     public AgileDao(String dataSourceName, Class<?> entityClazz) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
         this.tableStruct = TableStructParser.parse(entityClazz);
+        this.afterDaoSetter = null;
     }
 
     public AgileDao(Dao dao, Class<?> entityClazz) {
         this.dataSourceName = null;
         this.dao = dao;
         this.tableStruct = TableStructParser.parse(entityClazz);
+        this.afterDaoSetter = null;
     }
 
     public AgileDao(TableStruct tableStruct) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
         this.tableStruct = tableStruct;
+        this.afterDaoSetter = null;
     }
 
     public AgileDao(String dataSourceName, TableStruct tableStruct) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
         this.tableStruct = tableStruct;
+        this.afterDaoSetter = null;
     }
 
     public AgileDao(Dao dao, TableStruct tableStruct) {
         this.dataSourceName = null;
         this.dao = dao;
         this.tableStruct = tableStruct;
+        this.afterDaoSetter = null;
     }
 
+    private AgileDao(String dataSourceName, Dao dao, TableStruct tableStruct, Consumer<Dao> afterDaoSetter) {
+        this.dataSourceName = dataSourceName;
+        this.dao = dao;
+        this.tableStruct = tableStruct;
+        this.afterDaoSetter = afterDaoSetter;
+    }
+
+
+    public AgileDao daoSet( Consumer<Dao> daoSetter ) {
+        return new AgileDao( this.dataSourceName , this.dao , this.tableStruct , daoSetter );
+    }
 
 
 
@@ -833,7 +852,7 @@ public class AgileDao {
 
     public final class Edit {
 
-        private Object[] attrs;
+        private final Object[] attrs;
 
         private Edit(Object[] attrs) {
             this.attrs = attrs;
@@ -1031,7 +1050,15 @@ public class AgileDao {
 
 
     public Dao getDao() {
-        return dao == null ? DbUtil.getDao(this.dataSourceName) : dao;
+
+        Dao _dao = this.dao == null ? DbUtil.getDao(this.dataSourceName) : this.dao;
+
+        if ( this.afterDaoSetter != null ) {
+            this.afterDaoSetter.accept( _dao );
+        }
+
+        return _dao;
+
     }
 
     public String tableName() {
