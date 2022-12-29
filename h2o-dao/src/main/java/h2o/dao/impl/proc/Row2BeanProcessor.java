@@ -1,29 +1,26 @@
 package h2o.dao.impl.proc;
 
 import h2o.common.Tools;
-import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.util.bean.BeanUtil;
-import h2o.common.util.collection.MapBuilder;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.ColumnMetaUtil;
 import h2o.dao.structure.TableStruct;
 import h2o.dao.structure.TableStructParser;
 
-import java.util.List;
 import java.util.Map;
 
-public class DbMap2BeanProcessor {
+public class Row2BeanProcessor {
 
     private final BeanUtil beanUtil;
 
     private final TableStruct tableStruct;
 
 
-    public DbMap2BeanProcessor(Class<?> beanClazz) {
+    public Row2BeanProcessor(Class<?> beanClazz) {
         this(beanClazz, Tools.bic);
     }
 
-    public DbMap2BeanProcessor(Class<?> beanClazz, BeanUtil beanUtil) {
+    public Row2BeanProcessor(Class<?> beanClazz, BeanUtil beanUtil) {
 
 
         TableStruct _tableStruct = null;

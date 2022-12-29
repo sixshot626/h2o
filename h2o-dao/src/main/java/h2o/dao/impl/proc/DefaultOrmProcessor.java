@@ -1,13 +1,26 @@
 package h2o.dao.impl.proc;
 
+import h2o.common.Tools;
+import h2o.common.util.bean.ValOperate;
+import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
 import h2o.common.util.lang.InstanceUtil;
 import h2o.dao.exception.DaoException;
 import h2o.dao.proc.OrmProcessor;
+import h2o.jodd.bean.BeanUtil;
+import h2o.jodd.bean.BeanUtilBean;
 
 import java.util.Map;
 
 
 public class DefaultOrmProcessor implements OrmProcessor {
+
+    private boolean declare  = false;
+
+    private boolean silent   = true;
+
+    private boolean force    = false;
+
+    private volatile boolean custom = false;
 
 
     @Override
@@ -18,7 +31,19 @@ public class DefaultOrmProcessor implements OrmProcessor {
         }
 
         try {
-            return new DbMap2BeanProcessor(clazz).toBean(row, createBean(clazz));
+            if ( custom ) {
+
+                ValOperate beanVo = new JoddBeanUtilVOImpl()
+                        .setDeclare( declare )
+                        .setForce( force )
+                        .setSilently( silent );
+
+                return new Row2BeanProcessor(clazz, Tools.bic.beanVo( beanVo )).toBean(row, createBean(clazz));
+
+            } else {
+                return new Row2BeanProcessor(clazz).toBean(row, createBean(clazz));
+            }
+
         } catch (Exception e) {
             throw new DaoException(e);
         }
@@ -28,5 +53,22 @@ public class DefaultOrmProcessor implements OrmProcessor {
     protected <T> T createBean(Class<T> beanClazz) {
         return InstanceUtil.newInstance(beanClazz);
     }
+
+
+    public void setDeclare(boolean declare) {
+        this.declare = declare;
+        this.custom = true;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+        this.custom = true;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
+        this.custom = true;
+    }
+
 
 }
