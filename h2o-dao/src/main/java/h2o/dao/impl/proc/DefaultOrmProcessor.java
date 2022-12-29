@@ -16,7 +16,7 @@ public class DefaultOrmProcessor implements OrmProcessor {
 
     private boolean declare  = false;
 
-    private boolean silent   = true;
+    private boolean silently = true;
 
     private boolean force    = false;
 
@@ -36,7 +36,7 @@ public class DefaultOrmProcessor implements OrmProcessor {
                 ValOperate beanVo = new JoddBeanUtilVOImpl()
                         .setDeclare( declare )
                         .setForce( force )
-                        .setSilently( silent );
+                        .setSilently( silently );
 
                 return new Row2BeanProcessor(clazz, Tools.bic.beanVo( beanVo )).toBean(row, createBean(clazz));
 
@@ -65,10 +65,8 @@ public class DefaultOrmProcessor implements OrmProcessor {
         this.custom = true;
     }
 
-    public void setSilent(boolean silent) {
-        this.silent = silent;
+    public void setSilently(boolean silently) {
+        this.silently = silently;
         this.custom = true;
     }
-
-
 }
