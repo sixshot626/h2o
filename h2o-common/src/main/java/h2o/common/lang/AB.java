@@ -1,6 +1,6 @@
 package h2o.common.lang;
 
-public class AB<X,Y> implements java.io.Serializable {
+public final class AB<X,Y> implements java.io.Serializable {
 
     private static final long serialVersionUID = 7593389607204994788L;
 
@@ -16,21 +16,21 @@ public class AB<X,Y> implements java.io.Serializable {
         this.b = b;
     }
 
-    public static <R,S>  AB<R,S> a( Val<R> a ) {
-        return new AB<>(true , NString.NULL , a , Val.empty() );
+    public static <A,B>  AB<A,B> a( A a ) {
+        return new AB<>(true , NString.NULL , new Val<>(a) , Val.empty() );
     }
 
-    public static <R,S>  AB<R,S> a( Val<R> a , String msg ) {
-        return new AB<>(true , new NString(msg) , a , Val.empty() );
+    public static <A,B>  AB<A,B> a( A a , String msg ) {
+        return new AB<>(true , new NString(msg) , new Val<>(a) , Val.empty() );
     }
 
 
-    public static <R,S>  AB<R,S> b( Val<S> b ) {
-        return new AB<>(false , NString.NULL , Val.empty() , b );
+    public static <A,B>  AB<A,B> b( B b ) {
+        return new AB<>(false , NString.NULL , Val.empty() , new Val<>(b) );
     }
 
-    public static <R,S>  AB<R,S> b( Val<S> b , String msg ) {
-        return new AB<>(false , new NString(msg) , Val.empty() , b );
+    public static <A,B>  AB<A,B> b( B b , String msg ) {
+        return new AB<>(false , new NString(msg) , Val.empty() , new Val<>(b) );
     }
 
 

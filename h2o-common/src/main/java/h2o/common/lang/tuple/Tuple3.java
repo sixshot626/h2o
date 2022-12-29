@@ -2,7 +2,7 @@ package h2o.common.lang.tuple;
 
 import java.util.Objects;
 
-public class Tuple3<A, B, C> implements Tuple {
+public final class Tuple3<A, B, C> implements Tuple {
 
 
     private static final long serialVersionUID = 8515896572423195899L;

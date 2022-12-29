@@ -2,7 +2,7 @@ package h2o.common.lang.tuple;
 
 import java.util.Objects;
 
-public class Entry<K, V> implements java.io.Serializable {
+public final class Entry<K, V> implements java.io.Serializable {
 
     private static final long serialVersionUID = -8304096067686246637L;
 
