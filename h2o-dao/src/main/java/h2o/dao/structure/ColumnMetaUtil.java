@@ -74,14 +74,16 @@ public class ColumnMetaUtil {
             Set<String> attrNameSet = new HashSet<String>();
 
             for (String attr : attrNames) {
-                attrNameSet.add(attr);
+                if ( attr != null ) {
+                    attrNameSet.add(attr.toLowerCase());
+                }
             }
 
             if (!isAllAttr) {
 
                 List<ColumnMeta> colInfosTmp = new ArrayList<ColumnMeta>();
                 for (ColumnMeta ci : columnMetas) {
-                    if (attrNameSet.contains(ci.attrName)) {
+                    if (attrNameSet.contains(ci.attrName.toLowerCase())) {
                         colInfosTmp.add(ci);
                     }
 
@@ -104,11 +106,16 @@ public class ColumnMetaUtil {
 
         if (!CollectionUtil.argsIsBlank(skipAttrNames)) {
 
-            List<String> skipAttrNameList = Arrays.asList(skipAttrNames);
+            Set<String> skipAttrNameSet = new HashSet<String>();
+            for ( String attr : skipAttrNames ) {
+                if ( attr != null ) {
+                    skipAttrNameSet.add(attr.toLowerCase());
+                }
+            }
 
             List<ColumnMeta> skipColumnMetas = new ArrayList<ColumnMeta>();
             for (ColumnMeta ci : columnMetas) {
-                if (!skipAttrNameList.contains(ci.attrName)) {
+                if (!skipAttrNameSet.contains(ci.attrName.toLowerCase())) {
                     skipColumnMetas.add(ci);
                 }
             }

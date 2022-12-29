@@ -1,10 +1,13 @@
 package h2o.dao.impl.proc;
 
 import h2o.common.Tools;
+import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.util.bean.BeanUtil;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.ColumnMetaUtil;
+import h2o.dao.structure.TableStruct;
+import h2o.dao.structure.TableStructParser;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +16,7 @@ public class DbMap2BeanProcessor {
 
     private final BeanUtil beanUtil;
 
-    private final Map<String, String> colAttrMap;
+    private final TableStruct tableStruct;
 
 
     public DbMap2BeanProcessor(Class<?> beanClazz) {
@@ -23,26 +26,19 @@ public class DbMap2BeanProcessor {
     public DbMap2BeanProcessor(Class<?> beanClazz, BeanUtil beanUtil) {
 
 
-        Map<String, String> caMap = null;
+        TableStruct _tableStruct = null;
         if (ColumnMetaUtil.hasTableAnnotation(beanClazz)) {
-
-            caMap = MapBuilder.newMap();
-
-            List<ColumnMeta> cis = ColumnMetaUtil.getColInfos(beanClazz);
-            for (ColumnMeta ci : cis) {
-                caMap.put(ci.attrName, ci.colName);
-            }
-
+            _tableStruct = TableStructParser.parse( beanClazz );
         }
+        tableStruct = _tableStruct;
 
-        colAttrMap = caMap;
         this.beanUtil = beanUtil;
 
     }
 
     public <T> T toBean(Map<?, ?> m, T bean) {
 
-        if (colAttrMap == null) {
+        if ( tableStruct == null ) {
             return beanUtil.beanCopy(m, bean);
         }
 
@@ -50,8 +46,8 @@ public class DbMap2BeanProcessor {
         String[] srcpNames = new String[prepNames.length];
 
         for (int i = 0; i < prepNames.length; i++) {
-            String colName = colAttrMap.get(prepNames[i]);
-            srcpNames[i] = colName == null ? prepNames[i] : colName;
+            ColumnMeta col = tableStruct.findColumn(prepNames[i]);
+            srcpNames[i] = col == null ? prepNames[i] : col.colName;
         }
 
 
