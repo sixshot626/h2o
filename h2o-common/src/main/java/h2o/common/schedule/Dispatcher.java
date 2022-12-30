@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Dispatcher {
 
-    private static final Logger log = LoggerFactory.getLogger(Dispatcher.class.getName());
+    protected static final Logger log = LoggerFactory.getLogger(Dispatcher.class.getName());
 
-    private final String name;
+    protected final String name;
 
     private final long firstDelay;
     private final long okSleepTime;
@@ -28,8 +28,26 @@ public class Dispatcher {
         this.task = task;
     }
 
+    public Dispatcher(long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+        this.name = null;
+        this.firstDelay = firstDelay;
+        this.okSleepTime = okSleepTime;
+        this.freeSleepTime = freeSleepTime;
+        this.errSleepTime = errSleepTime;
+    }
+
     public Dispatcher(String name , long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
         this.name = name;
+        this.firstDelay = firstDelay;
+        this.okSleepTime = okSleepTime;
+        this.freeSleepTime = freeSleepTime;
+        this.errSleepTime = errSleepTime;
+    }
+
+
+    public Dispatcher(RepetitiveTask task, long firstDelay, long okSleepTime, long freeSleepTime, long errSleepTime) {
+        this.name = null;
+        this.task = task;
         this.firstDelay = firstDelay;
         this.okSleepTime = okSleepTime;
         this.freeSleepTime = freeSleepTime;
@@ -70,6 +88,11 @@ public class Dispatcher {
     }
 
 
+    protected Future<?> run( Runnable runnable ) {
+        return RunUtil.run( runnable,this.name == null ? "Dispatcher" : this.name );
+    }
+
+
     public Future<?> start() {
 
         if (stop) {
@@ -85,7 +108,7 @@ public class Dispatcher {
 
         running = true;
 
-        return RunUtil.run(new Runnable() {
+        return run(new Runnable() {
 
             public void run() {
 
@@ -134,7 +157,7 @@ public class Dispatcher {
 
             }
 
-        } , name );
+        });
 
     }
 

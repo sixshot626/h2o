@@ -5,6 +5,7 @@ import h2o.common.concurrent.executor.Executors;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RunUtil {
@@ -31,6 +32,18 @@ public class RunUtil {
         }
 
         this.executorService = Executors.newFixedThreadPool(n,name);
+    }
+
+    public RunUtil( int n, boolean autoShutdown ,  ExecutorService es ) {
+
+        this.autoShutdown = autoShutdown;
+        if (autoShutdown) {
+            count = new AtomicInteger(n);
+        } else {
+            count = null;
+        }
+
+        this.executorService = es;
     }
 
 
