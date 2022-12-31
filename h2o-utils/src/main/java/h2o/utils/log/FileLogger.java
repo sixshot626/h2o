@@ -3,6 +3,7 @@ package h2o.utils.log;
 
 import h2o.apache.commons.lang.StringUtils;
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.LTime;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.io.StreamUtil;
 import h2o.common.util.lang.StringUtil;
@@ -89,7 +90,7 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
         try {
 
             w = StreamUtil.writeFile( FileUtil.file(path + logMeta.getId() + ".log" ), true );
-            w.write( tagLogString( level , tags , prompt , log ) );
+            w.write( tagLogString( LTime.NULL , level , tags , prompt , log ) );
             w.write('\n');
             w.flush();
 
@@ -108,7 +109,7 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
 
         if ( !success ) {
-            this.emergencyLog( path + logMeta.getId() + ".log" , tagLogString( level , tags , prompt , log )  );
+            this.emergencyLog( path + logMeta.getId() + ".log" , tagLogString( LTime.NULL ,  level , tags , prompt , log )  );
         }
 
         return success;

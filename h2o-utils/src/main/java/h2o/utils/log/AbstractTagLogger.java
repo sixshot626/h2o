@@ -1,6 +1,8 @@
 package h2o.utils.log;
 
 import h2o.common.exception.ExceptionUtil;
+import h2o.common.lang.LTime;
+import h2o.common.lang.SDate;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.format.FormattingTuple;
@@ -24,22 +26,22 @@ public abstract class AbstractTagLogger implements  TagLogger {
 
     }
 
-    protected String tagLogString( LogLevel level , String[] tags , String prompt, Object log ) {
+    protected String tagLogString( LTime time , LogLevel level , String[] tags , String prompt, Object log ) {
 
         StringBuilder sbm = new StringBuilder();
-        sbm.append( DateUtil.toLongString( new Date()  ) );
+        sbm.append( time.fmt( "yyyy-MM-dd HH:mm:ss.SSS" ,  DateUtil.toLongString( new Date()  ) ) );
         sbm.append( " " );
         sbm.append( level );
         sbm.append( " --- " );
 
-        sbm.append( formatLog( tags , prompt , log ) );
+        sbm.append( tagLogString( tags , prompt , log ) );
 
         return sbm.toString();
 
 
     }
 
-    protected String formatLog( String[] tags , String prompt, Object log ) {
+    protected String tagLogString( String[] tags , String prompt, Object log ) {
         StringBuilder sbm = new StringBuilder();
         sbm.append( "[" );
 
