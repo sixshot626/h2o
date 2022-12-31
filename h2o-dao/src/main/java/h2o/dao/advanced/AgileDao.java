@@ -92,191 +92,6 @@ public class AgileDao {
     public static final String DESC = "desc";
 
 
-    private String buildInsertSql(Collection<?> ks) {
-
-        StringBuilder sqlInsert = new StringBuilder("insert into ").append(tableName()).append(" ( ");
-        StringBuilder sqlValues = new StringBuilder(" ) \n        values ( ");
-
-        int i = 0;
-        for (ColumnMeta col : this.tableStruct.sort( this.tableStruct.filterColumns(ks)) ) {
-            if (i++ > 0) {
-                sqlInsert.append(" , ");
-                sqlValues.append(" , ");
-            }
-            sqlInsert.append(col.colName);
-            sqlValues.append(col.value());
-        }
-
-        return sqlInsert.append(sqlValues).append(" )").toString();
-
-    }
-
-
-    private String buildDelSql1() {
-        return str("delete from ", this.tableName());
-    }
-
-
-    private String buildUpdateSql1(Collection<?> ks) {
-
-        StringBuilder sqlUpdate = new StringBuilder("update ").append(tableName()).append(" set ");
-
-        int i = 0;
-
-
-        for ( Object o : ks ) {
-
-            if (i++ > 0) {
-                sqlUpdate.append(" , ");
-            }
-            sqlUpdate.append("\n        ");
-
-            if ( o instanceof Special) {
-
-                sqlUpdate.append( ((Special) o).getValue() );
-
-            } else {
-
-                ColumnMeta col = this.tableStruct.getColumn(o);
-
-                sqlUpdate.append(col.colName);
-                sqlUpdate.append(" = ");
-                sqlUpdate.append(col.value());
-            }
-        }
-
-        return sqlUpdate.toString();
-
-    }
-
-
-    private String buildSelectSql1AllAttrs() {
-
-        StringBuilder sqlSelect = new StringBuilder("select  ");
-
-        List<ColumnMeta> cols = this.tableStruct.columns();
-
-        int i = 0;
-        for (ColumnMeta col : cols) {
-            if (i++ > 0) {
-                sqlSelect.append(" ,\n        ");
-            }
-            sqlSelect.append(col.colName);
-        }
-
-        return sqlSelect.append("\nfrom ").append(this.tableName()).toString();
-
-    }
-
-
-    private String buildSelectSql1(Collection<?> ks) {
-
-        StringBuilder sqlSelect = new StringBuilder("select  ");
-
-        int i = 0;
-        for (Object k : ks) {
-            if (i++ > 0) {
-                sqlSelect.append(" ,\n        ");
-            }
-            if (k instanceof Special) {
-                sqlSelect.append(((Special) k).getValue());
-            } else {
-                sqlSelect.append(column(k));
-            }
-
-        }
-
-        return sqlSelect.append("\nfrom ").append(this.tableName()).toString();
-
-    }
-
-
-    private String buildOrderSql(List<?> oks) {
-
-        StringBuilder sqlOrder = new StringBuilder("order by ");
-
-        for (int i = 0, len = oks.size(); i < len; i += 2) {
-            if (i > 0) {
-                sqlOrder.append(" , ");
-            }
-            Object f = oks.get(i);
-            Object d = oks.get(i + 1);
-
-            if (f instanceof String) {
-                sqlOrder.append(f);
-            } else {
-                sqlOrder.append(column(f));
-            }
-
-            if (d != null) {
-                sqlOrder.append(" ");
-                sqlOrder.append(name(d));
-            }
-
-        }
-
-        return sqlOrder.toString();
-
-    }
-
-
-
-    private Map<String, Object> orm(Map<String, Object> row) {
-
-        Map<String, Object> nRow = new HashMap<>();
-
-        for (Map.Entry<String, Object> re : row.entrySet()) {
-            ColumnMeta column = this.tableStruct.findColumn(re.getKey());
-            if (column != null) {
-                nRow.put(column.attrName, re.getValue());
-            } else {
-                nRow.put(re.getKey(), re.getValue());
-            }
-        }
-
-        return new KeyMap(nRow);
-
-    }
-
-
-    //////////////////////////////////////////////////
-
-
-    private String selectSql(Collection<?> attr) {
-        if (attr == null || attr.isEmpty()) {
-            return buildSelectSql1AllAttrs();
-        }
-        return buildSelectSql1(attr);
-    }
-
-
-    private String lockSql(Object lock) {
-        if (lock == null) {
-            return null;
-        } else if (lock instanceof String) {
-            return str(" \n", lock);
-        } else if (lock instanceof Boolean) {
-            if (((Boolean) lock).booleanValue()) {
-                return " \nfor update";
-            } else {
-                return null;
-            }
-        } else {
-            throw new DaoException(String.valueOf(lock));
-        }
-
-    }
-
-
-
-
-    private String orderSql(List<?> orderby) {
-        if (orderby == null || orderby.isEmpty()) {
-            return null;
-        }
-        return str(" \n", buildOrderSql(orderby));
-    }
-
 
 
 
@@ -294,12 +109,14 @@ public class AgileDao {
 
 
 
+    ///////////////////////////////////////////////////////////////////////
+
     private final class Query {
 
 
         private final List<Object> attrs;
         private WhereConditions whereConditions;
-        private List<Object> orders = Collections.EMPTY_LIST;
+        private List<Object> orders = Collections.emptyList();
 
         private Query(Object[] attrs) {
             this.attrs = args2List(attrs);
@@ -405,7 +222,7 @@ public class AgileDao {
             if (res.isEmpty()) {
                 return res;
             } else {
-                return res.stream().map(row -> orm(row)).collect(Collectors.toList());
+                return res.stream().map(this::orm).collect(Collectors.toList());
             }
         }
 
@@ -481,6 +298,141 @@ public class AgileDao {
                 return res;
             }
         }
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+
+
+        private String buildSelectSql1AllAttrs() {
+
+            StringBuilder sqlSelect = new StringBuilder("select  ");
+
+            List<ColumnMeta> cols = tableStruct.columns();
+
+            int i = 0;
+            for (ColumnMeta col : cols) {
+                if (i++ > 0) {
+                    sqlSelect.append(" ,\n        ");
+                }
+                sqlSelect.append(col.colName);
+            }
+
+            return sqlSelect.append("\nfrom ").append(tableName()).toString();
+
+        }
+
+
+        private String buildSelectSql1(Collection<?> ks) {
+
+            StringBuilder sqlSelect = new StringBuilder("select  ");
+
+            int i = 0;
+            for (Object k : ks) {
+                if (i++ > 0) {
+                    sqlSelect.append(" ,\n        ");
+                }
+                if (k instanceof Special) {
+                    sqlSelect.append(((Special) k).getValue());
+                } else {
+                    sqlSelect.append(column(k));
+                }
+
+            }
+
+            return sqlSelect.append("\nfrom ").append(tableName()).toString();
+
+        }
+
+
+        private String buildOrderSql(List<?> oks) {
+
+            StringBuilder sqlOrder = new StringBuilder("order by ");
+
+            for (int i = 0, len = oks.size(); i < len; i += 2) {
+                if (i > 0) {
+                    sqlOrder.append(" , ");
+                }
+                Object f = oks.get(i);
+                Object d = oks.get(i + 1);
+
+                if (f instanceof String) {
+                    sqlOrder.append(f);
+                } else {
+                    sqlOrder.append(column(f));
+                }
+
+                if (d != null) {
+                    sqlOrder.append(" ");
+                    sqlOrder.append(name(d));
+                }
+
+            }
+
+            return sqlOrder.toString();
+
+        }
+
+
+
+
+        private String selectSql(Collection<?> attr) {
+            if (attr == null || attr.isEmpty()) {
+                return buildSelectSql1AllAttrs();
+            }
+            return buildSelectSql1(attr);
+        }
+
+
+        private String lockSql(Object lock) {
+            if (lock == null) {
+                return null;
+            } else if (lock instanceof String) {
+                return str(" \n", lock);
+            } else if (lock instanceof Boolean) {
+                if (((Boolean) lock).booleanValue()) {
+                    return " \nfor update";
+                } else {
+                    return null;
+                }
+            } else {
+                throw new DaoException(String.valueOf(lock));
+            }
+
+        }
+
+        private String orderSql(List<?> orderby) {
+            if (orderby == null || orderby.isEmpty()) {
+                return null;
+            }
+            return str(" \n", buildOrderSql(orderby));
+        }
+
+
+
+        private Map<String, Object> orm(Map<String, Object> row) {
+
+            Map<String, Object> nRow = new HashMap<>();
+
+            for (Map.Entry<String, Object> re : row.entrySet()) {
+                ColumnMeta column = tableStruct.findColumn(re.getKey());
+                if (column != null) {
+                    nRow.put(column.attrName, re.getValue());
+                } else {
+                    nRow.put(re.getKey(), re.getValue());
+                }
+            }
+
+            return new KeyMap(nRow);
+
+        }
+
+
+
+
     }
 
 
@@ -625,7 +577,10 @@ public class AgileDao {
     }
 
 
-    //////////////////////////////////////////////////
+
+
+
+    ///////////////////////////////////////////////////////////////////////
 
     private final class Update {
 
@@ -795,6 +750,72 @@ public class AgileDao {
             return getDao().update(sql, merge( para , wherePara ) );
         }
 
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+
+
+        private String buildInsertSql(Collection<?> ks) {
+
+            StringBuilder sqlInsert = new StringBuilder("insert into ").append(tableName()).append(" ( ");
+            StringBuilder sqlValues = new StringBuilder(" ) \n        values ( ");
+
+            int i = 0;
+            for (ColumnMeta col : tableStruct.sort( tableStruct.filterColumns(ks)) ) {
+                if (i++ > 0) {
+                    sqlInsert.append(" , ");
+                    sqlValues.append(" , ");
+                }
+                sqlInsert.append(col.colName);
+                sqlValues.append(col.value());
+            }
+
+            return sqlInsert.append(sqlValues).append(" )").toString();
+
+        }
+
+
+        private String buildDelSql1() {
+            return str("delete from ", tableName());
+        }
+
+
+        private String buildUpdateSql1(Collection<?> ks) {
+
+            StringBuilder sqlUpdate = new StringBuilder("update ").append(tableName()).append(" set ");
+
+            int i = 0;
+
+
+            for ( Object o : ks ) {
+
+                if (i++ > 0) {
+                    sqlUpdate.append(" , ");
+                }
+                sqlUpdate.append("\n        ");
+
+                if ( o instanceof Special) {
+
+                    sqlUpdate.append( ((Special) o).getValue() );
+
+                } else {
+
+                    ColumnMeta col = tableStruct.getColumn(o);
+
+                    sqlUpdate.append(col.colName);
+                    sqlUpdate.append(" = ");
+                    sqlUpdate.append(col.value());
+                }
+            }
+
+            return sqlUpdate.toString();
+
+        }
+
+
+
     }
 
 
@@ -960,30 +981,30 @@ public class AgileDao {
 
         private Del() {}
 
-        private final Update update = new Update((Object[]) null);
+        private final Update update = new Update(null);
 
         public DelExecutor unconditional() {
-            return new DelExecutor( new Update((Object[]) null).unconditional() );
+            return new DelExecutor( new Update(null).unconditional() );
         }
 
         public DelExecutor where(String where) {
-            return new DelExecutor( new Update((Object[]) null).where(where) );
+            return new DelExecutor( new Update(null).where(where) );
         }
 
         public DelExecutor whereAttrs(Object... attrs) {
-            return new DelExecutor( new Update((Object[]) null).whereAttrs(attrs));
+            return new DelExecutor( new Update(null).whereAttrs(attrs));
         }
 
         public DelExecutor whereArgs(Object... args) {
-            return new DelExecutor( new Update((Object[]) null).whereArgs(args) );
+            return new DelExecutor( new Update(null).whereArgs(args) );
         }
 
         public DelExecutor buildWhere( Consumer<WhereBuilder> consumer ) {
-            return new DelExecutor( new Update((Object[]) null).buildWhere(  consumer ) );
+            return new DelExecutor( new Update(null).buildWhere(  consumer ) );
         }
 
         public DelExecutor buildWhere( WhereBuilder whereBuilder ) {
-            return new DelExecutor( new Update((Object[]) null).buildWhere(  whereBuilder ) );
+            return new DelExecutor( new Update(null).buildWhere(  whereBuilder ) );
         }
 
 
@@ -1008,7 +1029,7 @@ public class AgileDao {
 
     private static Map args2Map( Object[] args ) {
         if (args == null) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
        return Collections.unmodifiableMap(DbUtil.DBFACTORY.getArgProcessor().proc(args));
     }
@@ -1016,7 +1037,7 @@ public class AgileDao {
 
     private static List args2List(Object[] args) {
         if (args == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return Collections.unmodifiableList(Arrays.asList(args));
     }

@@ -28,7 +28,7 @@ class MapSqlParameterSource  {
 
     private final Map<String, Object> values;
 
-    private final KeyMap valuesMap;
+    private final KeyMap<Object> valuesMap;
 
 
 
@@ -44,7 +44,7 @@ class MapSqlParameterSource  {
                 this.values.put(entry.getKey(), entry.getValue());
             }
         }
-        this.valuesMap = new KeyMap( this.values );
+        this.valuesMap = new KeyMap<>( this.values );
     }
 
 

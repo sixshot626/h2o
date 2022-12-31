@@ -10,6 +10,7 @@ public abstract class AbstractValidator implements Validator {
     private String k;
 
 
+    @Override
     public String getMessage() {
         return message;
     }
@@ -18,10 +19,12 @@ public abstract class AbstractValidator implements Validator {
         this.message = message;
     }
 
+    @Override
     public String getK() {
         return k;
     }
 
+    @Override
     public void setK(String k) {
         this.k = k;
     }
@@ -33,6 +36,7 @@ public abstract class AbstractValidator implements Validator {
         return this;
     }
 
+    @Override
     public boolean validate(Object bean) {
         return this.validateV(h2o.jodd.bean.BeanUtil.silent.getProperty(bean, k));
     }

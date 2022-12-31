@@ -14,10 +14,7 @@ import h2o.common.util.lang.InstanceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public final class BeanUtil {
@@ -335,11 +332,13 @@ public final class BeanUtil {
     }
 
 
-    private <T> T createBean(Class<T> beanClazz) {
-        if (beanClazz.getClass().equals(Map.class)) {
-            return (T) new HashMap();
-        }
+    private static <T> T createBean(Class<T> beanClazz) {
 
+        if ( beanClazz.isInterface() && beanClazz.isAssignableFrom( HashMap.class ) ) {
+            @SuppressWarnings("unchecked")
+            T bean = (T)new HashMap<>();
+            return bean;
+        }
         return InstanceUtil.newInstance(beanClazz);
     }
 
@@ -378,9 +377,10 @@ public final class BeanUtil {
     }
 
 
+    @SuppressWarnings("unchecked")
     private String[] mapKeys(Map m) {
         Set<String> keys = m.keySet();
-        return keys.toArray(new String[keys.size()]);
+        return keys.toArray(new String[0]);
     }
 
 
@@ -395,7 +395,6 @@ public final class BeanUtil {
     public Map<String, Object> bean2Map(Object bean, String[] srcPrepNames, String[] prepNames) {
         return this.beanCopy0(bean, new HashMap<>(),  srcPrepNames, prepNames);
     }
-
 
 
 }

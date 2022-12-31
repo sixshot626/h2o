@@ -1,9 +1,9 @@
 package h2o.dao.jdbc;
 
+import h2o.common.lang.SNumber;
 import h2o.jenkov.db.impl.PreparedStatementManagerBase;
 import h2o.jenkov.db.itf.IPreparedStatementManager;
 import h2o.jenkov.db.itf.PersistenceException;
-import h2o.common.lang.SNumber;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

@@ -29,7 +29,7 @@ public abstract class AbstractDao implements Dao {
 
     private final Connection connection;
 
-    public AbstractDao(Connection connection) {
+    protected AbstractDao(Connection connection) {
         this.connection = connection;
     }
 
@@ -194,7 +194,7 @@ public abstract class AbstractDao implements Dao {
         try {
             List<Map<String, Object>> rows = this.load( sqlSource, args );
 
-            List<T> objs = new ArrayList<T>(rows.size());
+            List<T> objs = new ArrayList<>(rows.size());
 
             for (Map<String, Object> row : rows) {
                 objs.add(this.ormProc(row, clazz));
@@ -243,7 +243,7 @@ public abstract class AbstractDao implements Dao {
 
             List<Map<String, Object>> rows = this.fetch(sqlSource, fetchRequest, args);
 
-            List<T> objs = new ArrayList<T>(rows.size());
+            List<T> objs = new ArrayList<>(rows.size());
 
             for (Map<String, Object> row : rows) {
                 objs.add(this.ormProc(row, clazz));
@@ -282,14 +282,14 @@ public abstract class AbstractDao implements Dao {
 
             PageInfo pageInfo = new PageInfo(pageRequest, count.get().longValue());
             if (pageInfo.getTotalElements() == 0L) {
-                return new Page<Map<String, Object>>(pageInfo, ListBuilder.<Map<String, Object>>newEmptyList());
+                return new Page<>(pageInfo, ListBuilder.newEmptyList());
             }
 
             Tuple2<String, Map<String, Object>> p = _pagingProcessor.pagingSql( sql, new ResultInfo(pageRequest) );
             paramMap.putAll(p.e1);
             List<Map<String, Object>> records = this.load(p.e0, paramMap);
 
-            return new Page<Map<String, Object>>(pageInfo, records);
+            return new Page<>(pageInfo, records);
 
         } catch ( DaoException e ) {
             throw e;
@@ -312,13 +312,13 @@ public abstract class AbstractDao implements Dao {
 
             List<Map<String, Object>> rows = pageMap.getContent();
 
-            List<T> objs = new ArrayList<T>(rows.size());
+            List<T> objs = new ArrayList<>(rows.size());
 
             for (Map<String, Object> row : rows) {
                 objs.add(this.ormProc(row, clazz));
             }
 
-            return new Page<T>(pageMap, objs);
+            return new Page<>(pageMap, objs);
 
         } catch ( DaoException e ) {
             throw e;

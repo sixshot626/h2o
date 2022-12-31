@@ -374,7 +374,7 @@ public abstract class BasicRepository<E> {
 
 
     protected BasicUtil<E> createDaoBasicUtil() {
-        return new BasicUtil<E>(this.getDao(), this.getEntityClass(), this.getTableStruct());
+        return new BasicUtil<>(this.getDao(), this.getEntityClass(), this.getTableStruct());
     }
 
 

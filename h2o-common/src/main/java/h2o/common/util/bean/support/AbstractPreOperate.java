@@ -17,6 +17,7 @@ public abstract class AbstractPreOperate<T> implements PreOperate<T> {
         this.setPreOp(preOp);
     }
 
+    @Override
     public final T doOperate(T o) {
 
         if (this.preOp != null) {

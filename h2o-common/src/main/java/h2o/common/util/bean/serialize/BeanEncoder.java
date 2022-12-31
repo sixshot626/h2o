@@ -25,6 +25,7 @@ public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
         this.charsetName = charsetName;
     }
 
+    @Override
     public byte[] bean2bytes(Object bean) {
 
         try {
@@ -43,6 +44,7 @@ public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
         }
     }
 
+    @Override
     public Object bytes2bean(byte[] bs) {
 
         try {
@@ -67,6 +69,7 @@ public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
 
     }
 
+    @Override
     public String bean2string(Object bean) {
 
         try {
@@ -77,7 +80,7 @@ public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
             xe.writeObject(bean);
             xe.close();
 
-            return new String(bao.toByteArray(), charsetName);
+            return bao.toString(charsetName);
 
         } catch (Exception e) {
             log.debug("", e);
@@ -85,6 +88,7 @@ public class BeanEncoder implements BeanSerializer, BeanStrSerializer {
         }
     }
 
+    @Override
     public Object string2bean(String xml) {
 
         try {

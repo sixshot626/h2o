@@ -118,6 +118,7 @@ public interface Dao extends Closeable {
 
     Connection getConnection();
 
+    @Override
     void close() throws DaoException;
 
 

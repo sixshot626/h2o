@@ -1,9 +1,8 @@
 package h2o.utils.log;
 
 
-import java.io.Serializable;
 
-public class MultiLogger extends AbstractTagLogger implements TagLogger , Serializable {
+public class MultiLogger extends AbstractTagLogger implements TagLogger {
 
     private final TagLogger[] loggers;
 

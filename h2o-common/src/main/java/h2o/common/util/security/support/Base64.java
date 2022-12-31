@@ -7,22 +7,24 @@ public class Base64 implements Encryptor {
 
     private final String charset;
 
+    private final Base64Util b64Util;
+
     public Base64() {
         this.charset = null;
+        this.b64Util = new Base64Util();
     }
 
     public Base64(String charset) {
         this.charset = charset;
+        this.b64Util = new Base64Util();
     }
 
-    private volatile Base64Util b64Util = new Base64Util();
-
-    public Base64 setBase64Util(Base64Util b64Util) {
+    public Base64(String charset, Base64Util b64Util) {
+        this.charset = charset;
         this.b64Util = b64Util;
-        return this;
     }
 
-
+    @Override
     public String enc(String str) {
         return charset == null ? b64Util.encode(str) : b64Util.encode(str, charset);
     }

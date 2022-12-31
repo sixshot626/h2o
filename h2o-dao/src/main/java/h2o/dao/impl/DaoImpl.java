@@ -1,9 +1,5 @@
 package h2o.dao.impl;
 
-import h2o.jenkov.db.impl.ResultSetProcessorBase;
-import h2o.jenkov.db.itf.IDaos;
-import h2o.jenkov.db.itf.IResultSetProcessor;
-import h2o.jenkov.db.itf.PersistenceException;
 import h2o.common.Mode;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.SNumber;
@@ -19,6 +15,10 @@ import h2o.dao.jdbc.sqlpara.PreparedSqlAndParameters;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
 import h2o.dao.log.LogWriter;
 import h2o.dao.sql.SqlSource;
+import h2o.jenkov.db.impl.ResultSetProcessorBase;
+import h2o.jenkov.db.itf.IDaos;
+import h2o.jenkov.db.itf.IResultSetProcessor;
+import h2o.jenkov.db.itf.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
     private static final Logger log = LoggerFactory.getLogger(Dao.class.getName());
 
-    private static boolean SHOW_SQL = !Mode.isUserMode("DONT_SHOW_SQL");
+    private static final boolean SHOW_SQL = !Mode.isUserMode("DONT_SHOW_SQL");
 
 
     private final JdbcDao jdbcDao;
@@ -85,6 +85,7 @@ public class DaoImpl extends AbstractDao implements Dao {
 
             return jdbcDao.read( sql , SNumber.ZERO , new ResultSetProcessorBase() {
 
+                @Override
                 public boolean init(ResultSet result, IDaos daos) throws SQLException, PersistenceException {
 
                     ResultSetMetaData metaData = result.getMetaData();

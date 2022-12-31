@@ -17,6 +17,7 @@ public class ButterflyFactory implements Factory {
     }
 
 
+    @Override
     public <T> T get(String id, Object... args) {
 
         log.debug("{}: get({})", name, id);
@@ -25,6 +26,7 @@ public class ButterflyFactory implements Factory {
     }
 
 
+    @Override
     public <T> T silentlyGet(String id, Object... args) {
 
         try {

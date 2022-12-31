@@ -16,6 +16,7 @@ public class MD5 implements Encryptor {
         this.charset = charset;
     }
 
+    @Override
     public String enc(String str) {
         return MessageDigestUtil.digest("MD5", str, charset);
     }

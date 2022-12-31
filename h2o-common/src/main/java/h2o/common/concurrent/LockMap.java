@@ -9,6 +9,7 @@ public class LockMap {
 
     private final InstanceTable<String, Lock> lockIT = new InstanceTable<String, Lock>(new AbstractInstanceFactory<Lock>() {
 
+        @Override
         public Lock create(Object id) {
             return new java.util.concurrent.locks.ReentrantLock();
         }

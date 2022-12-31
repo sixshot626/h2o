@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class DefaultRowProcessor implements RowProcessor {
 
+    @Override
     public Map<String, Object> proc(Map<String, Object> m) {
         return m;
     }

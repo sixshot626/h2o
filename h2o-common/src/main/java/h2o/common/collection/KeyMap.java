@@ -22,8 +22,8 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
         if ( map == null || map.isEmpty() ) {
 
-            this.realMap    = Collections.EMPTY_MAP;
-            this.keyMapping = Collections.EMPTY_MAP;
+            this.realMap    = Collections.emptyMap();
+            this.keyMapping = Collections.emptyMap();
 
         } else {
 
@@ -80,17 +80,27 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
     }
 
-
+    @Override
     public int size()                        {return realMap.size();}
+
+    @Override
     public boolean isEmpty()                 {return realMap.isEmpty();}
+
+    @Override
     public boolean containsKey(Object key)   {return realMap.containsKey( procKey(key) );}
+
+    @Override
     public boolean containsValue(Object val) {return realMap.containsValue(val);}
 
+    @Override
     public V get(Object key)                 {return realMap.get( procKey(key) );}
 
+    @Override
     public V put(String key, Object value) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
     public V remove(Object key) {
         throw new UnsupportedOperationException();
     }
@@ -100,6 +110,7 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }
@@ -122,10 +133,20 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
     @Override
     public boolean equals(Object o) {
-        return realMap.equals(o);
+        if (this == o) return true;
+        if (o == null ) return false;
+        if (o instanceof KeyMap) {
+            KeyMap<?> keyMap = (KeyMap<?>) o;
+            return realMap.equals(keyMap.realMap);
+        } else {
+            return realMap.equals(o);
+        }
     }
 
+    @Override
     public int hashCode()           {return realMap.hashCode();}
+
+    @Override
     public String toString()        {return realMap.toString();}
 
 

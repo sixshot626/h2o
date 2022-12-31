@@ -16,7 +16,7 @@ import java.io.Writer;
 /**
  * Created by zhangjianwei on 16/8/18.
  */
-public class FileLogger extends AbstractTagLogger implements TagLogger , Serializable {
+public class FileLogger extends AbstractTagLogger implements TagLogger {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( FileLogger.class.getName() );
 

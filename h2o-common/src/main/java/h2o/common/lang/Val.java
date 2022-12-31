@@ -107,6 +107,7 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
         return setted;
     }
 
+    @Override
     public T getValue() {
         return value;
     }

@@ -16,6 +16,7 @@ public class SHA implements Encryptor {
         this.charset = charset;
     }
 
+    @Override
     public String enc(String str) {
         return MessageDigestUtil.digest("SHA", str, charset);
     }

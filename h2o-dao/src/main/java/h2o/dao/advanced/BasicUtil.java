@@ -344,7 +344,7 @@ public final class BasicUtil<E> {
         StringUtil.append(sql, "select ", this.connectSelectFileds(fields),
                 " from ", this.tableStruct.tableName());
 
-        return (List<E>) dao.load(this.entityClazz, orderProc(sql.toString(), sortInfos));
+        return dao.load(this.entityClazz, orderProc(sql.toString(), sortInfos));
 
     }
 

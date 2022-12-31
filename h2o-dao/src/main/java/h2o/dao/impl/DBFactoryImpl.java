@@ -40,7 +40,7 @@ public class DBFactoryImpl implements DBFactory {
 
     private <T> T factoryGet(String id) {
         return factory.get(id);
-    };
+    }
 
     public DBFactoryImpl(Factory factory) {
         this.factory = factory;

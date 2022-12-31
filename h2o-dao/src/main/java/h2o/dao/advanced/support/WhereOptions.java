@@ -12,6 +12,7 @@ public final class WhereOptions implements WhereConditions {
 
 
     private final TableStruct tableStruct;
+
     private final boolean allowUnconditional;
 
     public WhereOptions(TableStruct tableStruct , boolean allowUnconditional) {
@@ -20,8 +21,11 @@ public final class WhereOptions implements WhereConditions {
     }
 
     public boolean unconditional;
+
     public List wattr;
+
     public String where;
+
     public Map wargs;
 
 
@@ -108,7 +112,7 @@ public final class WhereOptions implements WhereConditions {
     @Override
     public Map<Object, Object> params() {
 
-        Map<Object,Object> para = Collections.EMPTY_MAP;
+        Map<Object,Object> para = Collections.emptyMap();
 
         if (this.where != null) {
             return para;
@@ -118,7 +122,7 @@ public final class WhereOptions implements WhereConditions {
             if (this.wargs.isEmpty()) {
                 return para;
             } else {
-                return convWArgs((Map<?, Object>) this.wargs);
+                return convWArgs(this.wargs);
             }
         } else if (this.unconditional) {
             return para;
@@ -128,9 +132,9 @@ public final class WhereOptions implements WhereConditions {
     }
 
 
-    private Map<Object, Object> convWArgs(Map<?, Object> wargs) {
+    private Map<Object, Object> convWArgs(Map<?, ?> wargs) {
         Map<Object, Object> nmap = new HashMap<>();
-        for (Map.Entry<?, Object> entry : wargs.entrySet()) {
+        for (Map.Entry<?, ?> entry : wargs.entrySet()) {
             if ( entry.getKey() instanceof Special) {
                 continue;
             }

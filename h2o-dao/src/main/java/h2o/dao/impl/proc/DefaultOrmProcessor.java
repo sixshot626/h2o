@@ -6,8 +6,6 @@ import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
 import h2o.common.util.lang.InstanceUtil;
 import h2o.dao.exception.DaoException;
 import h2o.dao.proc.OrmProcessor;
-import h2o.jodd.bean.BeanUtil;
-import h2o.jodd.bean.BeanUtilBean;
 
 import java.util.Map;
 

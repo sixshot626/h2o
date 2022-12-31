@@ -17,6 +17,8 @@ import java.util.concurrent.locks.Lock;
 
 public class KeyGen {
 
+    private KeyGen () {}
+
     private static final Logger log = LoggerFactory.getLogger( KeyGen.class.getName() );
 
     public static final String DEFAULT_CYCLICSPACE = "_null_";

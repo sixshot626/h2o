@@ -9,10 +9,12 @@ import java.util.List;
 
 public class TableStructParser {
 
+    private TableStructParser() {}
+
     private static final boolean CACHE = !Mode.isUserMode("DONT_CACHE_ENTITYPARSER");
 
     private static final InstanceTable<Class<?>, TableStruct> ENTITYPARSER_TABLE =
-            new InstanceTable<Class<?>, TableStruct>(new AbstractInstanceFactory<TableStruct>() {
+            new InstanceTable<>(new AbstractInstanceFactory<TableStruct>() {
 
                 @Override
                 public TableStruct create(Object entityClazz) {

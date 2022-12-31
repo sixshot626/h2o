@@ -10,13 +10,15 @@ public class Door {
         private static final long serialVersionUID = -2765796120040071906L;
 
         boolean isSignalled() {
-            return getState() != 0;
+            return super.getState() != 0;
         }
 
+        @Override
         protected int tryAcquireShared(int ignore) {
             return isSignalled() ? 1 : -1;
         }
 
+        @Override
         public boolean tryReleaseShared(int releases) {
             setState(releases);
             return true;
@@ -54,6 +56,7 @@ public class Door {
         return sync.isSignalled();
     }
 
+    @Override
     public String toString() {
         return super.toString() + "[Status = " + (getState() ? "opened" : "closed") + "]";
     }

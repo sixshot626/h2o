@@ -30,6 +30,7 @@ public final class Tuple2<A, B> implements Tuple {
         return e1;
     }
 
+    @Override
     public int size() {
         return 2;
     }
@@ -52,6 +53,7 @@ public final class Tuple2<A, B> implements Tuple {
         return String.format("Tuple2[e0=%s, e1=%s]", e0, e1);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getE(int i) {
         if (i < 0 || i > 1) {

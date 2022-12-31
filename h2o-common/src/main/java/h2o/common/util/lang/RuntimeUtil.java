@@ -60,6 +60,8 @@ public abstract class RuntimeUtil {
      * inside this package.
      */
     private static final class ClassContextSecurityManager extends SecurityManager {
+
+        @Override
         protected Class<?>[] getClassContext() {
             return super.getClassContext();
         }

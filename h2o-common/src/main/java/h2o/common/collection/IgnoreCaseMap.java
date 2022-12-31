@@ -72,6 +72,7 @@ public class IgnoreCaseMap<V> implements Map<String, V>, java.io.Serializable {
         return realMap.remove( ignoreCaseKey(key) );
     }
 
+    @Override
     public void putAll(Map<? extends String, ? extends V> m) {
 
         Map<String, V> icm = MapBuilder.newMap();
@@ -82,6 +83,7 @@ public class IgnoreCaseMap<V> implements Map<String, V>, java.io.Serializable {
         realMap.putAll(icm);
     }
 
+    @Override
     public void clear() {
         realMap.clear();
     }
@@ -103,7 +105,14 @@ public class IgnoreCaseMap<V> implements Map<String, V>, java.io.Serializable {
 
     @Override
     public boolean equals(Object o) {
-        return realMap.equals(o);
+        if (this == o) return true;
+        if (o == null ) return false;
+        if (o instanceof IgnoreCaseMap) {
+            IgnoreCaseMap<?> ignoreCaseMap = (IgnoreCaseMap<?>) o;
+            return realMap.equals(ignoreCaseMap.realMap);
+        } else {
+            return realMap.equals(o);
+        }
     }
 
     @Override

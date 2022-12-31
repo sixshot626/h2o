@@ -4,10 +4,8 @@ import h2o.common.util.bean.ValOperate;
 import h2o.jodd.bean.BeanUtilBean;
 
 
-public class JoddBeanUtilVOImpl implements ValOperate, java.io.Serializable {
+public class JoddBeanUtilVOImpl implements ValOperate {
 
-
-    private static final long serialVersionUID = -3816716166935742820L;
 
     private final BeanUtilBean beanUtilBean = new BeanUtilBean();
 
@@ -39,10 +37,12 @@ public class JoddBeanUtilVOImpl implements ValOperate, java.io.Serializable {
         this.setForce(isForce);
     }
 
+    @Override
     public Object get(Object target, String pName) {
         return beanUtilBean.getProperty(target, pName);
     }
 
+    @Override
     public void set(Object target, String pName, Object val) {
         beanUtilBean.setProperty(target, pName, val);
     }

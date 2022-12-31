@@ -2,7 +2,6 @@ package h2o.utils.log;
 
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.lang.LTime;
-import h2o.common.lang.SDate;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.date.DateUtil;
 import h2o.common.util.format.FormattingTuple;
@@ -10,7 +9,7 @@ import h2o.common.util.format.MessageFormatter;
 
 import java.util.Date;
 
-public abstract class AbstractTagLogger implements  TagLogger {
+public abstract class AbstractTagLogger implements TagLogger {
 
 
 

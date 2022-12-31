@@ -1,11 +1,11 @@
 package h2o.dao.jdbc;
 
-import h2o.jenkov.db.itf.IPreparedStatementManager;
-import h2o.jenkov.db.itf.PersistenceException;
-import h2o.jenkov.db.jdbc.JdbcUtil;
 import h2o.common.Mode;
 import h2o.dao.jdbc.sqlpara.PreparedSqlAndParameters;
 import h2o.dao.jdbc.sqlpara.SqlParameterUtil;
+import h2o.jenkov.db.itf.IPreparedStatementManager;
+import h2o.jenkov.db.itf.PersistenceException;
+import h2o.jenkov.db.jdbc.JdbcUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +53,7 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
     }
 
 
+    @Override
     public PreparedStatement prepare(String sql, Connection connection) throws SQLException, PersistenceException {
 
         this.sql = sql;
@@ -79,6 +80,7 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
     }
 
 
+    @Override
     @SuppressWarnings("rawtypes")
     public void init(PreparedStatement paramPreparedStatement) throws SQLException, PersistenceException {
 
@@ -104,8 +106,8 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
 
     }
 
+    @Override
     public Object execute(PreparedStatement paramPreparedStatement) throws SQLException, PersistenceException {
-
 
         log.debug("executeBatch...");
 
@@ -116,8 +118,8 @@ public class BatchPreparedStatementManager implements IPreparedStatementManager 
     }
 
 
+    @Override
     public void postProcess(PreparedStatement paramPreparedStatement) throws SQLException, PersistenceException {
-
     }
 
 

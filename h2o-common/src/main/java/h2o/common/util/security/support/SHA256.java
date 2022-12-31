@@ -16,7 +16,7 @@ public class SHA256 implements Encryptor {
         this.charset = charset;
     }
 
-
+    @Override
     public String enc(String str) {
         return MessageDigestUtil.digest("SHA-256", str, charset);
     }

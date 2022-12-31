@@ -44,7 +44,7 @@ public final class Tuple3<A, B, C> implements Tuple {
         return e2;
     }
 
-
+    @Override
     public int size() {
         return 3;
     }
@@ -69,6 +69,7 @@ public final class Tuple3<A, B, C> implements Tuple {
     }
 
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getE(int i) {
         if (i < 0 || i > 2) {

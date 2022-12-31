@@ -1,8 +1,8 @@
 package h2o.utils.store;
 
 
-import h2o.common.result.Result;
 import h2o.common.result.ErrorMessage;
+import h2o.common.result.Result;
 
 
 public interface FileService {

@@ -45,7 +45,7 @@ public class FileObject implements java.io.Serializable {
 
     public void putInfo(String key , String value ) {
         if ( extInfo == null ) {
-            extInfo = new HashMap<String,String>();
+            extInfo = new HashMap<>();
         }
         extInfo.put( key , value );
     }

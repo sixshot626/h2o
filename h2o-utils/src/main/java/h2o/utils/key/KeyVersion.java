@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 public class KeyVersion {
 
+    private KeyVersion() {}
+
     private static final Logger log = LoggerFactory.getLogger( KeyVersion.class.getName() );
 
 

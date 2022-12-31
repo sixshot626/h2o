@@ -74,7 +74,7 @@ public final class Tuple6<A, B, C, D, E, F> implements Tuple {
         return e5;
     }
 
-
+    @Override
     public int size() {
         return 6;
     }
@@ -98,6 +98,7 @@ public final class Tuple6<A, B, C, D, E, F> implements Tuple {
         return String.format("Tuple6[e0=%s, e1=%s, e2=%s, e3=%s, e4=%s, e5=%s]", e0, e1, e2, e3, e4, e5);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getE(int i) {
         if (i < 0 || i > 5) {

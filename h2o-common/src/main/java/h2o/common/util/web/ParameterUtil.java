@@ -1,13 +1,11 @@
 package h2o.common.util.web;
 
+import h2o.common.collection.KeyMap;
 import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.collection.MapBuilder;
 
 import javax.servlet.ServletRequest;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ParameterUtil implements Map<String, Object> {
 
@@ -59,58 +57,79 @@ public class ParameterUtil implements Map<String, Object> {
         return (T) this.parameters.get(pname);
     }
 
+    @Override
     public int size() {
         return parameters.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return parameters.isEmpty();
     }
 
+    @Override
     public boolean containsKey(Object key) {
         return parameters.containsKey(key);
     }
 
+    @Override
     public boolean containsValue(Object value) {
         return parameters.containsValue(value);
     }
 
+    @Override
     public Object get(Object key) {
         return parameters.get(key);
     }
 
+    @Override
     public Object put(String key, Object value) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void putAll(Map<? extends String, ? extends Object> t) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Set<String> keySet() {
         return parameters.keySet();
     }
 
+    @Override
     public Collection<Object> values() {
         return parameters.values();
     }
 
+    @Override
     public Set<Entry<String, Object>> entrySet() {
         return parameters.entrySet();
     }
 
+    @Override
     public boolean equals(Object o) {
-        return parameters.equals(o);
+        if (this == o) return true;
+        if (o == null ) return false;
+        if ( o instanceof ParameterUtil ) {
+            ParameterUtil parameterUtil = (ParameterUtil) o;
+            return this.parameters.equals(parameterUtil.parameters);
+        } else {
+            return parameters.equals(o);
+        }
     }
 
+    @Override
     public int hashCode() {
         return parameters.hashCode();
     }
