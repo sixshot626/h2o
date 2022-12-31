@@ -89,7 +89,7 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
         try {
 
             w = StreamUtil.writeFile( FileUtil.file(path + logMeta.getId() + ".log" ), true );
-            w.write( formatLog( level , tags , prompt , log ) );
+            w.write( tagLogString( level , tags , prompt , log ) );
             w.write('\n');
             w.flush();
 
@@ -108,7 +108,7 @@ public class FileLogger extends AbstractTagLogger implements TagLogger , Seriali
 
 
         if ( !success ) {
-            this.emergencyLog( path + logMeta.getId() + ".log" , formatLog( level , tags , prompt , log )  );
+            this.emergencyLog( path + logMeta.getId() + ".log" , tagLogString( level , tags , prompt , log )  );
         }
 
         return success;

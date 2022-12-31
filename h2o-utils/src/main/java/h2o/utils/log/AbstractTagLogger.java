@@ -24,13 +24,24 @@ public abstract class AbstractTagLogger implements  TagLogger {
 
     }
 
-    protected String formatLog( LogLevel level , String[] tags , String prompt, Object log ) {
+    protected String tagLogString( LogLevel level , String[] tags , String prompt, Object log ) {
 
         StringBuilder sbm = new StringBuilder();
         sbm.append( DateUtil.toLongString( new Date()  ) );
         sbm.append( " " );
         sbm.append( level );
-        sbm.append( " --- [" );
+        sbm.append( " --- " );
+
+        sbm.append( formatLog( tags , prompt , log ) );
+
+        return sbm.toString();
+
+
+    }
+
+    protected String formatLog( String[] tags , String prompt, Object log ) {
+        StringBuilder sbm = new StringBuilder();
+        sbm.append( "[" );
 
         if ( !CollectionUtil.argsIsBlank( tags ) ) {
             for ( int i = 0 ; i < tags.length ; i++ ) {
@@ -53,8 +64,8 @@ public abstract class AbstractTagLogger implements  TagLogger {
                     log.toString() );
 
         }
-        return sbm.toString();
 
+        return sbm.toString();
 
     }
 
