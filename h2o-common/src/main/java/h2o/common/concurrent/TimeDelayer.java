@@ -20,6 +20,9 @@ public class TimeDelayer {
                 nanosRemaining = available.awaitNanos(nanosRemaining);
             }
             return true;
+        } catch ( InterruptedException e ) {
+            Thread.currentThread().interrupt();
+            return false;
         } catch (Exception e) {
             return false;
         } finally {
@@ -27,34 +30,38 @@ public class TimeDelayer {
         }
     }
 
-    public boolean delayUntil(long time) {
-        return delayUntil(time, false);
+
+    public void delayEx(long timeout) throws InterruptedException {
+        if (timeout <= 0L) {
+            return;
+        }
+        long nanosRemaining = TimeUnit.MILLISECONDS.toNanos(timeout);
+        lock.lock();
+        try {
+            while (nanosRemaining > 0L) {
+                nanosRemaining = available.awaitNanos(nanosRemaining);
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
-    public void uninterruptedDelayUntil(long time) {
-        delayUntil(time, true);
-    }
 
-    private boolean delayUntil(long time, boolean interruptible) {
+    public boolean delayUntil( long time ) {
 
         if (time < 0) {
             throw new IllegalArgumentException();
         }
 
-        long delayTime = time - System.currentTimeMillis();
-        while (delayTime > 0) {
-            if (this.delay(delayTime >= 10000L ? 10000L : delayTime)) {
-                if (delayTime < 10000L) {
-                    return true;
-                }
-            } else if (interruptible) {
-                return System.currentTimeMillis() >= time;
-            }
-            delayTime = time - System.currentTimeMillis();
-        }
-
-        return true;
+        return delay( time - System.currentTimeMillis() );
     }
 
+    public void delayUntilEx( long time ) throws InterruptedException {
+        if (time < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        delayEx( time - System.currentTimeMillis() );
+    }
 
 }

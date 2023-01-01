@@ -99,7 +99,7 @@ public class RunUtil {
     public static <T> Future<T>[] call(Callable<T> task, int n, String name) {
 
         if (n < 1) {
-            return null;
+            return new Future[0];
         } else if (n == 1) {
             return new Future[]{call(task,name)};
         }
@@ -130,7 +130,7 @@ public class RunUtil {
     public static Future<?>[] run(Runnable task, int n, String name) {
 
         if (n < 1) {
-            return null;
+            return new Future[0];
         } else if (n == 1) {
             return new Future[]{run(task , name)};
         }
@@ -167,13 +167,16 @@ public class RunUtil {
         return new TimeDelayer().delay(timeout);
     }
 
+    public static void delayEx(long timeout) throws InterruptedException {
+        new TimeDelayer().delayEx(timeout);
+    }
+
     public static boolean delayUntil(long time) {
         return new TimeDelayer().delayUntil(time);
     }
 
-    public static void uninterruptedDelayUntil(long time) {
-        new TimeDelayer().uninterruptedDelayUntil(time);
+    public static void delayUntilEx(long timeout) throws InterruptedException {
+        new TimeDelayer().delayUntilEx(timeout);
     }
-
 
 }

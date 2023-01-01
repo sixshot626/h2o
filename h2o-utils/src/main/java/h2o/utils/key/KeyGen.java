@@ -103,6 +103,8 @@ public class KeyGen {
                 try {
                     TimeUnit.MILLISECONDS.sleep(20L);
                 } catch (InterruptedException localInterruptedException) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
             }
 
