@@ -19,9 +19,9 @@ public class Dispatcher {
     private final long freeSleepTime;
     private final long errSleepTime;
 
-    private volatile RepetitiveTask task;
+    private RepetitiveTask task;
 
-    public void setTask(RepetitiveTask task) {
+    public synchronized void setTask(RepetitiveTask task) {
         if (this.task != null) {
             throw new IllegalStateException("Task has been setted!");
         }
@@ -82,7 +82,7 @@ public class Dispatcher {
     }
 
 
-    public Future<?> startTask(RepetitiveTask task) {
+    public synchronized Future<?> startTask(RepetitiveTask task) {
         this.setTask(task);
         return this.start();
     }
@@ -93,7 +93,7 @@ public class Dispatcher {
     }
 
 
-    public Future<?> start() {
+    public synchronized Future<?> start() {
 
         if (stop) {
             throw new IllegalStateException("Service is stopped!");
@@ -108,10 +108,7 @@ public class Dispatcher {
 
         running = true;
 
-        return run(new Runnable() {
-
-            @Override
-            public void run() {
+        return run( () -> {
 
                 try {
 
@@ -157,9 +154,7 @@ public class Dispatcher {
                 stop = true;
                 running = false;
 
-            }
-
-        });
+            });
 
     }
 
