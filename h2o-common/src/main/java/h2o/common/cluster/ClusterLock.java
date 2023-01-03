@@ -15,8 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
-public class ClusterLock {
+public final class ClusterLock {
 
     private static final Logger log = LoggerFactory.getLogger(ClusterLock.class.getName());
 
@@ -143,6 +144,20 @@ public class ClusterLock {
 
         return lock;
 
+    }
+
+
+    public <T> T inLock( Function<NBool,T> action ) {
+       return this.inLock(DEFAULT_TIME_OUT , action);
+    }
+
+    public <T> T inLock( long timeout , Function<NBool,T> action ) {
+        try {
+            NBool locked = this.lock( timeout );
+            return action.apply( locked );
+        } finally {
+            this.unlock();
+        }
     }
 
 
