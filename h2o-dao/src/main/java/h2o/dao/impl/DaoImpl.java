@@ -7,7 +7,7 @@ import h2o.common.lang.Val;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
-import h2o.dao.ResultSetCallback;
+import h2o.dao.result.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.jdbc.BatchPreparedStatementManager;
 import h2o.dao.jdbc.JdbcDao;

@@ -1,20 +1,20 @@
 package h2o.dao;
 
 
-import h2o.common.exception.ExceptionUtil;
 import h2o.common.thirdparty.freemarker.TemplateUtil;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.exception.DaoException;
 import h2o.dao.sql.SqlBuilder;
 import h2o.dao.sql.SqlTable;
 import h2o.dao.transaction.JdbcTransactionManager;
+import h2o.dao.transaction.TransactionCallback;
 import h2o.dao.transaction.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Map;
-import java.util.function.Function;
 
 public final class DbUtil {
 
@@ -83,35 +83,39 @@ public final class DbUtil {
     }
 
 
-    public static <T> T qx(String name, Function<Dao, T> daoCallback) {
+    public static <T> T qx(String name, TransactionCallback<T> txCallback) {
 
         Dao dao = null;
 
         try {
             dao = getDao(name);
-            return daoCallback.apply(dao);
+            return txCallback.doInTransaction(dao);
 
-        } catch (Exception e) {
-
-            LOG.debug("doCallback", e);
-            throw ExceptionUtil.toRuntimeException(e);
-
+        } catch (RuntimeException | Error ex) {
+            // Transactional code threw application exception -> rollback
+            LOG.debug("doCallback", ex);
+            throw ex;
+        } catch (Throwable ex) {
+            // Transactional code threw unexpected exception -> rollback
+            LOG.debug("doCallback", ex);
+            throw new UndeclaredThrowableException(ex, "TransactionCallback threw undeclared checked exception");
         } finally {
             if (dao != null) {
                 try {
                     dao.close();
-                } catch (Exception e) {
+                } catch (Exception ex) {
+                    LOG.error("Dao close", ex);
                 }
             }
         }
     }
 
 
-    public static <T> T tx(String name, Function<Dao, T> txCallback) {
+    public static <T> T tx(String name, TransactionCallback<T> txCallback) {
         return tx(new JdbcTransactionManager(name), txCallback);
     }
 
-    public static <T> T tx(TransactionManager txManager, Function<Dao, T> txCallback) {
+    public static <T> T tx(TransactionManager txManager, TransactionCallback<T> txCallback) {
 
         Dao dao = null;
 
@@ -119,33 +123,37 @@ public final class DbUtil {
 
             dao = txManager.getDao();
 
-            T t = txCallback.apply(dao);
+            T t = txCallback.doInTransaction(dao);
 
             txManager.commit();
 
             return t;
 
-        } catch (Exception e) {
-
-            LOG.debug("doCallback", e);
-
+        } catch (RuntimeException | Error ex) {
+            // Transactional code threw application exception -> rollback
+            LOG.debug("doCallback", ex);
             txManager.rollback();
-
-            throw ExceptionUtil.toRuntimeException(e);
-
+            throw ex;
+        } catch (Throwable ex) {
+            // Transactional code threw unexpected exception -> rollback
+            LOG.debug("doCallback", ex);
+            txManager.rollback();
+            throw new UndeclaredThrowableException(ex, "TransactionCallback threw undeclared checked exception");
         } finally {
 
             if (dao != null) {
                 try {
                     dao.close();
-                } catch (Exception e) {
+                } catch (Exception ex) {
+                    LOG.error("Dao close", ex);
                 }
             }
 
             if (txManager instanceof AutoCloseable) {
                 try {
                     ((AutoCloseable) txManager).close();
-                } catch (Exception e) {
+                } catch (Exception ex) {
+                    LOG.error("TransactionManager close", ex);
                 }
             }
 

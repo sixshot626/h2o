@@ -9,7 +9,7 @@ import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.Assert;
 import h2o.common.util.collection.ListBuilder;
 import h2o.dao.Dao;
-import h2o.dao.ResultSetCallback;
+import h2o.dao.result.ResultSetCallback;
 import h2o.dao.exception.DaoException;
 import h2o.dao.impl.sql.TSql;
 import h2o.dao.log.LogWriter;

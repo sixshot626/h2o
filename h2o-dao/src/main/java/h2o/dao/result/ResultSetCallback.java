@@ -1,4 +1,6 @@
-package h2o.dao;
+package h2o.dao.result;
+
+import h2o.dao.Dao;
 
 import java.sql.ResultSet;
 

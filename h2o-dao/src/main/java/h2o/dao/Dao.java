@@ -10,6 +10,7 @@ import h2o.dao.page.PagingProcessor;
 import h2o.dao.proc.ArgProcessor;
 import h2o.dao.proc.OrmProcessor;
 import h2o.dao.proc.RowProcessor;
+import h2o.dao.result.ResultSetCallback;
 import h2o.dao.sql.SqlSource;
 
 import java.io.Closeable;
