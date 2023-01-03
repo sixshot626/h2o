@@ -34,7 +34,7 @@ public final class ClusterLock {
 
 
     public ClusterLock(RedisProvider redisClient, String key, Duration expire) {
-        this.id = createUID();
+        this.id = createUid();
         this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
         this.expire = expire.get(ChronoUnit.SECONDS);
@@ -42,7 +42,7 @@ public final class ClusterLock {
 
 
     public ClusterLock(RedisProvider redisClient, NString id, String key, Duration expire) {
-        this.id = id.orElse(createUID());
+        this.id = id.orElse(createUid());
         this.redisClient = redisClient;
         this.key = "H2OClusterLock_" + key;
         this.expire = expire.get(ChronoUnit.SECONDS);
@@ -128,16 +128,13 @@ public final class ClusterLock {
                     lock = NBool.NULL;
                 }
 
-
-                try {
-
-                    TimeUnit.MILLISECONDS.sleep(50);
-
-                } catch (InterruptedException e) {
-                }
+                TimeUnit.MILLISECONDS.sleep(50);
 
             } while (System.currentTimeMillis() - t < timeout);
 
+        } catch ( InterruptedException e ) {
+            Thread.currentThread().interrupt();
+            log.error("Interrupted", e);
         } catch (Exception e) {
             log.error("", e);
         }
@@ -199,7 +196,7 @@ public final class ClusterLock {
 
                     redis.eval(UNLOCK_LUA, ScriptOutputType.INTEGER, new String[]{key}, new String[]{id});
 
-                } catch (Throwable e) {
+                } catch ( Exception e) {
 
                     log.error("", e);
                     unlockUNLUA(redis);
@@ -216,7 +213,7 @@ public final class ClusterLock {
 
     private static final ClusterUtil.IdGenerator ID_GENERATOR = new ClusterUtil.IdGenerator();
 
-    private static String createUID() {
+    private static String createUid() {
         return StringUtil.build(ID_GENERATOR.makeId()  , "-" , new RandomString().makeNumberCode(10));
     }
 
