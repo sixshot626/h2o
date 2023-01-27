@@ -239,6 +239,32 @@ public final class WhereBuilder implements WhereConditions {
 
 
 
+    public WhereBuilder brackets(boolean condition, Consumer<WhereBuilder> consumer) {
+
+        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i );
+        consumer.accept( whereBuilder );
+
+        this.i = whereBuilder.i;
+
+        String sql = whereBuilder.whereSql();
+
+        if ( condition && StringUtils.isNotBlank( sql ) ) {
+            if (!conjunction) {
+                conjunction = true;
+            }
+
+            sqlBuilder.append(" ( ");
+            sqlBuilder.append( sql );
+            sqlBuilder.append(" ) ");
+
+            this.para.putAll( whereBuilder.params() );
+
+        }
+
+        return this;
+
+    }
+
 
     public WhereBuilder and(boolean condition, Consumer<WhereBuilder> consumer) {
 
@@ -266,6 +292,7 @@ public final class WhereBuilder implements WhereConditions {
 
         return this;
     }
+
 
     public WhereBuilder or(boolean condition, Consumer<WhereBuilder> consumer) {
 
@@ -381,6 +408,10 @@ public final class WhereBuilder implements WhereConditions {
     }
 
 
+    public WhereBuilder brackets(Consumer<WhereBuilder> consumer) {
+        return this.brackets( true , consumer);
+    }
+
     public WhereBuilder and(Consumer<WhereBuilder> consumer) {
         return this.and(true , consumer );
     }
@@ -460,8 +491,6 @@ public final class WhereBuilder implements WhereConditions {
     private String column(Object attr) {
         return this.tableStruct.getColumn(attr).colName;
     }
-
-
 
 
 }
