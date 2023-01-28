@@ -9,6 +9,6 @@ import h2o.flow.pvm.exception.FlowException;
 
 public interface SignalNode extends Node {
 
-	ExecResult signal(RunContext runContext , Object... args ) throws FlowException;
+	ExecResult onSignal(RunContext runContext , Object... args ) throws FlowException;
 	
 }
