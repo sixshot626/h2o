@@ -1,6 +1,8 @@
 package h2o.dao.jdbc.sqlpara;
 
 import h2o.common.Tools;
+import h2o.common.collection.IgnoreCaseMap;
+import h2o.common.collection.KeyMap;
 import h2o.common.lang.Key;
 import h2o.common.util.bean.BeanUtil;
 import h2o.common.util.collection.CollectionUtil;
@@ -9,10 +11,7 @@ import h2o.common.util.collection.MapBuilder;
 import h2o.dao.jdbc.sqlpara.namedparam.NamedParameterUtils;
 import h2o.dao.jdbc.sqlpara.namedparam.SqlParameterInfo;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlParameterUtil {
 
@@ -30,49 +29,61 @@ public class SqlParameterUtil {
 
     public Map<String, Object> toMap(Object... args) {
 
-        Map<String, Object> m = MapBuilder.newMap();
+        Map<String, Object> para = new HashMap<>();
 
-        if (!CollectionUtil.argsIsBlank(args)) for (int i = 0; i < args.length; i++) {
+        KeyMap<Object> m = new KeyMap<>( para );
 
-            Object a = args[i];
+        if (!CollectionUtil.argsIsBlank(args)) {
 
-            if (a == null) {
-                continue;
-            }
+            for (int i = 0; i < args.length; i++) {
 
-            if (otherToMapProc(a, m)) {
-            } else if (a instanceof Map) {
+                Object a = args[i];
 
-                for (Map.Entry<?, ?> e : ((Map<?, ?>) a).entrySet()) {
-                    m.put(e.getKey().toString(), valConvert(e.getValue()));
+                if (a == null) {
+                    continue;
                 }
 
-            } else if (a instanceof String) {
+                Map<String, Object> om = new HashMap<>();
+                if (otherToMapProc(a, om)) {
 
-                Object val = args[++i];
-                m.put((String) a, valConvert(val));
+                    for (Map.Entry<String, Object> e : om.entrySet()) {
+                        m.assoc(e.getKey(), valConvert(e.getValue()));
+                    }
 
-            } else if (a instanceof Enum) {
 
-                Object val = args[++i];
-                m.put(((Enum) a).name(), valConvert(val));
+                } else if (a instanceof Map) {
 
-            } else if (a instanceof Key) {
+                    for (Map.Entry<?, ?> e : ((Map<?, ?>) a).entrySet()) {
+                        m.assoc(e.getKey().toString(), valConvert(e.getValue()));
+                    }
 
-                Object val = args[++i];
-                m.put(((Key) a).name(), valConvert(val));
+                } else if (a instanceof String) {
 
-            } else {
+                    Object val = args[++i];
+                    m.assoc((String) a, valConvert(val));
 
-                Map<String, Object> sqlPara = beanUtil.bean2Map(a);
-                for (Map.Entry<String, Object> e : sqlPara.entrySet()) {
-                    m.put(e.getKey(), valConvert(e.getValue()));
+                } else if (a instanceof Enum) {
+
+                    Object val = args[++i];
+                    m.assoc(((Enum) a).name(), valConvert(val));
+
+                } else if (a instanceof Key) {
+
+                    Object val = args[++i];
+                    m.assoc(((Key) a).name(), valConvert(val));
+
+                } else {
+
+                    Map<String, Object> sqlPara = beanUtil.bean2Map(a);
+                    for (Map.Entry<String, Object> e : sqlPara.entrySet()) {
+                        m.assoc(e.getKey(), valConvert(e.getValue()));
+                    }
                 }
-            }
 
+            }
         }
 
-        return m;
+        return para;
 
     }
 

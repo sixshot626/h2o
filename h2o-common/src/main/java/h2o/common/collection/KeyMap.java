@@ -20,10 +20,10 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
     public KeyMap(Map<String, V> map) {
 
-        if ( map == null || map.isEmpty() ) {
+        if ( map == null ) {
 
-            this.realMap    = Collections.emptyMap();
-            this.keyMapping = Collections.emptyMap();
+            this.realMap    = new HashMap<>();
+            this.keyMapping = new HashMap<>();
 
         } else {
 
@@ -37,8 +37,8 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
             }
 
-            this.realMap    = Collections.unmodifiableMap(map);
-            this.keyMapping = Collections.unmodifiableMap(km);
+            this.realMap    = map;
+            this.keyMapping = km;
 
         }
 
@@ -79,6 +79,22 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
         return keyMapping.get( proc2(key) );
 
     }
+
+
+    public void assoc( Object obj, V value ) {
+
+        String key = proc( obj );
+        String key2 = proc2(key);
+
+        String oldKay = keyMapping.put( key2 , key );
+        if ( oldKay != null ) {
+           realMap.remove( oldKay );
+        }
+        realMap.put( key , value );
+
+    }
+
+
 
     @Override
     public int size()                        {return realMap.size();}
