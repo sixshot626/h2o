@@ -24,6 +24,11 @@ public final class WhereBuilder implements WhereConditions {
     private final String prefix;
 
 
+    private final int indentationLevel;
+
+
+
+
     private final StringBuilder sqlBuilder = new StringBuilder();
 
     private final Map<Object,Object> para = new HashMap<>();
@@ -42,14 +47,19 @@ public final class WhereBuilder implements WhereConditions {
 
         this.allowUnconditional = true;
         this.sub = false;
+
+        this.indentationLevel = 0;
     }
 
-    private WhereBuilder(TableStruct tableStruct , String prefix , int startParaIndex ) {
+    private WhereBuilder(TableStruct tableStruct , String prefix , int startParaIndex , int indentationLevel ) {
         this.tableStruct = tableStruct;
         this.prefix = prefix;
         this.i = startParaIndex;
         this.allowUnconditional = true;
         this.sub = true;
+
+        this.indentationLevel = indentationLevel;
+
     }
 
 
@@ -68,7 +78,9 @@ public final class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    and ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("    and ");
             }
 
             String p = StringUtil.build( prefix , "_" , i , "_" , name(col) );
@@ -97,7 +109,9 @@ public final class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    and ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("    and ");
             }
 
             String p = StringUtil.build( prefix , "_" , i , "_" , name(col) );
@@ -126,7 +140,9 @@ public final class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    and ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("    and ");
             }
 
             sqlBuilder.append(column(col));
@@ -241,7 +257,7 @@ public final class WhereBuilder implements WhereConditions {
 
     public WhereBuilder brackets(boolean condition, Consumer<WhereBuilder> consumer) {
 
-        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i );
+        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i , this.indentationLevel + 1 );
         consumer.accept( whereBuilder );
 
         this.i = whereBuilder.i;
@@ -253,9 +269,11 @@ public final class WhereBuilder implements WhereConditions {
                 conjunction = true;
             }
 
-            sqlBuilder.append(" ( ");
+            sqlBuilder.append("( ");
             sqlBuilder.append( sql );
-            sqlBuilder.append(" ) ");
+            sqlBuilder.append('\n');
+            sqlBuilder.append(indentation());
+            sqlBuilder.append("        ) ");
 
             this.para.putAll( whereBuilder.params() );
 
@@ -268,7 +286,7 @@ public final class WhereBuilder implements WhereConditions {
 
     public WhereBuilder and(boolean condition, Consumer<WhereBuilder> consumer) {
 
-        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i );
+        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i , this.indentationLevel + 1 );
         consumer.accept( whereBuilder );
 
         this.i = whereBuilder.i;
@@ -279,12 +297,16 @@ public final class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    and ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("    and ");
             }
 
-            sqlBuilder.append(" ( ");
+            sqlBuilder.append("( ");
             sqlBuilder.append( sql );
-            sqlBuilder.append(" ) ");
+            sqlBuilder.append('\n');
+            sqlBuilder.append(indentation());
+            sqlBuilder.append("        ) ");
 
             this.para.putAll( whereBuilder.params() );
 
@@ -296,7 +318,7 @@ public final class WhereBuilder implements WhereConditions {
 
     public WhereBuilder or(boolean condition, Consumer<WhereBuilder> consumer) {
 
-        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i );
+        WhereBuilder whereBuilder = new WhereBuilder( this.tableStruct  , this.prefix , this.i , this.indentationLevel + 1 );
         consumer.accept( whereBuilder );
 
         this.i = whereBuilder.i;
@@ -307,12 +329,16 @@ public final class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    or  ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("     or ");
             }
 
-            sqlBuilder.append(" ( ");
+            sqlBuilder.append("( ");
             sqlBuilder.append( sql );
-            sqlBuilder.append(" ) ");
+            sqlBuilder.append('\n');
+            sqlBuilder.append(indentation());
+            sqlBuilder.append("        ) ");
 
             this.para.putAll( whereBuilder.params() );
 
@@ -327,7 +353,9 @@ public final class WhereBuilder implements WhereConditions {
 
         if ( condition ) {
             if (conjunction) {
-                sqlBuilder.append("\n    or  ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("     or ");
                 conjunction = false;
             }
         }
@@ -343,7 +371,9 @@ public final class WhereBuilder implements WhereConditions {
             if (!conjunction) {
                 conjunction = true;
             } else {
-                sqlBuilder.append("\n    and ");
+                sqlBuilder.append('\n');
+                sqlBuilder.append(indentation());
+                sqlBuilder.append("    and ");
             }
 
             sqlBuilder.append( buildString( strs ) );
@@ -444,7 +474,7 @@ public final class WhereBuilder implements WhereConditions {
         }
 
         if ( sub ) {
-            return buildString(" \n        ",  sql);
+            return buildString(" \n", indentation() ,"        ",  sql);
         } else {
             return buildString(" \nwhere   ",  sql);
         }
@@ -462,6 +492,43 @@ public final class WhereBuilder implements WhereConditions {
     public String toString() {
         return this.whereSql();
     }
+
+
+
+
+
+
+
+
+
+
+
+    private String _indentation = null;
+    private String indentation() {
+
+
+
+        if ( this._indentation == null ) {
+
+            if ( this.indentationLevel == 0 ) {
+
+                this._indentation = "";
+
+            } else {
+
+                StringBuilder indentationBuilder = new StringBuilder();
+                for (int i = 0; i < this.indentationLevel; i++) {
+                    indentationBuilder.append("      ");
+                }
+
+                this._indentation = indentationBuilder.toString();
+
+            }
+        }
+
+        return this._indentation;
+    }
+
 
     private String buildString(Object... strs) {
         StringBuilder sb = new StringBuilder();
