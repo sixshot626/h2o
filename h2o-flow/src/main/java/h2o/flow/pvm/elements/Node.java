@@ -9,6 +9,6 @@ import h2o.flow.pvm.exception.FlowException;
 
 public interface Node extends FlowElement {
 
-	ExecResult exec(RunContext runContext , Object... args ) throws FlowException;
+	ExecResult execute(RunContext runContext , Object... args ) throws FlowException;
 
 }
