@@ -25,9 +25,9 @@ public class PostgreSQLPagingProcessor extends AbstractPagingProcessor implement
                 .put(P2, pageRowSize).get();
 
         StringBuilder pageSql = new StringBuilder();
-        pageSql.append("select * from (\n");
+        pageSql.append("select * from (\n\n");
         pageSql.append(this.orderProc(sql, resultInfo.getSorts()));
-        StringUtil.append(pageSql, "\n) page_query limit :", P2, " offset :", P1);
+        StringUtil.append(pageSql, "\n\n) page_query limit :", P2, " offset :", P1);
 
         return Tuple.t(pageSql.toString(), args);
     }
