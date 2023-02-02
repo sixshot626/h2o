@@ -24,25 +24,27 @@ public final class SNumber extends Number implements OptionalValue<String>, Comp
 
 
     public SNumber(long value) {
-        this.value = BigDecimal.valueOf(value).toString();
+        this.value = Long.toString(value);
     }
 
     public SNumber(double value) {
-        this.value = BigDecimal.valueOf(value).toString();
+        this.value = BigDecimal.valueOf(value).toPlainString();
     }
 
     public SNumber(Number number) {
 
         if (number == null) {
             this.value = null;
-        } else if (number instanceof Integer || number instanceof Double || number instanceof Long ||
-                number instanceof BigDecimal || number instanceof Float ||
-                number instanceof BigInteger || number instanceof Short) {
-            this.value = number.toString();
+        } else if (number instanceof Integer || number instanceof Long || number instanceof BigInteger || number instanceof Short) {
+                this.value = number.toString();
+        } else if (number instanceof Double || number instanceof Float ) {
+            this.value = BigDecimal.valueOf(number.doubleValue()).toPlainString();
+        } else if ( number instanceof BigDecimal ) {
+            this.value = ((BigDecimal) number).toPlainString();
         } else if (number instanceof SNumber) {
             this.value = ((SNumber) number).value;
         } else {
-            this.value = new BigDecimal(number.toString().trim()).toString();
+            this.value = new BigDecimal(number.toString().trim()).toPlainString();
         }
 
     }
@@ -55,7 +57,7 @@ public final class SNumber extends Number implements OptionalValue<String>, Comp
         if (direct) {
             this.value = num;
         } else {
-            this.value = num == null ? null : new BigDecimal(num).toString();
+            this.value = num == null ? null : new BigDecimal(num).toPlainString();
         }
     }
 
@@ -369,5 +371,6 @@ public final class SNumber extends Number implements OptionalValue<String>, Comp
     public String toString() {
         return this.orElse("<null>");
     }
+
 
 }

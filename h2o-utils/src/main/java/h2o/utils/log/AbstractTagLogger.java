@@ -14,13 +14,14 @@ public abstract class AbstractTagLogger implements TagLogger {
 
 
     @Override
-    public boolean fmtLog(LogLevel level, String[] tags, String prompt, String fmt, Object... args ) {
+    public boolean fmtLog( boolean keyLog ,  LogLevel level, String[] tags, String prompt, String fmt, Object... args ) {
+
 
         FormattingTuple tp = MessageFormatter.arrayFormat( fmt , args);
         if ( tp.getThrowable() != null ) {
-            return this.log( level , tags , prompt , tp.getThrowable() );
+            return this.log( keyLog,  level , tags , prompt , tp.getThrowable() );
         } else {
-            return this.log( level , tags , prompt , tp.getMessage() );
+            return this.log( keyLog , level , tags , prompt , tp.getMessage() );
         }
 
     }

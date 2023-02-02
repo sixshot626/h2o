@@ -50,7 +50,7 @@ public class FileLogger extends AbstractTagLogger implements TagLogger {
 
 
     @Override
-    public boolean log( LogLevel level, String[] tags , String prompt, Object log ) {
+    public boolean log( boolean keyLog, LogLevel level, String[] tags , String prompt, Object log ) {
 
         StringBuilder sb = new StringBuilder(basePath);
         if ( !basePath.endsWith("/") ) {
@@ -113,8 +113,6 @@ public class FileLogger extends AbstractTagLogger implements TagLogger {
         }
 
         return success;
-
-
 
 
     }
