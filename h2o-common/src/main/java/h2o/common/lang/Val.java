@@ -2,10 +2,8 @@ package h2o.common.lang;
 
 import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 
 public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
@@ -102,6 +100,28 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
         Val<T> t = (Val<T>) EMPTY;
         return t;
     }
+
+
+
+    public<U> Val<U> map(Function<? super T, ? extends U> mapper) {
+        if (!isPresent()) {
+            return empty();
+        } else {
+            return new Val<>(mapper.apply(value));
+        }
+    }
+
+
+    public<U> Val<U> flatMap(Function<? super T, Val<U>> mapper) {
+        if (!isPresent()) {
+            return empty();
+        } else {
+            return mapper.apply(value);
+        }
+    }
+
+
+
 
     public boolean isSetted() {
         return setted;
