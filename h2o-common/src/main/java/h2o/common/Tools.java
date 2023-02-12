@@ -1,5 +1,7 @@
 package h2o.common;
 
+import h2o.common.json.JsonUtil;
+import h2o.common.thirdparty.json.JacksonUtil;
 import h2o.common.util.bean.BeanUtil;
 
 
@@ -21,6 +23,9 @@ public class Tools {
     public static final BeanUtil bic = bi.cover(true);
 
     public static final BeanUtil bnic = bni.cover(true);
+
+
+    public static final JsonUtil j = new JacksonUtil();
 
 
     public static final Logger log = new Logger();
