@@ -4,6 +4,8 @@ import h2o.common.json.JsonUtil;
 import h2o.common.thirdparty.json.JacksonUtil;
 import h2o.common.util.bean.BeanUtil;
 
+import java.util.Map;
+
 
 public class Tools {
 
@@ -25,7 +27,21 @@ public class Tools {
     public static final BeanUtil bnic = bni.cover(true);
 
 
-    public static final JsonUtil j = new JacksonUtil();
+    public static final class j {
+
+        private j() {}
+
+        private static final JsonUtil JSON_UTIL = new JacksonUtil();
+
+        public static String toJson(Object obj) {
+            return JSON_UTIL.toJson(obj);
+        }
+
+        public static Map<String, Object> fromJson(String json) {
+            return JSON_UTIL.fromJson(json);
+        }
+
+    }
 
 
     public static final Logger log = new Logger();
