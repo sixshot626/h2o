@@ -1,7 +1,6 @@
 package h2o.dao.jdbc.sqlpara;
 
 import h2o.common.Tools;
-import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.collection.KeyMap;
 import h2o.common.lang.Cond;
 import h2o.common.lang.Key;
@@ -10,7 +9,6 @@ import h2o.common.lang.Val;
 import h2o.common.util.bean.BeanUtil;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
-import h2o.common.util.collection.MapBuilder;
 import h2o.dao.jdbc.sqlpara.namedparam.NamedParameterUtils;
 import h2o.dao.jdbc.sqlpara.namedparam.SqlParameterInfo;
 

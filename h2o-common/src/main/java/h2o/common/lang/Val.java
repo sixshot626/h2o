@@ -2,7 +2,10 @@ package h2o.common.lang;
 
 import h2o.common.util.bean.support.JoddBeanUtilVOImpl;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
