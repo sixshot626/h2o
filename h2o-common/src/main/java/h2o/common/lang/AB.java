@@ -34,6 +34,22 @@ public final class AB<X,Y> implements java.io.Serializable {
     }
 
 
+    public boolean isOk() {
+        return ok;
+    }
+
+    public NString getMsg() {
+        return msg;
+    }
+
+    public Val<X> getA() {
+        return a;
+    }
+
+    public Val<Y> getB() {
+        return b;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("AB{");

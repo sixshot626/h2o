@@ -3,7 +3,10 @@ package h2o.dao.jdbc.sqlpara;
 import h2o.common.Tools;
 import h2o.common.collection.IgnoreCaseMap;
 import h2o.common.collection.KeyMap;
+import h2o.common.lang.Cond;
 import h2o.common.lang.Key;
+import h2o.common.lang.Pair;
+import h2o.common.lang.Val;
 import h2o.common.util.bean.BeanUtil;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
@@ -43,34 +46,49 @@ public class SqlParameterUtil {
                     continue;
                 }
 
-                Map<String, Object> om = new HashMap<>();
+                Map<Object, Object> om = new HashMap<>();
                 if (otherToMapProc(a, om)) {
 
-                    for (Map.Entry<String, Object> e : om.entrySet()) {
-                        m.assoc(e.getKey(), valConvert(e.getValue()));
+                    for (Map.Entry<Object, Object> e : om.entrySet()) {
+                        m.assoc( keyConvert(e.getKey()), valConvert(e.getValue()));
                     }
-
 
                 } else if (a instanceof Map) {
 
                     for (Map.Entry<?, ?> e : ((Map<?, ?>) a).entrySet()) {
-                        m.assoc(e.getKey().toString(), valConvert(e.getValue()));
+                        m.assoc( keyConvert(e.getKey()), valConvert(e.getValue()));
                     }
 
-                } else if (a instanceof String) {
+                } else if (a instanceof String || a instanceof Enum || a instanceof Key) {
 
                     Object val = args[++i];
-                    m.assoc((String) a, valConvert(val));
+                    m.assoc( keyConvert(a) , valConvert(val));
 
-                } else if (a instanceof Enum) {
+                } else if (a instanceof Pair) {
 
+                    Val<?> key = ((Pair<?, ?>) a).a;
+
+                    if (key.isPresent()) {
+                        m.assoc(keyConvert(key.getValue()), valConvert(((Pair<?, ?>) a).b.getValue()));
+                    }
+
+                } else if (a instanceof Cond) {
+
+                    Cond<?> key = (Cond<?>) a;
                     Object val = args[++i];
-                    m.assoc(((Enum) a).name(), valConvert(val));
 
-                } else if (a instanceof Key) {
+                    if ( key.ok ) {
+                        m.assoc( keyConvert(key.value) , valConvert(val));
+                    }
 
+                }  else if (a instanceof Val) {
+
+                    Val<?> key = (Val<?>) a;
                     Object val = args[++i];
-                    m.assoc(((Key) a).name(), valConvert(val));
+
+                    if (key.isPresent()) {
+                        m.assoc(keyConvert(key.getValue()), valConvert(val));
+                    }
 
                 } else {
 
@@ -86,6 +104,30 @@ public class SqlParameterUtil {
         return para;
 
     }
+
+
+    @SuppressWarnings("rawtypes")
+    protected String keyConvert(Object key) {
+
+        if ( key instanceof String) {
+
+            return (String) key;
+
+        } else if (key instanceof Enum) {
+
+            return ((Enum) key).name();
+
+        } else if (key instanceof Key) {
+
+            return((Key) key).name();
+
+        } else {
+
+            return key.toString();
+
+        }
+    }
+
 
     @SuppressWarnings("rawtypes")
     protected Object valConvert(Object val) {
@@ -120,7 +162,7 @@ public class SqlParameterUtil {
     }
 
 
-    protected boolean otherToMapProc(Object arg, Map<String, Object> m) {
+    protected boolean otherToMapProc(Object arg, Map<Object, Object> m) {
         return false;
     }
 

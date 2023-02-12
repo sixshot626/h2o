@@ -22,7 +22,7 @@ public class DefaultArgProcessor implements ArgProcessor {
 
         this.sqlParameterUtil = new SqlParameterUtil(beanUtil) {
             @Override
-            protected boolean otherToMapProc(Object arg, Map<String, Object> m) {
+            protected boolean otherToMapProc(Object arg, Map<Object, Object> m) {
                 return otherProc(arg, m);
             }
 
@@ -36,7 +36,7 @@ public class DefaultArgProcessor implements ArgProcessor {
         return sqlParameterUtil.toMap(args);
     }
 
-    protected boolean otherProc(Object arg, Map<String, Object> m) {
+    protected boolean otherProc(Object arg, Map<Object, Object> m) {
         return false;
     }
 
