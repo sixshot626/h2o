@@ -2,26 +2,29 @@ package h2o.common.lang;
 
 import java.util.Objects;
 
-public class Cond<T> implements java.io.Serializable {
+public class Gate<T> implements java.io.Serializable {
 
-    private static final Cond<?> EMPTY = new Cond<>(false , null);
+    private static final long serialVersionUID = -597329505385306301L;
+
+    private static final Gate<?> EMPTY = new Gate<>(false , null);
+
 
     public final boolean ok;
 
     public final T value;
 
-    public Cond(boolean ok, T value) {
+    public Gate(boolean ok, T value) {
         this.ok = ok;
         this.value = value;
     }
 
-    public static <R> Cond<R> ok(R value) {
-        return new Cond<>(true,value);
+    public static <R> Gate<R> ok(R value) {
+        return new Gate<>(true,value);
     }
 
-    public static <R> Cond<R> empty() {
+    public static <R> Gate<R> empty() {
         @SuppressWarnings("unchecked")
-        Cond<R> t = (Cond<R>) EMPTY;
+        Gate<R> t = (Gate<R>) EMPTY;
         return t;
     }
 
@@ -39,8 +42,8 @@ public class Cond<T> implements java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cond<?> cond = (Cond<?>) o;
-        return ok == cond.ok && Objects.equals(value, cond.value);
+        Gate<?> gate = (Gate<?>) o;
+        return ok == gate.ok && Objects.equals(value, gate.value);
     }
 
     @Override

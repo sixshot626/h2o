@@ -2,7 +2,7 @@ package h2o.dao.jdbc.sqlpara;
 
 import h2o.common.Tools;
 import h2o.common.collection.KeyMap;
-import h2o.common.lang.Cond;
+import h2o.common.lang.Gate;
 import h2o.common.lang.Key;
 import h2o.common.lang.Pair;
 import h2o.common.lang.Val;
@@ -48,7 +48,7 @@ public class SqlParameterUtil {
                 if (otherToMapProc(a, om)) {
 
                     for (Map.Entry<Object, Object> e : om.entrySet()) {
-                        m.assoc( keyConvert(e.getKey()), valConvert(e.getValue()));
+                        m.assoc(keyConvert(e.getKey()), valConvert(e.getValue()));
                     }
 
                 } else if (a instanceof Map) {
@@ -60,7 +60,7 @@ public class SqlParameterUtil {
                 } else if (a instanceof String || a instanceof Enum || a instanceof Key) {
 
                     Object val = args[++i];
-                    m.assoc( keyConvert(a) , valConvert(val));
+                    m.assoc(keyConvert(a) , valConvert(val));
 
                 } else if (a instanceof Pair) {
 
@@ -70,13 +70,13 @@ public class SqlParameterUtil {
                         m.assoc(keyConvert(key.getValue()), valConvert(((Pair<?, ?>) a).b.getValue()));
                     }
 
-                } else if (a instanceof Cond) {
+                } else if (a instanceof Gate) {
 
-                    Cond<?> key = (Cond<?>) a;
+                    Gate<?> key = (Gate<?>) a;
                     Object val = args[++i];
 
-                    if ( key.ok ) {
-                        m.assoc( keyConvert(key.value) , valConvert(val));
+                    if (key.ok) {
+                        m.assoc(keyConvert(key.value) , valConvert(val));
                     }
 
                 }  else if (a instanceof Val) {
