@@ -1,7 +1,7 @@
 package h2o.common.collection;
 
-import h2o.common.lang.Key;
 import h2o.apache.commons.lang.StringUtils;
+import h2o.common.lang.Key;
 
 import java.io.Serializable;
 import java.util.*;

@@ -101,7 +101,7 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
         if (this.isPresent()) {
             return SDate.from(this.value, DATE_FMT);
         } else {
-            return new SDate();
+            return this == NULL ? SDate.NULL : new SDate();
         }
 
     }
@@ -112,7 +112,7 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
         if (this.isPresent()) {
             return STime.from(this.value, DATE_FMT);
         } else {
-            return new STime();
+            return this == NULL ? STime.NULL : new STime();
         }
 
     }

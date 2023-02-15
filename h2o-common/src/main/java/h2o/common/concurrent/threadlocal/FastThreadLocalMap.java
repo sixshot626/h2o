@@ -17,9 +17,8 @@
 package h2o.common.concurrent.threadlocal;
 
 
-
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

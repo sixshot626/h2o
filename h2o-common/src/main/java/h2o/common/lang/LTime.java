@@ -129,7 +129,17 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
         if (this.isPresent()) {
             return new SDateTime(new Date(this.value));
         } else {
-            return new SDateTime();
+            return this == NULL ? SDateTime.NULL : new SDateTime();
+        }
+
+    }
+
+    public STimestamp toSTimestamp() {
+
+        if (this.isPresent()) {
+            return new STimestamp(new Date(this.value));
+        } else {
+            return this == NULL ? STimestamp.NULL : new STimestamp();
         }
 
     }

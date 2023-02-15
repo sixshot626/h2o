@@ -3,7 +3,6 @@ package h2o.common.data.domain;
 import h2o.common.util.collection.CollectionUtil;
 import h2o.common.util.collection.ListBuilder;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

@@ -1,7 +1,5 @@
 package h2o.common.result;
 
-import h2o.common.lang.NBool;
-
 public class FinalResult<R> implements java.io.Serializable {
 
     private final boolean finalState;

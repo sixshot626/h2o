@@ -1,9 +1,9 @@
 package h2o.common.ioc;
 
+import h2o.common.util.io.StreamUtil;
 import h2o.jenkov.container.Container;
 import h2o.jenkov.container.IContainer;
 import h2o.jenkov.container.script.ScriptFactoryBuilder;
-import h2o.common.util.io.StreamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

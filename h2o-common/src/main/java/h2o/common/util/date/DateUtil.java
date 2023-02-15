@@ -5,10 +5,68 @@ import java.util.Date;
 
 public abstract class DateUtil {
 
+
+    public static final class Format {
+
+        private Format() {}
+
+        /**
+         * yyyy-MM-dd
+         */
+        String Y_M_D = "yyyy-MM-dd";
+
+        /**
+         *yyyyMMdd
+         */
+        String YMD = "yyyyMMdd";
+
+        /**
+         * HH:mm:ss
+         */
+        String H_M_S = "HH:mm:ss";
+
+        /**
+         * HHmmss
+         */
+        String HMS = "HHmmss";
+
+        /**
+         * yyyy-MM-dd HH:mm:ss
+         */
+        String D_S = "yyyy-MM-dd HH:mm:ss";
+
+        /**
+         * yyyy-MM-dd HH:mm:ss.SSS
+         */
+        String D_S_S = "yyyy-MM-dd HH:mm:ss.SSS";
+
+        /**
+         * yyyy-MM-dd'T'HH:mm:ss
+         */
+        String D_T_S = "yyyy-MM-dd'T'HH:mm:ss";
+
+        /**
+         * yyyy-MM-dd'T'HH:mm:ss.SSS
+         */
+        String D_T_S_S = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+
+        /**
+         * yyyyMMddHHmmss
+         */
+        String DS = "yyyyMMddHHmmss";
+
+        /**
+         * yyyyMMddHHmmssSSS
+         */
+        String DSS = "yyyyMMddHHmmssSSS";
+
+    }
+
+
+
     private DateUtil() {
     }
 
-    ;
 
     private final static DateTime dateTime = new DateTime(false);
 
