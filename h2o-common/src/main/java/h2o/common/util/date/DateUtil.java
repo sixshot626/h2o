@@ -13,52 +13,52 @@ public abstract class DateUtil {
         /**
          * yyyy-MM-dd
          */
-        String Y_M_D = "yyyy-MM-dd";
+        public static final String Y_M_D = "yyyy-MM-dd";
 
         /**
          *yyyyMMdd
          */
-        String YMD = "yyyyMMdd";
+        public static final String YMD = "yyyyMMdd";
 
         /**
          * HH:mm:ss
          */
-        String H_M_S = "HH:mm:ss";
+        public static final String H_M_S = "HH:mm:ss";
 
         /**
          * HHmmss
          */
-        String HMS = "HHmmss";
+        public static final String HMS = "HHmmss";
 
         /**
          * yyyy-MM-dd HH:mm:ss
          */
-        String D_S = "yyyy-MM-dd HH:mm:ss";
+        public static final String D_S = "yyyy-MM-dd HH:mm:ss";
 
         /**
          * yyyy-MM-dd HH:mm:ss.SSS
          */
-        String D_S_S = "yyyy-MM-dd HH:mm:ss.SSS";
+        public static final String D_S_S = "yyyy-MM-dd HH:mm:ss.SSS";
 
         /**
          * yyyy-MM-dd'T'HH:mm:ss
          */
-        String D_T_S = "yyyy-MM-dd'T'HH:mm:ss";
+        public static final String D_T_S = "yyyy-MM-dd'T'HH:mm:ss";
 
         /**
          * yyyy-MM-dd'T'HH:mm:ss.SSS
          */
-        String D_T_S_S = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        public static final String D_T_S_S = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
         /**
          * yyyyMMddHHmmss
          */
-        String DS = "yyyyMMddHHmmss";
+        public static final String DS = "yyyyMMddHHmmss";
 
         /**
          * yyyyMMddHHmmssSSS
          */
-        String DSS = "yyyyMMddHHmmssSSS";
+        public static final String DSS = "yyyyMMddHHmmssSSS";
 
     }
 
