@@ -50,6 +50,15 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
 
+
+    private static Date toDate(String date, String fmt) {
+        return SDate.toDate(date, fmt);
+    }
+
+    public static LTime from(String dateTime, String fmt) {
+        return new LTime(toDate(dateTime, fmt));
+    }
+
     public static LTime now() {
         return new LTime( System.currentTimeMillis() );
     }
