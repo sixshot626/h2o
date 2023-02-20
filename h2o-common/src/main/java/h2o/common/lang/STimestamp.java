@@ -86,6 +86,26 @@ public final class STimestamp implements OptionalValue<String>, Comparable<STime
 
 
 
+    public STimestamp plusSeconds(long secondsToAdd) {
+       return new STimestamp( this.toInstant().plusSeconds( secondsToAdd ) );
+    }
+
+    public STimestamp plusMillis(long millisToAdd) {
+        return new STimestamp( this.toInstant().plusMillis( millisToAdd ) );
+    }
+
+
+    public STimestamp minusSeconds(long secondsToSubtract) {
+        return new STimestamp( this.toInstant().minusSeconds( secondsToSubtract ) );
+    }
+
+    public STimestamp minusMillis(long millisToSubtract) {
+        return new STimestamp( this.toInstant().minusMillis( millisToSubtract ) );
+    }
+
+
+
+
     public SDateTime toSDateTime() {
 
         if (this.isPresent()) {

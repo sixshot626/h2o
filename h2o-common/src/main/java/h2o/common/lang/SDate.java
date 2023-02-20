@@ -6,6 +6,7 @@ import h2o.common.util.lang.StringUtil;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.Objects;
 
@@ -118,6 +119,58 @@ public final class SDate implements OptionalValue<String>, Comparable<SDate>, ja
     public String fmt(String fmt, String def) {
         return this.isPresent() ? this.fmt(fmt) : def;
     }
+
+
+
+    public SDate plus(long amountToAdd, TemporalUnit unit) {
+        return new SDate( this.toLocalDate().plus( amountToAdd , unit) );
+    }
+
+    public SDate minus(long amountToSubtract, TemporalUnit unit) {
+        return new SDate( this.toLocalDate().minus( amountToSubtract,  unit) );
+    }
+
+
+
+    public SDate plusYears(long yearsToAdd) {
+        return new SDate( this.toLocalDate().plusYears(yearsToAdd) );
+    }
+
+    public SDate plusMonths(long monthsToAdd) {
+        return new SDate( this.toLocalDate().plusWeeks(monthsToAdd) );
+    }
+
+    public SDate plusWeeks(long weeksToAdd) {
+        return new SDate( this.toLocalDate().plusWeeks(weeksToAdd) );
+    }
+
+    public SDate plusDays( int daysToAdd ) {
+        return new SDate( this.toLocalDate().plusDays(daysToAdd) );
+    }
+
+
+
+    public SDate minusYears(long yearsToSubtract) {
+        return new SDate( this.toLocalDate().minusYears(yearsToSubtract) );
+    }
+
+
+    public SDate minusMonths(long monthsToSubtract) {
+        return new SDate( this.toLocalDate().minusMonths(monthsToSubtract) );
+    }
+
+
+    public SDate minusWeeks(long weeksToSubtract) {
+        return new SDate( this.toLocalDate().minusWeeks(weeksToSubtract) );
+    }
+
+
+    public SDate minusDays(long daysToSubtract) {
+        return new SDate( this.toLocalDate().minusDays(daysToSubtract) );
+    }
+
+
+
 
 
     public Date toDate() {

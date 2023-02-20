@@ -102,6 +102,27 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
 
+
+    public LTime plusSeconds(long secondsToAdd) {
+        return new LTime( this.toInstant().plusSeconds( secondsToAdd ) );
+    }
+
+    public LTime plusMillis(long millisToAdd) {
+        return new LTime( this.toInstant().plusMillis( millisToAdd ) );
+    }
+
+
+    public LTime minusSeconds(long secondsToSubtract) {
+        return new LTime( this.toInstant().minusSeconds( secondsToSubtract ) );
+    }
+
+    public LTime minusMillis(long millisToSubtract) {
+        return new LTime( this.toInstant().minusMillis( millisToSubtract ) );
+    }
+
+
+
+
     public Date toDate() {
 
         if (this.isPresent()) {

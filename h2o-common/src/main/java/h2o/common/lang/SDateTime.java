@@ -6,9 +6,11 @@ import h2o.common.util.lang.StringUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+
 
 public final class SDateTime implements OptionalValue<String>, Comparable<SDateTime>, java.io.Serializable {
 
@@ -131,6 +133,88 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
     public String fmt(String fmt, String def) {
         return this.isPresent() ? this.fmt(fmt) : def;
     }
+
+
+
+
+    public SDateTime plus(long amountToAdd, TemporalUnit unit) {
+       return new SDateTime( this.toLocalDateTime().plus( amountToAdd , unit ) );
+    }
+
+    public SDateTime minus(long amountToSubtract, TemporalUnit unit) {
+        return new SDateTime( this.toLocalDateTime().minus( amountToSubtract , unit ) );
+    }
+
+
+    public SDateTime plusYears(long years) {
+        return new SDateTime( this.toLocalDateTime().plusYears( years ) );
+    }
+
+
+    public SDateTime plusMonths(long months) {
+        return new SDateTime( this.toLocalDateTime().plusMonths( months ) );
+    }
+
+
+    public SDateTime plusWeeks(long weeks) {
+        return new SDateTime( this.toLocalDateTime().plusWeeks( weeks ) );
+    }
+
+
+    public SDateTime plusDays(long days) {
+        return new SDateTime( this.toLocalDateTime().plusDays( days ) );
+    }
+
+
+    public SDateTime plusHours(long hours) {
+        return new SDateTime( this.toLocalDateTime().plusHours( hours ) );
+    }
+
+
+    public SDateTime plusMinutes(long minutes) {
+        return new SDateTime( this.toLocalDateTime().plusMinutes( minutes ) );
+    }
+
+
+    public SDateTime plusSeconds(long seconds) {
+        return new SDateTime( this.toLocalDateTime().plusSeconds( seconds ) );
+    }
+
+
+
+    public SDateTime minusYears(long years) {
+        return new SDateTime( this.toLocalDateTime().minusYears( years ) );
+    }
+
+
+    public SDateTime minusMonths(long months) {
+        return new SDateTime( this.toLocalDateTime().minusMonths( months ) );
+    }
+
+    public SDateTime minusWeeks(long weeks) {
+        return new SDateTime( this.toLocalDateTime().minusWeeks( weeks ) );
+    }
+
+
+    public SDateTime minusDays(long days) {
+        return new SDateTime( this.toLocalDateTime().minusDays( days ) );
+    }
+
+
+    public SDateTime minusHours(long hours) {
+        return new SDateTime( this.toLocalDateTime().minusHours( hours ) );
+    }
+
+
+    public SDateTime minusMinutes(long minutes) {
+        return new SDateTime( this.toLocalDateTime().minusMinutes( minutes ) );
+    }
+
+
+    public SDateTime minusSeconds(long seconds) {
+        return new SDateTime( this.toLocalDateTime().minusSeconds( seconds ) );
+    }
+
 
 
     public Date toDate() {
