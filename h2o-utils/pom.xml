@@ -11,7 +11,6 @@
         <version>6</version>
     </parent>
 
-    <groupId>h2o</groupId>
     <artifactId>h2o-utils</artifactId>
     <version>6.2.0</version>
 
@@ -35,7 +34,7 @@
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
-            <version>8.4.5</version>
+            <version>8.5.2</version>
         </dependency>
 
 

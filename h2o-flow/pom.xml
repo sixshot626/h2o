@@ -11,7 +11,6 @@
         <version>6</version>
     </parent>
 
-    <groupId>h2o</groupId>
     <artifactId>h2o-flow</artifactId>
     <version>6.2.0</version>
 

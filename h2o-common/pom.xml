@@ -11,7 +11,6 @@
         <version>6</version>
     </parent>
 
-    <groupId>h2o</groupId>
     <artifactId>h2o-common</artifactId>
     <version>6.2.0</version>
     <packaging>jar</packaging>
@@ -24,7 +23,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.5</version>
         </dependency>
 
 
@@ -47,7 +46,7 @@
         <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
-            <version>6.2.0.RELEASE</version>
+            <version>6.2.3.RELEASE</version>
             <scope>compile</scope>
         </dependency>
 
@@ -81,13 +80,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.2</version>
+            <version>2.13.4.2</version>
             <scope>compile</scope>
         </dependency>
 
