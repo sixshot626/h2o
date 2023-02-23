@@ -89,6 +89,8 @@ public final class DbUtil {
 
         try {
             dao = getDao(name);
+            dao.setAutoClose(false);
+
             return txCallback.doInTransaction(dao);
 
         } catch (RuntimeException | Error ex) {
