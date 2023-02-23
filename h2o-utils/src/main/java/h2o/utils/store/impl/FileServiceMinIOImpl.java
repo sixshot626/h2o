@@ -84,7 +84,7 @@ public class FileServiceMinIOImpl implements FileService {
             mc.putObject( putObjectArgsBuilder.build() );
 
 
-            return Result.success();
+            return Result.succ();
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
@@ -125,7 +125,7 @@ public class FileServiceMinIOImpl implements FileService {
             mc.putObject( putObjectArgsBuilder.build() );
 
 
-            return Result.success();
+            return Result.succ();
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
@@ -148,7 +148,7 @@ public class FileServiceMinIOImpl implements FileService {
             FileMeta meta = new FileMeta( stat.bucket() , stat.object(),
                     stat.size(), stat.contentType(), stat.userMetadata() );
 
-            return Result.success( meta );
+            return Result.succ( meta );
 
         } catch ( ErrorResponseException e ) {
 
@@ -190,7 +190,7 @@ public class FileServiceMinIOImpl implements FileService {
             fileObject.setContentType( stat.contentType() );
             fileObject.setExtInfo( stat.userMetadata() );
 
-            return Result.success( fileObject );
+            return Result.succ( fileObject );
 
         } catch ( ErrorResponseException e ) {
 
@@ -254,7 +254,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             mc.removeObject( RemoveObjectArgs.builder().bucket(bucket).object(fileId).build() );
 
-            return Result.success();
+            return Result.succ();
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);

@@ -14,11 +14,11 @@ public class Result<E,R> implements java.io.Serializable {
         this.content = content;
     }
 
-    public static <E,R> Result<E,R> success() {
+    public static <E,R> Result<E,R> succ() {
         return new Result<>( true , null , null );
     }
 
-    public static <E,R> Result<E,R> success(R content) {
+    public static <E,R> Result<E,R> succ(R content) {
         return new Result<>( true , null , content );
     }
 
