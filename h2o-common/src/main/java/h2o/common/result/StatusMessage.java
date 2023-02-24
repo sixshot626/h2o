@@ -1,6 +1,8 @@
 package h2o.common.result;
 
-public class StatusMessage<S> extends ErrorMessage {
+public class StatusMessage<S> extends ErrorMessage implements java.io.Serializable {
+
+    private static final long serialVersionUID = -7240739992619212868L;
 
     private final S status;
 

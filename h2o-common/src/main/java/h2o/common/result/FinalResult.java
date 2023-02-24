@@ -2,6 +2,8 @@ package h2o.common.result;
 
 public class FinalResult<R> implements java.io.Serializable {
 
+    private static final long serialVersionUID = 2574492965840507809L;
+
     private final boolean finalState;
     private final R result;
 

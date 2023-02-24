@@ -2,6 +2,8 @@ package h2o.common.result;
 
 public class ErrorMessage implements java.io.Serializable {
 
+    private static final long serialVersionUID = 17412745159727608L;
+
     private final String code;
 
     private final String message;

@@ -1,12 +1,14 @@
 package h2o.common.result;
 
-public class Result<E,R> implements java.io.Serializable {
+public final class Result<E,R> implements java.io.Serializable {
 
-    private final boolean success;
+    private static final long serialVersionUID = 2841849592407732732L;
 
-    private final E error;
+    public final boolean success;
 
-    private final R content;
+    public final E error;
+
+    public final R content;
 
     public Result(boolean success, E error, R content) {
         this.success = success;
