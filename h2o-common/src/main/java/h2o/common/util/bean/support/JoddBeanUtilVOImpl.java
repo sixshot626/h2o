@@ -7,20 +7,58 @@ import h2o.jodd.bean.BeanUtilBean;
 public class JoddBeanUtilVOImpl implements ValOperate {
 
 
-    private final BeanUtilBean beanUtilBean = new BeanUtilBean();
+    private final BeanUtilBean readUtil = new BeanUtilBean();
+
+    private final BeanUtilBean writeUtil = new BeanUtilBean();
 
     public JoddBeanUtilVOImpl setSilently(boolean isSilently) {
-        beanUtilBean.silent(isSilently);
+        readUtil.silent(isSilently);
+        writeUtil.silent(isSilently);
+        return this;
+    }
+
+
+    public JoddBeanUtilVOImpl readSilently(boolean isSilently) {
+        readUtil.silent(isSilently);
+        return this;
+    }
+
+    public JoddBeanUtilVOImpl writeSilently(boolean isSilently) {
+        writeUtil.silent(isSilently);
         return this;
     }
 
     public JoddBeanUtilVOImpl setForce(boolean isForce) {
-        beanUtilBean.forced(isForce);
+        readUtil.forced(isForce);
+        writeUtil.forced(isForce);
         return this;
     }
 
+    public JoddBeanUtilVOImpl readForce(boolean isForce) {
+        readUtil.forced(isForce);
+        return this;
+    }
+
+    public JoddBeanUtilVOImpl writeForce(boolean isForce) {
+        writeUtil.forced(isForce);
+        return this;
+    }
+
+
+
     public JoddBeanUtilVOImpl setDeclare(boolean isDeclare) {
-        beanUtilBean.declared(isDeclare);
+        readUtil.declared(isDeclare);
+        writeUtil.declared(isDeclare);
+        return this;
+    }
+
+    public JoddBeanUtilVOImpl readDeclare(boolean isDeclare) {
+        readUtil.declared(isDeclare);
+        return this;
+    }
+
+    public JoddBeanUtilVOImpl writeDeclare(boolean isDeclare) {
+        writeUtil.declared(isDeclare);
         return this;
     }
 
@@ -39,12 +77,12 @@ public class JoddBeanUtilVOImpl implements ValOperate {
 
     @Override
     public Object get(Object target, String pName) {
-        return beanUtilBean.getProperty(target, pName);
+        return readUtil.getProperty(target, pName);
     }
 
     @Override
     public void set(Object target, String pName, Object val) {
-        beanUtilBean.setProperty(target, pName, val);
+        writeUtil.setProperty(target, pName, val);
     }
 
 }
