@@ -3,10 +3,7 @@ package h2o.common.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ExceptionUtil {
 
@@ -220,89 +217,5 @@ public class ExceptionUtil {
         return null;
     }
 
-
-    // ---------------------------------------------------------------- sql
-
-    /**
-     * Rolls up SQL exceptions by taking each proceeding exception
-     * and making it a child of the previous using the <code>setNextException</code>
-     * method of SQLException.
-     */
-    public static SQLException rollupSqlExceptions(List<SQLException> exceptions) {
-        SQLException parent = null;
-        for (SQLException exception : exceptions) {
-            if (parent != null) {
-                exception.setNextException(parent);
-            }
-            parent = exception;
-        }
-        return parent;
-    }
-
-    // ---------------------------------------------------------------- misc
-
-    /**
-     * Throws target of <code>InvocationTargetException</code> if it is exception.
-     */
-    public static void throwTargetException(InvocationTargetException itex) throws Exception {
-        throw exctractTargetException(itex);
-    }
-
-    public static Exception exctractTargetException(InvocationTargetException itex) {
-        Throwable target = itex.getTargetException();
-        return target instanceof Exception ? (Exception) target : itex;
-    }
-
-
-    /**
-     * Throws checked exceptions in un-checked manner.
-     * Uses deprecated method.
-     *
-     * @see #throwException(Throwable)
-     */
-    @SuppressWarnings({"deprecation"})
-    public static void throwExceptionAlt(Throwable throwable) {
-        if (throwable instanceof RuntimeException) {
-            throw (RuntimeException) throwable;
-        }
-        Thread.currentThread().stop(throwable);
-    }
-
-    /**
-     * Throws checked exceptions in un-checked manner.
-     *
-     * @see #throwException(Throwable)
-     */
-    public static void throwException(Throwable throwable) {
-        if (throwable instanceof RuntimeException) {
-            throw (RuntimeException) throwable;
-        }
-        // can't handle these types
-        if ((throwable instanceof IllegalAccessException) || (throwable instanceof InstantiationException)) {
-            throw new IllegalArgumentException(throwable);
-        }
-
-        try {
-            synchronized (ThrowableThrower.class) {
-                ThrowableThrower.throwable = throwable;
-                ThrowableThrower.class.newInstance();
-            }
-        } catch (InstantiationException iex) {
-            throw new RuntimeException(iex);
-        } catch (IllegalAccessException iex) {
-            throw new RuntimeException(iex);
-        } finally {
-            ThrowableThrower.throwable = null;
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static class ThrowableThrower {
-        private static Throwable throwable;
-
-        ThrowableThrower() throws Throwable {
-            throw throwable;
-        }
-    }
 
 }
