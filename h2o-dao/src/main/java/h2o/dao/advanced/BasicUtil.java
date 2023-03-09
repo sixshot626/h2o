@@ -46,7 +46,7 @@ public final class BasicUtil<E> {
         Class<E> clazz = (Class<E>) entityClazz;
         this.entityClazz = clazz;
         this.dao = dao;
-        this.tableStruct = TableStructParser.parse(entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz).get();
     }
 
     public BasicUtil(Dao dao, Class<E> entityClazz, TableStruct tableStruct) {

@@ -31,7 +31,7 @@ public abstract class BasicRepository<E> {
         @SuppressWarnings("unchecked")
         Class<E> clazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
         this.entityClazz = clazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(this.entityClazz).get();
     }
 
     protected BasicRepository(String dataSourceName) {
@@ -40,7 +40,7 @@ public abstract class BasicRepository<E> {
         @SuppressWarnings("unchecked")
         Class<E> clazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
         this.entityClazz = clazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(this.entityClazz).get();
     }
 
     protected BasicRepository(Dao dao) {
@@ -49,21 +49,21 @@ public abstract class BasicRepository<E> {
         @SuppressWarnings("unchecked")
         Class<E> clazz = (Class<E>) GenericsUtil.getSuperClassGenricType(this.getClass());
         this.entityClazz = clazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(this.entityClazz).get();
     }
 
     protected BasicRepository(String dataSourceName , Class<E> entityClazz) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
         this.entityClazz = entityClazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(this.entityClazz).get();
     }
 
     protected BasicRepository(Dao dao , Class<E> entityClazz) {
         this.dataSourceName = null;
         this.dao = dao;
         this.entityClazz = entityClazz;
-        this.tableStruct = TableStructParser.parse(this.entityClazz);
+        this.tableStruct = TableStructParser.parse(this.entityClazz).get();
     }
 
     protected BasicRepository(String dataSourceName , Class<E> entityClazz , TableStruct tableStruct) {

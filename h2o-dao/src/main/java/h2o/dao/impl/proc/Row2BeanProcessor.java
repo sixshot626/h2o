@@ -25,7 +25,7 @@ public class Row2BeanProcessor {
 
         TableStruct _tableStruct = null;
         if (ColumnMetaUtil.hasTableAnnotation(beanClazz)) {
-            _tableStruct = TableStructParser.parse( beanClazz );
+            _tableStruct = TableStructParser.parse( beanClazz ).getValue();
         }
         tableStruct = _tableStruct;
 

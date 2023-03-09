@@ -35,21 +35,21 @@ public class AgileDao {
     public AgileDao(Class<?> entityClazz) {
         this.dataSourceName = DbUtil.DEFAULT_DATASOURCE_NAME;
         this.dao = null;
-        this.tableStruct = TableStructParser.parse(entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz).get();
         this.afterDaoSetter = null;
     }
 
     public AgileDao(String dataSourceName, Class<?> entityClazz) {
         this.dataSourceName = dataSourceName;
         this.dao = null;
-        this.tableStruct = TableStructParser.parse(entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz).get();
         this.afterDaoSetter = null;
     }
 
     public AgileDao(Dao dao, Class<?> entityClazz) {
         this.dataSourceName = null;
         this.dao = dao;
-        this.tableStruct = TableStructParser.parse(entityClazz);
+        this.tableStruct = TableStructParser.parse(entityClazz).get();
         this.afterDaoSetter = null;
     }
 
@@ -669,8 +669,16 @@ public class AgileDao {
 
             String sql;
             if (attrs == null || attrs.isEmpty()) {
-                Set<Object> ks = MapBuilder.start().putAll((Map) cell.iterator().next()).putAll(paraMap).get().keySet();
+                Object item = cell.iterator().next();
+
+                Set<Object> ks;
+                if ( item instanceof Map ) {
+                    ks = MapBuilder.start().putAll((Map) cell.iterator().next()).putAll(paraMap).get().keySet();
+                } else {
+                    ks = tableStruct.columns().stream().map( columnMeta -> columnMeta.attrName ).collect(Collectors.toSet());
+                }
                 sql = buildInsertSql(ks);
+
             } else {
                 sql = buildInsertSql(attrs);
             }
