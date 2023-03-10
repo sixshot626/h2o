@@ -98,7 +98,7 @@ public class LocalDateConverter implements TypeConverter<LocalDate> {
 			return TimeUtil.fromMilliseconds(((Number)value).longValue()).toLocalDate();
 		}
 		if (value instanceof LocalTime || value instanceof STime ) {
-			throw new TypeConversionException("Can't convert to date just from time: " + value);
+			throw new TypeConversionException("Can't convert to LocalDate: " + value);
 		}
 
 		String stringValue = value.toString().trim();

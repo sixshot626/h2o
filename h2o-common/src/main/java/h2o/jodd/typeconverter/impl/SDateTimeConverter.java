@@ -68,7 +68,7 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 			if ( ((SDate) value).isPresent() ) {
 				return new SDateTime( ((SDate) value).toDate() );
 			} else {
-				return new SDateTime();
+				return SDateTime.NULL;
 			}
 		}
 		if (value instanceof LTime) {
@@ -90,7 +90,7 @@ public class SDateTimeConverter implements TypeConverter<SDateTime> {
 			return new SDateTime(TimeUtil.toDate((LocalDate)value));
 		}
 		if (value instanceof LocalTime || value instanceof STime ) {
-			throw new TypeConversionException("Can't convert to date just from time: " + value);
+			throw new TypeConversionException("Can't convert to SDateTime: " + value);
 		}
 		if (value instanceof SNumber) {
 			if (((SNumber) value).isPresent() ) {

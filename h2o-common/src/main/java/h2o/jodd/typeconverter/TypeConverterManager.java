@@ -174,6 +174,7 @@ public class TypeConverterManager {
 		register(SDate.class, new SDateConverter());
 		register(STime.class, new STimeConverter());
 		register(SDateTime.class, new SDateTimeConverter());
+		register(STimestamp.class, new STimestampConverter());
 		register(LTime.class, new LTimeConverter());
 
 		register(NBool.class, new NBoolConverter());

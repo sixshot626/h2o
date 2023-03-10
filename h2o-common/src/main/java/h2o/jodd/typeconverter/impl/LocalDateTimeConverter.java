@@ -74,8 +74,8 @@ public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
 			}
 		}
 
-		if ( value instanceof STime) {
-			throw new TypeConversionException("Can't convert to date just from time: " + value);
+		if ( value instanceof STime || value instanceof LocalTime) {
+			throw new TypeConversionException("Can't convert to LocalDateTime: " + value);
 		}
 
 		if (value instanceof LTime) {
@@ -99,9 +99,7 @@ public class LocalDateTimeConverter implements TypeConverter<LocalDateTime> {
 		if (value instanceof Number) {
 			return TimeUtil.fromMilliseconds(((Number)value).longValue());
 		}
-		if (value instanceof LocalTime) {
-			throw new TypeConversionException("Can't convert to date just from time: " + value);
-		}
+
 
 		String stringValue = value.toString().trim();
 

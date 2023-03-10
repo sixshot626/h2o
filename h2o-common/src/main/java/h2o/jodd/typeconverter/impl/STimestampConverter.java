@@ -25,80 +25,100 @@
 
 package h2o.jodd.typeconverter.impl;
 
-import h2o.common.lang.LTime;
-import h2o.common.lang.SNumber;
-import h2o.common.lang.STime;
-import h2o.common.lang.STimestamp;
+import h2o.common.lang.*;
 import h2o.jodd.time.JulianDate;
 import h2o.jodd.time.TimeUtil;
 import h2o.jodd.typeconverter.TypeConversionException;
 import h2o.jodd.typeconverter.TypeConverter;
 import h2o.jodd.util.StringUtil;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Converts given object to a <code>Long</code>.
+ * Converts given object to <code>java.util.Date</code>.
  * Conversion rules:
  * <ul>
  * <li><code>null</code> value is returned as <code>null</code></li>
  * <li>object of destination type is simply casted</li>
- * <li>object is converted to string, trimmed, and then converted if possible.</li>
+ * <li><code>Calendar</code> object is converted</li>
+ * <li><code>JulianDate</code> object is converted</li>
+ * <li><code>LocalDateTime</code> object is converted</li>
+ * <li><code>LocalDate</code> object is converted</li>
+ * <li><code>Number</code> is used as number of milliseconds</li>
+ * <li>finally, if string value contains only numbers it is parsed as milliseconds</li>
  * </ul>
- * Number string may start with plus and minus sign.
  */
-public class LTimeConverter implements TypeConverter<LTime> {
+public class STimestampConverter implements TypeConverter<STimestamp> {
 
 	@Override
-	public LTime convert(final Object value) {
+	public STimestamp convert(final Object value) {
 
 		if (value == null) {
-			return LTime.NULL;
-		}
-
-		if (value instanceof LTime) {
-			return (LTime)value;
+			return STimestamp.NULL;
 		}
 
 		if (value instanceof STimestamp) {
-			return ((STimestamp) value).toLTime();
+			return (STimestamp) value;
 		}
-
+		if (value instanceof SDate) {
+			if ( ((SDate) value).isPresent() ) {
+				return new STimestamp( ((SDate) value).toDate() );
+			} else {
+				return STimestamp.NULL;
+			}
+		}
+		if (value instanceof LTime) {
+			return ((LTime) value).toSTimestamp();
+		}
 		if (value instanceof Date) {
-			return new LTime(((Date)value).getTime());
+			return new STimestamp((Date) value);
 		}
 		if (value instanceof Calendar) {
-			return new LTime(((Calendar)value).getTimeInMillis());
+			return new STimestamp(new Date(((Calendar)value).getTimeInMillis()));
 		}
 		if (value instanceof JulianDate) {
-			return new LTime(((JulianDate) value).toMilliseconds());
+			return new STimestamp(new Date(((JulianDate) value).toMilliseconds()));
 		}
 		if (value instanceof LocalDateTime) {
-			return new LTime(TimeUtil.toMilliseconds((LocalDateTime)value));
+			return new STimestamp(TimeUtil.toDate((LocalDateTime)value));
 		}
-		if (value instanceof LocalTime || value instanceof STime) {
-			throw new TypeConversionException("Can't convert to LTime: " + value);
+		if (value instanceof LocalDate) {
+			return new STimestamp(TimeUtil.toDate((LocalDate)value));
 		}
-
-		if (value.getClass() == Long.class) {
-			return new LTime((Long) value);
+		if (value instanceof LocalTime || value instanceof STime ) {
+			throw new TypeConversionException("Can't convert to STimestamp: " + value);
 		}
-		if ( value instanceof SNumber && !((SNumber) value).isPresent()) {
-			return new LTime();
+		if (value instanceof SNumber) {
+			if (((SNumber) value).isPresent() ) {
+				return new STimestamp(new Date(((SNumber) value).longValue()));
+			} else {
+				return STimestamp.NULL;
+			}
 		}
 		if (value instanceof Number) {
-			return new LTime(Long.valueOf(((Number)value).longValue()));
+			return new STimestamp(new Date(((Number) value).longValue()));
+		}
+
+		final String stringValue = value.toString().trim();
+
+		if (!StringUtil.containsOnlyDigits(stringValue)) {
+			if ( stringValue.toLowerCase().equals("null") || stringValue.toLowerCase().equals("<null>") ) {
+				return STimestamp.NULL;
+			}
+			try {
+				return new STimestamp( stringValue );
+			} catch (NumberFormatException nfex) {
+				throw new TypeConversionException(value, nfex);
+			}
+
 		}
 
 		try {
-			String stringValue = value.toString().trim();
-			if (StringUtil.startsWithChar(stringValue, '+')) {
-				stringValue = stringValue.substring(1);
-			}
-			return new LTime( Long.valueOf(stringValue) );
+			return STimestamp.from(stringValue,"yyyyMMddHHmmssSSS");
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

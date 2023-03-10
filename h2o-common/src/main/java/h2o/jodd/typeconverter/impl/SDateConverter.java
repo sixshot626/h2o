@@ -85,7 +85,7 @@ public class SDateConverter implements TypeConverter<SDate> {
 			return new SDate((LocalDate)value);
 		}
 		if (value instanceof LocalTime || value instanceof STime) {
-			throw new TypeConversionException("Can't convert to date just from time: " + value);
+			throw new TypeConversionException("Can't convert to SDate: " + value);
 		}
 		if (value instanceof SNumber) {
 			if (((SNumber) value).isPresent() ) {
