@@ -37,6 +37,12 @@ public class IgnoreCaseMap<V> implements Map<String, V>, java.io.Serializable {
     }
 
 
+
+    public Map<String,V> originalMap() {
+        return this.realMap;
+    }
+
+
     @Override
     public int size() {
         return realMap.size();

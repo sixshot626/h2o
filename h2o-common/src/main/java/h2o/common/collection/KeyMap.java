@@ -22,7 +22,7 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
         if ( map == null ) {
 
-            this.realMap    = new HashMap<>();
+            this.realMap    = new LinkedHashMap<>();
             this.keyMapping = new HashMap<>();
 
         } else {
@@ -92,6 +92,11 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
         }
         realMap.put( key , value );
 
+    }
+
+
+    public Map<String,V> originalMap() {
+        return this.realMap;
     }
 
 

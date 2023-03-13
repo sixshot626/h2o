@@ -41,6 +41,7 @@ public class SqlParameterUtil {
                 Object a = args[i];
 
                 if (a == null) {
+                    i++;
                     continue;
                 }
 

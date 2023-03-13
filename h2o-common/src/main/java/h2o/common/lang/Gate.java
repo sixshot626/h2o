@@ -51,9 +51,10 @@ public class Gate<T> implements java.io.Serializable {
         return Objects.hash(ok, value);
     }
 
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Cond{");
+        final StringBuilder sb = new StringBuilder("Gate{");
         sb.append("ok=").append(ok);
         sb.append(", value=").append(value);
         sb.append('}');
