@@ -4,7 +4,7 @@ import h2o.common.util.lang.StringUtil;
 
 import java.util.Objects;
 
-public final class Special implements Comparable<Special>, java.io.Serializable {
+public final class Special implements Comparable<Special>, java.io.Serializable , CharSequence {
 
 
     private static final long serialVersionUID = 4003380362220439161L;
@@ -52,4 +52,25 @@ public final class Special implements Comparable<Special>, java.io.Serializable 
     public String toString() {
         return this.value;
     }
+
+
+
+    // CharSequence
+
+    @Override
+    public int length() {
+        return value.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return value.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return s(value.substring( start , end ));
+    }
+
+
 }

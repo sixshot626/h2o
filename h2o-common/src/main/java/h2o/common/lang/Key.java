@@ -5,7 +5,7 @@ import h2o.apache.commons.lang.StringUtils;
 
 import java.util.Objects;
 
-public final class Key implements Comparable<Key>, java.io.Serializable {
+public final class Key implements Comparable<Key>, java.io.Serializable , CharSequence {
 
     private static final long serialVersionUID = 2360167979097124087L;
 
@@ -54,4 +54,24 @@ public final class Key implements Comparable<Key>, java.io.Serializable {
     public String toString() {
         return this.value;
     }
+
+
+    // CharSequence
+
+    @Override
+    public int length() {
+        return value.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return value.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return k(value.substring( start , end ));
+    }
+
+
 }
