@@ -18,7 +18,7 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
     private final boolean setted;
 
-    public final SNumber stamp;
+    private final SNumber stamp;
 
     private final Map<String,Object> meta;
 

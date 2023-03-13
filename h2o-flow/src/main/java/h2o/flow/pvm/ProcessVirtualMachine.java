@@ -217,7 +217,8 @@ public final class ProcessVirtualMachine {
 
 			final ExecResult nodeExecResult = isSignal ? ( (SignalNode) node).onSignal( runContext , args ) : node.execute( runContext , args );
 
-			if ( nodeExecResult.getResult().isSetted() &&  ( !this.result.isSetted() || nodeExecResult.getResult().stamp.compareTo( this.result.stamp ) > 0 ) ) {
+			if ( nodeExecResult.getResult().isSetted() &&
+					( !this.result.isSetted() || nodeExecResult.getResult().getStamp().compareTo( this.result.getStamp() ) > 0 ) ) {
 				this.result = nodeExecResult.getResult();
 			}
 
