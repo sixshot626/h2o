@@ -1,6 +1,7 @@
 package h2o.dao.advanced.support;
 
 import h2o.apache.commons.lang.StringUtils;
+import h2o.common.lang.Gate;
 import h2o.common.lang.Key;
 import h2o.common.util.lang.StringUtil;
 import h2o.dao.exception.DaoException;
@@ -13,9 +14,14 @@ import java.util.function.Supplier;
 
 public final class WhereBuilder implements WhereConditions {
 
-    private int i;
 
-    private boolean conjunction;
+    private static final String AND = "    and ";
+    private static final String OR  = "     or ";
+
+
+    private Gate<String> conj = new Gate<>(false,AND);
+
+
 
     private boolean allowUnconditional;
 
@@ -26,6 +32,8 @@ public final class WhereBuilder implements WhereConditions {
 
     private final int indentationLevel;
 
+
+    private int i;
 
 
 
@@ -75,12 +83,15 @@ public final class WhereBuilder implements WhereConditions {
         i++;
 
         if ( condition ) {
-            if (!conjunction) {
-                conjunction = true;
+
+            if (!conj.ok) {
+                conj = Gate.ok(conj.value);
             } else {
                 sqlBuilder.append('\n');
                 sqlBuilder.append(indentation());
-                sqlBuilder.append("    and ");
+                sqlBuilder.append(conj.value);
+
+                conj = Gate.ok(AND);
             }
 
             String p = StringUtil.build( prefix , "_" , i , "_" , name(col) );
@@ -106,12 +117,15 @@ public final class WhereBuilder implements WhereConditions {
         i++;
 
         if ( condition ) {
-            if (!conjunction) {
-                conjunction = true;
+
+            if (!conj.ok) {
+                conj = Gate.ok(conj.value);
             } else {
                 sqlBuilder.append('\n');
                 sqlBuilder.append(indentation());
-                sqlBuilder.append("    and ");
+                sqlBuilder.append(conj.value);
+
+                conj = Gate.ok(AND);
             }
 
             String p = StringUtil.build( prefix , "_" , i , "_" , name(col) );
@@ -137,12 +151,15 @@ public final class WhereBuilder implements WhereConditions {
         i++;
 
         if ( condition ) {
-            if (!conjunction) {
-                conjunction = true;
+
+            if (!conj.ok) {
+                conj = Gate.ok(conj.value);
             } else {
                 sqlBuilder.append('\n');
                 sqlBuilder.append(indentation());
-                sqlBuilder.append("    and ");
+                sqlBuilder.append(conj.value);
+
+                conj = Gate.ok(AND);
             }
 
             sqlBuilder.append(column(col));
@@ -265,9 +282,8 @@ public final class WhereBuilder implements WhereConditions {
         String sql = whereBuilder.whereSql();
 
         if ( condition && StringUtils.isNotBlank( sql ) ) {
-            if (!conjunction) {
-                conjunction = true;
-            }
+
+            conj = Gate.ok(AND);
 
             sqlBuilder.append("( ");
             sqlBuilder.append( sql );
@@ -294,13 +310,14 @@ public final class WhereBuilder implements WhereConditions {
         String sql = whereBuilder.whereSql();
 
         if ( condition && StringUtils.isNotBlank( sql ) ) {
-            if (!conjunction) {
-                conjunction = true;
-            } else {
+
+            if (conj.ok) {
                 sqlBuilder.append('\n');
                 sqlBuilder.append(indentation());
-                sqlBuilder.append("    and ");
+                sqlBuilder.append(AND);
             }
+
+            conj = Gate.ok(AND);
 
             sqlBuilder.append("( ");
             sqlBuilder.append( sql );
@@ -326,13 +343,14 @@ public final class WhereBuilder implements WhereConditions {
         String sql = whereBuilder.whereSql();
 
         if ( condition && StringUtils.isNotBlank( sql ) ) {
-            if (!conjunction) {
-                conjunction = true;
-            } else {
+
+            if (conj.ok) {
                 sqlBuilder.append('\n');
                 sqlBuilder.append(indentation());
-                sqlBuilder.append("     or ");
+                sqlBuilder.append(OR);
             }
+
+            conj = Gate.ok(AND);
 
             sqlBuilder.append("( ");
             sqlBuilder.append( sql );
@@ -352,12 +370,7 @@ public final class WhereBuilder implements WhereConditions {
     public WhereBuilder or(boolean condition) {
 
         if ( condition ) {
-            if (conjunction) {
-                sqlBuilder.append('\n');
-                sqlBuilder.append(indentation());
-                sqlBuilder.append("     or ");
-                conjunction = false;
-            }
+            conj = new Gate<>(conj.ok , OR);
         }
 
         return this;
@@ -368,12 +381,15 @@ public final class WhereBuilder implements WhereConditions {
     public WhereBuilder str(boolean condition, Object... strs) {
 
         if ( condition ) {
-            if (!conjunction) {
-                conjunction = true;
+
+            if (!conj.ok) {
+                conj = Gate.ok(conj.value);
             } else {
                 sqlBuilder.append('\n');
                 sqlBuilder.append(indentation());
-                sqlBuilder.append("    and ");
+                sqlBuilder.append(conj.value);
+
+                conj = Gate.ok(AND);
             }
 
             sqlBuilder.append( buildString( strs ) );
