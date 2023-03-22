@@ -83,6 +83,9 @@ public final class SDateTime implements OptionalValue<String>, Comparable<SDateT
 
 
     public static SDateTime from(String dateTime, String fmt) {
+        if ( dateTime == null ) {
+            return NULL;
+        }
         return new SDateTime(toDate(dateTime, fmt));
     }
 

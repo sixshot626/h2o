@@ -56,6 +56,9 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
     public static LTime from(String dateTime, String fmt) {
+        if ( dateTime == null ) {
+            return NULL;
+        }
         return new LTime(toDate(dateTime, fmt));
     }
 

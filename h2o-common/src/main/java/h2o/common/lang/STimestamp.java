@@ -54,6 +54,9 @@ public final class STimestamp implements OptionalValue<String>, Comparable<STime
 
 
     public static STimestamp from(String dateTime, String fmt) {
+        if ( dateTime == null ) {
+            return NULL;
+        }
         return new STimestamp(toDate(dateTime, fmt));
     }
 

@@ -83,6 +83,9 @@ public final class SDate implements OptionalValue<String>, Comparable<SDate>, ja
 
 
     public static SDate from(String date, String fmt) {
+        if ( date == null ) {
+            return NULL;
+        }
         return new SDate(toDate(date, fmt));
     }
 
