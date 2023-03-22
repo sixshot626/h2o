@@ -1,5 +1,6 @@
 package h2o.common.lang;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.date.DateUtil;
 
 import java.time.Instant;
@@ -54,7 +55,7 @@ public final class STimestamp implements OptionalValue<String>, Comparable<STime
 
 
     public static STimestamp from(String dateTime, String fmt) {
-        if ( dateTime == null ) {
+        if ( StringUtils.isBlank(dateTime) ) {
             return NULL;
         }
         return new STimestamp(toDate(dateTime, fmt));

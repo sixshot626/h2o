@@ -70,7 +70,7 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
     }
 
     public static STime from(String time, String fmt) {
-        if ( time == null ) {
+        if ( StringUtils.isBlank(time) ) {
             return NULL;
         }
         return new STime(toDate(time, fmt));

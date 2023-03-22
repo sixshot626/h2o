@@ -1,5 +1,6 @@
 package h2o.common.lang;
 
+import h2o.apache.commons.lang.StringUtils;
 import h2o.common.util.date.DateUtil;
 
 import java.time.Instant;
@@ -56,7 +57,7 @@ public final class LTime implements OptionalValue<Long>, Comparable<LTime>, java
     }
 
     public static LTime from(String dateTime, String fmt) {
-        if ( dateTime == null ) {
+        if ( StringUtils.isBlank(dateTime) ) {
             return NULL;
         }
         return new LTime(toDate(dateTime, fmt));
