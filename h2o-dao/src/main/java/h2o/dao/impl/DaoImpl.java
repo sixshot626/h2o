@@ -295,7 +295,9 @@ public class DaoImpl extends AbstractDao implements Dao {
             for (Object arg : args) {
 
                 Object[] aa;
-                if (arg.getClass().isArray()) {
+                if ( arg instanceof Collection ) {
+                    aa = ((Collection<?>) arg).toArray();
+                } else if (arg instanceof Object[]) {
                     aa = (Object[]) arg;
                 } else {
                     aa = new Object[]{arg};

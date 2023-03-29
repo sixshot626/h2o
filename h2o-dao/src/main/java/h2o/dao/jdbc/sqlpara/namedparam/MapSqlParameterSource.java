@@ -26,9 +26,9 @@ import java.util.Map;
 
 class MapSqlParameterSource  {
 
-    private final Map<String, Object> values;
+    private final Map<String, ?> values;
 
-    private final KeyMap<Object> valuesMap;
+    private final KeyMap<?> valuesMap;
 
 
 
@@ -38,12 +38,7 @@ class MapSqlParameterSource  {
      * @param values a Map holding existing parameter values (can be {@code null})
      */
     public MapSqlParameterSource(Map<String, ?> values) {
-        this.values = new LinkedHashMap<>();
-        if (values != null) {
-            for (Map.Entry<String, ?> entry : values.entrySet()) {
-                this.values.put(entry.getKey(), entry.getValue());
-            }
-        }
+        this.values = values;
         this.valuesMap = new KeyMap<>( this.values );
     }
 

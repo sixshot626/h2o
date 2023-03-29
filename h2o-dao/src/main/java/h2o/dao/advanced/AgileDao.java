@@ -8,6 +8,7 @@ import h2o.common.data.domain.SortInfo;
 import h2o.common.lang.Key;
 import h2o.common.lang.Special;
 import h2o.common.lang.Val;
+import h2o.common.util.collection.ListBuilder;
 import h2o.common.util.collection.MapBuilder;
 import h2o.dao.Dao;
 import h2o.dao.DbUtil;
@@ -669,14 +670,9 @@ public class AgileDao {
 
             String sql;
             if (attrs == null || attrs.isEmpty()) {
-                Object item = cell.iterator().next();
 
-                Set<Object> ks;
-                if ( item instanceof Map ) {
-                    ks = MapBuilder.start().putAll((Map) cell.iterator().next()).putAll(paraMap).get().keySet();
-                } else {
-                    ks = tableStruct.columns().stream().map( columnMeta -> columnMeta.attrName ).collect(Collectors.toSet());
-                }
+                Object item = cell.iterator().next();
+                Set<Object> ks = MapBuilder.start().putAll( args2Map( parseArgs( item ) ) ).putAll(paraMap).get().keySet();
                 sql = buildInsertSql(ks);
 
             } else {
@@ -689,7 +685,7 @@ public class AgileDao {
             } else {
                 data = new ArrayList<>(cell.size());
                 for ( Object row : cell) {
-                    data.add(MapBuilder.start().putAll((Map)row).putAll(paraMap).get());
+                    data.add( ListBuilder.start().add(parseArgs(row)).add(paraMap).get() );
                 }
             }
 
@@ -740,7 +736,7 @@ public class AgileDao {
             } else {
                 data = new ArrayList<>(cell.size());
                 for (Object row : cell) {
-                    data.add(MapBuilder.start().putAll( (Map) row).putAll(paraMap).get());
+                    data.add( ListBuilder.start().add(parseArgs(row)).add(paraMap).get() );
                 }
             }
 
@@ -1026,8 +1022,20 @@ public class AgileDao {
     //////////////////////////////////////////////////
     // util
 
+    private static Object[] parseArgs( Object args ) {
+        if ( args instanceof Map ) {
+            return new Object[] {args};
+        } else if ( args instanceof Collection ) {
+            return ((Collection<?>) args).toArray();
+        } else if ( args instanceof Object[] ) {
+            return (Object[])args;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
-    private Object[] merge(Object[] a, Object... b) {
+
+    private static Object[] merge(Object[] a, Object... b) {
         Object[] c = new Object[a.length + b.length];
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);
@@ -1052,7 +1060,7 @@ public class AgileDao {
 
 
 
-    private String str(Object... strs) {
+    private static String str(Object... strs) {
         StringBuilder sb = new StringBuilder();
         for (Object s : strs) {
             if (s != null) {
@@ -1062,7 +1070,7 @@ public class AgileDao {
         return sb.toString();
     }
 
-    private String name(Object obj) {
+    private static String name(Object obj) {
         String key;
         if (obj instanceof String) {
             key = (String) obj;
