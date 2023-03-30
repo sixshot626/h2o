@@ -6,4 +6,11 @@ public final class Int implements java.io.Serializable {
 
     public int i;
 
+    public Int() {
+        this.i = 0;
+    }
+
+    public Int(int i) {
+        this.i = i;
+    }
 }

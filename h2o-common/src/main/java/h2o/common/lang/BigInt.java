@@ -6,4 +6,11 @@ public class BigInt implements java.io.Serializable {
 
     public long i;
 
+    public BigInt() {
+        this.i = 0L;
+    }
+
+    public BigInt(long i) {
+        this.i = i;
+    }
 }
