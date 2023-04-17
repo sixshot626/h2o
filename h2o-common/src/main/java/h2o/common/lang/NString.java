@@ -23,6 +23,15 @@ public final class NString implements OptionalValue<String>, Comparable<NString>
         return value;
     }
 
+
+    public static NString valueOf( Object obj ) {
+        if ( obj == null) {
+            return NULL;
+        } else {
+            return new NString(obj.toString());
+        }
+    }
+
     @Override
     public int compareTo(NString o) {
         if (this.isPresent() && o.isPresent()) {
