@@ -3,6 +3,7 @@ package h2o.common.cluster;
 
 import h2o.apache.commons.lang.StringUtils;
 import h2o.common.lang.SDate;
+import h2o.common.lang.tuple.Entry;
 import h2o.common.util.id.SnowGarlandIdGen;
 import h2o.common.util.lang.StringUtil;
 import org.slf4j.Logger;
@@ -46,18 +47,10 @@ public abstract class ClusterUtil {
         }
 
 
-
-
-        private final static char[] LATIN = new char[] {
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                'U', 'V', 'W', 'X', 'Y', 'Z'};
-
-        public synchronized String make20Id() {
+        public synchronized Entry<LocalDate,String> dateId() {
             LocalDate localDate = LocalDate.now(ZoneOffset.UTC);
             String yyyy = Integer.toString(localDate.getYear());
-            return StringUtil.build(LATIN[ Integer.parseInt(StringUtils.substring(yyyy, -2)) % LATIN.length ] ,
-                    idGen.nextKey(new SDate(yyyy + "-01-01", true)));
+            return new Entry<>(localDate , idGen.nextKey(new SDate(yyyy + "-01-01", true)));
         }
 
     }
