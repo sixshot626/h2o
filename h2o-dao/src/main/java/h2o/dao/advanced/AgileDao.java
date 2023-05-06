@@ -587,6 +587,7 @@ public class AgileDao {
 
         private final List<Object> attrs;
 
+
         private Update(Object[] attrs) {
             this.attrs = args2List(attrs);
         }
@@ -640,6 +641,14 @@ public class AgileDao {
         }
 
 
+        private String additionalStr;
+
+        public void setAdditionalStr(String str ) {
+            this.additionalStr = str;
+        }
+
+
+
         public int add(Object... para) {
 
             if (para == null || para.length == 0 || para[0] == null) {
@@ -651,6 +660,10 @@ public class AgileDao {
                 sql = buildInsertSql(args2Map(para).keySet());
             } else {
                 sql = buildInsertSql(attrs);
+            }
+
+            if ( additionalStr != null ) {
+                sql = str(sql , "\n        " , additionalStr);
             }
 
             return getDao().update(sql, para);
@@ -706,7 +719,13 @@ public class AgileDao {
                 updSql = buildUpdateSql1(attrs);
             }
 
-            String sql = str(updSql, this.whereConditions.whereSql());
+
+
+            String sql = str(updSql, this.whereConditions.whereSql() );
+
+            if ( additionalStr != null ) {
+                sql = str(sql , "\n        " , additionalStr);
+            }
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
@@ -748,6 +767,10 @@ public class AgileDao {
         public int del(Object... para) {
 
             String sql = str(buildDelSql1(), this.whereConditions.whereSql());
+
+            if ( additionalStr != null ) {
+                sql = str(sql , "\n        " , additionalStr);
+            }
 
             Map<Object,Object> wherePara = this.whereConditions.params();
 
@@ -831,6 +854,20 @@ public class AgileDao {
             this.update = new Update(attrs);
         }
 
+        public Add appendStr(String str) {
+            this.update.setAdditionalStr(str);
+            return this;
+        }
+
+        public Add appendStr(boolean c , String str) {
+            if (c) {
+                this.update.setAdditionalStr(str);
+            } else {
+                this.update.setAdditionalStr(null);
+            }
+            return this;
+        }
+
         public int exec(Object... para) {
             return this.update.add(para);
         }
@@ -867,6 +904,20 @@ public class AgileDao {
 
         private EditExecutor(Update update) {
             this.update = update;
+        }
+
+        public EditExecutor appendStr(String str) {
+            this.update.setAdditionalStr(str);
+            return this;
+        }
+
+        public EditExecutor appendStr(boolean c , String str) {
+            if (c) {
+                this.update.setAdditionalStr(str);
+            } else {
+                this.update.setAdditionalStr(null);
+            }
+            return this;
         }
 
         public int exec(Object... para) {
@@ -972,6 +1023,20 @@ public class AgileDao {
             this.update = update;
         }
 
+        public DelExecutor appendStr(String str) {
+            this.update.setAdditionalStr(str);
+            return this;
+        }
+
+        public DelExecutor appendStr(boolean c , String str) {
+            if (c) {
+                this.update.setAdditionalStr(str);
+            } else {
+                this.update.setAdditionalStr(null);
+            }
+            return this;
+        }
+
 
         public int exec(Object... para) {
             return this.update.del(para);
@@ -984,8 +1049,6 @@ public class AgileDao {
     public final class Del {
 
         private Del() {}
-
-        private final Update update = new Update(null);
 
         public DelExecutor unconditional() {
             return new DelExecutor( new Update(null).unconditional() );
