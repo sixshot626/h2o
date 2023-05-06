@@ -48,7 +48,7 @@ public final class Val<T> implements OptionalValue<T>, java.io.Serializable {
 
         this.value = value;
         this.setted = true;
-        this.stamp = SNumber.NULL;;
+        this.stamp = SNumber.NULL;
 
         KeyMap<Object> _meta = new KeyMap<>( new LinkedHashMap<>() );
         _meta.assoc( metaKey , metaVal );

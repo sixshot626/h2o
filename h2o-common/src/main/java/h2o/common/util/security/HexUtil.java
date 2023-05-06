@@ -22,7 +22,7 @@ public class HexUtil {
 
 
     public static byte[] hexStringToByteArray(String hexString) {
-        if (hexString == null || hexString.equals("")) {
+        if (hexString == null || "".equals(hexString)) {
             return null;
         }
         hexString = hexString.toUpperCase();

@@ -134,7 +134,7 @@ public class Base64Util {
             return null;
         }
 
-        byte bytes[] = decode(s);
+        byte[] bytes = decode(s);
 
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 

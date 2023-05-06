@@ -2,7 +2,7 @@ package h2o.common.lang;
 
 import java.util.Objects;
 
-public class Gate<T> implements java.io.Serializable {
+public class Gate<T> implements OptionalValue<T> , java.io.Serializable {
 
     private static final long serialVersionUID = -597329505385306301L;
 
@@ -33,8 +33,9 @@ public class Gate<T> implements java.io.Serializable {
         return ok;
     }
 
+    @Override
     public T getValue() {
-        return value;
+        return ok ? value : null;
     }
 
 
