@@ -1,15 +1,15 @@
-package h2o.common.collection;
+package h2o.common.lang;
 
 import java.io.Serializable;
 import java.util.Map;
 
-public class Record<E> implements Serializable {
+public class Row<E extends Enum> implements Serializable {
 
     private static final long serialVersionUID = -7864995458948805128L;
 
     private final Map<Object,Object> data;
 
-    public Record(Map<?, ?> data) {
+    public Row(Map<?, ?> data) {
         this.data = (Map<Object,Object>)data;
     }
 
