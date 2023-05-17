@@ -15,6 +15,8 @@ public final class STime implements OptionalValue<String>, Comparable<STime>, ja
 
     public static final STime NULL = new STime();
 
+    public static final STime ZERO = new STime("00:00:00" , true);
+
     private static final String DATE_FMT = "HH:mm:ss";
 
 
