@@ -24,6 +24,6 @@ public class Row<E extends Enum> implements Serializable {
 
     @Override
     public String toString() {
-        return data.toString();
+        return data == null ? "<null>" : data.toString();
     }
 }
