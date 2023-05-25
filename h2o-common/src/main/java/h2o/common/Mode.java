@@ -20,6 +20,8 @@ public class Mode {
     public static final String mode;
     public static final String name;
 
+    public static final String config;
+
 
     public static final boolean prodMode;
     public static final boolean testMode;
@@ -38,6 +40,7 @@ public class Mode {
         boolean debug = false;
 
         String m;
+        String cfg;
         String userModes;
 
         try {
@@ -46,12 +49,18 @@ public class Mode {
             config.load(StreamUtil.openStream("mode.properties"));
 
             m = SystemUtil.get("H2OMode", config.getProperty("mode", PROD));
+
+            cfg = SystemUtil.get("H2OConfig", config.getProperty("config", m)).toLowerCase();
+
             debug = SystemUtil.getBoolean("H2ODebug", Boolean.valueOf(config.getProperty("debug", "false").trim()));
             userModes = SystemUtil.get("H2OUserMode", config.getProperty("userMode", "")).trim().toUpperCase();
 
         } catch (Throwable e) {
 
             m = SystemUtil.get("H2OMode", PROD).trim().toUpperCase();
+
+            cfg = SystemUtil.get("H2OConfig", m).trim().toLowerCase();
+
             debug = SystemUtil.getBoolean("H2ODebug", false);
             userModes = SystemUtil.get("H2OUserMode", "").trim().toUpperCase();
 
@@ -87,7 +96,10 @@ public class Mode {
         mode = m;
         name = m.toLowerCase();
 
+        config = cfg;
+
         log.info("Mode : {}", mode);
+        log.info("Config : {}", config);
         log.info("Debug Mode : {}", debugMode);
         log.info("User Mode : {}", userModeArrays);
 
