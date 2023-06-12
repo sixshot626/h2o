@@ -29,11 +29,11 @@ public final class XXTEA {
 
 
 
-    public static final byte[] encrypt(byte[] data, String key) {
+    public static byte[] encrypt(byte[] data, String key) {
         return encrypt(data, key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static final byte[] decrypt(byte[] data, String key) {
+    public static byte[] decrypt(byte[] data, String key) {
         return decrypt(data, key.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -44,7 +44,7 @@ public final class XXTEA {
 
 
 
-    private static final byte[] encrypt(byte[] data, byte[] key) {
+    private static byte[] encrypt(byte[] data, byte[] key) {
         if (data.length == 0) {
             return data;
         }
@@ -53,7 +53,7 @@ public final class XXTEA {
     }
 
 
-    private static final byte[] decrypt(byte[] data, byte[] key) {
+    private static byte[] decrypt(byte[] data, byte[] key) {
         if (data.length == 0) {
             return data;
         }
