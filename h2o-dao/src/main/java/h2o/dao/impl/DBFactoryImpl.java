@@ -152,4 +152,15 @@ public class DBFactoryImpl implements DBFactory {
     public DbUtil getDbUtil() {
         return dbUtilCache.get(true);
     }
+
+
+    @Override
+    public void init() {
+        factory.init();
+    }
+
+    @Override
+    public void dispose() {
+        factory.dispose();
+    }
 }

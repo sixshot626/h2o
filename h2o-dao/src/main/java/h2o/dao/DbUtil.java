@@ -13,16 +13,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.Closeable;
+import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Map;
 
-public final class DbUtil {
+public final class DbUtil implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DbUtil.class.getName());
 
     public static final String DEFAULT_DATASOURCE_NAME = "default";
 
     public static final DBFactory DBFACTORY = DBFactoryProvider.getDbFactory();
+    static {
+        DBFACTORY.init();
+    }
 
     public static final SqlTable sqlTable = newSqlTable();
 
@@ -161,5 +166,17 @@ public final class DbUtil {
 
         }
     }
+
+
+    @Override
+    public void close() throws IOException {
+        DbUtil.dispose();
+    }
+
+
+    public static void dispose() {
+        DBFACTORY.dispose();
+    }
+
 
 }

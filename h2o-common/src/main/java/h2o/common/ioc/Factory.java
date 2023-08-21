@@ -6,4 +6,8 @@ public interface Factory {
 
     <T> T silentlyGet(String id, Object... args);
 
+    default void init() {}
+
+    default void dispose() {}
+
 }

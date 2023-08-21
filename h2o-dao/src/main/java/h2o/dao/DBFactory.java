@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface DBFactory {
 
+    void init();
+
     SqlTable getSqlTable();
 
     TemplateUtil getSqlTemplateUtil();
@@ -33,5 +35,7 @@ public interface DBFactory {
     Db createDb(String name);
 
     DbUtil getDbUtil();
+
+    void dispose();
 
 }
