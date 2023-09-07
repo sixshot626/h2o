@@ -46,7 +46,7 @@ public final class NString implements OptionalValue<String>, Comparable<NString>
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof NString)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         NString nString = (NString) o;
         return Objects.equals(value, nString.value);
     }

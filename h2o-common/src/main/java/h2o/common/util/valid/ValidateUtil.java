@@ -1,5 +1,6 @@
 package h2o.common.util.valid;
 
+import h2o.common.lang.MVal;
 import h2o.common.lang.tuple.Tuple;
 import h2o.common.lang.tuple.Tuple2;
 import h2o.common.util.collection.ListBuilder;
@@ -13,18 +14,18 @@ public final class ValidateUtil {
     private ValidateUtil() {
     }
 
-    public static List<Tuple2<Object, String>> validate(Object bean, Validator... validators) {
+    public static List<MVal<String>> validate(Object bean, Validator... validators) {
 
-        List<Tuple2<Object, String>> rs = ListBuilder.newList();
-        Set<Object> ks = new HashSet<Object>();
+        List<MVal<String>> rs = ListBuilder.newList();
+        Set<String> ks = new HashSet<>();
         for (Validator validator : validators) {
 
-            Object k = validator.getK();
+            String k = validator.getK();
             if (ks.contains(k)) {
                 continue;
             }
             if (!validator.validate(bean)) {
-                rs.add(Tuple.t(k, validator.getMessage()));
+                rs.add(new MVal<>( k , validator.getMessage() ));
                 ks.add(k);
             }
         }
@@ -32,14 +33,14 @@ public final class ValidateUtil {
         return rs;
     }
 
-    public static Tuple2<String, String> validateOne(Object bean, Validator... validators) {
+    public static MVal<String> validateOne(Object bean, Validator... validators) {
 
         for (Validator validator : validators) {
             if (!validator.validate(bean)) {
-                return Tuple.t(validator.getK(), validator.getMessage());
+                return new MVal(validator.getK(),validator.getMessage());
             }
         }
-        return null;
+        return MVal.empty();
     }
 
 }
