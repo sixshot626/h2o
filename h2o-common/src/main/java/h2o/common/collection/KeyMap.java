@@ -62,7 +62,11 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
             throw new IllegalArgumentException();
         }
 
-        return key == null ? null : key;
+        if ( key == null ) {
+            throw new IllegalArgumentException();
+        }
+
+        return key;
     }
 
 
@@ -76,9 +80,23 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
         String key = proc( obj );
 
-        return keyMapping.get( proc2(key) );
+        String _key =  keyMapping.get( proc2(key) );
+
+        return _key == null ? key : _key;
 
     }
+
+
+
+
+    public static <T> KeyMap<T> wrap(Map<String, T> map) {
+        if ( map instanceof KeyMap ) {
+            return (KeyMap<T>) map;
+        }
+        return new KeyMap<>(map);
+    }
+
+
 
 
     public void assoc( Object obj, V value ) {
@@ -235,4 +253,5 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
     public V merge(String key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         throw new UnsupportedOperationException();
     }
+
 }

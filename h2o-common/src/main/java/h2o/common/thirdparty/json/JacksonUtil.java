@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.json.JsonUtil;
 
+
 import java.util.Map;
 
 public class JacksonUtil implements JsonUtil {
@@ -37,4 +38,16 @@ public class JacksonUtil implements JsonUtil {
             throw ExceptionUtil.toRuntimeException(e);
         }
     }
+
+    @Override
+    public <T> T fromJson(String json , Class<T> clazz) {
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch ( Exception e ) {
+            throw ExceptionUtil.toRuntimeException(e);
+        }
+    }
+
+
+
 }

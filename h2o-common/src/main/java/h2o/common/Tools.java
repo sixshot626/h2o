@@ -41,6 +41,9 @@ public class Tools {
             return JSON_UTIL.fromJson(json);
         }
 
+        public static <T> T fromJson(String json, Class<T> clazz) {
+            return JSON_UTIL.fromJson(json, clazz);
+        }
     }
 
 
