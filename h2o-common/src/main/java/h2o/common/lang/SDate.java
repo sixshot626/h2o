@@ -140,7 +140,7 @@ public final class SDate implements OptionalValue<String>, Comparable<SDate>, ja
     }
 
     public SDate plusMonths(long monthsToAdd) {
-        return new SDate( this.toLocalDate().plusWeeks(monthsToAdd) );
+        return new SDate( this.toLocalDate().plusMonths(monthsToAdd) );
     }
 
     public SDate plusWeeks(long weeksToAdd) {
