@@ -12,7 +12,7 @@ public class RSAUtil {
 
     private static final String KEY_ALGORITHM = "RSA";
 
-    private static final String SIGN_ALGORITHM = "SHA256withRSA";
+    private static final String SIGN_ALGORITHM_SHA256 = "SHA256withRSA";
 
 
     private static byte[] decryptBASE64(String key) {
@@ -72,12 +72,7 @@ public class RSAUtil {
 
 
 
-
-
-
-
-
-    public static byte[] signBySHA256WithRSA(  byte[] content,  String privateKey) {
+    public static byte[] signWithRSA( String signAlgorithm , byte[] content ,  String privateKey) {
 
         try {
 
@@ -86,7 +81,7 @@ public class RSAUtil {
             PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(keyBytes);
             PrivateKey priKey = KeyFactory.getInstance(KEY_ALGORITHM).generatePrivate(priPKCS8);
 
-            Signature signature = Signature.getInstance(SIGN_ALGORITHM);
+            Signature signature = Signature.getInstance(signAlgorithm);
             signature.initSign(priKey);
             signature.update(content);
 
@@ -99,7 +94,7 @@ public class RSAUtil {
     }
 
 
-    public static boolean verifyBySHA256WithRSA( byte[] content, String publicKey , byte[] sign  ) {
+    public static boolean verifyWithRSA( String signAlgorithm , byte[] content , String publicKey , byte[] sign ) {
 
         try {
 
@@ -108,7 +103,7 @@ public class RSAUtil {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
             PublicKey pubKey = KeyFactory.getInstance(KEY_ALGORITHM).generatePublic(keySpec);
 
-            Signature signature = Signature.getInstance(SIGN_ALGORITHM);
+            Signature signature = Signature.getInstance(signAlgorithm);
             signature.initVerify(pubKey);
             signature.update(content);
 
@@ -122,6 +117,17 @@ public class RSAUtil {
 
 
 
+
+
+
+    public static byte[] signBySHA256WithRSA( byte[] content,  String privateKey) {
+        return signWithRSA( SIGN_ALGORITHM_SHA256 , content , privateKey );
+    }
+
+
+    public static boolean verifyBySHA256WithRSA( byte[] content, String publicKey , byte[] sign  ) {
+        return verifyWithRSA( SIGN_ALGORITHM_SHA256 , content , publicKey , sign );
+    }
 
 
 
