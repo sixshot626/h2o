@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>h2o-flow</artifactId>
-    <version>6.2.1</version>
+    <version>6-SNAPSHOT</version>
 
 
     <dependencies>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>h2o</groupId>
             <artifactId>h2o-common</artifactId>
-            <version>${versions.h2o}</version>
+            <version>6-SNAPSHOT</version>
         </dependency>
 
 
