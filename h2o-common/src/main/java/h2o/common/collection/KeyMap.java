@@ -99,18 +99,38 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
 
 
-    public void assoc( Object obj, V value ) {
+    public V dissoc( Object obj ) {
+
+        String key = proc( obj );
+        String key2 = proc2(key);
+
+        String oldKay = keyMapping.remove( key2 );
+        if ( oldKay != null ) {
+            return realMap.remove( oldKay );
+        } else {
+            return null;
+        }
+
+    }
+
+
+    public V assoc( Object obj, V value ) {
 
         String key = proc( obj );
         String key2 = proc2(key);
 
         String oldKay = keyMapping.put( key2 , key );
+
+        V oldVal = null;
         if ( oldKay != null ) {
-           realMap.remove( oldKay );
+            oldVal = realMap.remove( oldKay );
         }
         realMap.put( key , value );
 
+        return oldVal;
+
     }
+
 
 
     public Map<String,V> originalMap() {
