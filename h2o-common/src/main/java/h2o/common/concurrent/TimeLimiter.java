@@ -54,8 +54,10 @@ public class TimeLimiter implements Closeable {
         } catch (InterruptedException e ) {
             Thread.currentThread().interrupt();
             throw exceptionSupplier.get();
-        } catch (TimeoutException | ExecutionException e) {
+        } catch (TimeoutException  e) {
             throw exceptionSupplier.get();
+        } catch (ExecutionException e) {
+            throw ExceptionUtil.toRuntimeException( e.getCause() );
         }
     }
 
@@ -65,8 +67,11 @@ public class TimeLimiter implements Closeable {
             simpleTimeLimiter.runWithTimeout(runnable, timeout , TimeUnit.MILLISECONDS );
         } catch (InterruptedException e ) {
             Thread.currentThread().interrupt();
+            throw exceptionSupplier.get();
         } catch (TimeoutException e) {
             throw exceptionSupplier.get();
+        } catch (ExecutionException e) {
+            throw ExceptionUtil.toRuntimeException( e.getCause() );
         }
     }
 
@@ -74,8 +79,10 @@ public class TimeLimiter implements Closeable {
     public <T> T callUninterruptiblyWithTimeout( long timeout , Callable<T> callable ) {
         try {
             return simpleTimeLimiter.callUninterruptiblyWithTimeout(callable,timeout , TimeUnit.MILLISECONDS);
-        } catch (TimeoutException | ExecutionException e) {
+        } catch (TimeoutException e) {
             throw exceptionSupplier.get();
+        } catch (ExecutionException e) {
+            throw ExceptionUtil.toRuntimeException( e.getCause() );
         }
     }
 
@@ -84,6 +91,8 @@ public class TimeLimiter implements Closeable {
             simpleTimeLimiter.runUninterruptiblyWithTimeout(runnable, timeout , TimeUnit.MILLISECONDS );
         } catch (TimeoutException e) {
             throw exceptionSupplier.get();
+        } catch (ExecutionException e) {
+            throw ExceptionUtil.toRuntimeException( e.getCause() );
         }
     }
 
@@ -219,9 +228,6 @@ public class TimeLimiter implements Closeable {
             } catch (InterruptedException | TimeoutException e) {
                 future.cancel(true /* mayInterruptIfRunning */);
                 throw e;
-            } catch (ExecutionException e) {
-                wrapAndThrowExecutionExceptionOrError(e.getCause());
-                throw new AssertionError();
             }
         }
 
@@ -239,14 +245,11 @@ public class TimeLimiter implements Closeable {
             } catch (TimeoutException e) {
                 future.cancel(true /* mayInterruptIfRunning */);
                 throw e;
-            } catch (ExecutionException e) {
-                wrapAndThrowExecutionExceptionOrError(e.getCause());
-                throw new AssertionError();
             }
         }
 
         public void runWithTimeout(Runnable runnable, long timeoutDuration, TimeUnit timeoutUnit)
-                throws TimeoutException, InterruptedException {
+                throws TimeoutException, InterruptedException , ExecutionException {
             checkNotNull(runnable);
             checkNotNull(timeoutUnit);
             checkPositiveTimeout(timeoutDuration);
@@ -258,14 +261,11 @@ public class TimeLimiter implements Closeable {
             } catch (InterruptedException | TimeoutException e) {
                 future.cancel(true /* mayInterruptIfRunning */);
                 throw e;
-            } catch (ExecutionException e) {
-                wrapAndThrowRuntimeExecutionExceptionOrError(e.getCause());
-                throw new AssertionError();
             }
         }
 
         public void runUninterruptiblyWithTimeout(
-                Runnable runnable, long timeoutDuration, TimeUnit timeoutUnit) throws TimeoutException {
+                Runnable runnable, long timeoutDuration, TimeUnit timeoutUnit) throws TimeoutException , ExecutionException {
             checkNotNull(runnable);
             checkNotNull(timeoutUnit);
             checkPositiveTimeout(timeoutDuration);
@@ -277,9 +277,6 @@ public class TimeLimiter implements Closeable {
             } catch (TimeoutException e) {
                 future.cancel(true /* mayInterruptIfRunning */);
                 throw e;
-            } catch (ExecutionException e) {
-                wrapAndThrowRuntimeExecutionExceptionOrError(e.getCause());
-                throw new AssertionError();
             }
         }
 
@@ -338,23 +335,6 @@ public class TimeLimiter implements Closeable {
             return false;
         }
 
-        private void wrapAndThrowExecutionExceptionOrError(Throwable cause) throws ExecutionException {
-            if (cause instanceof Error) {
-                throw (Error) cause;
-            } else if (cause instanceof RuntimeException) {
-                throw (RuntimeException)cause;
-            } else {
-                throw new ExecutionException(cause);
-            }
-        }
-
-        private void wrapAndThrowRuntimeExecutionExceptionOrError(Throwable cause) {
-            if (cause instanceof Error) {
-                throw (Error) cause;
-            } else {
-                throw ExceptionUtil.toRuntimeException(cause);
-            }
-        }
 
         private static void checkPositiveTimeout(long timeoutDuration) {
             if(timeoutDuration <= 0) {

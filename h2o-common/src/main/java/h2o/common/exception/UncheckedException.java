@@ -39,18 +39,6 @@ public class UncheckedException extends RuntimeException implements ExceptionWra
         this.showCauseDetails = showCauseDetails;
     }
 
-    public UncheckedException() {
-        super();
-        cause = null;
-        this.showCauseDetails = false;
-    }
-
-    public UncheckedException(String message) {
-        super(message);
-        cause = null;
-        this.showCauseDetails = false;
-    }
-
     public UncheckedException(String message, Throwable t) {
         super(message, t);
         cause = t;
