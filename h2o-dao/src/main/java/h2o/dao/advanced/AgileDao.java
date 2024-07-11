@@ -1,6 +1,5 @@
 package h2o.dao.advanced;
 
-import h2o.common.collection.KeyMap;
 import h2o.common.data.domain.Page;
 import h2o.common.data.domain.PageRequest;
 import h2o.common.data.domain.ResultInfo;
@@ -16,6 +15,7 @@ import h2o.dao.advanced.support.WhereBuilder;
 import h2o.dao.advanced.support.WhereConditions;
 import h2o.dao.advanced.support.WhereOptions;
 import h2o.dao.exception.DaoException;
+import h2o.dao.result.RowData;
 import h2o.dao.structure.ColumnMeta;
 import h2o.dao.structure.TableStruct;
 import h2o.dao.structure.TableStructParser;
@@ -427,7 +427,7 @@ public class AgileDao {
                 }
             }
 
-            return new KeyMap(nRow);
+            return new RowData(nRow);
 
         }
 
