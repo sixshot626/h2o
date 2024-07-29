@@ -42,6 +42,9 @@ public final class SQLExceptionTranslator {
             if (throwable instanceof SQLException ) {
                 return (SQLException) throwable;
             }
+            if ( throwable == throwable.getCause() ) {
+                break;
+            }
             throwable = throwable.getCause();
         }
         return null;
