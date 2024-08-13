@@ -2,6 +2,8 @@ package h2o.common.util.valid.base;
 
 import h2o.common.util.valid.Validator;
 
+import java.util.Map;
+
 public abstract class AbstractValidator implements Validator {
 
 
@@ -38,12 +40,20 @@ public abstract class AbstractValidator implements Validator {
 
     @Override
     public boolean validate(Object bean) {
-        return this.validateV(h2o.jodd.bean.BeanUtil.silent.getProperty(bean, k));
+        return this.validateV(getV(bean, k));
     }
 
     protected boolean validateV(Object v) {
         return false;
     }
 
+    @SuppressWarnings("rawtypes")
+    protected Object getV( Object bean , String k ) {
+        if ( bean instanceof Map ) {
+            return ((Map)bean).get(k);
+        } else {
+            return h2o.jodd.bean.BeanUtil.silent.getProperty(bean, k);
+        }
+    }
 
 }
