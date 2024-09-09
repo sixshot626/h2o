@@ -4,7 +4,7 @@ import h2o.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
-public class SensitiveWordScanner {
+public final class SensitiveWordScanner {
 
 
     private final Map<Character, List<SensitiveWord>> firstWordMap;
@@ -195,8 +195,9 @@ public class SensitiveWordScanner {
 
 
     public static final CharMapper LOWERCASE_CHAR_MAPPER = c -> {
-        if (c >= 'A' && c <= 'Z')
+        if (c >= 'A' && c <= 'Z') {
             return (char) (c | 0x20);
+        }
         return c;
     };
 
