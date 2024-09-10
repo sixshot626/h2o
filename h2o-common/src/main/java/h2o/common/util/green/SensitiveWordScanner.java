@@ -8,29 +8,29 @@ public final class SensitiveWordScanner {
 
 
     private final Map<Character, List<SensitiveWord>> firstWordMap;
-    
+
     private final CharMapper charMapper;
-    
+
     private final CharScanner charScanner;
 
-    public SensitiveWordScanner( List<SensitiveWord>  sensitiveWords ) {
-        this( sensitiveWords , LOWERCASE_CHAR_MAPPER , EQUALS_CHAR_SCANNER );
+    public SensitiveWordScanner(List<SensitiveWord> sensitiveWords) {
+        this(sensitiveWords, LOWERCASE_CHAR_MAPPER, EQUALS_CHAR_SCANNER);
     }
 
 
-    public SensitiveWordScanner( List<SensitiveWord>  sensitiveWords , CharMapper charMapper , CharScanner charScanner ) {
+    public SensitiveWordScanner(List<SensitiveWord> sensitiveWords, CharMapper charMapper, CharScanner charScanner) {
 
         this.charMapper = charMapper;
         this.charScanner = charScanner;
 
         Map<Character, List<SensitiveWord>> _firstWordMap = new HashMap<>();
 
-        for ( SensitiveWord sensitiveWord : sensitiveWords ) {
+        for (SensitiveWord sensitiveWord : sensitiveWords) {
 
-            Character firstWord = charMapper.map( sensitiveWord.word.charAt(0) );
+            Character firstWord = charMapper.map(sensitiveWord.word.charAt(0));
 
             List<SensitiveWord> words = _firstWordMap.computeIfAbsent(firstWord, k -> new ArrayList<>());
-            words.add( sensitiveWord );
+            words.add(sensitiveWord);
         }
 
         this.firstWordMap = _firstWordMap;
@@ -44,32 +44,31 @@ public final class SensitiveWordScanner {
     }
 
 
-    public SensitiveWordScanner charScanner( CharScanner charScanner ) {
-        return new SensitiveWordScanner( this.firstWordMap , this.charMapper , charScanner );
+    public SensitiveWordScanner charScanner(CharScanner charScanner) {
+        return new SensitiveWordScanner(this.firstWordMap, this.charMapper, charScanner);
     }
 
 
+    public ScanResult scan(String text) {
 
-    public ScanResult scan(String text ) {
-
-        if (StringUtils.isBlank( text )) {
+        if (StringUtils.isBlank(text)) {
             return ScanResult.PASS;
         }
 
-        return scan( new Word(text,0) );
+        return scan(new Word(text, 0));
 
     }
 
-    private ScanResult scan( Word text ) {
+    private ScanResult scan(Word text) {
 
-        for ( Word word = text ; ; word = word.moveNext() ) {
+        for (Word word = text; ; word = word.moveNext()) {
 
             ScanResult result = scan0(word);
-            if ( result.hit ) {
+            if (result.hit) {
                 return result;
             }
 
-            if (word.isEnd() ) {
+            if (word.isEnd()) {
                 break;
             }
 
@@ -80,27 +79,27 @@ public final class SensitiveWordScanner {
     }
 
 
-    public String replace( String text ) {
-        return this.replace( text , '*' );
+    public String replace(String text) {
+        return this.replace(text, '*');
     }
 
-    public String replace( String text , char c ) {
+    public String replace(String text, char c) {
 
-        if (StringUtils.isBlank( text )) {
+        if (StringUtils.isBlank(text)) {
             return text;
         }
 
-        Word word = new Word(text , 0);
+        Word word = new Word(text, 0);
 
-        for (  ;; word = word.moveNext()) {
+        for (; ; word = word.moveNext()) {
 
             ScanResult result = scan(word);
-            if ( result.hit ) {
-               word = new Word( replaceChar( word.str , result.indexes , c ) , result.indexes[0] );
+            if (result.hit) {
+                word = new Word(replaceChar(word.str, result.indexes, c), result.indexes[0]);
             }
 
 
-            if (word.isEnd() ) {
+            if (word.isEnd()) {
                 break;
             }
 
@@ -112,30 +111,29 @@ public final class SensitiveWordScanner {
     }
 
 
-    private static String replaceChar( String text , int[] indexes , char c ) {
+    private static String replaceChar(String text, int[] indexes, char c) {
 
         char[] chars = text.toCharArray();
         for (int index : indexes) {
             chars[index] = c;
         }
 
-        return new String( chars );
+        return new String(chars);
     }
 
 
+    private ScanResult scan0(Word text) {
 
-    private ScanResult scan0( Word text ) {
+        Character key = charMapper.map(text.currChar());
 
-        Character key = charMapper.map( text.currChar());
-
-        List<SensitiveWord>  sensitiveWords = firstWordMap.get( key );
-        if ( sensitiveWords == null || sensitiveWords.isEmpty() ) {
+        List<SensitiveWord> sensitiveWords = firstWordMap.get(key);
+        if (sensitiveWords == null || sensitiveWords.isEmpty()) {
             return ScanResult.PASS;
         }
 
-        for ( SensitiveWord sensitiveWord : sensitiveWords ) {
-            ScanResult result = test( text , sensitiveWord );
-            if ( result.hit ) {
+        for (SensitiveWord sensitiveWord : sensitiveWords) {
+            ScanResult result = test(text, sensitiveWord);
+            if (result.hit) {
                 return result;
             }
         }
@@ -145,53 +143,55 @@ public final class SensitiveWordScanner {
     }
 
 
+    private ScanResult test(Word text, SensitiveWord sensitiveWord) {
 
 
-
-    private ScanResult test( Word text , SensitiveWord sensitiveWord ) {
-
-
-        Indexes indexes = new Indexes( sensitiveWord.word.length() );
+        Indexes indexes = new Indexes(sensitiveWord.word.length());
         indexes.add(text.position);
 
-        if ( indexes.ok() ) {
-            return ScanResult.find( sensitiveWord , indexes.value() );
+        if (indexes.ok()) {
+            return ScanResult.find(sensitiveWord, indexes.value());
+        }
+
+        if (1 + indexes.space() > sensitiveWord.scanLen) {
+            return ScanResult.PASS;
         }
 
 
-        for (int i = 1 , si = 1 , sl = 1 , len = text.length(); i < len; i++) {
+        for (int i = 1, si = 1, sl = 1, len = text.length(); i + indexes.space() <= len ; i++) {
 
-            char testChar = charMapper.map( text.charAt(i) );
-            char sensitiveChar = charMapper.map( sensitiveWord.charAt(si) );
+            char testChar = charMapper.map(text.charAt(i));
+            char sensitiveChar = charMapper.map(sensitiveWord.charAt(si));
 
             CharScanResult res = charScanner.scan(testChar, sensitiveChar, text.str, indexes, text.index(i), sensitiveWord, si);
 
-            if ( res == CharScanResult.HIT ) {
-                
-                indexes.add( text.position + i );
+            if (res == CharScanResult.HIT) {
 
-                if ( indexes.ok() ) {
-                    return ScanResult.find( sensitiveWord , indexes.value() );
+                indexes.add(text.position + i);
+
+                if (indexes.ok()) {
+                    return ScanResult.find(sensitiveWord, indexes.value());
                 }
 
                 si++;
+
+            }
+
+            if (res != CharScanResult.SKIP) {
+
                 sl++;
 
-            } else if ( res == CharScanResult.PASS ) {
-                sl ++;
-            }
+                if (sl + indexes.space() > sensitiveWord.scanLen) {
+                    break;
+                }
 
-            if ( sl + indexes.space() > sensitiveWord.scanLen ) {
-                break;
             }
-
 
         }
 
         return ScanResult.PASS;
 
     }
-
 
 
     public static final CharMapper LOWERCASE_CHAR_MAPPER = c -> {
@@ -206,8 +206,6 @@ public final class SensitiveWordScanner {
             testChar == sensitiveChar ? CharScanResult.HIT : CharScanResult.PASS;
 
 
-
-
     private static final class Word {
 
         public final String str;
@@ -216,7 +214,7 @@ public final class SensitiveWordScanner {
 
         public Word(String str, int position) {
 
-            if ( str.length() <= position  ) {
+            if (str.length() <= position) {
                 throw new IllegalArgumentException();
             }
 
@@ -230,27 +228,27 @@ public final class SensitiveWordScanner {
         }
 
         public char currChar() {
-            return str.charAt( this.position );
+            return str.charAt(this.position);
         }
 
-
-        public int index( int idx ) {
-            if (  idx >= this.length()  ) {
+        public int index(int idx) {
+            if (idx >= this.length()) {
                 throw new IllegalArgumentException();
             }
             return this.position + idx;
         }
-        public char charAt( int idx ) {
-            return str.charAt( this.index(idx) );
+
+        public char charAt(int idx) {
+            return str.charAt(this.index(idx));
         }
 
 
-        public Word moveTo( int idx ) {
-            return new Word( this.str , idx );
+        public Word moveTo(int idx) {
+            return new Word(this.str, idx);
         }
 
         public Word moveNext() {
-            return new Word( this.str , position + 1 );
+            return moveTo(this.position + 1);
         }
 
         public boolean isEnd() {
@@ -268,34 +266,31 @@ public final class SensitiveWordScanner {
     }
 
 
-
-
-
-    public static final class  SensitiveWord {
+    public static final class SensitiveWord {
         public final String word;
 
         public final int scanLen;
 
 
-        public SensitiveWord( String word, int scanLen ) {
+        public SensitiveWord(String word, int scanLen) {
 
-            if ( StringUtils.isBlank(word) ) {
+            if (StringUtils.isBlank(word)) {
                 throw new IllegalArgumentException();
             }
 
-            this.word    = word;
+            this.word = word;
             this.scanLen = Math.max(scanLen, word.length());
         }
 
-        public Character charAt( int idx ) {
-            if (  idx >= word.length()  ) {
+        public Character charAt(int idx) {
+            if (idx >= word.length()) {
                 throw new IllegalArgumentException();
             }
 
-            return word.charAt(idx );
+            return word.charAt(idx);
         }
 
-        public boolean isEnd( int idx ) {
+        public boolean isEnd(int idx) {
             return idx >= word.length() - 1;
         }
 
@@ -316,20 +311,20 @@ public final class SensitiveWordScanner {
 
         private int i = 0;
 
-        public Indexes( int n ) {
+        public Indexes(int n) {
             this.idxs = new int[n];
         }
 
-        public void add( int idx ) {
-            if ( i >= idxs.length ) {
+        public void add(int idx) {
+            if (i >= idxs.length) {
                 throw new IllegalArgumentException();
             }
             idxs[i++] = idx;
         }
 
-        public int get( int idx ) {
+        public int get(int idx) {
 
-            if ( idx >= 0 ) {
+            if (idx >= 0) {
                 if (idx >= this.i) {
                     throw new IllegalArgumentException();
                 }
@@ -354,12 +349,12 @@ public final class SensitiveWordScanner {
 
         public int[] value() {
 
-            if ( ok() ) {
+            if (ok()) {
                 return idxs;
             }
 
             int[] r = new int[i];
-            System.arraycopy( idxs , 0 , r , 0 , i );
+            System.arraycopy(idxs, 0, r, 0, i);
             return r;
         }
 
@@ -374,7 +369,7 @@ public final class SensitiveWordScanner {
 
     public static final class ScanResult {
 
-        public static final ScanResult PASS = new ScanResult( false , null , null );
+        public static final ScanResult PASS = new ScanResult(false, null, null);
 
         public final boolean hit;
 
@@ -390,10 +385,9 @@ public final class SensitiveWordScanner {
         }
 
 
-        public static ScanResult find(SensitiveWord sensitiveWord, int[] indexes ) {
-            return new ScanResult( true , sensitiveWord , indexes );
+        public static ScanResult find(SensitiveWord sensitiveWord, int[] indexes) {
+            return new ScanResult(true, sensitiveWord, indexes);
         }
-
 
 
         @Override
@@ -408,17 +402,14 @@ public final class SensitiveWordScanner {
     }
 
 
-
-
-
     public interface CharMapper {
-        char map( char c );
+        char map(char c);
     }
 
 
     public interface CharScanner {
 
-        CharScanResult scan( char testChar , char sensitiveChar , String text , Indexes indexes , int ti , SensitiveWord sw , int si );
+        CharScanResult scan(char testChar, char sensitiveChar, String text, Indexes indexes, int ti, SensitiveWord sw, int si);
 
     }
 
