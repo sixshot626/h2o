@@ -96,8 +96,9 @@ public final class SensitiveWordScanner {
             ScanResult result = scan(word);
             if (result.hit) {
                 word = new Word(replaceChar(word.str, result.indexes, c), result.indexes[0]);
+            } else {
+                break;
             }
-
 
             if (word.isEnd()) {
                 break;
