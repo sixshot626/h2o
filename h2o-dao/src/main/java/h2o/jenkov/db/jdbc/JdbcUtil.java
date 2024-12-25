@@ -18,6 +18,7 @@
 
 package h2o.jenkov.db.jdbc;
 
+import h2o.dao.jdbc.TypedVal;
 import h2o.jenkov.db.itf.PersistenceException;
 import h2o.jenkov.db.jdbc.stream.AsciiStream;
 import h2o.jenkov.db.jdbc.stream.CharacterStream;
@@ -246,7 +247,14 @@ public class JdbcUtil {
 
         //most used parameter types in databases
         try {
+
             if(parameter == null)                        statement.setNull      (index, Types.NULL);
+
+            else if( parameter instanceof TypedVal )      {
+                    TypedVal tval = (TypedVal) parameter;
+                    statement.setObject( index , tval.getValue() , tval.getSqlType() );
+            }
+
             else if(parameter instanceof String  )       statement.setString    (index, (String) parameter);
             else if(parameter instanceof Integer)        statement.setInt       (index, ((Integer)parameter).intValue());
             else if(parameter instanceof Long   )        statement.setLong      (index, ((Long)   parameter).longValue());
