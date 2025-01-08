@@ -4,7 +4,6 @@ package h2o.utils.store.impl;
 import h2o.common.cluster.ClusterUtil;
 import h2o.common.exception.ExceptionUtil;
 import h2o.common.result.ErrorMessage;
-import h2o.common.result.ExceptionMessage;
 import h2o.common.result.Result;
 import h2o.common.result.StatusMessage;
 import h2o.common.util.date.DateUtil;
@@ -62,7 +61,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
         }
 
         try {
@@ -88,7 +87,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
         }
 
 
@@ -104,7 +103,7 @@ public class FileServiceMinIOImpl implements FileService {
             }
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
         }
 
         try {
@@ -129,7 +128,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
 
         } /* finally {
             StreamUtil.close( source );
@@ -156,11 +155,11 @@ public class FileServiceMinIOImpl implements FileService {
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
 
-                return Result.fail( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
+                return Result.fail( new StatusMessage<>( FileOptionStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
 
             } else {
 
-                return Result.fail( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
+                return Result.fail( new StatusMessage<>( FileOptionStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
 
             }
 
@@ -168,7 +167,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             LOG.error(StringUtil.EMPTY , e);
 
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
 
         }
 
@@ -198,11 +197,11 @@ public class FileServiceMinIOImpl implements FileService {
 
             if ( "NoSuchKey".equals(e.errorResponse().code())  ) {
 
-                return Result.fail( new StatusMessage<>( GetFileStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
+                return Result.fail( new StatusMessage<>( FileOptionStatus.NOT_FOUND , e.errorResponse().code() , e.errorResponse().message() ) );
 
             } else {
 
-                return Result.fail( new StatusMessage<>( GetFileStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
+                return Result.fail( new StatusMessage<>( FileOptionStatus.FAIL , e.errorResponse().code() , e.errorResponse().message() ) );
 
             }
 
@@ -210,7 +209,7 @@ public class FileServiceMinIOImpl implements FileService {
 
             LOG.error(StringUtil.EMPTY , e);
 
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
 
         } finally {
             StreamUtil.close( fileIn );
@@ -258,7 +257,7 @@ public class FileServiceMinIOImpl implements FileService {
 
         } catch ( Exception e ) {
             LOG.error(StringUtil.EMPTY , e);
-            return Result.fail( new ExceptionMessage( e ) );
+            return Result.fail( new StatusMessage<>( FileOptionStatus.EXCEPTION, e.getMessage() ) );
         }
 
     }
