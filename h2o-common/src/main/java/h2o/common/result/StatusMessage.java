@@ -16,6 +16,11 @@ public class StatusMessage<S> extends ErrorMessage implements java.io.Serializab
         this.status = status;
     }
 
+    public StatusMessage(S status , ErrorMessage err) {
+        super(err.getCode(), err.getMessage());
+        this.status = status;
+    }
+
     public S getStatus() {
         return status;
     }
