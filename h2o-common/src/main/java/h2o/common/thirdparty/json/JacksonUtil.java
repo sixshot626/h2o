@@ -33,7 +33,7 @@ public class JacksonUtil implements JsonUtil {
     @Override
     public Map<String, Object> fromJson(String json) {
         try {
-            return objectMapper.readValue(json,Map.class);
+            return (Map<String, Object>)objectMapper.readValue(json,Map.class);
         } catch ( Exception e ) {
             throw ExceptionUtil.toRuntimeException(e);
         }

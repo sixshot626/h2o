@@ -1,5 +1,6 @@
 package h2o.common;
 
+import h2o.common.ioc.ObjectFactory;
 import h2o.common.json.JsonUtil;
 import h2o.common.thirdparty.json.JacksonUtil;
 import h2o.common.util.bean.BeanUtil;
@@ -31,7 +32,23 @@ public class Tools {
 
         private j() {}
 
-        private static final JsonUtil JSON_UTIL = new JacksonUtil();
+        private static final JsonUtil JSON_UTIL = initJsonUtil();
+
+        private static JsonUtil initJsonUtil() {
+
+            JsonUtil jsonUtil = null;
+            try {
+                jsonUtil = ObjectFactory.silentlyGet("H2OJsonUtilProvider");
+            } catch ( Exception e ) {}
+
+            if ( jsonUtil == null ) {
+                jsonUtil = new JacksonUtil();
+            }
+
+            log.info("JsonUtil impl: {}" , jsonUtil.getClass().getName());
+
+            return jsonUtil;
+        }
 
         public static String toJson(Object obj) {
             return JSON_UTIL.toJson(obj);
