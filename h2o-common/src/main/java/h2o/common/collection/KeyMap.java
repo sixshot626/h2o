@@ -71,7 +71,7 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
 
     protected String proc2( String key ) {
-        return StringUtils.remove(StringUtils.deleteWhitespace(key.toLowerCase()) , "_");
+        return cleanKey(key);
     }
 
 
@@ -84,6 +84,20 @@ public class KeyMap<V> extends AbstractMap<String, V> implements Map<String,V> ,
 
         return _key == null ? key : _key;
 
+    }
+
+
+    public static String cleanKey( String key ) {
+
+        if ( key == null ) {
+            return null;
+        }
+
+        return StringUtils.remove(
+                StringUtils.remove(
+                        StringUtils.remove(
+                                StringUtils.remove(StringUtils.deleteWhitespace(key.toLowerCase())
+                                        , '_'), '`') , '\"') , '\'');
     }
 
 
