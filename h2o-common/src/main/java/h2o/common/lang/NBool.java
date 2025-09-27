@@ -15,11 +15,11 @@ public enum NBool implements OptionalValue<Boolean> {
         return this == NULL ? null : Boolean.valueOf(this == TRUE);
     }
 
-    public static NBool valueOf(boolean bool) {
+    public static NBool of(boolean bool) {
         return bool ? TRUE : FALSE;
     }
 
-    public static NBool valueOf(Boolean bool) {
+    public static NBool of(Boolean bool) {
         if (bool == null) {
             return NULL;
         } else {

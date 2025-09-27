@@ -52,11 +52,11 @@ public class NBoolConverter implements TypeConverter<NBool> {
 		}
 
 		if (value.getClass() == Boolean.class) {
-			return NBool.valueOf( (Boolean) value );
+			return NBool.of( (Boolean) value );
 		}
 
 		if ( value instanceof SNumber ) {
-			return NBool.valueOf( ((SNumber)value).toBoolean() );
+			return NBool.of( ((SNumber)value).toBoolean() );
 		}
 
 		String stringValue = value.toString();

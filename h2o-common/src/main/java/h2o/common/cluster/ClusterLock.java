@@ -53,7 +53,7 @@ public final class ClusterLock {
 
         try (Redis<String, String> redis = this.redisClient.create()) {
 
-            return NBool.valueOf(id.equals(redis.get(key)));
+            return NBool.of(id.equals(redis.get(key)));
 
         } catch (Exception e) {
             log.error("", e);
@@ -87,7 +87,7 @@ public final class ClusterLock {
 
         try (Redis<String, String> redis = this.redisClient.create()) {
 
-            return NBool.valueOf(tryLock(redis));
+            return NBool.of(tryLock(redis));
 
         } catch (Exception e) {
 
