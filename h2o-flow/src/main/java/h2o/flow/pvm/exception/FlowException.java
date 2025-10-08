@@ -3,7 +3,7 @@
  */
 package h2o.flow.pvm.exception;
 
-public abstract class FlowException extends Exception {
+public abstract class FlowException extends RuntimeException {
 
 
 	private static final long serialVersionUID = 9096081634629771374L;
