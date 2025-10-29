@@ -22,7 +22,7 @@ public abstract class StringUtil {
 
         StringBuilder sb = new StringBuilder();
 
-        if (strs != null || strs.length > 0 ) {
+        if (strs != null) {
             for (Object str : strs) {
                 if ( str != null ) {
                     if (str instanceof OptionalValue) {
@@ -542,7 +542,7 @@ public abstract class StringUtil {
         // the index of an occurrence we've found, or -1
         int patLen = oldPattern.length();
         while (index >= 0) {
-            sb.append(inString.substring(pos, index));
+            sb.append(inString, pos, index);
             sb.append(newPattern);
             pos = index + patLen;
             index = inString.indexOf(oldPattern, pos);
@@ -1019,9 +1019,7 @@ public abstract class StringUtil {
             return array;
         }
         Set<String> set = new TreeSet<String>();
-        for (String element : array) {
-            set.add(element);
-        }
+        Collections.addAll(set, array);
         return toStringArray(set);
     }
 
@@ -1236,9 +1234,7 @@ public abstract class StringUtil {
     public static Set<String> commaDelimitedListToSet(String str) {
         Set<String> set = new TreeSet<String>();
         String[] tokens = commaDelimitedListToStringArray(str);
-        for (String token : tokens) {
-            set.add(token);
-        }
+        Collections.addAll(set, tokens);
         return set;
     }
 
