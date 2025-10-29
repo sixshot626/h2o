@@ -103,15 +103,13 @@ public abstract class StringUtil {
 
         double cos =  CosineSimilarity.INSTANCE.cosineSimilarity(map, map2);
 
-        System.out.println( cos );
-
         return (long)((1 - cos) * 10000000000000000L);
 
     }
 
 
 
-    private static final class CosineSimilarity {
+    private static final strictfp class CosineSimilarity {
 
         /**
          * Singleton instance.
