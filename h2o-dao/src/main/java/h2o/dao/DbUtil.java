@@ -36,9 +36,11 @@ public final class DbUtil implements Closeable {
     }
 
 
-   public static final SqlBuilder sqlBuilder() {
+    public static SqlBuilder sqlBuilder() {
         return DBFACTORY.getSqlBuilder();
-   }
+    }
+
+
     public static final TemplateUtil sqlTemplateUtil = DBFACTORY.getSqlTemplateUtil();
 
 
